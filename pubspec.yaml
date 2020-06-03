@@ -1,8 +1,8 @@
 name: rutorrentflutter
-description: A rutorrent-based client in flutter 
+description: A rutorrent-based client in flutter
 
-publish_to: 'none'
-version: 1.0.0+1
+publish_to: "none"
+version: 1.0.0-alpha+2
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -11,16 +11,56 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^0.1.3
-  font_awesome_flutter: ^8.8.1
-  fluttertoast: ^4.0.1
-  http: ^0.12.1
-  shared_preferences: ^0.5.7+3
+  cupertino_icons: ^1.0.2
+  font_awesome_flutter: ^9.0.0-nullsafety
+  fluttertoast: ^8.0.1-nullsafety.0
+  http: ^0.13.0
+  filesize: ^1.0.4
+  # provider: ^5.0.0
+  flutter_local_notifications: ^5.0.0-nullsafety.1
+  intl: ^0.17.0
+  shimmer: ^2.0.0-nullsafety.0
+  modal_progress_hud: ^0.1.3
+  modal_bottom_sheet: ^2.0.0
+  xml: ^5.0.2
+  shared_preferences: ^2.0.3
+  path_provider: ^2.0.1
+  dio: ^4.0.0-beta7
+  open_file: ^3.1.0
+  flare_splash_screen: ^3.0.2
+  file_picker: ^3.0.0
+  flutter_vlc_player: ^6.0.1
+  package_info: ^2.0.0
+  wakelock: ^0.5.0+2
+  flutter_slidable: ^0.6.0-nullsafety.0
+  flutter_svg: ^0.21.0-nullsafety.0
+
+  #Architecture Packages
+  logger:
+  auto_route:
+  get_it: null
+  injectable: null
+  stacked:
+  stacked_services:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  auto_route_generator:
+  build_runner:
+  injectable_generator:
+  # mockito: null
 
 flutter:
-
   uses-material-design: true
+
+  assets:
+    - assets/logo/
+    - assets/animation/
+
+  fonts:
+    - family: SFUIDisplay
+      fonts:
+        - asset: fonts/SFUIDisplay/sf-ui-display-heavy.otf
+        - asset: fonts/SFUIDisplay/sf-ui-display-light.otf
+        - asset: fonts/SFUIDisplay/sf-ui-display-medium.otf
