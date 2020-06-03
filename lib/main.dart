@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ruTorrent Flutter',
       theme: ThemeData(
+        fontFamily: 'SFUIDisplay',
         primaryColor: Colors.grey[300],
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
