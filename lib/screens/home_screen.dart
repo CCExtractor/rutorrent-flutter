@@ -14,50 +14,47 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Task> tasksList = [];
-  bool loadingTasks;
 
   String url = 'http://192.168.43.176/rutorrent/plugins/httprpc/action.php';
 
-  _initTasksData() async{
-    List<Task> updatedList = [];
-    var response = await http.post(Uri.parse(url),
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Connection": "keep-alive",
-          "Accept-Encoding": "gzip, deflate, br",
-          "Accept" : "*/*",
-          "Accept-Language" : "en-GB,en-US;q=0.9,en;q=0.8",
-          "X-Requested-With": "XMLHttpRequest",
-        },
-        body: {
-          'mode': 'list',
-        },
-        encoding: Encoding.getByName("utf-8"));
-    print(response.statusCode);
-    print(response.body);
+  Stream<List<Task>> _initTasksData() async* {
 
-    var tasksPath = jsonDecode(response.body)['t'];
-    for(var hashKey in tasksPath.keys){
-      var taskObject = tasksPath[hashKey];
-      Task task = Task(hashKey); // new task created
-      task.name = taskObject[4];
-      task.size = filesize(taskObject[5]);
-      task.savePath = taskObject[25];
-      print(task.savePath);
+    while(true) {
+      List<Task> tasksList = [];
 
-      updatedList.add(task);
+      var response = await http.post(Uri.parse(url),
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Connection": "keep-alive",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept": "*/*",
+            "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
+            "X-Requested-With": "XMLHttpRequest",
+          },
+          body: {
+            'mode': 'list',
+          },
+          encoding: Encoding.getByName("utf-8"));
+//      print(response.statusCode);
+//      print(response.body);
+
+      var tasksPath = jsonDecode(response.body)['t'];
+      for (var hashKey in tasksPath.keys) {
+        var taskObject = tasksPath[hashKey];
+        Task task = Task(hashKey); // new task created
+        task.name = taskObject[4];
+        task.size = filesize(taskObject[5]);
+        task.savePath = taskObject[25];
+
+        tasksList.add(task);
+      }
+      yield tasksList;
     }
-    setState(() {
-      tasksList=updatedList;
-      loadingTasks=false;
-    });
   }
 
   @override
   void initState() {
     super.initState();
-    loadingTasks=true;
     _initTasksData();
   }
 
@@ -77,14 +74,20 @@ class _HomePageState extends State<HomePage> {
       ),
       drawer: Drawer(),
       body: Container(
-        child: loadingTasks?
-        Center(child: CircularProgressIndicator()):
-            ListView.builder(
-              itemCount: tasksList.length,
+        child: StreamBuilder(
+          stream: _initTasksData(),
+          builder: (BuildContext context, AsyncSnapshot<List<Task>> snapshot){
+            if(!snapshot.hasData){
+              return Center(child: Text('No Tasks to Show'),);
+            }
+            return ListView.builder(
+              itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context,int index){
-                return TaskTile(tasksList[index]);
+                return TaskTile(snapshot.data[index]);
               },
-            )
+            );
+          },
+        )
       ),
     );
   }
