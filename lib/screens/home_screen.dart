@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:rutorrentflutter/components/task_tile.dart';
 import 'dart:convert';
+
+import 'package:rutorrentflutter/models/task.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   String url = 'http://192.168.43.176/rutorrent/plugins/httprpc/action.php';
 
   _initTasksData() async{
+    List<Task> updatedList = [];
     var response = await http.post(Uri.parse(url),
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -42,10 +46,10 @@ class _HomePageState extends State<HomePage> {
       task.savePath = taskObject[25];
       print(task.savePath);
 
-      tasksList.add(task);
+      updatedList.add(task);
     }
-
     setState(() {
+      tasksList=updatedList;
       loadingTasks=false;
     });
   }
@@ -86,76 +90,3 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-enum Status {
-  downloading,
-  pausing,
-  stopped,
-}
-
-
-class Task{
-
-  Task(this.hash);
-
-  String hash; // hash value is a unique value for a torrent task
-  String name;
-  Status status;
-  String size; // size in appropriate unit
-  String savePath; // directory where task is saved
-}
-
-class TaskTile extends StatelessWidget {
-  final Task task;
-
-  TaskTile(this.task);
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Container(
-        color: Colors.grey[300],
-        width: double.infinity,
-        height: 80,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                VerticalDivider(
-                  thickness: 5,
-                  color: Colors.red,
-                ),
-                SizedBox(width: 10,),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(task.name,style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('${task.size} | 125 Min',style: TextStyle(fontSize: 12),),
-                        Text('500 kb/s | 400 kb/s',style: TextStyle(fontSize: 12),),
-                      ],
-                    )
-                  ],
-                ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Text('77%'),
-                IconButton(
-                  color: Colors.grey,
-                  iconSize: 40,
-                  icon: Icon(Icons.play_circle_filled),
-                  onPressed: (){},
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
