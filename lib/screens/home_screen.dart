@@ -9,28 +9,22 @@ import 'dart:convert';
 import 'package:rutorrentflutter/models/task.dart';
 
 class HomePage extends StatefulWidget {
+  static String url = 'http://192.168.43.176/rutorrent/plugins/httprpc/action.php';
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
 
-  String url = 'http://192.168.43.176/rutorrent/plugins/httprpc/action.php';
-
   Stream<List<Task>> _initTasksData() async* {
-
     while(true) {
+
+      await Future.delayed(Duration(seconds: 1),(){
+      });
+
       List<Task> tasksList = [];
 
-      var response = await http.post(Uri.parse(url),
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Connection": "keep-alive",
-            "Accept-Encoding": "gzip, deflate, br",
-            "Accept": "*/*",
-            "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
-            "X-Requested-With": "XMLHttpRequest",
-          },
+      var response = await http.post(Uri.parse(HomePage.url),
           body: {
             'mode': 'list',
           },
@@ -45,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         task.name = taskObject[4];
         task.size = filesize(taskObject[5]);
         task.savePath = taskObject[25];
-
+        task.status = int.parse(taskObject[0])==0?(Status.stopped):(int.parse(taskObject[3])==0?(Status.pausing):Status.downloading);
         tasksList.add(task);
       }
       yield tasksList;

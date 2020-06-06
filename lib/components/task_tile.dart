@@ -1,8 +1,38 @@
+import 'dart:convert';
+
+import 'package:rutorrentflutter/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/models/task.dart';
+import 'package:rutorrentflutter/screens/home_screen.dart';
+import 'package:http/http.dart' as http;
 
 class TaskTile extends StatelessWidget {
   final Task task;
+
+  _toggleTaskStatus() async{
+    Status currentStatus = task.status;
+    Status toggleStatus;
+    switch(currentStatus){
+      case Status.downloading:
+        toggleStatus=Status.pausing;
+        break;
+      case Status.pausing:
+        toggleStatus=Status.downloading;
+        break;
+      case Status.stopped:
+        toggleStatus=Status.downloading;
+        break;
+    }
+    var response = await http.post(Uri.parse(HomePage.url),
+        body: {
+          'mode': statusMap[toggleStatus],
+          'hash': '${task.hash}',
+        },
+        encoding: Encoding.getByName("utf-8"));
+    print(response.statusCode);
+    print(response.body);
+    print(task.hash);
+  }
 
   TaskTile(this.task);
   @override
@@ -45,8 +75,8 @@ class TaskTile extends StatelessWidget {
                 IconButton(
                   color: Colors.grey,
                   iconSize: 40,
-                  icon: Icon(Icons.play_circle_filled),
-                  onPressed: (){},
+                  icon: Icon(task.status==Status.downloading?Icons.pause_circle_filled:Icons.play_circle_filled),
+                  onPressed: _toggleTaskStatus,
                 ),
               ],
             ),
