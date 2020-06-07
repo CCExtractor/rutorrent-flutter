@@ -8,13 +8,13 @@ import 'dart:convert';
 
 import 'package:rutorrentflutter/models/task.dart';
 
-class HomePage extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   static String url = 'http://192.168.43.176/rutorrent/plugins/httprpc/action.php';
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomeScreenState extends State<HomeScreen> {
 
   Stream<List<Task>> _initTasksData() async* {
     while(true) {
@@ -24,7 +24,7 @@ class _HomePageState extends State<HomePage> {
 
       List<Task> tasksList = [];
 
-      var response = await http.post(Uri.parse(HomePage.url),
+      var response = await http.post(Uri.parse(HomeScreen.url),
           body: {
             'mode': 'list',
           },
@@ -61,7 +61,6 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(FontAwesomeIcons.solidMoon),
             onPressed: (){
               Fluttertoast.showToast(msg: "Night mode currently unavailable");
-              _initTasksData();
             },
           ),
         ],

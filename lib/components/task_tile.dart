@@ -23,9 +23,9 @@ class TaskTile extends StatelessWidget {
         toggleStatus=Status.downloading;
         break;
     }
-    var response = await http.post(Uri.parse(HomePage.url),
+    var response = await http.post(Uri.parse(HomeScreen.url),
         body: {
-          'mode': statusMap[toggleStatus],
+          'mode': Constants().statusMap[toggleStatus],
           'hash': '${task.hash}',
         },
         encoding: Encoding.getByName("utf-8"));
@@ -34,13 +34,26 @@ class TaskTile extends StatelessWidget {
     print(task.hash);
   }
 
+  Color _getStatusColor(Status status){
+    switch(status){
+      case Status.downloading:
+        return Constants().kBlue;
+      case Status.pausing:
+        return Constants().kDarkGrey;
+      case Status.stopped:
+        return Constants().kRed;
+      default:
+        return Constants().kGreen;
+    }
+  }
   TaskTile(this.task);
   @override
   Widget build(BuildContext context) {
+    Color statusColor = _getStatusColor(task.status);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Container(
-        color: Colors.grey[300],
+        color: Colors.grey[200],
         width: double.infinity,
         height: 80,
         child: Row(
@@ -50,7 +63,7 @@ class TaskTile extends StatelessWidget {
               children: <Widget>[
                 VerticalDivider(
                   thickness: 5,
-                  color: Colors.red,
+                  color: statusColor,
                 ),
                 SizedBox(width: 10,),
                 Column(
@@ -61,7 +74,8 @@ class TaskTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text('${task.size} | 125 Min',style: TextStyle(fontSize: 12),),
-                        Text('500 kb/s | 400 kb/s',style: TextStyle(fontSize: 12),),
+                        SizedBox(width: 100,),
+                        Text('500 kb/s | 400 kb/s',style: TextStyle(fontSize: 10),),
                       ],
                     )
                   ],
@@ -73,7 +87,7 @@ class TaskTile extends StatelessWidget {
               children: <Widget>[
                 Text('77%'),
                 IconButton(
-                  color: Colors.grey,
+                  color: statusColor,
                   iconSize: 40,
                   icon: Icon(task.status==Status.downloading?Icons.pause_circle_filled:Icons.play_circle_filled),
                   onPressed: _toggleTaskStatus,
