@@ -24,6 +24,9 @@ class TaskTile extends StatelessWidget {
         break;
     }
     var response = await http.post(Uri.parse(HomeScreen.url),
+        headers: {
+          'authorization':Constants().getBasicAuth(),
+        },
         body: {
           'mode': Constants().statusMap[toggleStatus],
           'hash': '${task.hash}',
@@ -59,40 +62,55 @@ class TaskTile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                VerticalDivider(
-                  thickness: 5,
-                  color: statusColor,
-                ),
-                SizedBox(width: 10,),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(task.name,style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),),
-                    Row(
+            Expanded(
+              flex: 5,
+              child: Row(
+                children: <Widget>[
+                  VerticalDivider(
+                    thickness: 5,
+                    color: statusColor,
+                  ),
+                  SizedBox(width: 10,),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text('${task.size} | 125 Min',style: TextStyle(fontSize: 12),),
-                        SizedBox(width: 100,),
-                        Text('500 kb/s | 400 kb/s',style: TextStyle(fontSize: 10),),
+                        Flexible(child: Text(task.name,style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),)),
+                        Flexible(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text('${task.size} | 125 Min',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.grey[800]),),
+                              Text('500 kb/s | 400 kb/s',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[700]),),
+                            ],
+                          ),
+                        ),
+                        Flexible(
+                          child: LinearProgressIndicator(
+                            value: 0.77,
+                            backgroundColor: Constants().kLightGrey
+                          ),
+                        )
                       ],
-                    )
-                  ],
-                ),
-              ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Text('77%'),
-                IconButton(
-                  color: statusColor,
-                  iconSize: 40,
-                  icon: Icon(task.status==Status.downloading?Icons.pause_circle_filled:Icons.play_circle_filled),
-                  onPressed: _toggleTaskStatus,
-                ),
-              ],
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Text('77%'),
+                  IconButton(
+                    color: statusColor,
+                    iconSize: 40,
+                    icon: Icon(task.status==Status.downloading?Icons.pause_circle_filled:Icons.play_circle_filled),
+                    onPressed: _toggleTaskStatus,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
