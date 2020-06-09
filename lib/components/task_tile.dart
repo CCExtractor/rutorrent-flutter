@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:filesize/filesize.dart';
 import 'package:rutorrentflutter/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/models/task.dart';
@@ -81,8 +82,8 @@ class TaskTile extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('${task.size} | 125 Min',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.grey[800]),),
-                              Text('500 kb/s | 400 kb/s',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[700]),),
+                              Text('${task.size}${task.dlSpeed==0?'':' | '+task.getEta}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.grey[800]),),
+                              Text('↓ ${filesize(task.dlSpeed.toString())+'/s'} | ↑ ${filesize(task.ulSpeed.toString())+'/s'}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[700]),),
                             ],
                           ),
                         ),
@@ -102,7 +103,7 @@ class TaskTile extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Text('77%'),
+                  Text(task.getPercentageDownload.toString()+'%',style: TextStyle(color: statusColor,fontWeight: FontWeight.w600),),
                   IconButton(
                     color: statusColor,
                     iconSize: 40,

@@ -44,6 +44,17 @@ class _HomeScreenState extends State<HomeScreen> {
         task.size = filesize(taskObject[5]);
         task.savePath = taskObject[25];
         task.status = int.parse(taskObject[0])==0?(Status.stopped):(int.parse(taskObject[3])==0?(Status.pausing):Status.downloading);
+        task.remainingContent = filesize(taskObject[19]);
+        task.completedChunks = int.parse(taskObject[6]);
+        task.totalChunks = int.parse(taskObject[7]);
+        task.sizeOfChunk = int.parse(taskObject[13]);
+        task.torrentAdded = int.parse(taskObject[21]);
+        task.torrentCreated = int.parse(taskObject[26]);
+        task.seedsActual = int.parse(taskObject[18]);
+        task.peersActual = int.parse(taskObject[15]);
+        task.ulSpeed = int.parse(taskObject[11]);
+        task.dlSpeed = int.parse(taskObject[12]);
+
         tasksList.add(task);
       }
       yield tasksList;
