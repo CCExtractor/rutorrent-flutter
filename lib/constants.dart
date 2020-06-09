@@ -1,6 +1,30 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+
+import 'models/task.dart';
 
 /// This file contains constants which can be used in any part of the project
 class  Constants{
+  Map<Status,String> statusMap = {
+    Status.downloading : 'start',
+    Status.pausing : 'pause',
+    Status.stopped: 'stop',
+  };
 
+  Color kBlue = Color(0xFF1B1464);
+  Color kRed = Color(0xFFEA2027);
+  Color kGreen = Color(0xFF009432);
+  Color kLightGrey = Color(0xFFC6C7C6);
+  Color kWhitishGrey = Color(0xFFF7F7F7);
+  Color kDarkGrey = Color(0xFF424342);
+
+  String getBasicAuth(){
+    String username = 'username';
+    String password = '****';
+    String basicAuth =
+        'Basic ' + base64Encode(utf8.encode('$username:$password'));
+    print(basicAuth);
+    return basicAuth;
+  }
 }

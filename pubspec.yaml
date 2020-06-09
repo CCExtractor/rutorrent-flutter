@@ -16,6 +16,7 @@ dependencies:
   fluttertoast: ^4.0.1
   http: ^0.12.1
   shared_preferences: ^0.5.7+3
+  filesize: ^1.0.4
 
 dev_dependencies:
   flutter_test:
@@ -24,3 +25,10 @@ dev_dependencies:
 flutter:
 
   uses-material-design: true
+
+  fonts:
+    - family: SFUIDisplay
+      fonts:
+        - asset: fonts/SFUIDisplay/sf-ui-display-heavy.otf
+        - asset: fonts/SFUIDisplay/sf-ui-display-light.otf
+        - asset: fonts/SFUIDisplay/sf-ui-display-medium.otf
