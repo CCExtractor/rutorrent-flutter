@@ -22,7 +22,6 @@ class  Constants{
     String password = '*****';
     String basicAuth =
         'Basic ' + base64Encode(utf8.encode('$username:$password'));
-    print(basicAuth);
     return basicAuth;
   }
 }

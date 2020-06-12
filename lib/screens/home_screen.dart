@@ -87,19 +87,68 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       drawer: Drawer(),
       body: Container(
-        child: StreamBuilder(
-          stream: _initTasksData(),
-          builder: (BuildContext context, AsyncSnapshot<List<Task>> snapshot){
-            if(!snapshot.hasData){
-              return Center(child: Text('No Tasks to Show'),);
-            }
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context,int index){
-                return TaskTile(snapshot.data[index]);
-              },
-            );
-          },
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: Icon(
+                        Icons.search,
+                        color: Constants().kDarkGrey,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        cursorColor: Colors.black,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            errorBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                            hintText: 'Search your item by name'),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: (){
+
+                      },
+                      color: Constants().kDarkGrey,
+                      icon: Icon(Icons.sort),
+                    ),
+                  ],
+                ),
+                width: double.infinity,
+                height: 50,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey,width: 1.5),
+                  borderRadius: BorderRadius.all(Radius.circular(5))
+                ),
+              ),
+            ),
+            Expanded(
+              child: StreamBuilder(
+                stream: _initTasksData(),
+                builder: (BuildContext context, AsyncSnapshot<List<Task>> snapshot){
+                  if(!snapshot.hasData){
+                    return Center(child: Text('No Tasks to Show'),);
+                  }
+                  return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context,int index){
+                      return TaskTile(snapshot.data[index]);
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
         )
       ),
     );
