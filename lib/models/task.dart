@@ -1,7 +1,9 @@
 enum Status {
   downloading,
-  pausing,
+  paused,
   stopped,
+  completed,
+  errors,
 }
 
 class Task{
@@ -14,6 +16,8 @@ class Task{
   String size; // size in appropriate unit
   String savePath; // directory where task is saved
   String remainingContent;
+  String eta;
+  int percentageDownload;
   int totalChunks;
   int completedChunks;
   int sizeOfChunk; // in bytes
@@ -22,7 +26,21 @@ class Task{
   int seedsActual;
   int peersActual;
   int dlSpeed; // bytes per second
-  int ulSpeed; // bytes per second
+  int ulSpeed;// bytes per second
+  int isOpen;
+  int getState;
+  String msg;
+  String downloadedData;// in bytes
+
+  Status get getTaskStatus {
+    Status status;
+    status = isOpen==0?Status.stopped:getState==0?(Status.paused):Status.downloading;
+    if(msg.length>0 && msg!='Tracker: [Tried all trackers.]')
+      status = Status.errors;
+    if(getPercentageDownload==100)
+      status = Status.completed;
+    return status;
+  }
 
   /// returns percentage task downloaded using file chunks
   int get getPercentageDownload => (completedChunks/totalChunks*100).round();

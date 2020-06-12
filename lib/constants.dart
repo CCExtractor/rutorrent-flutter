@@ -1,14 +1,12 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import 'models/task.dart';
 
 /// This file contains constants which can be used in any part of the project
 class  Constants{
   Map<Status,String> statusMap = {
     Status.downloading : 'start',
-    Status.pausing : 'pause',
+    Status.paused : 'pause',
     Status.stopped: 'stop',
   };
 
@@ -21,7 +19,7 @@ class  Constants{
 
   String getBasicAuth(){
     String username = 'username';
-    String password = '****';
+    String password = '*****';
     String basicAuth =
         'Basic ' + base64Encode(utf8.encode('$username:$password'));
     print(basicAuth);

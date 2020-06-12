@@ -5,9 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:rutorrentflutter/components/task_tile.dart';
 import 'dart:convert';
-
 import 'package:rutorrentflutter/models/task.dart';
-
 import '../constants.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -43,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
         task.name = taskObject[4];
         task.size = filesize(taskObject[5]);
         task.savePath = taskObject[25];
-        task.status = int.parse(taskObject[0])==0?(Status.stopped):(int.parse(taskObject[3])==0?(Status.pausing):Status.downloading);
         task.remainingContent = filesize(taskObject[19]);
         task.completedChunks = int.parse(taskObject[6]);
         task.totalChunks = int.parse(taskObject[7]);
@@ -54,7 +51,14 @@ class _HomeScreenState extends State<HomeScreen> {
         task.peersActual = int.parse(taskObject[15]);
         task.ulSpeed = int.parse(taskObject[11]);
         task.dlSpeed = int.parse(taskObject[12]);
+        task.isOpen = int.parse(taskObject[0]);
+        task.getState = int.parse(taskObject[3]);
+        task.msg = taskObject[29];
+        task.downloadedData = filesize(taskObject[8]);
 
+        task.eta = task.getEta;
+        task.percentageDownload= task.getPercentageDownload;
+        task.status = task.getTaskStatus;
         tasksList.add(task);
       }
       yield tasksList;
