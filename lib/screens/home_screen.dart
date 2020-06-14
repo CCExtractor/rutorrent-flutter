@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:rutorrentflutter/components/task_tile.dart';
 import 'dart:convert';
 import 'package:rutorrentflutter/models/task.dart';
-import '../constants.dart';
+import 'package:rutorrentflutter/constants.dart' as Constants;
 
 class HomeScreen extends StatefulWidget {
   static String url = 'https://fremicro081.xirvik.com/rtorrent/plugins/httprpc/action.php';
@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
       List<Task> tasksList = [];
       var response = await http.post(Uri.parse(HomeScreen.url),
           headers: {
-            'authorization':Constants().getBasicAuth(),
+            'authorization':Constants.getBasicAuth(),
           },
           body: {
             'mode': 'list',
@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: Icon(
                         Icons.search,
-                        color: Constants().kDarkGrey,
+                        color: Constants.kDarkGrey,
                       ),
                     ),
                     Expanded(
@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       onPressed: (){
 
                       },
-                      color: Constants().kDarkGrey,
+                      color: Constants.kDarkGrey,
                       icon: Icon(Icons.sort),
                     ),
                   ],

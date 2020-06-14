@@ -1,8 +1,7 @@
 import 'dart:convert';
-
 import 'package:filesize/filesize.dart';
-import 'package:rutorrentflutter/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:rutorrentflutter/constants.dart' as Constants;
 import 'package:rutorrentflutter/models/task.dart';
 import 'package:rutorrentflutter/screens/home_screen.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +14,7 @@ class TaskTile extends StatelessWidget {
   _stopTask() async{
     await http.post(Uri.parse(HomeScreen.url),
         headers: {
-          'authorization':Constants().getBasicAuth(),
+          'authorization':Constants.getBasicAuth(),
         },
         body: {
           'mode': Status.stopped,
@@ -30,10 +29,10 @@ class TaskTile extends StatelessWidget {
 
     var response = await http.post(Uri.parse(HomeScreen.url),
         headers: {
-          'authorization':Constants().getBasicAuth(),
+          'authorization':Constants.getBasicAuth(),
         },
         body: {
-          'mode': Constants().statusMap[toggleStatus],
+          'mode': Constants.statusMap[toggleStatus],
           'hash': '${task.hash}',
         },
         encoding: Encoding.getByName("utf-8"));
@@ -42,15 +41,15 @@ class TaskTile extends StatelessWidget {
   Color _getStatusColor(){
     switch(task.status){
       case Status.downloading:
-        return Constants().kBlue;
+        return Constants.kBlue;
       case Status.paused:
-        return Constants().kDarkGrey;
+        return Constants.kDarkGrey;
       case Status.errors:
-        return Constants().kRed;
+        return Constants.kRed;
       case Status.completed:
-        return Constants().kGreen;
+        return Constants.kGreen;
       default:
-        return Constants().kDarkGrey;
+        return Constants.kDarkGrey;
     }
   }
 
@@ -109,7 +108,7 @@ class TaskTile extends StatelessWidget {
                               LinearProgressIndicator(
                                 value: task.percentageDownload/100,
                                 valueColor: AlwaysStoppedAnimation<Color>(statusColor),
-                                backgroundColor: Constants().kLightGrey
+                                backgroundColor: Constants.kLightGrey
                               ),
                             ],
                           ),
