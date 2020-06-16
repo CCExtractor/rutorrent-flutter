@@ -3,45 +3,45 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:rutorrentflutter/components/task_details_sheet.dart';
+import 'package:rutorrentflutter/components/torrent_details_sheet.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
-import 'package:rutorrentflutter/models/task.dart';
+import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/screens/home_screen.dart';
 import 'package:http/http.dart' as http;
 
-class TaskTile extends StatelessWidget {
+class TorrentTile extends StatelessWidget {
 
-  final Task task;
-  TaskTile(this.task);
+  final Torrent torrent;
+  TorrentTile(this.torrent);
 
-  _stopTask() async{
+  _stopTorrent() async{
     await http.post(Uri.parse(HomeScreen.url),
         headers: {
           'authorization':Constants.getBasicAuth(),
         },
         body: {
           'mode': Constants.statusMap[Status.stopped],
-          'hash': '${task.hash}',
+          'hash': '${torrent.hash}',
         },
         encoding: Encoding.getByName("utf-8"));
   }
 
-  _removeTask() async{
-    Fluttertoast.showToast(msg: 'Removing Task');
+  _removeTorrent() async{
+    Fluttertoast.showToast(msg: 'Removing Torrent');
     await http.post(Uri.parse(HomeScreen.url),
         headers: {
           'authorization':Constants.getBasicAuth(),
         },
         body: {
           'mode': 'remove',
-          'hash': '${task.hash}',
+          'hash': '${torrent.hash}',
         },
         encoding: Encoding.getByName("utf-8"));
   }
 
-  _toggleTaskStatus() async{
-    Status toggleStatus = task.isOpen==0?
-        Status.downloading:task.getState==0?(Status.downloading):Status.paused;
+  _toggleTorrentStatus() async{
+    Status toggleStatus = torrent.isOpen==0?
+        Status.downloading:torrent.getState==0?(Status.downloading):Status.paused;
 
     var response = await http.post(Uri.parse(HomeScreen.url),
         headers: {
@@ -49,13 +49,13 @@ class TaskTile extends StatelessWidget {
         },
         body: {
           'mode': Constants.statusMap[toggleStatus],
-          'hash': '${task.hash}',
+          'hash': '${torrent.hash}',
         },
         encoding: Encoding.getByName("utf-8"));
   }
 
   Color _getStatusColor(){
-    switch(task.status){
+    switch(torrent.status){
       case Status.downloading:
         return Constants.kBlue;
       case Status.paused:
@@ -69,8 +69,8 @@ class TaskTile extends StatelessWidget {
     }
   }
 
-  IconData _getTaskIconData(){
-      return task.isOpen==0?Icons.play_circle_filled:task.getState==0?
+  IconData _getTorrentIconData(){
+      return torrent.isOpen==0?Icons.play_circle_filled:torrent.getState==0?
           (Icons.play_circle_filled):Icons.pause_circle_filled;
   }
 
@@ -82,7 +82,7 @@ class TaskTile extends StatelessWidget {
         showModalBottomSheet(
             context: context,
             builder: (BuildContext buildContext){
-              return TaskDetailSheet(task);
+              return TorrentDetailSheet(torrent);
             },
         );
       },
@@ -97,7 +97,7 @@ class TaskTile extends StatelessWidget {
                 Text('Remove'),
               ],
             ),
-            onTap: _removeTask,
+            onTap: _removeTorrent,
           ),
           SlideAction(
             child: Column(
@@ -107,7 +107,7 @@ class TaskTile extends StatelessWidget {
                 Flexible(child: Text('Stop')),
               ],
             ),
-            onTap: _stopTask
+            onTap: _stopTorrent
           )
         ],
         child: Padding(
@@ -132,13 +132,13 @@ class TaskTile extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Flexible(child: Text(task.name,style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),)),
+                            Flexible(child: Text(torrent.name,style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),)),
                             Flexible(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Text(filesize(task.size),style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,),),
-                                  Text(task.ratio>0?'R: ${task.ratio.toString()[0]}.${task.ratio.toString().substring(1)}': 'R: 0.000',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.grey[700]),),
+                                  Text(filesize(torrent.size),style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,),),
+                                  Text(torrent.ratio>0?'R: ${torrent.ratio.toString()[0]}.${torrent.ratio.toString().substring(1)}': 'R: 0.000',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.grey[700]),),
                                 ],
                               ),
                             ),
@@ -149,13 +149,13 @@ class TaskTile extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Text('${task.downloadedData}${task.dlSpeed==0?'':' | '+task.getEta}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[800]),),
-                                      Text('↓ ${filesize(task.dlSpeed.toString())+'/s'} | ↑ ${filesize(task.ulSpeed.toString())+'/s'}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[700]),),
+                                      Text('${torrent.downloadedData}${torrent.dlSpeed==0?'':' | '+torrent.getEta}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[800]),),
+                                      Text('↓ ${filesize(torrent.dlSpeed.toString())+'/s'} | ↑ ${filesize(torrent.ulSpeed.toString())+'/s'}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[700]),),
                                     ],
                                   ),
                                   SizedBox(height: 4,),
                                   LinearProgressIndicator(
-                                    value: task.percentageDownload/100,
+                                    value: torrent.percentageDownload/100,
                                     valueColor: AlwaysStoppedAnimation<Color>(statusColor),
                                     backgroundColor: Constants.kLightGrey
                                   ),
@@ -172,12 +172,12 @@ class TaskTile extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Text(task.getPercentageDownload.toString()+'%',style: TextStyle(color: statusColor,fontWeight: FontWeight.w600),),
+                      Text(torrent.getPercentageDownload.toString()+'%',style: TextStyle(color: statusColor,fontWeight: FontWeight.w600),),
                       IconButton(
                         color: statusColor,
                         iconSize: 40,
-                        icon: Icon(_getTaskIconData()),
-                        onPressed: _toggleTaskStatus,
+                        icon: Icon(_getTorrentIconData()),
+                        onPressed: _toggleTorrentStatus,
                       ),
                     ],
                   ),

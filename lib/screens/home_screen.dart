@@ -1,15 +1,13 @@
+import '../constants.dart' as Constants;
+import 'package:http/http.dart' as http;
 import 'dart:async';
-
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/http.dart' as http;
-import 'package:rutorrentflutter/components/task_tile.dart';
+import 'package:rutorrentflutter/components/torrent_tile.dart';
 import 'dart:convert';
-import 'package:rutorrentflutter/models/task.dart';
-import '../constants.dart' as Constants;
+import 'package:rutorrentflutter/models/torrent.dart';
 
 class HomeScreen extends StatefulWidget {
   static String url = 'https://fremicro081.xirvik.com/rtorrent/plugins/httprpc/action.php';
@@ -21,11 +19,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Constants.Sort sortPreference;
 
-  Stream<List<Task>> _initTasksData() async* {
+  Stream<List<Torrent>> _initTorrentsData() async* {
     while(true) {
       await Future.delayed(Duration(seconds: 1),(){
       });
-      List<Task> tasksList = [];
+      List<Torrent> torrentsList = [];
       var response = await http.post(Uri.parse(HomeScreen.url),
           headers: {
             'authorization':Constants.getBasicAuth(),
@@ -35,42 +33,42 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           encoding: Encoding.getByName("utf-8"));
 
-      var tasksPath = jsonDecode(response.body)['t'];
-      for (var hashKey in tasksPath.keys) {
-        var taskObject = tasksPath[hashKey];
-        Task task = Task(hashKey); // new task created
-        task.name = taskObject[4];
-        task.size = int.parse(taskObject[5]);
-        task.savePath = taskObject[25];
-        task.remainingContent = filesize(taskObject[19]);
-        task.completedChunks = int.parse(taskObject[6]);
-        task.totalChunks = int.parse(taskObject[7]);
-        task.sizeOfChunk = int.parse(taskObject[13]);
-        task.torrentAdded = int.parse(taskObject[21]);
-        task.torrentCreated = int.parse(taskObject[26]);
-        task.seedsActual = int.parse(taskObject[18]);
-        task.peersActual = int.parse(taskObject[15]);
-        task.ulSpeed = int.parse(taskObject[11]);
-        task.dlSpeed = int.parse(taskObject[12]);
-        task.isOpen = int.parse(taskObject[0]);
-        task.getState = int.parse(taskObject[3]);
-        task.msg = taskObject[29];
-        task.downloadedData = filesize(taskObject[8]);
-        task.ratio = int.parse(taskObject[10]);
+      var torrentsPath = jsonDecode(response.body)['t'];
+      for (var hashKey in torrentsPath.keys) {
+        var torrentObject = torrentsPath[hashKey];
+        Torrent torrent = Torrent(hashKey); // new torrent created
+        torrent.name = torrentObject[4];
+        torrent.size = int.parse(torrentObject[5]);
+        torrent.savePath = torrentObject[25];
+        torrent.remainingContent = filesize(torrentObject[19]);
+        torrent.completedChunks = int.parse(torrentObject[6]);
+        torrent.totalChunks = int.parse(torrentObject[7]);
+        torrent.sizeOfChunk = int.parse(torrentObject[13]);
+        torrent.torrentAdded = int.parse(torrentObject[21]);
+        torrent.torrentCreated = int.parse(torrentObject[26]);
+        torrent.seedsActual = int.parse(torrentObject[18]);
+        torrent.peersActual = int.parse(torrentObject[15]);
+        torrent.ulSpeed = int.parse(torrentObject[11]);
+        torrent.dlSpeed = int.parse(torrentObject[12]);
+        torrent.isOpen = int.parse(torrentObject[0]);
+        torrent.getState = int.parse(torrentObject[3]);
+        torrent.msg = torrentObject[29];
+        torrent.downloadedData = filesize(torrentObject[8]);
+        torrent.ratio = int.parse(torrentObject[10]);
 
-        task.eta = task.getEta;
-        task.percentageDownload= task.getPercentageDownload;
-        task.status = task.getTaskStatus;
-        tasksList.add(task);
+        torrent.eta = torrent.getEta;
+        torrent.percentageDownload= torrent.getPercentageDownload;
+        torrent.status = torrent.getTorrentStatus;
+        torrentsList.add(torrent);
       }
-      yield tasksList;
+      yield torrentsList;
     }
   }
 
   @override
   void initState() {
     super.initState();
-    _initTasksData();
+    _initTorrentsData();
   }
 
   @override
@@ -82,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(FontAwesomeIcons.solidMoon),
             onPressed: (){
               Fluttertoast.showToast(msg: "Night mode currently unavailable");
-              _initTasksData();
+              _initTorrentsData();
             },
           ),
         ],
@@ -149,16 +147,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               child: StreamBuilder(
-                stream: _initTasksData(),
+                stream: _initTorrentsData(),
                 builder: (BuildContext context, AsyncSnapshot snapshot){
                   if(!snapshot.hasData){
-                    return Center(child: Text('No Tasks to Show'),);
+                    return Center(child: Text('No Torrents to Show'),);
                   }
-                  List<Task> sortedList = _sortList(snapshot.data, sortPreference);
+                  List<Torrent> sortedList = _sortList(snapshot.data, sortPreference);
                   return ListView.builder(
                     itemCount: sortedList.length,
                     itemBuilder: (BuildContext context,int index){
-                      return TaskTile(sortedList[index]);
+                      return TorrentTile(sortedList[index]);
                     },
                   );
                 },
@@ -170,31 +168,31 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  List<Task> _sortList(List<Task> tasksList, Constants.Sort sort,){
+  List<Torrent> _sortList(List<Torrent> torrentsList, Constants.Sort sort,){
     switch(sort){
       case Constants.Sort.name:
-        tasksList.sort((a,b)=>a.name.compareTo(b.name));
-        return tasksList;
+        torrentsList.sort((a,b)=>a.name.compareTo(b.name));
+        return torrentsList;
       case Constants.Sort.dateAdded:
-        tasksList.sort((a,b)=>a.torrentAdded.compareTo(b.torrentAdded));
-        return tasksList;
+        torrentsList.sort((a,b)=>a.torrentAdded.compareTo(b.torrentAdded));
+        return torrentsList;
       case Constants.Sort.percentDownloaded:
-        tasksList.sort((a,b)=>a.percentageDownload.compareTo(b.percentageDownload));
-        return tasksList;
+        torrentsList.sort((a,b)=>a.percentageDownload.compareTo(b.percentageDownload));
+        return torrentsList;
       case Constants.Sort.downloadSpeed:
-        tasksList.sort((a,b)=>a.dlSpeed.compareTo(b.dlSpeed));
-        return tasksList;
+        torrentsList.sort((a,b)=>a.dlSpeed.compareTo(b.dlSpeed));
+        return torrentsList;
       case Constants.Sort.uploadSpeed:
-        tasksList.sort((a,b)=>a.ulSpeed.compareTo(b.ulSpeed));
-        return tasksList;
+        torrentsList.sort((a,b)=>a.ulSpeed.compareTo(b.ulSpeed));
+        return torrentsList;
       case Constants.Sort.ratio:
-        tasksList.sort((a,b)=>a.ratio.compareTo(b.ratio));
-        return tasksList;
+        torrentsList.sort((a,b)=>a.ratio.compareTo(b.ratio));
+        return torrentsList;
       case Constants.Sort.size:
-        tasksList.sort((a,b)=>a.size.compareTo(b.size));
-        return tasksList;
+        torrentsList.sort((a,b)=>a.size.compareTo(b.size));
+        return torrentsList;
       default:
-        return tasksList;
+        return torrentsList;
     }
   }
 

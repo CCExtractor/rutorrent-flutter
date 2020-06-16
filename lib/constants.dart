@@ -4,7 +4,7 @@ library constants;
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'models/task.dart';
+import 'models/torrent.dart';
 
 const Map<Status,String> statusMap = {
   Status.downloading : 'start',
@@ -41,8 +41,8 @@ enum Sort{
 
 
 String getBasicAuth(){
-  String username = 'ritik';
-  String password = 'shiet3Weec';
+  String username = 'username';
+  String password = '*****';
   String basicAuth =
       'Basic ' + base64Encode(utf8.encode('$username:$password'));
   return basicAuth;

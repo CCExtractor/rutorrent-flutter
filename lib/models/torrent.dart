@@ -6,15 +6,15 @@ enum Status {
   errors,
 }
 
-class Task{
+class Torrent{
 
-  Task(this.hash);
+  Torrent(this.hash);
 
-  String hash; // hash value is a unique value for a torrent task
+  String hash; // hash value is a unique value for a torrent torrent
   String name;
   Status status;
   int size; // size in bytes
-  String savePath; // directory where task is saved
+  String savePath; // directory where torrent is saved
   String remainingContent;
   String eta;
   int percentageDownload;
@@ -33,7 +33,7 @@ class Task{
   String downloadedData;// in bytes
   int ratio;
 
-  Status get getTaskStatus {
+  Status get getTorrentStatus {
     Status status;
     status = isOpen==0?Status.stopped:getState==0?(Status.paused):Status.downloading;
     if(msg.length>0 && msg!='Tracker: [Tried all trackers.]')
@@ -43,10 +43,10 @@ class Task{
     return status;
   }
 
-  /// returns percentage task downloaded using file chunks
+  /// returns percentage torrent downloaded using file chunks
   int get getPercentageDownload => (completedChunks/totalChunks*100).round();
 
-  /// returns expected time remaining of downloading task in hrs and min
+  /// returns expected time remaining of downloading torrent in hrs and min
   String get getEta {
     if(dlSpeed==0) //check download speed to prevent "Infinity or div by 0"
       return '';

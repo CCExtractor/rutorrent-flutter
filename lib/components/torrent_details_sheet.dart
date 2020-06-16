@@ -1,15 +1,15 @@
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
-import 'package:rutorrentflutter/models/task.dart';
+import 'package:rutorrentflutter/models/torrent.dart';
 
-class TaskDetailSheet extends StatefulWidget {
-  final Task task;
-  TaskDetailSheet(this.task);
+class TorrentDetailSheet extends StatefulWidget {
+  final Torrent torrent;
+  TorrentDetailSheet(this.torrent);
   @override
-  _TaskDetailSheetState createState() => _TaskDetailSheetState();
+  _TorrentDetailSheetState createState() => _TorrentDetailSheetState();
 }
 
-class _TaskDetailSheetState extends State<TaskDetailSheet> {
+class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +19,20 @@ class _TaskDetailSheetState extends State<TaskDetailSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(widget.task.name),
+              Text(widget.torrent.name),
               SizedBox(width: 20,),
-              Text(filesize(widget.task.size)),
+              Text(filesize(widget.torrent.size)),
             ],
           ),
           Text('Status: Downloading'),
-          Text('Download Speed: ${filesize(widget.task.dlSpeed)}'),
-          Text('Upload Speed: ${filesize(widget.task.dlSpeed)}'),
-          Text('Downloaded Data: ${widget.task.downloadedData}'),
-          Text('Uploaded Data: ${widget.task.downloadedData}'),
+          Text('Download Speed: ${filesize(widget.torrent.dlSpeed)}'),
+          Text('Upload Speed: ${filesize(widget.torrent.dlSpeed)}'),
+          Text('Downloaded Data: ${widget.torrent.downloadedData}'),
+          Text('Uploaded Data: ${widget.torrent.downloadedData}'),
           Text('Ratio: 1.892'),
           Text('Data Added: 16.06.2020 06:28:20'),
           Text('Data Created: 16.06.2020 06:28:20'),
-          Text('Uploaded Data: ${widget.task.downloadedData}'),
+          Text('Uploaded Data: ${widget.torrent.downloadedData}'),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
