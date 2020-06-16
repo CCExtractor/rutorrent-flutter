@@ -41,8 +41,8 @@ enum Sort{
 
 
 String getBasicAuth(){
-  String username = 'username';
-  String password = '*****';
+  String username = 'ritik';
+  String password = 'shiet3Weec';
   String basicAuth =
       'Basic ' + base64Encode(utf8.encode('$username:$password'));
   return basicAuth;

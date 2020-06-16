@@ -3,6 +3,7 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rutorrentflutter/components/task_details_sheet.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
 import 'package:rutorrentflutter/models/task.dart';
 import 'package:rutorrentflutter/screens/home_screen.dart';
@@ -76,103 +77,113 @@ class TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color statusColor = _getStatusColor();
-    return Slidable(
-      actionPane: SlidableScrollActionPane(),
-      actions: <Widget>[
-        SlideAction(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(Icons.clear),
-              Text('Remove'),
-            ],
+    return GestureDetector(
+      onTap: (){
+        showModalBottomSheet(
+            context: context,
+            builder: (BuildContext buildContext){
+              return TaskDetailSheet(task);
+            },
+        );
+      },
+      child: Slidable(
+        actionPane: SlidableScrollActionPane(),
+        actions: <Widget>[
+          SlideAction(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.clear),
+                Text('Remove'),
+              ],
+            ),
+            onTap: _removeTask,
           ),
-          onTap: _removeTask,
-        ),
-        SlideAction(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(Icons.stop),
-              Flexible(child: Text('Stop')),
-            ],
-          ),
-          onTap: _stopTask
-        )
-      ],
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 10),
-        child: Container(
-          width: double.infinity,
-          height: 80,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                flex: 5,
-                child: Row(
-                  children: <Widget>[
-                    VerticalDivider(
-                      thickness: 5,
-                      color: statusColor,
-                    ),
-                    SizedBox(width: 10,),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Flexible(child: Text(task.name,style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),)),
-                          Flexible(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(filesize(task.size),style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,),),
-                                Text(task.ratio>0?'R: ${task.ratio.toString()[0]}.${task.ratio.toString().substring(1)}': 'R: 0.000',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.grey[700]),),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: 8.0),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text('${task.downloadedData}${task.dlSpeed==0?'':' | '+task.getEta}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[800]),),
-                                    Text('↓ ${filesize(task.dlSpeed.toString())+'/s'} | ↑ ${filesize(task.ulSpeed.toString())+'/s'}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[700]),),
-                                  ],
-                                ),
-                                SizedBox(height: 4,),
-                                LinearProgressIndicator(
-                                  value: task.percentageDownload/100,
-                                  valueColor: AlwaysStoppedAnimation<Color>(statusColor),
-                                  backgroundColor: Constants.kLightGrey
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
+          SlideAction(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(Icons.stop),
+                Flexible(child: Text('Stop')),
+              ],
+            ),
+            onTap: _stopTask
+          )
+        ],
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Container(
+            width: double.infinity,
+            height: 80,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Expanded(
+                  flex: 5,
+                  child: Row(
+                    children: <Widget>[
+                      VerticalDivider(
+                        thickness: 5,
+                        color: statusColor,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 10,),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Flexible(child: Text(task.name,style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),)),
+                            Flexible(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(filesize(task.size),style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,),),
+                                  Text(task.ratio>0?'R: ${task.ratio.toString()[0]}.${task.ratio.toString().substring(1)}': 'R: 0.000',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.grey[700]),),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 8.0),
+                              child: Column(
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text('${task.downloadedData}${task.dlSpeed==0?'':' | '+task.getEta}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[800]),),
+                                      Text('↓ ${filesize(task.dlSpeed.toString())+'/s'} | ↑ ${filesize(task.ulSpeed.toString())+'/s'}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[700]),),
+                                    ],
+                                  ),
+                                  SizedBox(height: 4,),
+                                  LinearProgressIndicator(
+                                    value: task.percentageDownload/100,
+                                    valueColor: AlwaysStoppedAnimation<Color>(statusColor),
+                                    backgroundColor: Constants.kLightGrey
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Text(task.getPercentageDownload.toString()+'%',style: TextStyle(color: statusColor,fontWeight: FontWeight.w600),),
-                    IconButton(
-                      color: statusColor,
-                      iconSize: 40,
-                      icon: Icon(_getTaskIconData()),
-                      onPressed: _toggleTaskStatus,
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Text(task.getPercentageDownload.toString()+'%',style: TextStyle(color: statusColor,fontWeight: FontWeight.w600),),
+                      IconButton(
+                        color: statusColor,
+                        iconSize: 40,
+                        icon: Icon(_getTaskIconData()),
+                        onPressed: _toggleTaskStatus,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -100,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: Icon(
                         Icons.search,
-                        color: Constants.kDarkGrey,
+                        color: Colors.grey[600],
                       ),
                     ),
                     Expanded(
@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     PopupMenuButton<Constants.Sort>(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.sort,color: Constants.kDarkGrey,),
+                        child: Icon(FontAwesomeIcons.slidersH,color: Colors.grey[700],),
                       ),
                       onSelected: (selectedChoice){
                         setState(() {
