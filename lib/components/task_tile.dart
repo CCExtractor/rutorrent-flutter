@@ -88,8 +88,8 @@ class TaskTile extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(task.size,style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,),),
-                              Text('R: 1.083',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.grey[700]),),
+                              Text(filesize(task.size),style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,),),
+                              Text(task.ratio>0?'R: ${task.ratio.toString()[0]}.${task.ratio.toString().substring(1)}': 'R: 0.000',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.grey[700]),),
                             ],
                           ),
                         ),

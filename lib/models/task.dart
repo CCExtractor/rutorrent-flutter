@@ -13,7 +13,7 @@ class Task{
   String hash; // hash value is a unique value for a torrent task
   String name;
   Status status;
-  String size; // size in appropriate unit
+  int size; // size in bytes
   String savePath; // directory where task is saved
   String remainingContent;
   String eta;
@@ -31,6 +31,7 @@ class Task{
   int getState;
   String msg;
   String downloadedData;// in bytes
+  int ratio;
 
   Status get getTaskStatus {
     Status status;
