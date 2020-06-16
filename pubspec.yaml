@@ -17,6 +17,7 @@ dependencies:
   http: ^0.12.1
   shared_preferences: ^0.5.7+3
   filesize: ^1.0.4
+  flutter_slidable: ^0.5.4
 
 dev_dependencies:
   flutter_test:
