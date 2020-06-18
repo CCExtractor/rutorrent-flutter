@@ -17,7 +17,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  List<Torrent> sortedList = [];
   Constants.Sort sortPreference;
+  TextEditingController searchTextController  = TextEditingController();
+  bool isSearching = false;
 
   Stream<List<Torrent>> _initTorrentsData() async* {
     while(true) {
@@ -80,7 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(FontAwesomeIcons.solidMoon),
             onPressed: (){
               Fluttertoast.showToast(msg: "Night mode currently unavailable");
-              _initTorrentsData();
             },
           ),
         ],
@@ -103,6 +105,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        onChanged: (value){
+                          setState(() {
+                            isSearching = searchTextController.text.isNotEmpty;
+                          });
+                        },
+                        controller: searchTextController,
                         cursorColor: Colors.black,
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
@@ -115,6 +123,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             hintText: 'Search your item by name'),
                       ),
                     ),
+                    isSearching?
+                    IconButton(
+                      icon: Icon(Icons.clear),
+                      onPressed: (){
+                        searchTextController.clear();
+                        setState(() {
+                          isSearching=false;
+                        });
+                      },
+                    ):
                     PopupMenuButton<Constants.Sort>(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -152,7 +170,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   if(!snapshot.hasData){
                     return Center(child: Text('No Torrents to Show'),);
                   }
-                  List<Torrent> sortedList = _sortList(snapshot.data, sortPreference);
+                  sortedList = _sortList(snapshot.data, sortPreference);
+                  if(searchTextController.text.isNotEmpty) {
+                    sortedList = sortedList.where((element) =>
+                        element.name.toLowerCase().contains(searchTextController.text.toLowerCase()))
+                        .toList();
+                  }
                   return ListView.builder(
                     itemCount: sortedList.length,
                     itemBuilder: (BuildContext context,int index){

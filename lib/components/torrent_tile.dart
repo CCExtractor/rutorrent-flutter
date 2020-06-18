@@ -138,7 +138,7 @@ class TorrentTile extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(filesize(torrent.size),style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,),),
-                                  Text(torrent.ratio>0?'R: ${torrent.ratio.toString()[0]}.${torrent.ratio.toString().substring(1)}': 'R: 0.000',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.grey[700]),),
+                                  Text(torrent.ratio==0?'R: 0.000':'R: ${(torrent.ratio/1000).toString()}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 12,color: Colors.grey[700]),),
                                 ],
                               ),
                             ),
