@@ -47,4 +47,3 @@ String getBasicAuth(){
       'Basic ' + base64Encode(utf8.encode('$username:$password'));
   return basicAuth;
 }
-

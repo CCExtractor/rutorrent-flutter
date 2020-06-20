@@ -1,3 +1,5 @@
+import 'package:rutorrentflutter/components/torrent_add_dialog.dart';
+
 import '../constants.dart' as Constants;
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -17,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  http.Client client = http.Client();
   List<Torrent> sortedList = [];
   Constants.Sort sortPreference;
   TextEditingController searchTextController  = TextEditingController();
@@ -27,14 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
       await Future.delayed(Duration(seconds: 1),(){
       });
       List<Torrent> torrentsList = [];
-      var response = await http.post(Uri.parse(HomeScreen.url),
+      var response = await client.post(Uri.parse(HomeScreen.url),
           headers: {
             'authorization':Constants.getBasicAuth(),
           },
           body: {
             'mode': 'list',
-          },
-          encoding: Encoding.getByName("utf-8"));
+          });
 
       var torrentsPath = jsonDecode(response.body)['t'];
       for (var hashKey in torrentsPath.keys) {
@@ -80,6 +82,12 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         actions: <Widget>[
           IconButton(
+            onPressed: (){
+              showDialog(context: context,builder: (context)=> TorrentAddDialog());
+            },
+            icon: Icon(Icons.add),
+          ),
+          IconButton(
             icon: Icon(FontAwesomeIcons.solidMoon),
             onPressed: (){
               Fluttertoast.showToast(msg: "Night mode currently unavailable");
@@ -105,6 +113,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        enableInteractiveSelection: false,
+                        autofocus: false,
                         onChanged: (value){
                           setState(() {
                             isSearching = searchTextController.text.isNotEmpty;
@@ -219,5 +229,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    client.close();
+  }
 }
-

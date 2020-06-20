@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -22,8 +21,7 @@ class TorrentTile extends StatelessWidget {
         body: {
           'mode': Constants.statusMap[Status.stopped],
           'hash': '${torrent.hash}',
-        },
-        encoding: Encoding.getByName("utf-8"));
+        });
   }
 
   _removeTorrent() async{
@@ -35,23 +33,21 @@ class TorrentTile extends StatelessWidget {
         body: {
           'mode': 'remove',
           'hash': '${torrent.hash}',
-        },
-        encoding: Encoding.getByName("utf-8"));
+        });
   }
 
   _toggleTorrentStatus() async{
     Status toggleStatus = torrent.isOpen==0?
         Status.downloading:torrent.getState==0?(Status.downloading):Status.paused;
 
-    var response = await http.post(Uri.parse(HomeScreen.url),
+    await http.post(Uri.parse(HomeScreen.url),
         headers: {
           'authorization':Constants.getBasicAuth(),
         },
         body: {
           'mode': Constants.statusMap[toggleStatus],
           'hash': '${torrent.hash}',
-        },
-        encoding: Encoding.getByName("utf-8"));
+        });
   }
 
   Color _getStatusColor(){
