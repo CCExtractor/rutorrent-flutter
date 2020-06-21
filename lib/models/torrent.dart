@@ -27,6 +27,7 @@ class Torrent{
   int peersActual;
   int dlSpeed; // bytes per second
   int ulSpeed;// bytes per second
+  int isActive;
   int isOpen;
   int getState;
   String msg;
@@ -58,4 +59,5 @@ class Torrent{
     eta = eta + '$min min';
     return eta;
   }
+
 }

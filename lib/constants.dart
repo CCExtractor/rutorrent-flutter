@@ -39,6 +39,14 @@ enum Sort{
   size,
 }
 
+enum Filter{
+  All,
+  Downloading,
+  Completed,
+  Active,
+  Inactive,
+  Error,
+}
 
 String getBasicAuth(){
   String username = 'username';

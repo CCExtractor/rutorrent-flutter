@@ -1,3 +1,4 @@
+import 'package:rutorrentflutter/components/filter_tile.dart';
 import 'package:rutorrentflutter/components/torrent_add_dialog.dart';
 
 import '../constants.dart' as Constants;
@@ -24,6 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Constants.Sort sortPreference;
   TextEditingController searchTextController  = TextEditingController();
   bool isSearching = false;
+  Constants.Filter selectedFilter = Constants.Filter.All;
 
   Stream<List<Torrent>> _initTorrentsData() async* {
     while(true) {
@@ -55,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
         torrent.peersActual = int.parse(torrentObject[15]);
         torrent.ulSpeed = int.parse(torrentObject[11]);
         torrent.dlSpeed = int.parse(torrentObject[12]);
+        torrent.isActive = int.parse(torrentObject[28]);
         torrent.isOpen = int.parse(torrentObject[0]);
         torrent.getState = int.parse(torrentObject[3]);
         torrent.msg = torrentObject[29];
@@ -95,7 +98,96 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            DrawerHeader(
+              curve: Curves.bounceIn,
+              child: Image(
+                image: AssetImage('assets/images/logo-name-grp.png'),
+              ),
+            ),
+            Center(child: Text('Disk Space (33.4GB/ 500 GB) 6.68%',style: TextStyle(fontSize: 16,color: Colors.grey[700]),)),
+            Container(
+              height: 20,
+              child: LinearProgressIndicator(
+                value: 0.66,
+                backgroundColor: Constants.kLightGrey,
+                valueColor: AlwaysStoppedAnimation<Color>(Constants.kGreen),
+              ),
+            ),
+            ExpansionTile(
+              initiallyExpanded: true,
+              title: Text('Filters'),
+              children: <Widget>[
+                FilterTile(
+                  icon: Icons.all_inclusive,
+                  isSelected: selectedFilter==Constants.Filter.All,
+                  filter: Constants.Filter.All,
+                  onSelection: (){
+                    setState(() {
+                      selectedFilter = Constants.Filter.All;
+                    });
+                  },
+                ),
+                FilterTile(
+                  icon: FontAwesomeIcons.arrowAltCircleDown,
+                  isSelected: selectedFilter==Constants.Filter.Downloading,
+                  filter: Constants.Filter.Downloading,
+                  onSelection: (){
+                    setState(() {
+                      selectedFilter = Constants.Filter.Downloading;
+                    });
+                  },
+                ),
+                FilterTile(
+                  icon: Icons.done_outline,
+                  isSelected: selectedFilter==Constants.Filter.Completed,
+                  filter: Constants.Filter.Completed,
+                  onSelection: (){
+                    setState(() {
+                      selectedFilter = Constants.Filter.Completed;
+                    });
+                  },
+                ),
+                FilterTile(
+                  icon: Icons.open_with,
+                  isSelected: selectedFilter==Constants.Filter.Active,
+                  filter: Constants.Filter.Active,
+                  onSelection: (){
+                    setState(() {
+                      selectedFilter = Constants.Filter.Active;
+                    });
+                  },
+                ),
+                FilterTile(
+                  icon: Icons.not_interested,
+                  isSelected: selectedFilter==Constants.Filter.Inactive,
+                  filter: Constants.Filter.Inactive,
+                  onSelection: (){
+                    setState(() {
+                      selectedFilter = Constants.Filter.Inactive;
+                    });
+                  },
+                ),
+                FilterTile(
+                  icon: Icons.error,
+                  isSelected: selectedFilter==Constants.Filter.Error,
+                  filter: Constants.Filter.Error,
+                  onSelection: (){
+                    setState(() {
+                      selectedFilter = Constants.Filter.Error;
+                    });
+                  },
+                ),
+              ],
+            ),
+            Divider(),
+            ListTile(title: Text('Settings'),),
+            ListTile(title: Text('About'),),
+          ],
+        ),
+      ),
       body: Container(
         child: Column(
           children: <Widget>[
@@ -181,11 +273,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Center(child: Text('No Torrents to Show'),);
                   }
                   sortedList = _sortList(snapshot.data, sortPreference);
+
+                  //filtering list on basis of selected filter
+                  sortedList = _filterList(sortedList, selectedFilter);
+                  print(sortedList.length);
+
                   if(searchTextController.text.isNotEmpty) {
+                    //showing list on basis of searched text
                     sortedList = sortedList.where((element) =>
                         element.name.toLowerCase().contains(searchTextController.text.toLowerCase()))
                         .toList();
                   }
+
                   return ListView.builder(
                     itemCount: sortedList.length,
                     itemBuilder: (BuildContext context,int index){
@@ -229,9 +328,29 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  List<Torrent> _filterList(List<Torrent> torrentsList, Constants.Filter filter){
+    switch(filter){
+      case Constants.Filter.All:
+        return torrentsList;
+      case Constants.Filter.Downloading:
+        return torrentsList.where((element) => element.status==Status.downloading).toList();
+      case Constants.Filter.Completed:
+        return torrentsList.where((element) => element.status==Status.completed).toList();
+      case Constants.Filter.Active:
+        return torrentsList.where((element) => element.isActive==1 ).toList();
+      case Constants.Filter.Inactive:
+        return torrentsList.where((element) => element.isActive==0).toList();
+      case Constants.Filter.Error:
+        return torrentsList.where((element) => element.msg.length>0 && element.msg!='Tracker: [Tried all trackers.]').toList();
+      default:
+        return torrentsList;
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
     client.close();
   }
 }
+
