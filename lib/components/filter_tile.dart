@@ -23,7 +23,6 @@ class FilterTile extends StatelessWidget {
           Navigator.pop(context);
         },
       ),
-    )
-    ;
+    );
   }
 }

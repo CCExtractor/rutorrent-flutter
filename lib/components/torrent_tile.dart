@@ -2,19 +2,21 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/torrent_details_sheet.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
 import 'package:rutorrentflutter/models/torrent.dart';
-import 'package:rutorrentflutter/screens/home_screen.dart';
 import 'package:http/http.dart' as http;
+
+import '../api_conf.dart';
 
 class TorrentTile extends StatelessWidget {
 
   final Torrent torrent;
   TorrentTile(this.torrent);
 
-  _stopTorrent() async{
-    await http.post(Uri.parse(HomeScreen.url),
+  _stopTorrent(BuildContext context) async{
+    await http.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
         headers: {
           'authorization':Constants.getBasicAuth(),
         },
@@ -24,9 +26,9 @@ class TorrentTile extends StatelessWidget {
         });
   }
 
-  _removeTorrent() async{
+  _removeTorrent(BuildContext context) async{
     Fluttertoast.showToast(msg: 'Removing Torrent');
-    await http.post(Uri.parse(HomeScreen.url),
+    await http.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
         headers: {
           'authorization':Constants.getBasicAuth(),
         },
@@ -36,11 +38,11 @@ class TorrentTile extends StatelessWidget {
         });
   }
 
-  _toggleTorrentStatus() async{
+  _toggleTorrentStatus(BuildContext context) async{
     Status toggleStatus = torrent.isOpen==0?
         Status.downloading:torrent.getState==0?(Status.downloading):Status.paused;
 
-    await http.post(Uri.parse(HomeScreen.url),
+    await http.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
         headers: {
           'authorization':Constants.getBasicAuth(),
         },
@@ -93,7 +95,7 @@ class TorrentTile extends StatelessWidget {
                 Text('Remove'),
               ],
             ),
-            onTap: _removeTorrent,
+            onTap: ()=>_removeTorrent(context),
           ),
           SlideAction(
             child: Column(
@@ -103,7 +105,7 @@ class TorrentTile extends StatelessWidget {
                 Flexible(child: Text('Stop')),
               ],
             ),
-            onTap: _stopTorrent
+            onTap: ()=>_stopTorrent(context)
           )
         ],
         child: Padding(
@@ -173,7 +175,9 @@ class TorrentTile extends StatelessWidget {
                         color: statusColor,
                         iconSize: 40,
                         icon: Icon(_getTorrentIconData()),
-                        onPressed: _toggleTorrentStatus,
+                        onPressed: (){
+                          _toggleTorrentStatus(context);
+                        },
                       ),
                     ],
                   ),

@@ -1,6 +1,7 @@
+import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/filter_tile.dart';
 import 'package:rutorrentflutter/components/torrent_add_dialog.dart';
-
+import '../api_conf.dart';
 import '../constants.dart' as Constants;
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -13,7 +14,10 @@ import 'dart:convert';
 import 'package:rutorrentflutter/models/torrent.dart';
 
 class HomeScreen extends StatefulWidget {
-  static String url = 'https://fremicro081.xirvik.com/rtorrent/plugins/httprpc/action.php';
+  final Api api;
+  HomeScreen(this.api);
+
+  //static String url = 'https://fremicro081.xirvik.com/rtorrent/plugins/httprpc/action.php';
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -28,13 +32,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Constants.Filter selectedFilter = Constants.Filter.All;
 
   Stream<List<Torrent>> _initTorrentsData() async* {
+
     while(true) {
       await Future.delayed(Duration(seconds: 1),(){
       });
       List<Torrent> torrentsList = [];
-      var response = await client.post(Uri.parse(HomeScreen.url),
+      var response = await client.post(Uri.parse(widget.api.httprpcPluginUrl),
           headers: {
-            'authorization':Constants.getBasicAuth(),
+              'authorization':Constants.getBasicAuth(),
           },
           body: {
             'mode': 'list',
@@ -81,221 +86,235 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-            onPressed: (){
-              showDialog(context: context,builder: (context)=> TorrentAddDialog());
-            },
-            icon: Icon(Icons.add),
-          ),
-          IconButton(
-            icon: Icon(FontAwesomeIcons.solidMoon),
-            onPressed: (){
-              Fluttertoast.showToast(msg: "Night mode currently unavailable");
-            },
-          ),
-        ],
-      ),
-      drawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            DrawerHeader(
-              curve: Curves.bounceIn,
-              child: Image(
-                image: AssetImage('assets/images/logo-name-grp.png'),
-              ),
+    return Provider<Api>(
+      create: (context)=>widget.api,
+      child: Scaffold(
+        appBar: AppBar(
+          actions: <Widget>[
+            IconButton(
+              onPressed: (){
+                showDialog(context: context,builder: (context)=> TorrentAddDialog(widget.api.addTorrentUrl));
+              },
+              icon: Icon(Icons.add),
             ),
-            Center(child: Text('Disk Space (33.4GB/ 500 GB) 6.68%',style: TextStyle(fontSize: 16,color: Colors.grey[700]),)),
-            Container(
-              height: 20,
-              child: LinearProgressIndicator(
-                value: 0.66,
-                backgroundColor: Constants.kLightGrey,
-                valueColor: AlwaysStoppedAnimation<Color>(Constants.kGreen),
-              ),
+            IconButton(
+              icon: Icon(FontAwesomeIcons.solidMoon),
+              onPressed: (){
+                Fluttertoast.showToast(msg: "Night mode currently unavailable");
+              },
             ),
-            ExpansionTile(
-              initiallyExpanded: true,
-              title: Text('Filters'),
-              children: <Widget>[
-                FilterTile(
-                  icon: Icons.all_inclusive,
-                  isSelected: selectedFilter==Constants.Filter.All,
-                  filter: Constants.Filter.All,
-                  onSelection: (){
-                    setState(() {
-                      selectedFilter = Constants.Filter.All;
-                    });
-                  },
-                ),
-                FilterTile(
-                  icon: FontAwesomeIcons.arrowAltCircleDown,
-                  isSelected: selectedFilter==Constants.Filter.Downloading,
-                  filter: Constants.Filter.Downloading,
-                  onSelection: (){
-                    setState(() {
-                      selectedFilter = Constants.Filter.Downloading;
-                    });
-                  },
-                ),
-                FilterTile(
-                  icon: Icons.done_outline,
-                  isSelected: selectedFilter==Constants.Filter.Completed,
-                  filter: Constants.Filter.Completed,
-                  onSelection: (){
-                    setState(() {
-                      selectedFilter = Constants.Filter.Completed;
-                    });
-                  },
-                ),
-                FilterTile(
-                  icon: Icons.open_with,
-                  isSelected: selectedFilter==Constants.Filter.Active,
-                  filter: Constants.Filter.Active,
-                  onSelection: (){
-                    setState(() {
-                      selectedFilter = Constants.Filter.Active;
-                    });
-                  },
-                ),
-                FilterTile(
-                  icon: Icons.not_interested,
-                  isSelected: selectedFilter==Constants.Filter.Inactive,
-                  filter: Constants.Filter.Inactive,
-                  onSelection: (){
-                    setState(() {
-                      selectedFilter = Constants.Filter.Inactive;
-                    });
-                  },
-                ),
-                FilterTile(
-                  icon: Icons.error,
-                  isSelected: selectedFilter==Constants.Filter.Error,
-                  filter: Constants.Filter.Error,
-                  onSelection: (){
-                    setState(() {
-                      selectedFilter = Constants.Filter.Error;
-                    });
-                  },
-                ),
-              ],
-            ),
-            Divider(),
-            ListTile(title: Text('Settings'),),
-            ListTile(title: Text('About'),),
           ],
         ),
-      ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                child: Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: Icon(
-                        Icons.search,
-                        color: Colors.grey[600],
+        drawer: Drawer(
+          child: ListView(
+            children: <Widget>[
+              DrawerHeader(
+                child: Image(
+                  image: AssetImage('assets/images/ruTorrent_mobile_logo.png'),
+                ),
+              ),
+              Container(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0,horizontal: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('Disk Space (80%)',style: TextStyle(fontSize: 18,color: Colors.black,fontFamily: 'SFUIDisplay/sf-ui-display-high.otf'),),
+                      SizedBox(height: 10,),
+                      Text('5GB left of 10GB',style: TextStyle(fontSize: 14,color: Constants.kDarkGrey,fontFamily: 'SFUIDisplay/sf-ui-display-medium.otf')),
+                      SizedBox(height: 5,),
+                      Container(
+                        height: 10,
+                        child: LinearProgressIndicator(
+                          value: 0.66,
+                          backgroundColor: Constants.kLightGrey,
+                          valueColor: AlwaysStoppedAnimation<Color>(Constants.kBlue),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              ExpansionTile(
+                initiallyExpanded: true,
+                title: Text('Filters',style: TextStyle(color: Colors.black),),
+                children: <Widget>[
+                  FilterTile(
+                    icon: Icons.all_inclusive,
+                    isSelected: selectedFilter==Constants.Filter.All,
+                    filter: Constants.Filter.All,
+                    onSelection: (){
+                      setState(() {
+                        selectedFilter = Constants.Filter.All;
+                      });
+                    },
+                  ),
+                  FilterTile(
+                    icon: FontAwesomeIcons.arrowAltCircleDown,
+                    isSelected: selectedFilter==Constants.Filter.Downloading,
+                    filter: Constants.Filter.Downloading,
+                    onSelection: (){
+                      setState(() {
+                        selectedFilter = Constants.Filter.Downloading;
+                      });
+                    },
+                  ),
+                  FilterTile(
+                    icon: Icons.done_outline,
+                    isSelected: selectedFilter==Constants.Filter.Completed,
+                    filter: Constants.Filter.Completed,
+                    onSelection: (){
+                      setState(() {
+                        selectedFilter = Constants.Filter.Completed;
+                      });
+                    },
+                  ),
+                  FilterTile(
+                    icon: Icons.open_with,
+                    isSelected: selectedFilter==Constants.Filter.Active,
+                    filter: Constants.Filter.Active,
+                    onSelection: (){
+                      setState(() {
+                        selectedFilter = Constants.Filter.Active;
+                      });
+                    },
+                  ),
+                  FilterTile(
+                    icon: Icons.not_interested,
+                    isSelected: selectedFilter==Constants.Filter.Inactive,
+                    filter: Constants.Filter.Inactive,
+                    onSelection: (){
+                      setState(() {
+                        selectedFilter = Constants.Filter.Inactive;
+                      });
+                    },
+                  ),
+                  FilterTile(
+                    icon: Icons.error,
+                    isSelected: selectedFilter==Constants.Filter.Error,
+                    filter: Constants.Filter.Error,
+                    onSelection: (){
+                      setState(() {
+                        selectedFilter = Constants.Filter.Error;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              Divider(),
+              ListTile(title: Text('Settings'),),
+              ListTile(title: Text('About'),),
+            ],
+          ),
+        ),
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: Icon(
+                          Icons.search,
+                          color: Colors.grey[600],
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        enableInteractiveSelection: false,
-                        autofocus: false,
-                        onChanged: (value){
+                      Expanded(
+                        child: TextFormField(
+                          onChanged: (value){
+                            setState(() {
+                              isSearching = searchTextController.text.isNotEmpty;
+                            });
+                          },
+                          controller: searchTextController,
+                          cursorColor: Colors.black,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                              hintText: 'Search your item by name'),
+                        ),
+                      ),
+                      isSearching?
+                      IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: (){
+                          searchTextController.clear();
                           setState(() {
-                            isSearching = searchTextController.text.isNotEmpty;
+                            isSearching=false;
                           });
                         },
-                        controller: searchTextController,
-                        cursorColor: Colors.black,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: 10),
-                            hintText: 'Search your item by name'),
+                      ):
+                      PopupMenuButton<Constants.Sort>(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(FontAwesomeIcons.slidersH,color: Colors.grey[700],),
+                        ),
+                        onSelected: (selectedChoice){
+                          setState(() {
+                            sortPreference = selectedChoice;
+                          });
+                        },
+                        itemBuilder: (BuildContext context){
+                          return Constants.Sort.values.map((Constants.Sort choice) {
+                            return PopupMenuItem<Constants.Sort>(
+                              enabled: !(sortPreference==choice),
+                              value: choice,
+                              child: Text(Constants.sortMap[choice]),
+                            );
+                          }).toList();
+                        },
                       ),
-                    ),
-                    isSearching?
-                    IconButton(
-                      icon: Icon(Icons.clear),
-                      onPressed: (){
-                        searchTextController.clear();
-                        setState(() {
-                          isSearching=false;
-                        });
-                      },
-                    ):
-                    PopupMenuButton<Constants.Sort>(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(FontAwesomeIcons.slidersH,color: Colors.grey[700],),
-                      ),
-                      onSelected: (selectedChoice){
-                        setState(() {
-                          sortPreference = selectedChoice;
-                        });
-                      },
-                      itemBuilder: (BuildContext context){
-                        return Constants.Sort.values.map((Constants.Sort choice) {
-                          return PopupMenuItem<Constants.Sort>(
-                            enabled: !(sortPreference==choice),
-                            value: choice,
-                            child: Text(Constants.sortMap[choice]),
-                          );
-                        }).toList();
-                      },
-                    ),
-                  ],
-                ),
-                width: double.infinity,
-                height: 50,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey,width: 1.5),
-                  borderRadius: BorderRadius.all(Radius.circular(5))
+                    ],
+                  ),
+                  width: double.infinity,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey,width: 1.5),
+                    borderRadius: BorderRadius.all(Radius.circular(5))
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: StreamBuilder(
-                stream: _initTorrentsData(),
-                builder: (BuildContext context, AsyncSnapshot snapshot){
-                  if(!snapshot.hasData){
-                    return Center(child: Text('No Torrents to Show'),);
-                  }
-                  sortedList = _sortList(snapshot.data, sortPreference);
+//            Align(
+//                alignment: Alignment.centerLeft,
+//                child: Padding(
+//                  padding: const EdgeInsets.all(8.0),
+//                  child: Text('Showing ${selectedFilter.toString().substring(selectedFilter.toString().indexOf('.')+1)} (${sortedList.length})',style: TextStyle(fontSize: 15,color: Constants.kDarkGrey,fontFamily: 'SFUIDisplay/sf-ui-display-high.otf',fontWeight: FontWeight.bold),),
+//                )),
+              Expanded(
+                child: StreamBuilder(
+                  stream: _initTorrentsData(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot){
+                    if(!snapshot.hasData){
+                      return Center(child: Text('No Torrents to Show'),);
+                    }
+                    sortedList = _sortList(snapshot.data, sortPreference);
 
-                  //filtering list on basis of selected filter
-                  sortedList = _filterList(sortedList, selectedFilter);
-                  print(sortedList.length);
+                    //filtering list on basis of selected filter
+                    sortedList = _filterList(sortedList, selectedFilter);
 
-                  if(searchTextController.text.isNotEmpty) {
-                    //showing list on basis of searched text
-                    sortedList = sortedList.where((element) =>
-                        element.name.toLowerCase().contains(searchTextController.text.toLowerCase()))
-                        .toList();
-                  }
+                    if(searchTextController.text.isNotEmpty) {
+                      //showing list on basis of searched text
+                      sortedList = sortedList.where((element) =>
+                          element.name.toLowerCase().contains(searchTextController.text.toLowerCase()))
+                          .toList();
+                    }
 
-                  return ListView.builder(
-                    itemCount: sortedList.length,
-                    itemBuilder: (BuildContext context,int index){
-                      return TorrentTile(sortedList[index]);
-                    },
-                  );
-                },
+                    return ListView.builder(
+                      itemCount: sortedList.length,
+                      itemBuilder: (BuildContext context,int index){
+                        return TorrentTile(sortedList[index]);
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
-        )
+            ],
+          )
+        ),
       ),
     );
   }
@@ -333,15 +352,15 @@ class _HomeScreenState extends State<HomeScreen> {
       case Constants.Filter.All:
         return torrentsList;
       case Constants.Filter.Downloading:
-        return torrentsList.where((element) => element.status==Status.downloading).toList();
+        return torrentsList.where((torrent) => torrent.status==Status.downloading).toList();
       case Constants.Filter.Completed:
-        return torrentsList.where((element) => element.status==Status.completed).toList();
+        return torrentsList.where((torrent) => torrent.status==Status.completed).toList();
       case Constants.Filter.Active:
-        return torrentsList.where((element) => element.isActive==1 ).toList();
+        return torrentsList.where((torrent) => torrent.ulSpeed>0 || torrent.dlSpeed>0).toList();
       case Constants.Filter.Inactive:
-        return torrentsList.where((element) => element.isActive==0).toList();
+        return torrentsList.where((torrent) => torrent.ulSpeed==0 && torrent.dlSpeed==0).toList();
       case Constants.Filter.Error:
-        return torrentsList.where((element) => element.msg.length>0 && element.msg!='Tracker: [Tried all trackers.]').toList();
+        return torrentsList.where((torrent) => torrent.msg.length>0 && torrent.msg!='Tracker: [Tried all trackers.]').toList();
       default:
         return torrentsList;
     }

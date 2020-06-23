@@ -1,30 +1,25 @@
-import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:provider/provider.dart';
+import '../api_conf.dart';
 import '../constants.dart' as Constants;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-class TorrentAddDialog extends StatefulWidget {
+class TorrentAddDialog extends StatelessWidget {
 
-  @override
-  _TorrentAddDialogState createState() => _TorrentAddDialogState();
-}
-
-class _TorrentAddDialogState extends State<TorrentAddDialog> {
+  final addTorrentUrl;
   final TextEditingController urlTextController = TextEditingController();
 
+  TorrentAddDialog(this.addTorrentUrl);
+
   _addTorrentUrl(String url) async {
-    var response = await http.post(Uri.parse('https://fremicro081.xirvik.com/rtorrent/php/addtorrent.php'),
+    await http.post(Uri.parse(addTorrentUrl),
         headers: {
           'authorization':Constants.getBasicAuth(),
         },
         body: {
           'url': urlTextController.text,
         });
-    print('body'+response.body);
-    print(response.statusCode);
-    print(response.hashCode);
   }
 
   @override
@@ -49,10 +44,6 @@ class _TorrentAddDialogState extends State<TorrentAddDialog> {
                 controller: urlTextController,
                 decoration: InputDecoration(
                     border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: 10),
                     hintText: 'Enter Url'),
               ),
@@ -63,7 +54,7 @@ class _TorrentAddDialogState extends State<TorrentAddDialog> {
                 child: RaisedButton(
                   color: Constants.kBlue,
                   child: Text('Add',style: TextStyle(color: Colors.white,fontSize: 16),),
-                  onPressed: () async{
+                  onPressed: (){
                     Fluttertoast.showToast(msg: 'Adding torrent');
                     Navigator.pop(context);
                     _addTorrentUrl(urlTextController.text);
