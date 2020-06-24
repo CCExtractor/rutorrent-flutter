@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/data_input_widget.dart';
 import 'package:rutorrentflutter/constants.dart';
+import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/screens/home_screen.dart';
 import '../api_conf.dart';
 
@@ -16,7 +18,7 @@ class ConfigurationsScreen extends StatelessWidget {
       body: Container(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 80.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 120.0),
             child: Center(
               child: Column(
                 children: <Widget>[
@@ -61,8 +63,14 @@ class ConfigurationsScreen extends StatelessWidget {
                       Api api = Api(urlController.text);
                       api.setUsername(usernameController.text);
                       api.setPassword(passwordController.text);
+
                       Navigator.push(context, MaterialPageRoute(
-                        builder: (context) => HomeScreen(api)
+                        builder: (context) => MultiProvider(
+                          providers: [
+                            Provider<Api> (create: (context)=>api),
+                            ChangeNotifierProvider<GeneralFeatures> (create: (context)=>GeneralFeatures(),),
+                          ],
+                            child: HomeScreen(api))
                       ));
                     },
                   )

@@ -7,15 +7,15 @@ import 'package:http/http.dart' as http;
 
 class TorrentAddDialog extends StatelessWidget {
 
-  final addTorrentUrl;
+  final Api api;
   final TextEditingController urlTextController = TextEditingController();
 
-  TorrentAddDialog(this.addTorrentUrl);
+  TorrentAddDialog(this.api);
 
   _addTorrentUrl(String url) async {
-    await http.post(Uri.parse(addTorrentUrl),
+    await http.post(Uri.parse(api.addTorrentUrl),
         headers: {
-          'authorization':Constants.getBasicAuth(),
+          'authorization':api.getBasicAuth(),
         },
         body: {
           'url': urlTextController.text,

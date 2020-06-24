@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/models/general_features.dart';
 
 class FilterTile extends StatelessWidget {
-  final Function onSelection;
-  final String title;
-  final Constants.Filter filter;
-  final bool isSelected;
+  final Filter filter;
   final IconData icon;
 
-  FilterTile({this.title,this.isSelected,this.onSelection,this.filter,this.icon});
+  FilterTile({this.filter,this.icon});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: isSelected?Constants.kLightGrey:Colors.white,
+      color: Provider.of<GeneralFeatures>(context).selectedFilter==filter?Constants.kLightGrey:Colors.white,
       child: ListTile(
-        trailing: Icon(icon),
+        leading: Icon(icon),
         title: Text(
             filter.toString().substring(filter.toString().indexOf('.')+1)),
         onTap: (){
-          onSelection();
+          Provider.of<GeneralFeatures>(context,listen: false).changeFilter(filter);
           Navigator.pop(context);
         },
       ),

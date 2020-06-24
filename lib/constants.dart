@@ -4,6 +4,7 @@ library constants;
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'models/general_features.dart';
 import 'models/torrent.dart';
 
 const Map<Status,String> statusMap = {
@@ -29,29 +30,3 @@ const Map<Sort,String> sortMap = {
   Sort.size: 'Size',
 };
 
-enum Sort{
-  name,
-  dateAdded,
-  percentDownloaded,
-  downloadSpeed,
-  uploadSpeed,
-  ratio,
-  size,
-}
-
-enum Filter{
-  All,
-  Downloading,
-  Completed,
-  Active,
-  Inactive,
-  Error,
-}
-
-String getBasicAuth(){
-  String username = 'username';
-  String password = '*****';
-  String basicAuth =
-      'Basic ' + base64Encode(utf8.encode('$username:$password'));
-  return basicAuth;
-}

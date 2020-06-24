@@ -18,7 +18,7 @@ class TorrentTile extends StatelessWidget {
   _stopTorrent(BuildContext context) async{
     await http.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
         headers: {
-          'authorization':Constants.getBasicAuth(),
+          'authorization':Provider.of<Api>(context,listen: false).getBasicAuth(),
         },
         body: {
           'mode': Constants.statusMap[Status.stopped],
@@ -30,7 +30,7 @@ class TorrentTile extends StatelessWidget {
     Fluttertoast.showToast(msg: 'Removing Torrent');
     await http.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
         headers: {
-          'authorization':Constants.getBasicAuth(),
+          'authorization':Provider.of<Api>(context,listen: false).getBasicAuth(),
         },
         body: {
           'mode': 'remove',
@@ -44,7 +44,7 @@ class TorrentTile extends StatelessWidget {
 
     await http.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
         headers: {
-          'authorization':Constants.getBasicAuth(),
+          'authorization':Provider.of<Api>(context,listen: false).getBasicAuth(),
         },
         body: {
           'mode': Constants.statusMap[toggleStatus],

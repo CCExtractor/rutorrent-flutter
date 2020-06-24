@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
 
 class Api {
   String _url;
@@ -16,5 +16,13 @@ class Api {
 
   get httprpcPluginUrl => url+'/plugins/httprpc/action.php';
   get addTorrentUrl => url + '/php/addtorrent.php';
+
+  String getBasicAuth(){
+    String username = _username;
+    String password = _password;
+    String basicAuth =
+        'Basic ' + base64Encode(utf8.encode('$username:$password'));
+    return basicAuth;
+  }
 
 }
