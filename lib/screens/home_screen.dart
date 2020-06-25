@@ -1,15 +1,15 @@
+import 'package:filesize/filesize.dart';
 import 'package:provider/provider.dart';
-import 'package:rutorrentflutter/api_requests.dart';
+import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/torrent_add_dialog.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
-import '../api_conf.dart';
-import '../constants.dart' as Constants;
-import 'package:http/http.dart' as http;
+import '../api/api_conf.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rutorrentflutter/components/torrent_tile.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
+import '../constants.dart' as Constants;
 
 class HomeScreen extends StatefulWidget {
   final Api api;
@@ -20,11 +20,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  http.Client client = http.Client();
-  List<Torrent> sortedList = [];
+  List<Torrent> torrentsList = [];
   Sort sortPreference;
   TextEditingController searchTextController  = TextEditingController();
   bool isSearching = false;
+  FocusNode searchBarFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -65,21 +65,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text('Disk Space (80%)', style: TextStyle(fontSize: 18,
+                        Text('Disk Space (${generalFeatures.diskSpace.getPercentage()}%)', style: TextStyle(fontSize: 16,
                             color: Colors.black,
                             fontFamily: 'SFUIDisplay/sf-ui-display-high.otf'),),
                         SizedBox(height: 10,),
-                        Text('5GB left of 10GB', style: TextStyle(fontSize: 14,
+                        Text('${filesize(generalFeatures.diskSpace.free)} left of ${filesize(generalFeatures.diskSpace.total)}', style: TextStyle(fontSize: 14,
                             color: Constants.kDarkGrey,
                             fontFamily: 'SFUIDisplay/sf-ui-display-medium.otf')),
                         SizedBox(height: 5,),
                         Container(
                           height: 10,
                           child: LinearProgressIndicator(
-                            value: 0.66,
+                            value: generalFeatures.diskSpace.getPercentage()/100,
                             backgroundColor: Constants.kLightGrey,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                                Constants.kBlue),
+                                    generalFeatures.diskSpace.isLow()?
+                                    Constants.kRed: Constants.kBlue),
                           ),
                         )
                       ],
@@ -116,7 +117,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Expanded(
                             child: TextFormField(
+                              focusNode: searchBarFocus,
                               onChanged: (value) {
+                                if(value.isEmpty)
+                                  searchBarFocus.unfocus();
                                 setState(() {
                                   isSearching =
                                       searchTextController.text.isNotEmpty;
@@ -137,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             icon: Icon(Icons.clear),
                             onPressed: () {
                               searchTextController.clear();
+                              searchBarFocus.unfocus();
                               setState(() {
                                 isSearching = false;
                               });
@@ -176,28 +181,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Expanded(
                     child: StreamBuilder(
-                      stream: ApiRequests.initTorrentsData(context,widget.api),
+                      stream: ApiRequests.initTorrentsData(context,widget.api,generalFeatures),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (!snapshot.hasData) {
                           return Center(child: Text('No Torrents to Show'),);
                         }
-                        sortedList = generalFeatures.sortList(snapshot.data, sortPreference);
+                        torrentsList = generalFeatures.sortList(snapshot.data, sortPreference);
 
                         //filtering list on basis of selected filter
-                        sortedList = generalFeatures.filterList(
-                            sortedList, generalFeatures.selectedFilter);
+                        torrentsList = generalFeatures.filterList(
+                            torrentsList, generalFeatures.selectedFilter);
 
                         if (searchTextController.text.isNotEmpty) {
                           //showing list on basis of searched text
-                          sortedList = sortedList.where((element) =>
+                          torrentsList = torrentsList.where((element) =>
                               element.name.toLowerCase().contains(
                                   searchTextController.text.toLowerCase()))
                               .toList();
                         }
                         return ListView.builder(
-                          itemCount: sortedList.length,
+                          itemCount: torrentsList.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return TorrentTile(sortedList[index]);
+                            return TorrentTile(torrentsList[index]);
                           },
                         );
                       },
@@ -216,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     super.dispose();
-    client.close();
+    widget.api.client.close();
   }
 }
 

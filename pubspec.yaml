@@ -19,6 +19,7 @@ dependencies:
   filesize: ^1.0.4
   flutter_slidable: ^0.5.4
   provider: ^4.1.3
+  flutter_local_notifications: ^1.4.4+1
 
 dev_dependencies:
   flutter_test:

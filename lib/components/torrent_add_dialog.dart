@@ -1,6 +1,6 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../api_conf.dart';
+import '../api/api_conf.dart';
 import '../constants.dart' as Constants;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;

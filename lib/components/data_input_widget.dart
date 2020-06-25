@@ -15,11 +15,11 @@ class DataInput extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Icon(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: iconData!=null?Icon(
                 iconData,
                 color: Colors.grey[600],
-              ),
+              ):Container(),
             ),
             Expanded(
               child: TextFormField(

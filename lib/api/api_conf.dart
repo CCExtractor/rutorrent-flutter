@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class Api {
   String _url;
   String _username;
   String _password;
+  http.Client client = http.Client();
 
   Api(this._url);
 
@@ -16,13 +18,8 @@ class Api {
 
   get httprpcPluginUrl => url+'/plugins/httprpc/action.php';
   get addTorrentUrl => url + '/php/addtorrent.php';
+  get diskSpacePluginUrl => url + '/plugins/diskspace/action.php';
 
-  String getBasicAuth(){
-    String username = _username;
-    String password = _password;
-    String basicAuth =
-        'Basic ' + base64Encode(utf8.encode('$username:$password'));
-    return basicAuth;
-  }
+  String getBasicAuth() => 'Basic ' + base64Encode(utf8.encode('$_username:$_password'));
 
 }

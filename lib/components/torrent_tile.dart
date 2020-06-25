@@ -8,7 +8,7 @@ import 'package:rutorrentflutter/constants.dart' as Constants;
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:http/http.dart' as http;
 
-import '../api_conf.dart';
+import '../api/api_conf.dart';
 
 class TorrentTile extends StatelessWidget {
 

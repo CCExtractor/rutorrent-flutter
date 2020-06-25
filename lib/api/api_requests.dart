@@ -1,20 +1,31 @@
 import 'dart:convert';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:rutorrentflutter/models/general_features.dart';
 import 'api_conf.dart';
-import 'models/torrent.dart';
-import 'package:http/http.dart' as http;
-import 'package:rutorrentflutter/constants.dart' as Constants;
+import '../models/torrent.dart';
 
 class ApiRequests{
 
-  static Stream<List<Torrent>> initTorrentsData(BuildContext context,Api api) async* {
+  static Stream<List<Torrent>> initTorrentsData(BuildContext context,Api api,GeneralFeatures generalFeatures) async* {
 
     while(true) {
+
+      // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1),(){
       });
+
+      //Updating DiskSpace
+      var diskSpaceResponse = await api.client.get(Uri.parse(api.diskSpacePluginUrl),
+          headers: {
+            'authorization':api.getBasicAuth(),
+          });
+      var diskSpace = jsonDecode(diskSpaceResponse.body);
+      generalFeatures.updateDiskSpace(diskSpace['total'], diskSpace['free']);
+
+      //Fetching torrents Info
       List<Torrent> torrentsList = [];
-      var response = await http.post(Uri.parse(api.httprpcPluginUrl),
+      var response = await api.client.post(Uri.parse(api.httprpcPluginUrl),
           headers: {
             'authorization':api.getBasicAuth(),
           },

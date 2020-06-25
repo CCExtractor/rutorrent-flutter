@@ -5,7 +5,7 @@ import 'package:rutorrentflutter/components/data_input_widget.dart';
 import 'package:rutorrentflutter/constants.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/screens/home_screen.dart';
-import '../api_conf.dart';
+import '../api/api_conf.dart';
 
 class ConfigurationsScreen extends StatelessWidget {
   final TextEditingController urlController = TextEditingController();
@@ -32,7 +32,6 @@ class ConfigurationsScreen extends StatelessWidget {
                       children: <Widget>[
                         DataInput(
                           textEditingController: urlController,
-                          iconData: FontAwesomeIcons.solidAddressCard,
                           hintText: 'Enter url here',
                         ),
                         Text('Example: https://fremicro081.xirvik.com/rtorrent/',style: TextStyle(color: Colors.grey),),
@@ -57,8 +56,15 @@ class ConfigurationsScreen extends StatelessWidget {
                     ),
                   ),
                   RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                        side: BorderSide(),
+                    ),
                     color: kBlue,
-                    child: Text('Go',style: TextStyle(color: Colors.white),),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 28,vertical: 16),
+                      child: Text('Go',style: TextStyle(color: Colors.white,fontSize: 18),),
+                    ),
                     onPressed: (){
                       Api api = Api(urlController.text);
                       api.setUsername(usernameController.text);
