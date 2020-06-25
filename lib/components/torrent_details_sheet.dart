@@ -43,9 +43,8 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
               Icon(Icons.arrow_drop_down),
             ],
           ),
-
         ],
       ),
-    );;
+    );
   }
 }

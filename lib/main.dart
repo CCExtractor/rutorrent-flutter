@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
-import 'package:rutorrentflutter/screens/home_screen.dart';
 
 void main() {
   runApp(MyApp());

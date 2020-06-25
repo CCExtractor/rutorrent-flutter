@@ -2,7 +2,6 @@
 
 library constants;
 
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'models/general_features.dart';
 import 'models/torrent.dart';
