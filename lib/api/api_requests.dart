@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:filesize/filesize.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'api_conf.dart';
@@ -40,7 +39,6 @@ class ApiRequests{
         torrent.name = torrentObject[4];
         torrent.size = int.parse(torrentObject[5]);
         torrent.savePath = torrentObject[25];
-        torrent.remainingContent = filesize(torrentObject[19]);
         torrent.completedChunks = int.parse(torrentObject[6]);
         torrent.totalChunks = int.parse(torrentObject[7]);
         torrent.sizeOfChunk = int.parse(torrentObject[13]);
@@ -50,11 +48,11 @@ class ApiRequests{
         torrent.peersActual = int.parse(torrentObject[15]);
         torrent.ulSpeed = int.parse(torrentObject[11]);
         torrent.dlSpeed = int.parse(torrentObject[12]);
-        torrent.isActive = int.parse(torrentObject[28]);
         torrent.isOpen = int.parse(torrentObject[0]);
         torrent.getState = int.parse(torrentObject[3]);
         torrent.msg = torrentObject[29];
-        torrent.downloadedData = filesize(torrentObject[8]);
+        torrent.downloadedData = int.parse(torrentObject[8]);
+        torrent.uploadedData = int.parse(torrentObject[9]);
         torrent.ratio = int.parse(torrentObject[10]);
 
         torrent.eta = torrent.getEta;

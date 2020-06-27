@@ -34,7 +34,7 @@ class ConfigurationsScreen extends StatelessWidget {
                           textEditingController: urlController,
                           hintText: 'Enter url here',
                         ),
-                        Text('Example: https://fremicro081.xirvik.com/rtorrent/',style: TextStyle(color: Colors.grey),),
+                        Text('Example: https://fremicro081.xirvik.com/rtorrent',style: TextStyle(color: Colors.grey),),
                       ],
                     ),
                   ),

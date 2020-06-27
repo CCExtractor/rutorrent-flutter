@@ -15,7 +15,6 @@ class Torrent{
   Status status;
   int size; // size in bytes
   String savePath; // directory where torrent is saved
-  String remainingContent;
   String eta;
   int percentageDownload;
   int totalChunks;
@@ -27,11 +26,11 @@ class Torrent{
   int peersActual;
   int dlSpeed; // bytes per second
   int ulSpeed;// bytes per second
-  int isActive;
   int isOpen;
   int getState;
   String msg;
-  String downloadedData;// in bytes
+  int downloadedData;// in bytes
+  int uploadedData;// in bytes
   int ratio;
 
   Status get getTorrentStatus {

@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/torrent_details_sheet.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:http/http.dart' as http;
 
@@ -77,12 +78,11 @@ class TorrentTile extends StatelessWidget {
     Color statusColor = _getStatusColor();
     return GestureDetector(
       onTap: (){
-        showModalBottomSheet(
-            context: context,
-            builder: (BuildContext buildContext){
-              return TorrentDetailSheet(torrent);
-            },
-        );
+        Provider.of<GeneralFeatures>(context,listen: false).scaffoldKey.currentState
+            .showBottomSheet((context) => Provider<Api>(
+              create: (context)=> Provider.of<Api>(context,listen: false),
+              child: TorrentDetailSheet(torrent)
+        ));
       },
       child: Slidable(
         actionPane: SlidableScrollActionPane(),
@@ -147,7 +147,7 @@ class TorrentTile extends StatelessWidget {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Text('${torrent.downloadedData}${torrent.dlSpeed==0?'':' | '+torrent.getEta}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[800]),),
+                                      Text('${filesize(torrent.downloadedData)}${torrent.dlSpeed==0?'':' | '+torrent.getEta}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[800]),),
                                       Text('↓ ${filesize(torrent.dlSpeed.toString())+'/s'} | ↑ ${filesize(torrent.ulSpeed.toString())+'/s'}',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 10,color: Colors.grey[700]),),
                                     ],
                                   ),

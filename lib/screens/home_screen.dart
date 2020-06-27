@@ -31,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<GeneralFeatures>(
       builder: (context,generalFeatures,child) {
         return Scaffold(
+          key: generalFeatures.scaffoldKey,
           appBar: AppBar(
             actions: <Widget>[
               IconButton(
