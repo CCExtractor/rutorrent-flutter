@@ -11,6 +11,7 @@ class ConfigurationsScreen extends StatelessWidget {
   final TextEditingController urlController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final FocusNode passwordFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +44,16 @@ class ConfigurationsScreen extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         DataInput(
+                          onFieldSubmittedCallback: (v){
+                            FocusScope.of(context).requestFocus(passwordFocus);
+                          },
                           textEditingController: usernameController,
                           iconData: FontAwesomeIcons.user,
                           hintText: 'Username',
+                          textInputAction: TextInputAction.next,
                         ),
                         DataInput(
+                          focus: passwordFocus,
                           textEditingController: passwordController,
                           iconData: FontAwesomeIcons.userSecret,
                           hintText: 'Password',

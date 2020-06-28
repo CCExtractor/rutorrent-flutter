@@ -1,6 +1,7 @@
 import 'package:filesize/filesize.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
+import 'package:rutorrentflutter/components/loading_shimmer.dart';
 import 'package:rutorrentflutter/components/torrent_add_dialog.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import '../api/api_conf.dart';
@@ -9,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rutorrentflutter/components/torrent_tile.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
+import 'package:shimmer/shimmer.dart';
 import '../constants.dart' as Constants;
 
 class HomeScreen extends StatefulWidget {
@@ -103,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
           body: Container(
               child: Column(
                 children: <Widget>[
+                  //Search Bar
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -180,26 +183,46 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
+                  //TorrentListings
                   Expanded(
                     child: StreamBuilder(
                       stream: ApiRequests.initTorrentsData(context,widget.api,generalFeatures),
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(child: Text('No Torrents to Show'),);
-                        }
-                        torrentsList = generalFeatures.sortList(snapshot.data, sortPreference);
 
-                        //filtering list on basis of selected filter
+                        if(snapshot.connectionState==ConnectionState.waiting && !snapshot.hasData){
+                          // showing loading list of Shimmers
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300],
+                            highlightColor: Colors.grey[100],
+                            child: ListView.builder(
+                                itemCount: 5,
+                                itemBuilder: (context,index){
+                              return LoadingShimmer();
+                            }),
+                          );
+                        }
+
+                        if (!snapshot.hasData) {
+                          return Center(child: Text('No Torrents to Show',style: TextStyle(fontSize: 14),),);
+                        }
+
+                        torrentsList = snapshot.data;
+
+                        //Sorting: sorting data on basis of sortPreference
+                        torrentsList = generalFeatures.sortList(torrentsList, sortPreference);
+
+                        //Filtering: filtering list on basis of selected filter
                         torrentsList = generalFeatures.filterList(
                             torrentsList, generalFeatures.selectedFilter);
 
                         if (searchTextController.text.isNotEmpty) {
-                          //showing list on basis of searched text
+                          //Searching : showing list on basis of searched text
                           torrentsList = torrentsList.where((element) =>
                               element.name.toLowerCase().contains(
                                   searchTextController.text.toLowerCase()))
                               .toList();
                         }
+
                         return ListView.builder(
                           itemCount: torrentsList.length,
                           itemBuilder: (BuildContext context, int index) {

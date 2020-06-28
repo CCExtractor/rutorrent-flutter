@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:filesize/filesize.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'api_conf.dart';

@@ -4,8 +4,11 @@ class DataInput extends StatelessWidget {
   final IconData iconData;
   final String hintText;
   final TextEditingController textEditingController;
+  final onFieldSubmittedCallback;
+  final FocusNode focus;
+  final textInputAction;
 
-  DataInput({this.iconData,this.hintText,this.textEditingController});
+  DataInput({this.iconData,this.hintText,this.textEditingController,this.onFieldSubmittedCallback,this.focus,this.textInputAction});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +26,9 @@ class DataInput extends StatelessWidget {
             ),
             Expanded(
               child: TextFormField(
+                textInputAction: textInputAction,
+                focusNode: focus,
+                onFieldSubmitted: onFieldSubmittedCallback,
                 controller: textEditingController,
                 cursorColor: Colors.black,
                 keyboardType: TextInputType.text,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
@@ -140,7 +141,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text('Size: ${filesize(torrent.size)}',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600)),
-                    Text('Added: 26/10/2019',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600)),
+                    Text('Added: ${DateFormat('dd/MM/yyyy').format(DateTime.fromMillisecondsSinceEpoch(torrent.torrentAdded*1000))}',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
