@@ -5,10 +5,8 @@ class Api {
   String _url;
   String _username;
   String _password;
-  http.Client client = http.Client();
 
-  Api(this._url);
-
+  setUrl(String url) => _url=url;
   setPassword(String password) => _password=password;
   setUsername(String username) => _username=username;
 

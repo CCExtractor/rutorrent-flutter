@@ -23,72 +23,86 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
 
   _updateSheetData(String hashValue) async{
 
-    var trKResponse = await http.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
-        headers: {
-          'authorization':Provider.of<Api>(context,listen: false).getBasicAuth(),
-        },
-        body: {
-          'mode': 'trk',
-          'hash': hashValue
-        });
-
-    var trackers = jsonDecode(trKResponse.body);
-    for(var tracker in trackers){
-      trackersList.add(tracker[0]);
-    }
-
-    var flsResponse = await http.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
-        headers: {
-          'authorization':Provider.of<Api>(context,listen: false).getBasicAuth(),
-        },
-        body: {
-          'mode': 'fls',
-          'hash': hashValue
-        });
-
-    var files = jsonDecode(flsResponse.body);
-    for(var file in files){
-      filesList.add(file[0]);
-    }
-
-    while(mounted){
-      await Future.delayed(Duration(seconds: 1),(){
-      });
-
-      var response = await http.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
+    try {
+      var trKResponse = await http.post(Uri.parse(Provider
+          .of<Api>(context, listen: false)
+          .httprpcPluginUrl),
           headers: {
-            'authorization':Provider.of<Api>(context,listen: false).getBasicAuth(),
+            'authorization': Provider.of<Api>(context, listen: false)
+                .getBasicAuth(),
           },
           body: {
-            'mode': 'list',
+            'mode': 'trk',
+            'hash': hashValue
           });
 
-      var torrentObject = jsonDecode(response.body)['t'][hashValue];
-      Torrent updatedTorrent = torrent;
-      // updating the values which possibly change over time
-      updatedTorrent.completedChunks = int.parse(torrentObject[6]);
-      updatedTorrent.totalChunks = int.parse(torrentObject[7]);
-      updatedTorrent.sizeOfChunk = int.parse(torrentObject[13]);
-      updatedTorrent.seedsActual = int.parse(torrentObject[18]);
-      updatedTorrent.peersActual = int.parse(torrentObject[15]);
-      updatedTorrent.ulSpeed = int.parse(torrentObject[11]);
-      updatedTorrent.dlSpeed = int.parse(torrentObject[12]);
-      updatedTorrent.isOpen = int.parse(torrentObject[0]);
-      updatedTorrent.getState = int.parse(torrentObject[3]);
-      updatedTorrent.msg = torrentObject[29];
-      updatedTorrent.downloadedData = int.parse(torrentObject[8]);
-      updatedTorrent.uploadedData = int.parse(torrentObject[9]);
-      updatedTorrent.ratio = int.parse(torrentObject[10]);
-
-      updatedTorrent.eta = updatedTorrent.getEta;
-      updatedTorrent.percentageDownload = updatedTorrent.getPercentageDownload;
-      updatedTorrent.status = updatedTorrent.getTorrentStatus;
-
-      if(mounted) {
-        setState(() {
-          torrent = updatedTorrent;
-        });
+      var trackers = jsonDecode(trKResponse.body);
+      for (var tracker in trackers) {
+        trackersList.add(tracker[0]);
       }
+
+      var flsResponse = await http.post(Uri.parse(Provider
+          .of<Api>(context, listen: false)
+          .httprpcPluginUrl),
+          headers: {
+            'authorization': Provider.of<Api>(context, listen: false)
+                .getBasicAuth(),
+          },
+          body: {
+            'mode': 'fls',
+            'hash': hashValue
+          });
+
+      var files = jsonDecode(flsResponse.body);
+      for (var file in files) {
+        filesList.add(file[0]);
+      }
+
+      while (mounted) {
+        await Future.delayed(Duration(seconds: 1), () {});
+
+        var response = await http.post(Uri.parse(Provider
+            .of<Api>(context, listen: false)
+            .httprpcPluginUrl),
+            headers: {
+              'authorization': Provider.of<Api>(context, listen: false)
+                  .getBasicAuth(),
+            },
+            body: {
+              'mode': 'list',
+            });
+
+        var torrentObject = jsonDecode(response.body)['t'][hashValue];
+        Torrent updatedTorrent = torrent;
+        // updating the values which possibly change over time
+        updatedTorrent.completedChunks = int.parse(torrentObject[6]);
+        updatedTorrent.totalChunks = int.parse(torrentObject[7]);
+        updatedTorrent.sizeOfChunk = int.parse(torrentObject[13]);
+        updatedTorrent.seedsActual = int.parse(torrentObject[18]);
+        updatedTorrent.peersActual = int.parse(torrentObject[15]);
+        updatedTorrent.ulSpeed = int.parse(torrentObject[11]);
+        updatedTorrent.dlSpeed = int.parse(torrentObject[12]);
+        updatedTorrent.isOpen = int.parse(torrentObject[0]);
+        updatedTorrent.getState = int.parse(torrentObject[3]);
+        updatedTorrent.msg = torrentObject[29];
+        updatedTorrent.downloadedData = int.parse(torrentObject[8]);
+        updatedTorrent.uploadedData = int.parse(torrentObject[9]);
+        updatedTorrent.ratio = int.parse(torrentObject[10]);
+
+        updatedTorrent.eta = updatedTorrent.getEta;
+        updatedTorrent.percentageDownload =
+            updatedTorrent.getPercentageDownload;
+        updatedTorrent.status = updatedTorrent.getTorrentStatus;
+
+        if (mounted) {
+          setState(() {
+            torrent = updatedTorrent;
+          });
+        }
+      }
+    }
+    catch(e){
+      print(e);
     }
   }
 

@@ -31,6 +31,7 @@ class GeneralFeatures extends ChangeNotifier{
 
   DiskSpace _diskSpace = DiskSpace();
   get diskSpace => _diskSpace;
+
   updateDiskSpace(int total,int free){
     //check if there is any change in freeSpace of disk
     if(free==_diskSpace.free)
