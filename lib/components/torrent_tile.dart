@@ -1,14 +1,15 @@
+import 'dart:io';
+
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/io_client.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/torrent_details_sheet.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
-import 'package:http/http.dart' as http;
-
 import '../api/api_conf.dart';
 
 class TorrentTile extends StatelessWidget {
@@ -17,7 +18,9 @@ class TorrentTile extends StatelessWidget {
   TorrentTile(this.torrent);
 
   _stopTorrent(BuildContext context) async{
-    await http.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
+    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+    await ioClient.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
         headers: {
           'authorization':Provider.of<Api>(context,listen: false).getBasicAuth(),
         },
@@ -29,7 +32,9 @@ class TorrentTile extends StatelessWidget {
 
   _removeTorrent(BuildContext context) async{
     Fluttertoast.showToast(msg: 'Removing Torrent');
-    await http.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
+    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+    await ioClient.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
         headers: {
           'authorization':Provider.of<Api>(context,listen: false).getBasicAuth(),
         },
@@ -43,7 +48,9 @@ class TorrentTile extends StatelessWidget {
     Status toggleStatus = torrent.isOpen==0?
         Status.downloading:torrent.getState==0?(Status.downloading):Status.paused;
 
-    await http.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
+    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+    await ioClient.post(Uri.parse(Provider.of<Api>(context,listen: false).httprpcPluginUrl),
         headers: {
           'authorization':Provider.of<Api>(context,listen: false).getBasicAuth(),
         },

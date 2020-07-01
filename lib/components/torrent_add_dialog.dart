@@ -1,8 +1,10 @@
+import 'dart:io';
+
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/io_client.dart';
 import '../api/api_conf.dart';
 import '../constants.dart' as Constants;
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class TorrentAddDialog extends StatelessWidget {
 
@@ -12,7 +14,9 @@ class TorrentAddDialog extends StatelessWidget {
   TorrentAddDialog(this.api);
 
   _addTorrentUrl(String url) async {
-    await http.post(Uri.parse(api.addTorrentUrl),
+    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+    await ioClient.post(Uri.parse(api.addTorrentUrl),
         headers: {
           'authorization':api.getBasicAuth(),
         },

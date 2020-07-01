@@ -1,19 +1,22 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:http/io_client.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'api_conf.dart';
 import '../models/torrent.dart';
-import 'package:http/http.dart' as http;
 
 class ApiRequests{
 
   static Stream<List<Torrent>> initTorrentsData(BuildContext context,Api api,GeneralFeatures generalFeatures) async* {
     while (true) {
+      HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+      IOClient ioClient = new IOClient(httpClient);
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
 
         //Updating DiskSpace
-        var diskSpaceResponse = await http.get(
+        var diskSpaceResponse = await ioClient.get(
             Uri.parse(api.diskSpacePluginUrl),
             headers: {
               'authorization': api.getBasicAuth(),
@@ -25,7 +28,7 @@ class ApiRequests{
         List<Torrent> torrentsList = [];
         try {
           //Fetching torrents Info
-          var response = await http.post(Uri.parse(api.httprpcPluginUrl),
+          var response = await ioClient.post(Uri.parse(api.httprpcPluginUrl),
               headers: {
                 'authorization': api.getBasicAuth(),
               },

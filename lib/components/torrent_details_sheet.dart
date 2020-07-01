@@ -1,12 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
+import 'package:http/io_client.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
 import 'package:rutorrentflutter/models/torrent.dart';
-import 'package:http/http.dart' as http;
 
 class TorrentDetailSheet extends StatefulWidget {
   final Torrent torrent;
@@ -23,8 +24,11 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
 
   _updateSheetData(String hashValue) async{
 
+    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+
     try {
-      var trKResponse = await http.post(Uri.parse(Provider
+      var trKResponse = await ioClient.post(Uri.parse(Provider
           .of<Api>(context, listen: false)
           .httprpcPluginUrl),
           headers: {
@@ -41,7 +45,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
         trackersList.add(tracker[0]);
       }
 
-      var flsResponse = await http.post(Uri.parse(Provider
+      var flsResponse = await ioClient.post(Uri.parse(Provider
           .of<Api>(context, listen: false)
           .httprpcPluginUrl),
           headers: {
@@ -61,7 +65,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
       while (mounted) {
         await Future.delayed(Duration(seconds: 1), () {});
 
-        var response = await http.post(Uri.parse(Provider
+        var response = await ioClient.post(Uri.parse(Provider
             .of<Api>(context, listen: false)
             .httprpcPluginUrl),
             headers: {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/io_client.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/data_input_widget.dart';
 import 'package:rutorrentflutter/constants.dart';
@@ -10,7 +11,7 @@ import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/screens/home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '../api/api_conf.dart';
-import 'package:http/http.dart' as http;
+
 
 class ConfigurationsScreen extends StatefulWidget {
   @override
@@ -49,7 +50,9 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
     });
     var response;
     try {
-      response = await http.get(Uri.parse(api.diskSpacePluginUrl),
+      HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+      IOClient ioClient = new IOClient(httpClient);
+      response = await ioClient.get(Uri.parse(api.diskSpacePluginUrl),
           headers: {
             'authorization': api.getBasicAuth(),
           });
