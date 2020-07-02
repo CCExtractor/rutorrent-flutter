@@ -4,13 +4,6 @@ library constants;
 
 import 'package:flutter/material.dart';
 import 'models/general_features.dart';
-import 'models/torrent.dart';
-
-const Map<Status,String> statusMap = {
-  Status.downloading : 'start',
-  Status.paused : 'pause',
-  Status.stopped: 'stop',
-};
 
 const Color kBlue = Color(0xFF1B1464);
 const Color kRed = Color(0xFFEA2027);

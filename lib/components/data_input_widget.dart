@@ -4,8 +4,8 @@ class DataInput extends StatelessWidget {
   final IconData iconData;
   final String hintText;
   final TextEditingController textEditingController;
-  final onFieldSubmittedCallback;
   final FocusNode focus;
+  final onFieldSubmittedCallback;
   final textInputAction;
 
   DataInput({this.iconData,this.hintText,this.textEditingController,this.onFieldSubmittedCallback,this.focus,this.textInputAction});

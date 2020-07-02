@@ -22,19 +22,14 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   List<String> trackersList =[];
   List<String> filesList =[];
 
-  _updateSheetData(String hashValue) async{
+  _updateSheetData(Api api, String hashValue) async{
 
     HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
     IOClient ioClient = new IOClient(httpClient);
 
     try {
-      var trKResponse = await ioClient.post(Uri.parse(Provider
-          .of<Api>(context, listen: false)
-          .httprpcPluginUrl),
-          headers: {
-            'authorization': Provider.of<Api>(context, listen: false)
-                .getBasicAuth(),
-          },
+      var trKResponse = await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+          headers: Provider.of<Api>(context,listen: false).getAuthHeader(),
           body: {
             'mode': 'trk',
             'hash': hashValue
@@ -45,13 +40,8 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
         trackersList.add(tracker[0]);
       }
 
-      var flsResponse = await ioClient.post(Uri.parse(Provider
-          .of<Api>(context, listen: false)
-          .httprpcPluginUrl),
-          headers: {
-            'authorization': Provider.of<Api>(context, listen: false)
-                .getBasicAuth(),
-          },
+      var flsResponse = await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+          headers: Provider.of<Api>(context,listen: false).getAuthHeader(),
           body: {
             'mode': 'fls',
             'hash': hashValue
@@ -65,13 +55,8 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
       while (mounted) {
         await Future.delayed(Duration(seconds: 1), () {});
 
-        var response = await ioClient.post(Uri.parse(Provider
-            .of<Api>(context, listen: false)
-            .httprpcPluginUrl),
-            headers: {
-              'authorization': Provider.of<Api>(context, listen: false)
-                  .getBasicAuth(),
-            },
+        var response = await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+            headers: Provider.of<Api>(context,listen: false).getAuthHeader(),
             body: {
               'mode': 'list',
             });
@@ -106,15 +91,15 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
       }
     }
     catch(e){
-      print(e);
+      print('Exception Caught in Torrent Details'+e.toString());
     }
   }
 
   @override
   void initState() {
     super.initState();
-    torrent=widget.torrent;
-    _updateSheetData(widget.torrent.hash);
+    torrent=widget.torrent; // to show initial data on the sheet
+    _updateSheetData(Provider.of<Api>(context, listen: false),widget.torrent.hash);
   }
 
   Color _getStatusColor(){
@@ -146,7 +131,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text(torrent.name,style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold)),
+                child: Text(torrent.name,style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold)),
               ),
               Text('${torrent.percentageDownload}%',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: statusColor),),
               Divider(

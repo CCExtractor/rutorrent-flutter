@@ -52,10 +52,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
     try {
       HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
       IOClient ioClient = new IOClient(httpClient);
-      response = await ioClient.get(Uri.parse(api.diskSpacePluginUrl),
-          headers: {
-            'authorization': api.getBasicAuth(),
-          });
+      response = await ioClient.get(Uri.parse(api.diskSpacePluginUrl),headers: api.getAuthHeader());
     }
     catch(e){
       print(e);

@@ -17,9 +17,7 @@ class TorrentAddDialog extends StatelessWidget {
     HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
     IOClient ioClient = new IOClient(httpClient);
     await ioClient.post(Uri.parse(api.addTorrentUrl),
-        headers: {
-          'authorization':api.getBasicAuth(),
-        },
+        headers: api.getAuthHeader(),
         body: {
           'url': urlTextController.text,
         });

@@ -6,7 +6,7 @@ class LoadingShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 14,vertical: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -15,23 +15,7 @@ class LoadingShimmer extends StatelessWidget {
                 width: double.infinity,
                 color: Colors.grey,
               ),
-              SizedBox(height: 10,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    height: 12,
-                    width: 50,
-                    color: Colors.grey,
-                  ),
-                  Container(
-                    height: 12,
-                    width: 80,
-                    color: Colors.grey,
-                  ),
-                ],
-              ),
-              SizedBox(height: 12,),
+              SizedBox(height: 24,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -42,15 +26,16 @@ class LoadingShimmer extends StatelessWidget {
                   ),
                   Container(
                     height: 12,
-                    width: 120,
+                    width: 100,
                     color: Colors.grey,
                   ),
+                  SizedBox(),
                 ],
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 8,),
               Container(
-                height: 12,
-                width: 250,
+                height: 10,
+                width: 260,
                 color: Colors.grey,
               ),
             ],

@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/io_client.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'api_conf.dart';
 import '../models/torrent.dart';
+
 
 class ApiRequests{
 
@@ -18,9 +20,7 @@ class ApiRequests{
         //Updating DiskSpace
         var diskSpaceResponse = await ioClient.get(
             Uri.parse(api.diskSpacePluginUrl),
-            headers: {
-              'authorization': api.getBasicAuth(),
-            });
+            headers: api.getAuthHeader());
         var diskSpace = jsonDecode(diskSpaceResponse.body);
 
         generalFeatures.updateDiskSpace(diskSpace['total'], diskSpace['free']);
@@ -29,9 +29,7 @@ class ApiRequests{
         try {
           //Fetching torrents Info
           var response = await ioClient.post(Uri.parse(api.httprpcPluginUrl),
-              headers: {
-                'authorization': api.getBasicAuth(),
-              },
+              headers: api.getAuthHeader(),
               body: {
                 'mode': 'list',
               });
@@ -74,5 +72,49 @@ class ApiRequests{
           yield null;
         }
     }
+  }
+
+  static stopTorrent(Api api, String hashValue) async{
+    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+    await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {
+          'mode': 'stop',
+          'hash': hashValue,
+        });
+  }
+
+  static removeTorrent(Api api, String hashValue) async{
+    Fluttertoast.showToast(msg: 'Removing Torrent');
+    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+    await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {
+          'mode': 'remove',
+          'hash': hashValue,
+        });
+  }
+
+  static toggleTorrentStatus(Api api, String hashValue, int isOpen, int getState) async{
+
+    const Map<Status,String> statusMap = {
+      Status.downloading : 'start',
+      Status.paused : 'pause',
+      Status.stopped: 'stop',
+    };
+
+    Status toggleStatus = isOpen==0?
+    Status.downloading:getState==0?(Status.downloading):Status.paused;
+
+    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+    await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {
+          'mode': statusMap[toggleStatus],
+          'hash': hashValue,
+        });
   }
 }

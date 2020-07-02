@@ -17,6 +17,8 @@ class Api {
   get addTorrentUrl => url + '/php/addtorrent.php';
   get diskSpacePluginUrl => url + '/plugins/diskspace/action.php';
 
-  String getBasicAuth() => 'Basic ' + base64Encode(utf8.encode('$_username:$_password'));
+
+  Map<String,String> getAuthHeader() =>
+      {'authorization': 'Basic ' + base64Encode(utf8.encode('$_username:$_password'))};
 
 }
