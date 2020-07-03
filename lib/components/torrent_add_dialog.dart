@@ -1,7 +1,5 @@
-import 'dart:io';
-
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/io_client.dart';
+import 'package:rutorrentflutter/api/api_requests.dart';
 import '../api/api_conf.dart';
 import '../constants.dart' as Constants;
 import 'package:flutter/material.dart';
@@ -12,16 +10,6 @@ class TorrentAddDialog extends StatelessWidget {
   final TextEditingController urlTextController = TextEditingController();
 
   TorrentAddDialog(this.api);
-
-  _addTorrentUrl(String url) async {
-    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
-    IOClient ioClient = new IOClient(httpClient);
-    await ioClient.post(Uri.parse(api.addTorrentUrl),
-        headers: api.getAuthHeader(),
-        body: {
-          'url': urlTextController.text,
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +46,7 @@ class TorrentAddDialog extends StatelessWidget {
                   onPressed: (){
                     Fluttertoast.showToast(msg: 'Adding torrent');
                     Navigator.pop(context);
-                    _addTorrentUrl(urlTextController.text);
+                    ApiRequests.addTorrentUrl(api,urlTextController.text);
                   },
                 ),
               ),

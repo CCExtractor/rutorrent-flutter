@@ -33,6 +33,8 @@ class Torrent{
   int uploadedData;// in bytes
   int ratio;
 
+
+
   Status get getTorrentStatus {
     Status status;
     status = isOpen==0?Status.stopped:getState==0?(Status.paused):Status.downloading;

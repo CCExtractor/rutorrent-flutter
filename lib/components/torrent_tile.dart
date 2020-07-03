@@ -7,6 +7,7 @@ import 'package:rutorrentflutter/components/torrent_details_sheet.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import '../api/api_conf.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
 
 class TorrentTile extends StatelessWidget {
@@ -41,15 +42,15 @@ class TorrentTile extends StatelessWidget {
       builder: (context,api,child) {
         return GestureDetector(
           onTap: () {
-            Provider
-                .of<GeneralFeatures>(context, listen: false)
-                .scaffoldKey
-                .currentState
-                .showBottomSheet((context) =>
-                Provider<Api>(
+            showMaterialModalBottomSheet(
+                expand: true,
+                context: context,
+                builder: (context,scrollContainer) =>
+                    Provider<Api>(
                     create: (context) =>api,
                     child: TorrentDetailSheet(torrent)
-                ));
+                )
+            );
           },
           child: Slidable(
             actionPane: SlidableScrollActionPane(),

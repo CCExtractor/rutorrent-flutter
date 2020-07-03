@@ -27,8 +27,6 @@ enum Filter{
 
 class GeneralFeatures extends ChangeNotifier{
 
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
   DiskSpace _diskSpace = DiskSpace();
   get diskSpace => _diskSpace;
 

@@ -23,6 +23,7 @@ dependencies:
   intl: ^0.16.1
   shimmer: ^1.1.1
   modal_progress_hud: ^0.1.3
+  modal_bottom_sheet: ^0.1.6+1
 
 dev_dependencies:
   flutter_test:

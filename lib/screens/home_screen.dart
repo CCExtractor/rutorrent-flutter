@@ -85,7 +85,6 @@ class _HomeScreenState extends State<HomeScreen> {
       onWillPop: _onWillPop,
       child: Consumer<GeneralFeatures>(builder: (context, generalFeat, child) {
         return Scaffold(
-          key: generalFeat.scaffoldKey,
           appBar: AppBar(
             actions: <Widget>[
               IconButton(
@@ -265,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting &&
                         !snapshot.hasData) {
-                      // showing loading list of Shimmers
+                      // showing loading list of Shimmer
                       return Shimmer.fromColors(
                         baseColor: Colors.grey[300],
                         highlightColor: Colors.grey[100],
@@ -285,9 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       );
                     }
-
                     torrentsList = _getDisplayList(snapshot.data, generalFeat);
-
                     return ListView.builder(
                       itemCount: torrentsList.length,
                       itemBuilder: (BuildContext context, int index) {

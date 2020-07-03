@@ -7,10 +7,11 @@ import 'package:rutorrentflutter/models/general_features.dart';
 import 'api_conf.dart';
 import '../models/torrent.dart';
 
-
 class ApiRequests{
 
-  static Stream<List<Torrent>> initTorrentsData(BuildContext context,Api api,GeneralFeatures generalFeatures) async* {
+  /// This class will be responsible for making all API Calls
+
+  static Stream<List<Torrent>> initTorrentsData(BuildContext context,Api api,GeneralFeatures generalFeat) async* {
     while (true) {
       HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
       IOClient ioClient = new IOClient(httpClient);
@@ -23,7 +24,7 @@ class ApiRequests{
             headers: api.getAuthHeader());
         var diskSpace = jsonDecode(diskSpaceResponse.body);
 
-        generalFeatures.updateDiskSpace(diskSpace['total'], diskSpace['free']);
+        generalFeat.updateDiskSpace(diskSpace['total'], diskSpace['free']);
 
         List<Torrent> torrentsList = [];
         try {
@@ -116,5 +117,96 @@ class ApiRequests{
           'mode': statusMap[toggleStatus],
           'hash': hashValue,
         });
+  }
+
+  static addTorrentUrl(Api api,String url) async {
+    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+    await ioClient.post(Uri.parse(api.addTorrentUrl),
+        headers: api.getAuthHeader(),
+        body: {
+          'url': url,
+        });
+  }
+
+  static Future<List<String>> getTrackers(Api api, String hashValue) async{
+    List<String> trackersList = [];
+    HttpClient httpClient = new HttpClient()
+      ..badCertificateCallback =
+      ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+
+    var trKResponse = await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {'mode': 'trk', 'hash': hashValue});
+
+    var trackers = jsonDecode(trKResponse.body);
+    for (var tracker in trackers) {
+      trackersList.add(tracker[0]);
+    }
+    return trackersList;
+  }
+
+  static Future<List<String>> getFiles(Api api, String hashValue) async{
+    List<String> filesList = [];
+    HttpClient httpClient = new HttpClient()
+      ..badCertificateCallback =
+      ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+
+    var flsResponse = await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {'mode': 'fls', 'hash': hashValue});
+
+    var files = jsonDecode(flsResponse.body);
+    for (var file in files) {
+      filesList.add(file[0]);
+    }
+    return filesList;
+  }
+
+  static Stream<Torrent> updateSheetData(Api api, Torrent torrent) async* {
+    HttpClient httpClient = new HttpClient()
+      ..badCertificateCallback =
+      ((X509Certificate cert, String host, int port) => true);
+    IOClient ioClient = new IOClient(httpClient);
+
+    try {
+      while (true) {
+        await Future.delayed(Duration(seconds: 1), () {});
+
+        var response = await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+            headers: api.getAuthHeader(),
+            body: {
+              'mode': 'list',
+            });
+
+        var torrentObject = jsonDecode(response.body)['t'][torrent.hash];
+        Torrent updatedTorrent = torrent;
+        // updating the values which possibly change over time
+        updatedTorrent.completedChunks = int.parse(torrentObject[6]);
+        updatedTorrent.totalChunks = int.parse(torrentObject[7]);
+        updatedTorrent.sizeOfChunk = int.parse(torrentObject[13]);
+        updatedTorrent.seedsActual = int.parse(torrentObject[18]);
+        updatedTorrent.peersActual = int.parse(torrentObject[15]);
+        updatedTorrent.ulSpeed = int.parse(torrentObject[11]);
+        updatedTorrent.dlSpeed = int.parse(torrentObject[12]);
+        updatedTorrent.isOpen = int.parse(torrentObject[0]);
+        updatedTorrent.getState = int.parse(torrentObject[3]);
+        updatedTorrent.msg = torrentObject[29];
+        updatedTorrent.downloadedData = int.parse(torrentObject[8]);
+        updatedTorrent.uploadedData = int.parse(torrentObject[9]);
+        updatedTorrent.ratio = int.parse(torrentObject[10]);
+
+        updatedTorrent.eta = updatedTorrent.getEta;
+        updatedTorrent.percentageDownload =
+            updatedTorrent.getPercentageDownload;
+        updatedTorrent.status = updatedTorrent.getTorrentStatus;
+
+        yield updatedTorrent;
+      }
+    } catch (e) {
+      print('Exception Caught in Torrent Details' + e.toString());
+    }
   }
 }
