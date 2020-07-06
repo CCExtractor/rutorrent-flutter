@@ -4,7 +4,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/torrent_details_sheet.dart';
-import 'package:rutorrentflutter/models/general_features.dart';
+import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import '../api/api_conf.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -82,91 +82,88 @@ class TorrentTile extends StatelessWidget {
                     )),
                   onTap: () => ApiRequests.stopTorrent(api,torrent.hash)
               )],
-            child: Card(
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 12),
-                child: Container(
-                  width: double.infinity,
-                  height: 80,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Expanded(
-                        flex: 5,
-                        child: Row(
-                          children: <Widget>[
-                            SizedBox(width: 10,),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Flexible(child: Text(torrent.name,
-                                    style: TextStyle(fontWeight: FontWeight.w600,
-                                        fontSize: 16),)),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                                    child: Column(
-                                      children: <Widget>[
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment
-                                              .spaceBetween,
-                                          children: <Widget>[
-                                            Text('${filesize(
-                                                torrent.downloadedData)}${torrent
-                                                .dlSpeed == 0 ? '' : ' | ' +
-                                                torrent.getEta}',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 10,
-                                                  color: Colors.grey[800]),),
-                                            Text('↓ ${filesize(
-                                                torrent.dlSpeed.toString()) +
-                                                '/s'} | ↑ ${filesize(
-                                                torrent.ulSpeed.toString()) +
-                                                '/s'}', style: TextStyle(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 12),
+              child: Container(
+                width: double.infinity,
+                height: 80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(width: 10,),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Flexible(child: Text(torrent.name,
+                                  style: TextStyle(fontWeight: FontWeight.w600,
+                                      fontSize: 16),)),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment
+                                            .spaceBetween,
+                                        children: <Widget>[
+                                          Text('${filesize(
+                                              torrent.downloadedData)}${torrent
+                                              .dlSpeed == 0 ? '' : ' | ' +
+                                              torrent.getEta}',
+                                            style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 10,
-                                                color: Colors.grey[700]),),
-                                          ],
-                                        ),
-                                        SizedBox(height: 4,),
-                                        LinearProgressIndicator(
-                                            value: torrent.percentageDownload /
-                                                100,
-                                            valueColor: AlwaysStoppedAnimation<
-                                                Color>(statusColor),
-                                            backgroundColor: Constants.kLightGrey
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
+                                                color: Provider.of<Mode>(context).isLightMode?Constants.kDarkGrey:Constants.kLightGrey),),
+                                          Text('↓ ${filesize(
+                                              torrent.dlSpeed.toString()) +
+                                              '/s'} | ↑ ${filesize(
+                                              torrent.ulSpeed.toString()) +
+                                              '/s'}', style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 10,
+                                              color: Provider.of<Mode>(context).isLightMode?Constants.kDarkGrey:Constants.kLightGrey),),
+                                        ],
+                                      ),
+                                      SizedBox(height: 4,),
+                                      LinearProgressIndicator(
+                                          value: torrent.percentageDownload /
+                                              100,
+                                          valueColor: AlwaysStoppedAnimation<
+                                              Color>(statusColor),
+                                          backgroundColor: Constants.kLightGrey
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Text(torrent.getPercentageDownload.toString() + '%',
-                              style: TextStyle(color: statusColor,
-                                  fontWeight: FontWeight.w600),),
-                            IconButton(
-                              color: statusColor,
-                              iconSize: 40,
-                              icon: Icon(_getTorrentIconData()),
-                              onPressed: ()=>
-                                  ApiRequests.toggleTorrentStatus(api,torrent.hash,torrent.isOpen,torrent.getState),
-                            ),
-                          ],
-                        ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Text(torrent.percentageDownload.toString() + '%',
+                            style: TextStyle(color: statusColor,
+                                fontWeight: FontWeight.w700),),
+                          IconButton(
+                            color: statusColor,
+                            iconSize: 40,
+                            icon: Icon(_getTorrentIconData()),
+                            onPressed: ()=>
+                                ApiRequests.toggleTorrentStatus(api,torrent.hash,torrent.isOpen,torrent.getState),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

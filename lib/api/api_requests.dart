@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/io_client.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'api_conf.dart';
 import '../models/torrent.dart';
@@ -13,13 +11,11 @@ class ApiRequests{
 
   static Stream<List<Torrent>> initTorrentsData(BuildContext context,Api api,GeneralFeatures generalFeat) async* {
     while (true) {
-      HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
-      IOClient ioClient = new IOClient(httpClient);
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
 
         //Updating DiskSpace
-        var diskSpaceResponse = await ioClient.get(
+        var diskSpaceResponse = await api.ioClient.get(
             Uri.parse(api.diskSpacePluginUrl),
             headers: api.getAuthHeader());
         var diskSpace = jsonDecode(diskSpaceResponse.body);
@@ -29,7 +25,7 @@ class ApiRequests{
         List<Torrent> torrentsList = [];
         try {
           //Fetching torrents Info
-          var response = await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+          var response = await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
               headers: api.getAuthHeader(),
               body: {
                 'mode': 'list',
@@ -76,9 +72,7 @@ class ApiRequests{
   }
 
   static stopTorrent(Api api, String hashValue) async{
-    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
-    IOClient ioClient = new IOClient(httpClient);
-    await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+    await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': 'stop',
@@ -88,9 +82,7 @@ class ApiRequests{
 
   static removeTorrent(Api api, String hashValue) async{
     Fluttertoast.showToast(msg: 'Removing Torrent');
-    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
-    IOClient ioClient = new IOClient(httpClient);
-    await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+    await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': 'remove',
@@ -109,9 +101,7 @@ class ApiRequests{
     Status toggleStatus = isOpen==0?
     Status.downloading:getState==0?(Status.downloading):Status.paused;
 
-    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
-    IOClient ioClient = new IOClient(httpClient);
-    await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+    await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': statusMap[toggleStatus],
@@ -120,9 +110,7 @@ class ApiRequests{
   }
 
   static addTorrentUrl(Api api,String url) async {
-    HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
-    IOClient ioClient = new IOClient(httpClient);
-    await ioClient.post(Uri.parse(api.addTorrentUrl),
+    await api.ioClient.post(Uri.parse(api.addTorrentUrl),
         headers: api.getAuthHeader(),
         body: {
           'url': url,
@@ -131,12 +119,8 @@ class ApiRequests{
 
   static Future<List<String>> getTrackers(Api api, String hashValue) async{
     List<String> trackersList = [];
-    HttpClient httpClient = new HttpClient()
-      ..badCertificateCallback =
-      ((X509Certificate cert, String host, int port) => true);
-    IOClient ioClient = new IOClient(httpClient);
 
-    var trKResponse = await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+    var trKResponse = await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {'mode': 'trk', 'hash': hashValue});
 
@@ -149,12 +133,8 @@ class ApiRequests{
 
   static Future<List<String>> getFiles(Api api, String hashValue) async{
     List<String> filesList = [];
-    HttpClient httpClient = new HttpClient()
-      ..badCertificateCallback =
-      ((X509Certificate cert, String host, int port) => true);
-    IOClient ioClient = new IOClient(httpClient);
 
-    var flsResponse = await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+    var flsResponse = await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {'mode': 'fls', 'hash': hashValue});
 
@@ -166,16 +146,11 @@ class ApiRequests{
   }
 
   static Stream<Torrent> updateSheetData(Api api, Torrent torrent) async* {
-    HttpClient httpClient = new HttpClient()
-      ..badCertificateCallback =
-      ((X509Certificate cert, String host, int port) => true);
-    IOClient ioClient = new IOClient(httpClient);
-
     try {
       while (true) {
         await Future.delayed(Duration(seconds: 1), () {});
 
-        var response = await ioClient.post(Uri.parse(api.httprpcPluginUrl),
+        var response = await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
             headers: api.getAuthHeader(),
             body: {
               'mode': 'list',

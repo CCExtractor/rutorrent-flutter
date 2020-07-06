@@ -1,6 +1,23 @@
 import 'dart:convert';
 
+import 'dart:io';
+
+import 'package:http/io_client.dart';
+
 class Api {
+  IOClient _ioClient;
+
+  Api(){
+    // url with some issue with their SSL certificates can be trusted explicitly with this
+    bool trustSelfSigned = true;
+    HttpClient httpClient = new HttpClient()
+      ..badCertificateCallback =
+      ((X509Certificate cert, String host, int port) => trustSelfSigned);
+    _ioClient = new IOClient(httpClient);
+  }
+
+  get ioClient => _ioClient;
+
   String _url;
   String _username;
   String _password;

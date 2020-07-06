@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/io_client.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/data_input_widget.dart';
 import 'package:rutorrentflutter/constants.dart';
@@ -50,9 +49,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
     });
     var response;
     try {
-      HttpClient httpClient = new HttpClient()..badCertificateCallback = ((X509Certificate cert, String host, int port) => true);
-      IOClient ioClient = new IOClient(httpClient);
-      response = await ioClient.get(Uri.parse(api.diskSpacePluginUrl),headers: api.getAuthHeader());
+      response = await api.ioClient.get(Uri.parse(api.diskSpacePluginUrl),headers: api.getAuthHeader());
     }
     catch(e){
       print(e);
@@ -63,15 +60,15 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
         isValidating=false;
       });
       if(response!=null){
-        response.statusCode==200?//SUCCESS
+        response.statusCode==200? //  SUCCESS: Validation Successful
           //Navigate to Home Screen
-          Navigator.push(context, MaterialPageRoute(
+          Navigator.pushReplacement(context, MaterialPageRoute(
               builder: (context) => MultiProvider(
                   providers: [
                     Provider<Api> (create: (context)=>api),
                     ChangeNotifierProvider<GeneralFeatures> (create: (context)=>GeneralFeatures(),),
                   ],
-                  child: HomeScreen(api))
+                  child: HomeScreen())
           )):
         api.username.toString().isEmpty||api.password.toString().isEmpty?
         Fluttertoast.showToast(msg: 'Please enter username and password'):
