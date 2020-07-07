@@ -76,7 +76,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   Widget build(BuildContext context) {
     return ModalProgressHUD(
       progressIndicator: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(Constants.kBlue),
+        valueColor: AlwaysStoppedAnimation<Color>(Constants.kIndigo),
       ),
       inAsyncCall: isValidating,
       child: Scaffold(

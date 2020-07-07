@@ -34,7 +34,7 @@ class TorrentAddDialog extends StatelessWidget {
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: 10),
-                    hintText: 'Enter Url'),
+                    hintText: 'Paste Magnet Url Here'),
               ),
             ),
             Expanded(
@@ -43,8 +43,7 @@ class TorrentAddDialog extends StatelessWidget {
                 child: RaisedButton(
                   color: Constants.kBlue,
                   child: Text('Add',style: TextStyle(color: Colors.white,fontSize: 16),),
-                  onPressed: (){
-                    Fluttertoast.showToast(msg: 'Adding torrent');
+                  onPressed: () {
                     Navigator.pop(context);
                     ApiRequests.addTorrentUrl(api,urlTextController.text);
                   },

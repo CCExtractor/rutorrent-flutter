@@ -33,6 +33,7 @@ class Api {
   get httprpcPluginUrl => url + '/plugins/httprpc/action.php';
   get addTorrentUrl => url + '/php/addtorrent.php';
   get diskSpacePluginUrl => url + '/plugins/diskspace/action.php';
+  get rssPluginUrl => url + '/plugins/rss/action.php';
 
   Map<String, String> getAuthHeader() => {
         'authorization':

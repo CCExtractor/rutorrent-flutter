@@ -1,14 +1,15 @@
 import 'package:provider/provider.dart';
-import 'package:rutorrentflutter/components/search_bar.dart';
 import 'package:rutorrentflutter/components/show_disk_space.dart';
 import 'package:rutorrentflutter/components/torrent_add_dialog.dart';
-import 'package:rutorrentflutter/components/torrent_list_stream.dart';
+import 'package:rutorrentflutter/pages/rss_feeds.dart';
+import 'package:rutorrentflutter/pages/torrents_list_page.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
 import '../api/api_conf.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import '../constants.dart' as Constants;
 
 class HomeScreen extends StatefulWidget {
@@ -17,6 +18,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;
+  PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer3<Mode, Api, GeneralFeatures>(
@@ -84,10 +94,49 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        body: Column(
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() => _currentIndex = index);
+          },
           children: <Widget>[
-            SearchBar(),
-            Expanded(child: TorrentListStream()),
+            TorrentsListPage(),
+            RSSFeeds(),
+            Container(
+              color: Colors.green,
+            ),
+            Container(
+              color: Colors.blue,
+            ),
+          ],
+        ),
+        bottomNavigationBar: BottomNavyBar(
+          selectedIndex: _currentIndex,
+          onItemSelected: (index) {
+            setState(() => _currentIndex = index);
+            _pageController.jumpToPage(index);
+          },
+          items: <BottomNavyBarItem>[
+            BottomNavyBarItem(
+                title: Text('Home'),
+                icon: Icon(Icons.home),
+                activeColor: Constants.kIndigo,
+                inactiveColor: mode.isLightMode ? Constants.kDarkGrey : Colors.white,),
+            BottomNavyBarItem(
+                title: Text('Feeds'),
+                icon: Icon(Icons.rss_feed),
+                activeColor: Constants.kIndigo,
+                inactiveColor: mode.isLightMode ? Constants.kDarkGrey : Colors.white,),
+            BottomNavyBarItem(
+                title: Text('Downloads'),
+                icon: Icon(Icons.file_download),
+                activeColor: Constants.kIndigo,
+                inactiveColor: mode.isLightMode ? Constants.kDarkGrey : Colors.white,),
+            BottomNavyBarItem(
+                title: Text('Settings'),
+                icon: Icon(Icons.settings),
+                activeColor: Constants.kIndigo,
+                inactiveColor: mode.isLightMode ? Constants.kDarkGrey : Colors.white,),
           ],
         ),
       );
