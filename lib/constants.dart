@@ -12,13 +12,3 @@ const Color kLightGrey = Color(0xFFC6C7C6);
 const Color kWhitishGrey = Color(0xFFF7F7F7);
 const Color kDarkGrey = Color(0xFF424342);
 
-const Map<Sort,String> sortMap = {
-  Sort.name: 'Name',
-  Sort.dateAdded: 'Date Added',
-  Sort.percentDownloaded: 'Percent Downloaded',
-  Sort.downloadSpeed: 'Download Speed',
-  Sort.uploadSpeed: 'Upload Speed',
-  Sort.ratio: 'Ratio',
-  Sort.size: 'Size',
-};
-

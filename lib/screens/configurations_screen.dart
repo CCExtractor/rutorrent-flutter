@@ -5,12 +5,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/data_input_widget.dart';
-import 'package:rutorrentflutter/constants.dart';
-import 'package:rutorrentflutter/models/general_features.dart';
+import 'package:rutorrentflutter/constants.dart' as Constants;
 import 'package:rutorrentflutter/screens/home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '../api/api_conf.dart';
-
 
 class ConfigurationsScreen extends StatefulWidget {
   @override
@@ -18,7 +16,6 @@ class ConfigurationsScreen extends StatefulWidget {
 }
 
 class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
-
   final TextEditingController urlController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -26,18 +23,17 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   bool isValidating = false;
   Api api = Api();
 
-  _validateConfigurationDetails(Api api) async{
-    if(api.username.toString().isNotEmpty){
+  _validateConfigurationDetails(Api api) async {
+    if (api.username.toString().isNotEmpty) {
       //check for network connection when user is trying to connect to an external server
       try {
         final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           print('Connected to Network');
         }
-      }
-      on SocketException catch (_) {
+      } on SocketException catch (_) {
         setState(() {
-          isValidating=false;
+          isValidating = false;
         });
         Fluttertoast.showToast(msg: 'Network Connection Error');
         return;
@@ -45,34 +41,33 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
     }
 
     setState(() {
-      isValidating=true;
+      isValidating = true;
     });
     var response;
     try {
-      response = await api.ioClient.get(Uri.parse(api.diskSpacePluginUrl),headers: api.getAuthHeader());
-    }
-    catch(e){
+      response = await api.ioClient
+          .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
+    } catch (e) {
       print(e);
       Fluttertoast.showToast(msg: 'Invalid Url');
-    }
-    finally{
+    } finally {
       setState(() {
-        isValidating=false;
+        isValidating = false;
       });
-      if(response!=null){
-        response.statusCode==200? //  SUCCESS: Validation Successful
-          //Navigate to Home Screen
-          Navigator.pushReplacement(context, MaterialPageRoute(
-              builder: (context) => MultiProvider(
-                  providers: [
-                    Provider<Api> (create: (context)=>api),
-                    ChangeNotifierProvider<GeneralFeatures> (create: (context)=>GeneralFeatures(),),
-                  ],
-                  child: HomeScreen())
-          )):
-        api.username.toString().isEmpty||api.password.toString().isEmpty?
-        Fluttertoast.showToast(msg: 'Please enter username and password'):
-        Fluttertoast.showToast(msg: 'Invalid Credentials');
+      if (response != null) {
+        response.statusCode == 200
+            ? //  SUCCESS: Validation Successful
+            //Navigate to Home Screen
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      Provider(create: (context) => api, child: HomeScreen()),
+                ))
+            : api.username.toString().isEmpty || api.password.toString().isEmpty
+                ? Fluttertoast.showToast(
+                    msg: 'Please enter username and password')
+                : Fluttertoast.showToast(msg: 'Invalid Credentials');
       }
     }
   }
@@ -80,17 +75,22 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   @override
   Widget build(BuildContext context) {
     return ModalProgressHUD(
+      progressIndicator: CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Constants.kBlue),
+      ),
       inAsyncCall: isValidating,
       child: Scaffold(
         body: Container(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 120.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 120.0),
               child: Center(
                 child: Column(
                   children: <Widget>[
                     Image(
-                      image: AssetImage('assets/images/ruTorrent_mobile_logo.png'),
+                      image:
+                          AssetImage('assets/images/ruTorrent_mobile_logo.png'),
                       height: 60,
                     ),
                     Padding(
@@ -101,17 +101,22 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                             textEditingController: urlController,
                             hintText: 'Enter url here',
                           ),
-                          Text('Example: https://fremicro081.xirvik.com/rtorrent',style: TextStyle(color: Colors.grey),),
+                          Text(
+                            'Example: https://fremicro081.xirvik.com/rtorrent',
+                            style: TextStyle(color: Colors.grey),
+                          ),
                         ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 32.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 32.0, vertical: 32.0),
                       child: Column(
                         children: <Widget>[
                           DataInput(
-                            onFieldSubmittedCallback: (v){
-                              FocusScope.of(context).requestFocus(passwordFocus);
+                            onFieldSubmittedCallback: (v) {
+                              FocusScope.of(context)
+                                  .requestFocus(passwordFocus);
                             },
                             textEditingController: usernameController,
                             iconData: FontAwesomeIcons.user,
@@ -129,15 +134,19 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                     ),
                     RaisedButton(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          side: BorderSide(),
+                        borderRadius: BorderRadius.circular(5.0),
+                        side: BorderSide(),
                       ),
-                      color: kBlue,
+                      color: Constants.kBlue,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 28,vertical: 16),
-                        child: Text('Go',style: TextStyle(color: Colors.white,fontSize: 18),),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 28, vertical: 16),
+                        child: Text(
+                          'Go',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
                       ),
-                      onPressed: (){
+                      onPressed: () {
                         api.setUrl(urlController.text);
                         api.setUsername(usernameController.text);
                         api.setPassword(passwordController.text);

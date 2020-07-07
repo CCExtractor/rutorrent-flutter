@@ -27,10 +27,67 @@ enum Filter{
 
 class GeneralFeatures extends ChangeNotifier{
 
+  /// Torrent List
+  List<Torrent> _torrentsList = [];
+  get torrentsList => _torrentsList;
+  updateTorrentsList(List<Torrent> newList)=> _torrentsList = newList;
+
+  /// Torrent Sorting
+  Sort _sortPreference;
+  get sortPreference => _sortPreference;
+  setSortPreference (Sort newPreference){
+    _sortPreference = newPreference;
+    notifyListeners();
+  }
+
+  List<Torrent> sortList(List<Torrent> torrentsList, Sort sort,){
+    switch(sort){
+      case Sort.name:
+        torrentsList.sort((a,b)=>a.name.compareTo(b.name));
+        return torrentsList;
+      case Sort.dateAdded:
+        torrentsList.sort((a,b)=>a.torrentAdded.compareTo(b.torrentAdded));
+        return torrentsList;
+      case Sort.percentDownloaded:
+        torrentsList.sort((a,b)=>a.percentageDownload.compareTo(b.percentageDownload));
+        return torrentsList;
+      case Sort.downloadSpeed:
+        torrentsList.sort((a,b)=>a.dlSpeed.compareTo(b.dlSpeed));
+        return torrentsList;
+      case Sort.uploadSpeed:
+        torrentsList.sort((a,b)=>a.ulSpeed.compareTo(b.ulSpeed));
+        return torrentsList;
+      case Sort.ratio:
+        torrentsList.sort((a,b)=>a.ratio.compareTo(b.ratio));
+        return torrentsList;
+      case Sort.size:
+        torrentsList.sort((a,b)=>a.size.compareTo(b.size));
+        return torrentsList;
+      default:
+        return torrentsList;
+    }
+  }
+
+  /// Torrent Searching
+  TextEditingController _searchTextController = TextEditingController();
+  bool _isSearching = false;
+  FocusNode _searchBarFocus = FocusNode();
+
+  get searchTextController => _searchTextController;
+  get isSearching => _isSearching;
+  get searchBarFocus => _searchBarFocus;
+
+  setSearchingState (bool newState){
+    _isSearching = newState;
+    notifyListeners();
+  }
+
+
+  /// Disk Space
   DiskSpace _diskSpace = DiskSpace();
   get diskSpace => _diskSpace;
 
-  updateDiskSpace(int total,int free){
+  updateDiskSpace(int total, int free){
     //check if there is any change in freeSpace of disk
     if(free==_diskSpace.free)
       return;// returning since there is no change and UI does not need to update
@@ -42,6 +99,7 @@ class GeneralFeatures extends ChangeNotifier{
       _diskSpace.generateLowDiskSpaceAlert();
   }
 
+  /// Torrent Filtering
   Filter _selectedFilter = Filter.All;
   List<FilterTile> _filterTileList=[
     FilterTile(
@@ -92,34 +150,6 @@ class GeneralFeatures extends ChangeNotifier{
         return torrentsList.where((torrent) => torrent.ulSpeed==0 && torrent.dlSpeed==0).toList();
       case Filter.Error:
         return torrentsList.where((torrent) => torrent.msg.length>0 && torrent.msg!='Tracker: [Tried all trackers.]').toList();
-      default:
-        return torrentsList;
-    }
-  }
-
-  List<Torrent> sortList(List<Torrent> torrentsList, Sort sort,){
-    switch(sort){
-      case Sort.name:
-        torrentsList.sort((a,b)=>a.name.compareTo(b.name));
-        return torrentsList;
-      case Sort.dateAdded:
-        torrentsList.sort((a,b)=>a.torrentAdded.compareTo(b.torrentAdded));
-        return torrentsList;
-      case Sort.percentDownloaded:
-        torrentsList.sort((a,b)=>a.percentageDownload.compareTo(b.percentageDownload));
-        return torrentsList;
-      case Sort.downloadSpeed:
-        torrentsList.sort((a,b)=>a.dlSpeed.compareTo(b.dlSpeed));
-        return torrentsList;
-      case Sort.uploadSpeed:
-        torrentsList.sort((a,b)=>a.ulSpeed.compareTo(b.ulSpeed));
-        return torrentsList;
-      case Sort.ratio:
-        torrentsList.sort((a,b)=>a.ratio.compareTo(b.ratio));
-        return torrentsList;
-      case Sort.size:
-        torrentsList.sort((a,b)=>a.size.compareTo(b.size));
-        return torrentsList;
       default:
         return torrentsList;
     }

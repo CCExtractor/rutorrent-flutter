@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rutorrentflutter/constants.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
 
+import 'models/general_features.dart';
 import 'models/mode.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider<Mode>(
-      create: (context) => Mode(), child: MyApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider<Mode>(create: (context) => Mode()),
+    ChangeNotifierProvider<GeneralFeatures>(
+      create: (context) => GeneralFeatures(),
+    ),
+  ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

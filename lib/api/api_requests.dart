@@ -9,7 +9,7 @@ class ApiRequests{
 
   /// This class will be responsible for making all API Calls
 
-  static Stream<List<Torrent>> initTorrentsData(BuildContext context,Api api,GeneralFeatures generalFeat) async* {
+  static Stream<List<Torrent>> initTorrentsData(BuildContext context,Api api,GeneralFeatures general) async* {
     while (true) {
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
@@ -20,7 +20,7 @@ class ApiRequests{
             headers: api.getAuthHeader());
         var diskSpace = jsonDecode(diskSpaceResponse.body);
 
-        generalFeat.updateDiskSpace(diskSpace['total'], diskSpace['free']);
+        general.updateDiskSpace(diskSpace['total'], diskSpace['free']);
 
         List<Torrent> torrentsList = [];
         try {
@@ -181,7 +181,10 @@ class ApiRequests{
         yield updatedTorrent;
       }
     } catch (e) {
-      print('Exception Caught in Torrent Details' + e.toString());
+      print('Exception Caught in Torrent Details ' + e.toString());
+      /* Exception may arise when you are constantly updating the torrent details and
+      that torrent task might have been removed either from
+      web interface or through any other device.*/
     }
   }
 }
