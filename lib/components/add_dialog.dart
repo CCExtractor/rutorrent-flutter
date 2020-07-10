@@ -1,0 +1,71 @@
+import 'package:flutter/services.dart';
+import '../constants.dart' as Constants;
+import 'package:flutter/material.dart';
+
+class AddDialog extends StatelessWidget {
+
+  final Function apiRequest;
+  final Color buttonColor;
+  final TextEditingController urlTextController = TextEditingController();
+
+  AddDialog({this.apiRequest,this.buttonColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(10),
+        topRight: Radius.circular(10),
+    ),
+      ),
+      child: Container(
+        height: 120,
+        decoration: BoxDecoration(
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+              height: 70,
+              width: double.infinity,
+              child: Row(
+                children: <Widget>[
+                  Flexible(
+                    child: TextFormField(
+                      style: TextStyle(fontSize: 16,color: Constants.kDarkGrey),
+                      controller: urlTextController,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 8,vertical: 10),
+                          hintText: 'Enter url here'),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () async{
+                      ClipboardData data = await Clipboard.getData('text/plain');
+                      urlTextController.text = data.text.toString();
+                    },
+                    icon: Icon(Icons.content_paste),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 50,
+              width: double.infinity,
+              child: RaisedButton(
+                color: buttonColor,
+                child: Text('Add',style: TextStyle(color: Colors.white,fontSize: 16),),
+                onPressed: () {
+                  Navigator.pop(context);
+                  apiRequest(urlTextController.text);
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

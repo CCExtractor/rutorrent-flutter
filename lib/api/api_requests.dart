@@ -7,7 +7,7 @@ import 'api_conf.dart';
 import '../models/torrent.dart';
 
 class ApiRequests {
-  /// This class will be responsible for making all API Calls
+  /// This class will be responsible for making all API Calls to the ruTorrent server
 
   static Stream<List<Torrent>> initTorrentsData(
       BuildContext context, Api api, GeneralFeatures general) async* {
@@ -109,9 +109,9 @@ class ApiRequests {
         });
   }
 
-  static addTorrentUrl(Api api, String url) async {
+  static addTorrent(Api api, String url) async {
     Fluttertoast.showToast(msg: 'Adding torrent');
-    await api.ioClient.post(Uri.parse(api.addTorrentUrl),
+    await api.ioClient.post(Uri.parse(api.addTorrentPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'url': url,
@@ -202,5 +202,24 @@ class ApiRequests {
       rssLabels.add(rssLabel);
     }
     return rssLabels;
+  }
+
+  static removeRSS (Api api, String hashValue) async{
+    await api.ioClient
+        .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(),
+        body: {
+        'mode': 'remove',
+        'rss': hashValue,
+        });
+  }
+
+  static addRSS (Api api, String rssUrl) async{
+    Fluttertoast.showToast(msg: 'Adding RSS');
+    await api.ioClient
+        .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(),
+        body: {
+          'mode': 'add',
+          'url': rssUrl,
+        });
   }
 }

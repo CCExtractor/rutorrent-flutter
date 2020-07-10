@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
-import 'package:rutorrentflutter/components/show_disk_space.dart';
-import 'package:rutorrentflutter/components/torrent_add_dialog.dart';
+import 'package:rutorrentflutter/api/api_requests.dart';
+import 'package:rutorrentflutter/components/disk_space_block.dart';
+import 'package:rutorrentflutter/components/add_dialog.dart';
 import 'package:rutorrentflutter/pages/rss_feeds.dart';
 import 'package:rutorrentflutter/pages/torrents_list_page.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
@@ -49,7 +50,12 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 showDialog(
                     context: context,
-                    builder: (context) => TorrentAddDialog(api));
+                    builder: (context) => AddDialog(
+                      buttonColor: Constants.kBlue,
+                      apiRequest: (url){
+                        ApiRequests.addTorrent(api, url);
+                      },
+                    ));
               },
               icon: Icon(
                 Icons.library_add,
@@ -102,11 +108,11 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             TorrentsListPage(),
             RSSFeeds(),
-            Container(
-              color: Colors.green,
+            Center(
+              child: Text('Nothing Here Now'),
             ),
-            Container(
-              color: Colors.blue,
+            Center(
+              child: Text('Settings Page'),
             ),
           ],
         ),

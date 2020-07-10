@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class DataInput extends StatelessWidget {
   final IconData iconData;
@@ -7,8 +8,9 @@ class DataInput extends StatelessWidget {
   final FocusNode focus;
   final onFieldSubmittedCallback;
   final textInputAction;
+  final bool showPasteIcon;
 
-  DataInput({this.iconData,this.hintText,this.textEditingController,this.onFieldSubmittedCallback,this.focus,this.textInputAction});
+  DataInput({this.iconData,this.hintText,this.textEditingController,this.onFieldSubmittedCallback,this.focus,this.textInputAction,this.showPasteIcon});
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +27,32 @@ class DataInput extends StatelessWidget {
               ):Container(),
             ),
             Expanded(
-              child: TextFormField(
-                textInputAction: textInputAction,
-                focusNode: focus,
-                onFieldSubmitted: onFieldSubmittedCallback,
-                controller: textEditingController,
-                cursorColor: Colors.black,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16,vertical: 10),
-                    hintText: hintText),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: TextFormField(
+                      textInputAction: textInputAction,
+                      focusNode: focus,
+                      onFieldSubmitted: onFieldSubmittedCallback,
+                      controller: textEditingController,
+                      cursorColor: Colors.black,
+                      keyboardType: TextInputType.text,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 4,vertical: 10),
+                          hintText: hintText),
+                    ),
+                  ),
+                  showPasteIcon??false? IconButton(
+                    color: Colors.grey,
+                    onPressed: () async{
+                      ClipboardData data = await Clipboard.getData('text/plain');
+                      textEditingController.text = data.text.toString();
+                    },
+                    icon: Icon(Icons.content_paste),
+                  ):Container(),
+                ],
               ),
             ),
           ],

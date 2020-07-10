@@ -19,16 +19,17 @@ class ShowDiskSpace extends StatelessWidget {
               Text(
                 'Disk Space (${general.diskSpace.getPercentage()}%)',
                 style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: 'SFUIDisplay/sf-ui-display-high.otf'),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                ),
               ),
               SizedBox(
-                height: 10,
+                height: 8,
               ),
               Text(
                   '${filesize(general.diskSpace.free)} left of ${filesize(general.diskSpace.total)}',
                   style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       color: mode.isLightMode
                           ? Constants.kDarkGrey
                           : Constants.kLightGrey,
@@ -37,7 +38,7 @@ class ShowDiskSpace extends StatelessWidget {
                 height: 5,
               ),
               Container(
-                height: 10,
+                height: 8,
                 child: LinearProgressIndicator(
                   value: general.diskSpace.getPercentage() / 100,
                   backgroundColor: Constants.kLightGrey,

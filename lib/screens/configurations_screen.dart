@@ -98,6 +98,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                       child: Column(
                         children: <Widget>[
                           DataInput(
+                            showPasteIcon: true,
                             textEditingController: urlController,
                             hintText: 'Enter url here',
                           ),

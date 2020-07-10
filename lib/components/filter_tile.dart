@@ -20,6 +20,7 @@ class FilterTile extends StatelessWidget {
                 : Constants.kLightGrey)
             : null,
         child: ListTile(
+          dense: true,
           leading: Icon(icon),
           title: Text(
               filter.toString().substring(filter.toString().indexOf('.') + 1)),

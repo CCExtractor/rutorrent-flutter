@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rutorrentflutter/constants.dart' as Constants;
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
 
 import 'models/general_features.dart';
@@ -20,12 +21,18 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ruTorrent Mobile',
       theme: ThemeData.light().copyWith(
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Constants.kIndigo,
+        ),
         textTheme: ThemeData.light().textTheme.apply(
               fontFamily: 'SFUIDisplay',
             ),
         primaryColor: Colors.grey[300],
       ),
       darkTheme: ThemeData.dark().copyWith(
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Constants.kIndigo,
+        ),
         textTheme: ThemeData.dark().textTheme.apply(
               fontFamily: 'SFUIDisplay',
             ),

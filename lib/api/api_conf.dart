@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'dart:io';
-
 import 'package:http/io_client.dart';
 
 class Api {
@@ -31,7 +29,7 @@ class Api {
   get password => _password;
 
   get httprpcPluginUrl => url + '/plugins/httprpc/action.php';
-  get addTorrentUrl => url + '/php/addtorrent.php';
+  get addTorrentPluginUrl => url + '/php/addtorrent.php';
   get diskSpacePluginUrl => url + '/plugins/diskspace/action.php';
   get rssPluginUrl => url + '/plugins/rss/action.php';
 
