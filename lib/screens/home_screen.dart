@@ -20,13 +20,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 showDialog(
                     context: context,
                     builder: (context) => AddDialog(
-                      buttonColor: Constants.kBlue,
+                      dialogHint: 'Enter torrent url',
                       apiRequest: (url){
                         ApiRequests.addTorrent(api, url);
                       },
@@ -101,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         body: PageView(
-          controller: _pageController,
+          controller: general.pageController,
           onPageChanged: (index) {
             setState(() => _currentIndex = index);
           },
@@ -120,28 +113,28 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedIndex: _currentIndex,
           onItemSelected: (index) {
             setState(() => _currentIndex = index);
-            _pageController.jumpToPage(index);
+            general.pageController.jumpToPage(index);
           },
           items: <BottomNavyBarItem>[
             BottomNavyBarItem(
                 title: Text('Home'),
                 icon: Icon(Icons.home),
-                activeColor: Constants.kIndigo,
+                activeColor: mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
                 inactiveColor: mode.isLightMode ? Constants.kDarkGrey : Colors.white,),
             BottomNavyBarItem(
                 title: Text('Feeds'),
                 icon: Icon(Icons.rss_feed),
-                activeColor: Constants.kIndigo,
+                activeColor: mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
                 inactiveColor: mode.isLightMode ? Constants.kDarkGrey : Colors.white,),
             BottomNavyBarItem(
                 title: Text('Downloads'),
                 icon: Icon(Icons.file_download),
-                activeColor: Constants.kIndigo,
+                activeColor: mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
                 inactiveColor: mode.isLightMode ? Constants.kDarkGrey : Colors.white,),
             BottomNavyBarItem(
                 title: Text('Settings'),
                 icon: Icon(Icons.settings),
-                activeColor: Constants.kIndigo,
+                activeColor: mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
                 inactiveColor: mode.isLightMode ? Constants.kDarkGrey : Colors.white,),
           ],
         ),

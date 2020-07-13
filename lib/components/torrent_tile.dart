@@ -15,16 +15,16 @@ class TorrentTile extends StatelessWidget {
   final Torrent torrent;
   TorrentTile(this.torrent);
 
-  Color _getStatusColor() {
-    switch (torrent.status) {
+  static Color getStatusColor(Status status,BuildContext context) {
+    switch (status) {
       case Status.downloading:
-        return Constants.kBlue;
+        return Provider.of<Mode>(context).isLightMode?Constants.kBlue:Constants.kIndigo;
       case Status.paused:
-        return Constants.kDarkGrey;
+        return Provider.of<Mode>(context).isLightMode?Constants.kDarkGrey:Constants.kLightGrey;
       case Status.errors:
         return Constants.kRed;
       case Status.completed:
-        return Constants.kGreen;
+        return  Provider.of<Mode>(context).isLightMode?Constants.kGreen:Constants.kLightGreen;
       default:
         return Constants.kDarkGrey;
     }
@@ -40,7 +40,7 @@ class TorrentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color statusColor = _getStatusColor();
+    Color statusColor = getStatusColor(torrent.status,context);
     return Consumer<Api>(
       builder: (context, api, child) {
         return GestureDetector(
@@ -56,27 +56,26 @@ class TorrentTile extends StatelessWidget {
             actionPane: SlidableScrollActionPane(),
             actions: <Widget>[
               SlideAction(
-                color: Colors.red[800],
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Icon(
-                    Icons.remove_circle_outline,
-                    size: 32,
-                    color: Colors.white,
-                  ),
+                child: Icon(
+                  Icons.remove_circle_outline,
+                  color: Provider.of<Mode>(context)
+                      .isLightMode
+                      ? Constants.kDarkGrey
+                      : Constants.kLightGrey,
+                  size: 34,
                 ),
                 onTap: () => ApiRequests.removeTorrent(api, torrent.hash),
               )
             ],
             secondaryActions: <Widget>[
               SlideAction(
-                color: Colors.grey[700],
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: FaIcon(
-                    FontAwesomeIcons.stop,
-                    color: Colors.white,
-                  ),
+                child: FaIcon(
+                  FontAwesomeIcons.stopCircle,
+                  color: Provider.of<Mode>(context)
+                      .isLightMode
+                      ? Constants.kDarkGrey
+                      : Constants.kLightGrey,
+                  size: 32,
                 ),
                 onTap: () => ApiRequests.stopTorrent(api, torrent.hash),
               ),
@@ -124,34 +123,18 @@ class TorrentTile extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.symmetric(vertical: 8.0),
                                   child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            '↓ ${filesize(torrent.dlSpeed.toString()) + '/s'} | ↑ ${filesize(torrent.ulSpeed.toString()) + '/s'}',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 10,
-                                                color:
-                                                    Provider.of<Mode>(context)
-                                                            .isLightMode
-                                                        ? Constants.kDarkGrey
-                                                        : Constants.kLightGrey),
-                                          ),
-                                          Text(
-                                            torrent.ratio == 0
-                                                ? 'R: 0.000'
-                                                : 'R: ${(torrent.ratio / 1000).toStringAsFixed(3)}',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 10,
-                                                color: Provider.of<Mode>(context)
-                                                    .isLightMode
+                                      Text(
+                                        '↓ ${filesize(torrent.dlSpeed.toString()) + '/s'} | ↑ ${filesize(torrent.ulSpeed.toString()) + '/s'}',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 10,
+                                            color:
+                                                Provider.of<Mode>(context)
+                                                        .isLightMode
                                                     ? Constants.kDarkGrey
                                                     : Constants.kLightGrey),
-                                          ),
-                                        ],
                                       ),
                                       SizedBox(
                                         height: 4,
@@ -163,7 +146,7 @@ class TorrentTile extends StatelessWidget {
                                               AlwaysStoppedAnimation<Color>(
                                                   statusColor),
                                           backgroundColor:
-                                              Constants.kLightGrey),
+                                              Provider.of<Mode>(context).isLightMode?Constants.kLightGrey:Constants.kDarkGrey),
                                     ],
                                   ),
                                 )
@@ -175,6 +158,7 @@ class TorrentTile extends StatelessWidget {
                     ),
                     Expanded(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           Text(

@@ -15,22 +15,17 @@ class LoadingShimmer extends StatelessWidget {
                 width: double.infinity,
                 color: Colors.grey,
               ),
-              SizedBox(height: 24,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    height: 12,
-                    width: 80,
-                    color: Colors.grey,
-                  ),
-                  Container(
-                    height: 12,
-                    width: 100,
-                    color: Colors.grey,
-                  ),
-                  SizedBox(),
-                ],
+              SizedBox(height: 8,),
+              Container(
+                height: 12,
+                width: 80,
+                color: Colors.grey,
+              ),
+              SizedBox(height: 20,),
+              Container(
+                height: 12,
+                width: 100,
+                color: Colors.grey,
               ),
               SizedBox(height: 8,),
               Container(

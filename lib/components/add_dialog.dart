@@ -1,14 +1,16 @@
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:rutorrentflutter/models/mode.dart';
 import '../constants.dart' as Constants;
 import 'package:flutter/material.dart';
 
 class AddDialog extends StatelessWidget {
 
   final Function apiRequest;
-  final Color buttonColor;
+  final String dialogHint;
   final TextEditingController urlTextController = TextEditingController();
 
-  AddDialog({this.apiRequest,this.buttonColor});
+  AddDialog({this.apiRequest,this.dialogHint});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class AddDialog extends StatelessWidget {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(horizontal: 8,vertical: 10),
-                          hintText: 'Enter url here'),
+                          hintText: dialogHint??'Enter url here'),
                     ),
                   ),
                   IconButton(
@@ -55,7 +57,7 @@ class AddDialog extends StatelessWidget {
               height: 50,
               width: double.infinity,
               child: RaisedButton(
-                color: buttonColor,
+                color: Provider.of<Mode>(context).isLightMode ? Constants.kBlue : Constants.kIndigo,
                 child: Text('Add',style: TextStyle(color: Colors.white,fontSize: 16),),
                 onPressed: () {
                   Navigator.pop(context);

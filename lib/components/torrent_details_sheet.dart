@@ -1,28 +1,38 @@
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
+import 'package:rutorrentflutter/components/torrent_tile.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 
 class TorrentDetailSheet extends StatelessWidget {
   final Torrent torrent;
   TorrentDetailSheet(this.torrent);
 
-  Color _getStatusColor(Status status) {
-    switch (status) {
-      case Status.downloading:
-        return Constants.kBlue;
-      case Status.paused:
-        return Constants.kDarkGrey;
-      case Status.errors:
-        return Constants.kRed;
-      case Status.completed:
-        return Constants.kGreen;
+  IconData _getTorrentIconData(Torrent torrent) {
+    return torrent.isOpen == 0
+        ? Icons.play_arrow
+        : torrent.getState == 0
+        ? (Icons.play_arrow)
+        : Icons.pause;
+  }
+
+  IconData _getFileIcon(String filename){
+    String ext = filename.substring(filename.lastIndexOf('.'),filename.length);
+    switch(ext){
+      case '.mp4':
+        return Icons.ondemand_video;
+      case '.mp3':
+        return Icons.music_video;
+      case '.jpg':
+        return Icons.image;
       default:
-        return Constants.kDarkGrey;
+        return Icons.insert_drive_file;
     }
   }
 
@@ -36,10 +46,25 @@ class TorrentDetailSheet extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 32,horizontal: 16),
-                  child: Text(torrent.name,
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  padding: const EdgeInsets.fromLTRB(8,16,8,8),
+                  child: Row(
+                    children: <Widget>[
+                      IconButton(
+                        onPressed: ()=> Navigator.pop(context),
+                        icon: Icon(
+                          Icons.keyboard_backspace,
+                          color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,
+                        ),
+                      ),
+                      Flexible(
+                        child: Center(
+                          child: Text(torrent.name,
+                              style:
+                                  TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 StreamBuilder(
                     initialData: torrent,
@@ -48,16 +73,48 @@ class TorrentDetailSheet extends StatelessWidget {
                       Torrent updatedTorrent = snapshot.data ?? torrent;
                       return Column(
                         children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              IconButton(
+                                color: Constants.kRed,
+                                iconSize: 40,
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  ApiRequests.removeTorrent(api, torrent.hash);
+                                  Navigator.pop(context);
+                                }
+                              ),
+                              SizedBox(width: 25,),
+                              IconButton(
+                                color: Provider.of<Mode>(context).isLightMode?Constants.kBlue:Constants.kIndigo,
+                                iconSize: 40,
+                                icon: Icon(_getTorrentIconData(torrent)),
+                                onPressed: () => ApiRequests.toggleTorrentStatus(
+                                    api,
+                                    updatedTorrent.hash,
+                                    updatedTorrent.isOpen,
+                                    updatedTorrent.getState),
+                              ),
+                              SizedBox(width: 25,),
+                              IconButton(
+                                color: Colors.grey,
+                                iconSize: 44,
+                                icon: Icon(Icons.stop),
+                                onPressed: () => ApiRequests.stopTorrent(api, torrent.hash)
+                              ),
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.center,
+                          ),
                           Text(
                             '${updatedTorrent.percentageDownload}%',
                             style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: _getStatusColor(updatedTorrent.status)),
+                                color: TorrentTile.getStatusColor(updatedTorrent.status,context)),
                           ),
                           Divider(
                             thickness: 8,
-                            color: _getStatusColor(updatedTorrent.status),
+                            color:TorrentTile.getStatusColor(updatedTorrent.status,context),
                           ),
                         ],
                       );
@@ -79,20 +136,6 @@ class TorrentDetailSheet extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('${filesize(torrent.downloadedData)}\nDownloaded',
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w600)),
-                      Text('${filesize(torrent.uploadedData)}\nUploaded',
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
                   child: Text('Save Path: ${torrent.savePath}',
                       style:
                           TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
@@ -109,7 +152,8 @@ class TorrentDetailSheet extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10.0),
                             border: Border.all(color: Colors.grey)),
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 12),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -128,7 +172,7 @@ class TorrentDetailSheet extends StatelessWidget {
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600)),
                                   SizedBox(
-                                    height: 10,
+                                    height: 12,
                                   ),
                                   Text('${updatedTorrent.seedsActual}',
                                       style: TextStyle(
@@ -139,7 +183,22 @@ class TorrentDetailSheet extends StatelessWidget {
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600)),
                                   SizedBox(
-                                    height: 10,
+                                    height: 12,
+                                  ),
+                                  Text(
+                                    '${filesize(updatedTorrent.downloadedData)}',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Text(
+                                    'Downloaded',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  SizedBox(
+                                    height: 12,
                                   ),
                                   Text('${filesize(updatedTorrent.dlSpeed)}',
                                       style: TextStyle(
@@ -163,7 +222,7 @@ class TorrentDetailSheet extends StatelessWidget {
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600)),
                                   SizedBox(
-                                    height: 10,
+                                    height: 12,
                                   ),
                                   Text('${updatedTorrent.peersActual}',
                                       style: TextStyle(
@@ -174,7 +233,22 @@ class TorrentDetailSheet extends StatelessWidget {
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600)),
                                   SizedBox(
-                                    height: 10,
+                                    height: 12,
+                                  ),
+                                  Text(
+                                    '${filesize(updatedTorrent.uploadedData)}',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  Text(
+                                    'Uploaded',
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  SizedBox(
+                                    height: 12,
                                   ),
                                   Text('${filesize(updatedTorrent.ulSpeed)}',
                                       style: TextStyle(
@@ -203,9 +277,10 @@ class TorrentDetailSheet extends StatelessWidget {
                                 fontSize: 14, fontWeight: FontWeight.w600)),
                         children: list
                             .map((e) => ListTile(
+                          leading: Icon(_getFileIcon(e)),
                                     title: Text(
                                   e,
-                                  style: TextStyle(fontSize: 12),
+                                  style:TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                                 )))
                             .toList(),
                       );
@@ -222,9 +297,10 @@ class TorrentDetailSheet extends StatelessWidget {
                       ),
                       children: list
                           .map((e) => ListTile(
+                        dense: true,
                                   title: Text(
                                 e,
-                                style: TextStyle(fontSize: 12),
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                               )))
                           .toList(),
                     );

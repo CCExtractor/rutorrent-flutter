@@ -33,22 +33,19 @@ class SearchBar extends StatelessWidget {
               ),
               Expanded(
                 child: TextFormField(
+                  style: TextStyle(fontWeight: FontWeight.w600),
                   focusNode: general.searchBarFocus,
-                  onChanged: (value) {
-                    if (value.isEmpty) {
-                      general.searchBarFocus.unfocus();
-                    }
-                    general.setSearchingState(
-                        general.searchTextController.text.isNotEmpty);
+                  onTap: (){
+                    general.setSearchingState(true);
                   },
                   controller: general.searchTextController,
-                  cursorColor: Colors.black,
+                  cursorColor: mode.isLightMode?Colors.black:Colors.white,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      hintText: 'Search your item by name'),
+                      hintText: 'Search torrent by name'),
                 ),
               ),
               general.isSearching

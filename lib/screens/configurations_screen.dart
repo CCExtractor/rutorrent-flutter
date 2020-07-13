@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/data_input_widget.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '../api/api_conf.dart';
@@ -43,18 +45,19 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
     setState(() {
       isValidating = true;
     });
-    var response;
+    var response;int total;
     try {
       response = await api.ioClient
           .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
+      total = jsonDecode(response.body)['total'];
     } catch (e) {
       print(e);
-      Fluttertoast.showToast(msg: 'Invalid Url');
+      Fluttertoast.showToast(msg: 'Invalid');
     } finally {
       setState(() {
         isValidating = false;
       });
-      if (response != null) {
+      if (response != null && total!=null) {
         response.statusCode == 200
             ? //  SUCCESS: Validation Successful
             //Navigate to Home Screen
@@ -64,10 +67,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                   builder: (context) =>
                       Provider(create: (context) => api, child: HomeScreen()),
                 ))
-            : api.username.toString().isEmpty || api.password.toString().isEmpty
-                ? Fluttertoast.showToast(
-                    msg: 'Please enter username and password')
-                : Fluttertoast.showToast(msg: 'Invalid Credentials');
+            : Fluttertoast.showToast(msg: 'Something\'s Wrong');
       }
     }
   }
@@ -76,7 +76,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   Widget build(BuildContext context) {
     return ModalProgressHUD(
       progressIndicator: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(Constants.kIndigo),
+        valueColor: AlwaysStoppedAnimation<Color>(Provider.of<Mode>(context).isLightMode ? Constants.kBlue : Constants.kIndigo),
       ),
       inAsyncCall: isValidating,
       child: Scaffold(

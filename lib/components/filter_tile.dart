@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
+import 'package:rutorrentflutter/screens/home_screen.dart';
 
 class FilterTile extends StatelessWidget {
   final Filter filter;

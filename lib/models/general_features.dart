@@ -27,6 +27,10 @@ enum Filter{
 
 class GeneralFeatures extends ChangeNotifier{
 
+  /// Page Controller for Home Page
+  final PageController _pageController = PageController();
+  get pageController => _pageController;
+
   /// Torrent List
   List<Torrent> _torrentsList = [];
   get torrentsList => _torrentsList;
@@ -35,6 +39,7 @@ class GeneralFeatures extends ChangeNotifier{
   /// Torrent Sorting
   Sort _sortPreference;
   get sortPreference => _sortPreference;
+
   setSortPreference (Sort newPreference){
     _sortPreference = newPreference;
     notifyListeners();
@@ -133,6 +138,7 @@ class GeneralFeatures extends ChangeNotifier{
 
   changeFilter(Filter newFilter){
     _selectedFilter = newFilter;
+    _pageController.jumpToPage(0); // Show the torrents listing page
     notifyListeners();
   }
 
@@ -154,5 +160,4 @@ class GeneralFeatures extends ChangeNotifier{
         return torrentsList;
     }
   }
-
 }

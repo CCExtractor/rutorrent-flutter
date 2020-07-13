@@ -4,6 +4,7 @@ import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/add_dialog.dart';
 import 'package:rutorrentflutter/components/rss_label_tile.dart';
+import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
 
@@ -31,12 +32,13 @@ class _RSSFeedsState extends State<RSSFeeds> {
       builder: (context,api,child) {
         return Scaffold(
           floatingActionButton: FloatingActionButton(
+            backgroundColor: Provider.of<Mode>(context).isLightMode ? Constants.kBlue : Constants.kIndigo,
             onPressed: () {
               showDialog(
                   context: context,
                   builder: (context) =>
                       AddDialog(
-                        buttonColor: Constants.kIndigo,
+                        dialogHint: 'Enter rss url',
                         apiRequest: (rssUrl) async{
                           await ApiRequests.addRSS(api, rssUrl);
                           _refreshState();
