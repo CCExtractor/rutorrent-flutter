@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
-
 import 'models/general_features.dart';
 import 'models/mode.dart';
 

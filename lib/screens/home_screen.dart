@@ -70,7 +70,8 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               DrawerHeader(
                 child: Image(
-                  image: AssetImage('assets/images/ruTorrent_mobile_logo.png'),
+                  image: mode.isLightMode ? AssetImage('assets/logo/light_mode.png')
+                      : AssetImage('assets/logo/dark_mode.png'),
                 ),
               ),
               ShowDiskSpace(),

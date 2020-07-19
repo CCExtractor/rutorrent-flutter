@@ -45,7 +45,8 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
     setState(() {
       isValidating = true;
     });
-    var response;int total;
+    var response;
+    int total;
     try {
       response = await api.ioClient
           .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
@@ -57,7 +58,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
       setState(() {
         isValidating = false;
       });
-      if (response != null && total!=null) {
+      if (response != null && total != null) {
         response.statusCode == 200
             ? //  SUCCESS: Validation Successful
             //Navigate to Home Screen
@@ -76,7 +77,10 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   Widget build(BuildContext context) {
     return ModalProgressHUD(
       progressIndicator: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(Provider.of<Mode>(context).isLightMode ? Constants.kBlue : Constants.kIndigo),
+        valueColor: AlwaysStoppedAnimation<Color>(
+            Provider.of<Mode>(context).isLightMode
+                ? Constants.kBlue
+                : Constants.kIndigo),
       ),
       inAsyncCall: isValidating,
       child: Scaffold(
@@ -89,8 +93,9 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                 child: Column(
                   children: <Widget>[
                     Image(
-                      image:
-                          AssetImage('assets/images/ruTorrent_mobile_logo.png'),
+                      image: Provider.of<Mode>(context).isLightMode
+                          ? AssetImage('assets/logo/light_mode.png')
+                          : AssetImage('assets/logo/dark_mode.png'),
                       height: 60,
                     ),
                     Padding(
