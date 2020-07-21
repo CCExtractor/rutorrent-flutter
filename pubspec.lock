@@ -337,7 +337,7 @@ packages:
     source: hosted
     version: "2.0.8"
   xml:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: xml
       url: "https://pub.dartlang.org"

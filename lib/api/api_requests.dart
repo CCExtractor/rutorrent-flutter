@@ -5,6 +5,7 @@ import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/rss.dart';
 import 'api_conf.dart';
 import '../models/torrent.dart';
+import 'package:xml/xml.dart' as xml;
 
 class ApiRequests {
   /// This class will be responsible for making all API Calls to the ruTorrent server
@@ -221,5 +222,38 @@ class ApiRequests {
           'mode': 'add',
           'url': rssUrl,
         });
+  }
+
+  static Future<bool> getRSSDetails (Api api, RSSItem rssItem, String labelHash) async {
+    bool dataAvailable = true;
+    try {
+      var response = await api.ioClient
+          .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(),
+          body: {
+            'mode': 'getdesc',
+            'href': rssItem.url,
+            'rss': labelHash,
+          });
+      var xmlResponse = xml.parse(response.body);
+
+      var data = xmlResponse.lastChild
+          .text; // extracting value stored in data tag
+      var list = data.split('<br />');
+      var secondList = list[0].split('\"');
+
+      rssItem.imageUrl = secondList[3];
+      rssItem.name = secondList[5];
+
+      rssItem.rating = list[1];
+      rssItem.genre = list[2];
+      rssItem.size = list[3];
+      rssItem.runtime = list[4];
+      rssItem.description = list[6];
+    }
+    catch(e){
+      dataAvailable=false;
+      print(e);
+    }
+    return dataAvailable;
   }
 }
