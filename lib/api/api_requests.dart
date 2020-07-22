@@ -24,6 +24,7 @@ class ApiRequests {
       general.updateDiskSpace(diskSpace['total'], diskSpace['free']);
 
       List<Torrent> torrentsList = [];
+      List<Torrent> activeTorrents = [];
       try {
         //Fetching torrents Info
         var response = await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
@@ -59,16 +60,43 @@ class ApiRequests {
           torrent.percentageDownload = torrent.getPercentageDownload;
           torrent.status = torrent.getTorrentStatus;
           torrentsList.add(torrent);
+
+          if (torrent.status == Status.downloading &&
+              torrent.percentageDownload < 100) activeTorrents.add(torrent);
         }
+        /* A separate list of active torrents is required for changing the connection state
+           from waiting to active and for notifying user when a new torrent is added or when
+           an active torrent download is completed
+         */
+        general.setActiveDownloads(activeTorrents);
         yield torrentsList;
       } catch (e) {
         print('Exception caught in Api Request ' + e.toString());
         /*returning null since the stream has to be active all times to return something
           this usually occurs when there is no torrent task available or when the connect
-          to rTorrent is not established.*/
+          to rTorrent is not established
+        */
         yield null;
       }
     }
+  }
+
+  static startTorrent(Api api, String hashValue) async {
+    await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {
+          'mode': 'start',
+          'hash': hashValue,
+        });
+  }
+
+  static pauseTorrent(Api api, String hashValue) async {
+    await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {
+          'mode': 'pause',
+          'hash': hashValue,
+        });
   }
 
   static stopTorrent(Api api, String hashValue) async {
@@ -205,30 +233,29 @@ class ApiRequests {
     return rssLabels;
   }
 
-  static removeRSS (Api api, String hashValue) async{
+  static removeRSS(Api api, String hashValue) async {
     await api.ioClient
-        .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(),
-        body: {
-        'mode': 'remove',
-        'rss': hashValue,
-        });
+        .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(), body: {
+      'mode': 'remove',
+      'rss': hashValue,
+    });
   }
 
-  static addRSS (Api api, String rssUrl) async{
+  static addRSS(Api api, String rssUrl) async {
     Fluttertoast.showToast(msg: 'Adding RSS');
     await api.ioClient
-        .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(),
-        body: {
-          'mode': 'add',
-          'url': rssUrl,
-        });
+        .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(), body: {
+      'mode': 'add',
+      'url': rssUrl,
+    });
   }
 
-  static Future<bool> getRSSDetails (Api api, RSSItem rssItem, String labelHash) async {
+  static Future<bool> getRSSDetails(
+      Api api, RSSItem rssItem, String labelHash) async {
     bool dataAvailable = true;
     try {
-      var response = await api.ioClient
-          .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(),
+      var response = await api.ioClient.post(Uri.parse(api.rssPluginUrl),
+          headers: api.getAuthHeader(),
           body: {
             'mode': 'getdesc',
             'href': rssItem.url,
@@ -236,8 +263,8 @@ class ApiRequests {
           });
       var xmlResponse = xml.parse(response.body);
 
-      var data = xmlResponse.lastChild
-          .text; // extracting value stored in data tag
+      var data =
+          xmlResponse.lastChild.text; // extracting value stored in data tag
       var list = data.split('<br />');
       var secondList = list[0].split('\"');
 
@@ -249,9 +276,8 @@ class ApiRequests {
       rssItem.size = list[3];
       rssItem.runtime = list[4];
       rssItem.description = list[6];
-    }
-    catch(e){
-      dataAvailable=false;
+    } catch (e) {
+      dataAvailable = false;
       print(e);
     }
     return dataAvailable;

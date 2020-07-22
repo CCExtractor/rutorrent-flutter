@@ -23,7 +23,6 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   final TextEditingController passwordController = TextEditingController();
   final FocusNode passwordFocus = FocusNode();
   bool isValidating = false;
-  Api api = Api();
 
   _validateConfigurationDetails(Api api) async {
     if (api.username.toString().isNotEmpty) {
@@ -49,7 +48,8 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
     int total;
     try {
       response = await api.ioClient
-          .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
+          .get(Uri.parse(api.diskSpacePluginUrl),
+          headers: api.getAuthHeader());
       total = jsonDecode(response.body)['total'];
     } catch (e) {
       print(e);
@@ -66,7 +66,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      Provider(create: (context) => api, child: HomeScreen()),
+                      HomeScreen(),
                 ))
             : Fluttertoast.showToast(msg: 'Something\'s Wrong');
       }
@@ -153,6 +153,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                         ),
                       ),
                       onPressed: () {
+                        Api api = Provider.of<Api>(context,listen: false); // One call to provider
                         api.setUrl(urlController.text);
                         api.setUsername(usernameController.text);
                         api.setPassword(passwordController.text);

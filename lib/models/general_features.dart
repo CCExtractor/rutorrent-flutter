@@ -6,7 +6,7 @@ import 'package:rutorrentflutter/models/torrent.dart';
 
 import 'disk_space.dart';
 
-enum Sort{
+enum Sort {
   name,
   dateAdded,
   percentDownloaded,
@@ -16,7 +16,7 @@ enum Sort{
   size,
 }
 
-enum Filter{
+enum Filter {
   All,
   Downloading,
   Completed,
@@ -25,8 +25,7 @@ enum Filter{
   Error,
 }
 
-class GeneralFeatures extends ChangeNotifier{
-
+class GeneralFeatures extends ChangeNotifier {
   /// Page Controller for Home Page
   final PageController _pageController = PageController();
   get pageController => _pageController;
@@ -34,39 +33,43 @@ class GeneralFeatures extends ChangeNotifier{
   /// Torrent List
   List<Torrent> _torrentsList = [];
   get torrentsList => _torrentsList;
-  updateTorrentsList(List<Torrent> newList)=> _torrentsList = newList;
+  updateTorrentsList(List<Torrent> newList) => _torrentsList = newList;
 
   /// Torrent Sorting
   Sort _sortPreference;
   get sortPreference => _sortPreference;
 
-  setSortPreference (Sort newPreference){
+  setSortPreference(Sort newPreference) {
     _sortPreference = newPreference;
     notifyListeners();
   }
 
-  List<Torrent> sortList(List<Torrent> torrentsList, Sort sort,){
-    switch(sort){
+  List<Torrent> sortList(
+    List<Torrent> torrentsList,
+    Sort sort,
+  ) {
+    switch (sort) {
       case Sort.name:
-        torrentsList.sort((a,b)=>a.name.compareTo(b.name));
+        torrentsList.sort((a, b) => a.name.compareTo(b.name));
         return torrentsList;
       case Sort.dateAdded:
-        torrentsList.sort((a,b)=>a.torrentAdded.compareTo(b.torrentAdded));
+        torrentsList.sort((a, b) => a.torrentAdded.compareTo(b.torrentAdded));
         return torrentsList;
       case Sort.percentDownloaded:
-        torrentsList.sort((a,b)=>a.percentageDownload.compareTo(b.percentageDownload));
+        torrentsList.sort(
+            (a, b) => a.percentageDownload.compareTo(b.percentageDownload));
         return torrentsList;
       case Sort.downloadSpeed:
-        torrentsList.sort((a,b)=>a.dlSpeed.compareTo(b.dlSpeed));
+        torrentsList.sort((a, b) => a.dlSpeed.compareTo(b.dlSpeed));
         return torrentsList;
       case Sort.uploadSpeed:
-        torrentsList.sort((a,b)=>a.ulSpeed.compareTo(b.ulSpeed));
+        torrentsList.sort((a, b) => a.ulSpeed.compareTo(b.ulSpeed));
         return torrentsList;
       case Sort.ratio:
-        torrentsList.sort((a,b)=>a.ratio.compareTo(b.ratio));
+        torrentsList.sort((a, b) => a.ratio.compareTo(b.ratio));
         return torrentsList;
       case Sort.size:
-        torrentsList.sort((a,b)=>a.size.compareTo(b.size));
+        torrentsList.sort((a, b) => a.size.compareTo(b.size));
         return torrentsList;
       default:
         return torrentsList;
@@ -82,31 +85,30 @@ class GeneralFeatures extends ChangeNotifier{
   get isSearching => _isSearching;
   get searchBarFocus => _searchBarFocus;
 
-  setSearchingState (bool newState){
+  setSearchingState(bool newState) {
     _isSearching = newState;
     notifyListeners();
   }
-
 
   /// Disk Space
   DiskSpace _diskSpace = DiskSpace();
   get diskSpace => _diskSpace;
 
-  updateDiskSpace(int total, int free){
+  updateDiskSpace(int total, int free) {
     //check if there is any change in freeSpace of disk
-    if(free==_diskSpace.free)
-      return;// returning since there is no change and UI does not need to update
+    if (free == _diskSpace.free)
+      return; // returning since there is no change and UI does not need to update
 
-    _diskSpace.update(total,free);
+    _diskSpace.update(total, free);
     notifyListeners();
 
-    if(_diskSpace.isLow() && _diskSpace.alertUser)
+    if (_diskSpace.isLow() && _diskSpace.alertUser)
       _diskSpace.generateLowDiskSpaceAlert();
   }
 
   /// Torrent Filtering
   Filter _selectedFilter = Filter.All;
-  List<FilterTile> _filterTileList=[
+  List<FilterTile> _filterTileList = [
     FilterTile(
       icon: Icons.select_all,
       filter: Filter.All,
@@ -136,28 +138,48 @@ class GeneralFeatures extends ChangeNotifier{
   get selectedFilter => _selectedFilter;
   get filterTileList => _filterTileList;
 
-  changeFilter(Filter newFilter){
+  changeFilter(Filter newFilter) {
     _selectedFilter = newFilter;
     _pageController.jumpToPage(0); // Show the torrents listing page
     notifyListeners();
   }
 
-  List<Torrent> filterList(List<Torrent> torrentsList, Filter filter){
-    switch(filter){
+  List<Torrent> filterList(List<Torrent> torrentsList, Filter filter) {
+    switch (filter) {
       case Filter.All:
         return torrentsList;
       case Filter.Downloading:
-        return torrentsList.where((torrent) => torrent.status==Status.downloading).toList();
+        return torrentsList
+            .where((torrent) => torrent.status == Status.downloading)
+            .toList();
       case Filter.Completed:
-        return torrentsList.where((torrent) => torrent.status==Status.completed).toList();
+        return torrentsList
+            .where((torrent) => torrent.status == Status.completed)
+            .toList();
       case Filter.Active:
-        return torrentsList.where((torrent) => torrent.ulSpeed>0 || torrent.dlSpeed>0).toList();
+        return torrentsList
+            .where((torrent) => torrent.ulSpeed > 0 || torrent.dlSpeed > 0)
+            .toList();
       case Filter.Inactive:
-        return torrentsList.where((torrent) => torrent.ulSpeed==0 && torrent.dlSpeed==0).toList();
+        return torrentsList
+            .where((torrent) => torrent.ulSpeed == 0 && torrent.dlSpeed == 0)
+            .toList();
       case Filter.Error:
-        return torrentsList.where((torrent) => torrent.msg.length>0 && torrent.msg!='Tracker: [Tried all trackers.]').toList();
+        return torrentsList
+            .where((torrent) =>
+                torrent.msg.length > 0 &&
+                torrent.msg != 'Tracker: [Tried all trackers.]')
+            .toList();
       default:
         return torrentsList;
     }
   }
+
+  /// Active Torrents
+  // Those torrents which are currently active and not fully downloaded
+  List<Torrent> _activeDownloads = [];
+  get activeDownloads {
+    return _activeDownloads;
+  }
+  setActiveDownloads(List<Torrent> list) => _activeDownloads = list;
 }

@@ -14,9 +14,9 @@ import 'loading_shimmer.dart';
 class RSSDescSheet extends StatefulWidget {
   final RSSItem rssItem;
   final String labelHash;
-  final Api api;
 
-  RSSDescSheet(this.rssItem, this.labelHash, this.api);
+
+  RSSDescSheet(this.rssItem, this.labelHash);
 
   @override
   _RSSDescSheetState createState() => _RSSDescSheetState();
@@ -29,7 +29,7 @@ class _RSSDescSheetState extends State<RSSDescSheet> {
 
   fetchRSSDetails() async {
     dataAvailable =
-        await ApiRequests.getRSSDetails(widget.api, rssItem, widget.labelHash);
+        await ApiRequests.getRSSDetails(Provider.of<Api>(context,listen: false), rssItem, widget.labelHash);
     setState(() {
       isFetching = false;
     });
@@ -111,7 +111,7 @@ class _RSSDescSheetState extends State<RSSDescSheet> {
                                         IconButton(
                                           color: Provider.of<Mode>(context).isDarkMode?Colors.white:Colors.black,
                                           icon: FaIcon(FontAwesomeIcons.plusSquare),
-                                          onPressed: ()=>ApiRequests.addTorrent(widget.api, rssItem.url),
+                                          onPressed: ()=>ApiRequests.addTorrent(Provider.of<Api>(context,listen: false), rssItem.url),
                                         ),
                                       ],
                                     ),
@@ -152,7 +152,7 @@ class _RSSDescSheetState extends State<RSSDescSheet> {
                             padding: EdgeInsets.all(8),
                             child: Text(
                               rssItem.description,
-                              style: TextStyle(fontSize: 12,fontWeight: FontWeight.w600),
+                              style: TextStyle(fontSize: 13),
                             ),
                           ),
                         ],

@@ -12,16 +12,15 @@ import 'package:shimmer/shimmer.dart';
 import '../components/loading_shimmer.dart';
 
 class TorrentsListPage extends StatefulWidget {
-
   @override
   _TorrentsListPageState createState() => _TorrentsListPageState();
 }
 
 class _TorrentsListPageState extends State<TorrentsListPage> {
+
   Future<void> _refreshState() async {
-    await Future.delayed(Duration(milliseconds: 500),(){});
-    setState(() {
-    });
+    await Future.delayed(Duration(milliseconds: 500), () {});
+    setState(() {});
   }
 
   List<Torrent> _getDisplayList(List<Torrent> list, GeneralFeatures general) {
@@ -37,11 +36,27 @@ class _TorrentsListPageState extends State<TorrentsListPage> {
       //Searching : showing list on basis of searched text
       displayList = displayList
           .where((element) => element.name
-          .toLowerCase()
-          .contains(general.searchTextController.text.toLowerCase()))
+              .toLowerCase()
+              .contains(general.searchTextController.text.toLowerCase()))
           .toList();
     }
     return displayList;
+  }
+
+  checkForActiveDownloads(Api api) async {
+    /* this method is responsible for changing the connection state from waiting to active by
+    temporary pausing the active downloads and then resuming them again
+     */
+    List<Torrent> tempPausedDownloads = [];
+    for (Torrent torrent
+        in Provider.of<GeneralFeatures>(context).activeDownloads) {
+      await ApiRequests.pauseTorrent(api, torrent.hash);
+      tempPausedDownloads.add(torrent);
+    }
+    // Resuming the temporary paused active downloads
+    for (Torrent torrent in tempPausedDownloads) {
+      await ApiRequests.startTorrent(api, torrent.hash);
+    }
   }
 
   @override
@@ -49,7 +64,7 @@ class _TorrentsListPageState extends State<TorrentsListPage> {
     return Consumer<GeneralFeatures>(builder: (context, general, child) {
       return RefreshIndicator(
         onRefresh: _refreshState,
-        color: Constants.kIndigo,
+        color: Provider.of<Mode>(context).isLightMode?Constants.kBlue:Constants.kIndigo,
         child: Column(
           children: <Widget>[
             SearchBar(),
@@ -60,10 +75,16 @@ class _TorrentsListPageState extends State<TorrentsListPage> {
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting &&
                       !snapshot.hasData) {
+                    checkForActiveDownloads(
+                        Provider.of<Api>(context, listen: false));
                     // showing loading list of Shimmer
                     return Shimmer.fromColors(
-                      baseColor: Provider.of<Mode>(context).isLightMode?Colors.grey[300]:Constants.kDarkGrey,
-                      highlightColor: Provider.of<Mode>(context).isLightMode?Colors.grey[100]:Constants.kLightGrey,
+                      baseColor: Provider.of<Mode>(context).isLightMode
+                          ? Colors.grey[300]
+                          : Constants.kDarkGrey,
+                      highlightColor: Provider.of<Mode>(context).isLightMode
+                          ? Colors.grey[100]
+                          : Constants.kLightGrey,
                       child: ListView.builder(
                           itemCount: 5,
                           itemBuilder: (context, index) {

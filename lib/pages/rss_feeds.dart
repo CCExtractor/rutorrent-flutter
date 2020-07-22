@@ -48,7 +48,7 @@ class _RSSFeedsState extends State<RSSFeeds> {
             child: Icon(Icons.add,color: Colors.white,),
           ),
           body: RefreshIndicator(
-            color: Constants.kIndigo,
+            color: Provider.of<Mode>(context).isLightMode?Constants.kBlue:Constants.kIndigo,
             onRefresh: _refreshState,
             child: FutureBuilder(
               future: ApiRequests.loadRSS(Provider.of<Api>(context)),

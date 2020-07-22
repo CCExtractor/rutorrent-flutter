@@ -3,7 +3,7 @@
 library constants;
 import 'package:flutter/material.dart';
 
-// Active color for Light Mode is kBlue and for Dark Mode its kIndigo
+// Active color for Light Mode is Blue and for Dark Mode its Indigo
 const Color kBlue = Color(0xFF1B1464);
 const Color kRed = Color(0xFFEA2027);
 const Color kGreen = Color(0xFF009432);

@@ -48,7 +48,8 @@ class DataInput extends StatelessWidget {
                     color: Colors.grey,
                     onPressed: () async{
                       ClipboardData data = await Clipboard.getData('text/plain');
-                      textEditingController.text = data.text.toString();
+                      if(data!=null)
+                        textEditingController.text = data.text.toString();
                     },
                     icon: Icon(Icons.content_paste),
                   ):Container(),

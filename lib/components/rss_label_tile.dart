@@ -74,7 +74,7 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
                                 expand: false,
                                 context: context,
                                 builder: (context,scrollController){
-                                  return RSSDescSheet(item,widget.rssLabel.hash,api);
+                                  return RSSDescSheet(item,widget.rssLabel.hash);
                                 }
                             );
                           },
