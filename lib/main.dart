@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
-import 'package:rutorrentflutter/screens/configurations_screen.dart';
+import 'package:rutorrentflutter/screens/loading_screen.dart';
 import 'api/api_conf.dart';
 import 'models/general_features.dart';
 import 'models/mode.dart';
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       themeMode: Provider.of<Mode>(context).isLightMode
           ? ThemeMode.light
           : ThemeMode.dark,
-      home: ConfigurationsScreen(),
+      home: LoadingScreen(),
     );
   }
 }

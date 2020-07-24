@@ -15,7 +15,6 @@ dependencies:
   font_awesome_flutter: ^8.8.1
   fluttertoast: ^4.0.1
   http: ^0.12.1
-  shared_preferences: ^0.5.7+3
   filesize: ^1.0.4
   flutter_slidable: ^0.5.4
   provider: ^4.1.3
@@ -26,6 +25,8 @@ dependencies:
   modal_bottom_sheet: ^0.1.6+1
   bottom_navy_bar: ^5.4.0
   xml: ^3.6.1
+  flutter_spinkit: ^4.1.2+1
+  shared_preferences: ^0.5.8
 
 dev_dependencies:
   flutter_test:

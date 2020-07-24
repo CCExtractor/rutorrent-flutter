@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
 import 'package:rutorrentflutter/components/add_dialog.dart';
 import 'package:rutorrentflutter/components/history_sheet.dart';
+import 'package:rutorrentflutter/pages/downloads_page.dart';
 import 'package:rutorrentflutter/pages/rss_feeds.dart';
+import 'package:rutorrentflutter/pages/settings_page.dart';
 import 'package:rutorrentflutter/pages/torrents_list_page.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
@@ -16,13 +19,48 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import '../constants.dart' as Constants;
 
 class HomeScreen extends StatefulWidget {
+  final List<Api> apis;
+  HomeScreen(this.apis);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
+  List<Api> apis;
 
+  Future<void> _refreshState() async {
+    await Future.delayed(Duration(milliseconds: 500), () {});
+    setState(() {});
+  }
+
+  bool matchApi(Api api1,Api api2){
+    if(api1.url==api2.url &&
+        api1.username==api2.username &&
+        api1.password==api2.password)
+      return true;
+    else
+      return false;
+  }
+
+  _initPlugins() async{
+    while(mounted){
+      try {
+        await Future.delayed(Duration(seconds: 1), () {});
+        ApiRequests.updatePlugins(Provider.of(context, listen: false),
+            Provider.of<GeneralFeatures>(context, listen: false));
+      }
+      catch(e){
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initPlugins();
+    apis=widget.apis;
+  }
   @override
   Widget build(BuildContext context) {
     return Consumer3<Mode, Api, GeneralFeatures>(
@@ -71,13 +109,52 @@ class _HomeScreenState extends State<HomeScreen> {
           child: ListView(
             children: <Widget>[
               DrawerHeader(
-                child: Image(
-                  image: mode.isLightMode
-                      ? AssetImage('assets/logo/light_mode.png')
-                      : AssetImage('assets/logo/dark_mode.png'),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Image(
+                      image: mode.isLightMode
+                          ? AssetImage('assets/logo/light_mode.png')
+                          : AssetImage('assets/logo/dark_mode.png'),
+                    ),
+                    SizedBox(height: 15),
+                    Text('Application version: 1.01',style: TextStyle(fontSize: 12,fontStyle: FontStyle.italic),),
+                  ],
                 ),
               ),
               ShowDiskSpace(),
+              ExpansionTile(
+                title: Text('Accounts'),
+                children: apis.map((e) => Container(
+                  color: matchApi(e, api)?(mode.isLightMode?
+                    Constants.kLightGrey:
+                    Constants.kDarkGrey):null,
+                  child: ListTile(
+                    dense: true,
+                    title: Text(e.url,
+                    style: TextStyle(fontSize: 12),),
+                    onTap: (){
+                      api.setUrl(e.url);
+                      api.setUsername(e.username);
+                      api.setPassword(e.password);
+                      Navigator.pop(context);
+                      _refreshState();
+                    },
+                  ),
+                )).toList(),
+              ),
+              ListTile(
+                dense: true,
+                leading: Icon(Icons.add),
+                title: Text('Add another account'),
+                onTap: (){
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(
+                        builder: (context)=> ConfigurationsScreen(),
+                  ));
+                },
+              ),
               ExpansionTile(
                 initiallyExpanded: true,
                 title: Text(
@@ -92,16 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       context: context,
                       builder: (context, controller) => HistorySheet());
                 },
-                title: Text('History'),
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ConfigurationsScreen()));
-                },
-                title: Text('Reconfigure'),
+                title: Text('Show History'),
               ),
             ],
           ),
@@ -114,12 +182,8 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             TorrentsListPage(),
             RSSFeeds(),
-            Center(
-              child: Text('Nothing Here Now'),
-            ),
-            Center(
-              child: Text('Settings Page'),
-            ),
+            DownloadsPage(),
+            SettingsPage(),
           ],
         ),
         bottomNavigationBar: BottomNavyBar(

@@ -13,7 +13,7 @@ class ApiRequests {
 
   static updateHistory(Api api, GeneralFeatures general) async {
     String timestamp = ((DateTime.now().millisecondsSinceEpoch -
-                Duration(hours: 1).inMilliseconds) ~/
+                Duration(minutes: 1).inMilliseconds) ~/
             1000)
         .toString();
     List<HistoryItem> historyItems = [];
@@ -40,19 +40,19 @@ class ApiRequests {
     general.updateDiskSpace(diskSpace['total'], diskSpace['free']);
   }
 
-  static Stream<List<Torrent>> initTorrentsData(
+  static updatePlugins(Api api, GeneralFeatures general){
+    /// Updating DiskSpace
+    updateDiskSpace(api, general);
+
+    /// Updating History
+    updateHistory(api, general);
+  }
+
+  static Stream<List<Torrent>> getTorrentsList(
       BuildContext context, Api api, GeneralFeatures general) async* {
     while (true) {
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
-
-      /// Updating DiskSpace
-      updateDiskSpace(api, general);
-
-      /// Updating History Sheet
-      updateHistory(api, general);
-
-      /// Fetching torrents Data
       List<Torrent> torrentsList = [];
       // A list of active torrents is required for changing the connection state from waiting to active
       List<Torrent> activeTorrents = [];

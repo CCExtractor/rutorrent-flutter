@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/data_input_widget.dart';
 import 'package:rutorrentflutter/constants.dart' as Constants;
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:rutorrentflutter/services/preferences.dart';
 import '../api/api_conf.dart';
 
 class ConfigurationsScreen extends StatefulWidget {
@@ -22,7 +22,43 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FocusNode passwordFocus = FocusNode();
+  final FocusNode urlFocus = FocusNode();
   bool isValidating = false;
+
+  bool matchApi(Api api1,Api api2){
+    if(api1.url==api2.url &&
+        api1.username==api2.username &&
+        api1.password==api2.password)
+      return true;
+    else
+      return false;
+  }
+
+  saveLogin(Api api) async{
+    bool alreadyLoggedIn = false;
+    List<Api> apis = await Preferences.fetchSavedLogin();
+    for(int index = 0; index<apis.length; index++)
+        if(matchApi(apis[index],api)) {
+          Fluttertoast.showToast(msg: 'Account already saved');
+          alreadyLoggedIn = true;
+
+          Api swapApi = apis[0];//swap to put active one on first position
+          apis[0]=apis[index];
+          apis[index]=swapApi;
+        }
+
+    if(!alreadyLoggedIn) {
+      apis.insert(0, api);
+      Preferences.saveLogin(apis);
+    }
+
+    Navigator.pushReplacement(//Navigate to Home Screen
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              HomeScreen(apis),
+        ));
+  }
 
   _validateConfigurationDetails(Api api) async {
     if (api.username.toString().isNotEmpty) {
@@ -40,7 +76,6 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
         return;
       }
     }
-
     setState(() {
       isValidating = true;
     });
@@ -52,26 +87,19 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
           headers: api.getAuthHeader());
       total = jsonDecode(response.body)['total'];
     } catch (e) {
-      print(e);
       Fluttertoast.showToast(msg: 'Invalid');
     } finally {
       setState(() {
         isValidating = false;
       });
       if (response != null && total != null) {
-        response.statusCode == 200
-            ? //  SUCCESS: Validation Successful
-            //Navigate to Home Screen
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      HomeScreen(),
-                ))
-            : Fluttertoast.showToast(msg: 'Something\'s Wrong');
+        response.statusCode == 200? // SUCCESS
+          saveLogin(api):
+          Fluttertoast.showToast(msg: 'Something\'s Wrong');
       }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -103,13 +131,43 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                       child: Column(
                         children: <Widget>[
                           DataInput(
-                            showPasteIcon: true,
                             textEditingController: urlController,
                             hintText: 'Enter url here',
+                            focus: urlFocus,
+                            suffixIconButton: IconButton(
+                              color: Colors.grey,
+                              onPressed: () async {
+                                ClipboardData data =
+                                await Clipboard.getData('text/plain');
+                                if (data != null)
+                                  urlController.text =
+                                      data.text.toString();
+                                if(urlFocus.hasFocus)
+                                  urlFocus.unfocus();
+                              },
+                              icon: Icon(Icons.content_paste),
+                            ),
                           ),
-                          Text(
-                            'Example: https://fremicro081.xirvik.com/rtorrent',
-                            style: TextStyle(color: Colors.grey),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(Icons.info_outline,color: Colors.grey,),
+                              ),
+                              Flexible(
+                                child: RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(text: 'Location of ruTorrent',
+                                      style: TextStyle(color: Colors.grey,fontSize: 14,fontStyle: FontStyle.italic),),
+                                      TextSpan(text: '\n(Check your browser address bar)',
+                                        style: TextStyle(color: Colors.grey,fontSize: 10,fontStyle: FontStyle.italic),),
+                                    ]
+                                  )
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -125,15 +183,12 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                                   .requestFocus(passwordFocus);
                             },
                             textEditingController: usernameController,
-                            iconData: FontAwesomeIcons.user,
                             hintText: 'Username',
                             textInputAction: TextInputAction.next,
                           ),
-                          DataInput(
-                            focus: passwordFocus,
+                          PasswordInput(
                             textEditingController: passwordController,
-                            iconData: FontAwesomeIcons.userSecret,
-                            hintText: 'Password',
+                            passwordFocus: passwordFocus,
                           ),
                         ],
                       ),
@@ -141,14 +196,17 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                     RaisedButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
-                        side: BorderSide(),
+                        side: BorderSide(color: Provider.of<Mode>(context).isLightMode?
+                        Colors.black:Colors.white),
                       ),
-                      color: Constants.kBlue,
+                      color: Provider.of<Mode>(context).isLightMode?
+                              Constants.kBlue:
+                              Constants.kIndigo,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 28, vertical: 16),
                         child: Text(
-                          'Go',
+                          'Log In',
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
                       ),
@@ -170,3 +228,51 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
     );
   }
 }
+
+class PasswordInput extends StatefulWidget {
+  final TextEditingController textEditingController;
+  final FocusNode passwordFocus;
+  PasswordInput({this.textEditingController,this.passwordFocus});
+  @override
+  _PasswordInputState createState() => _PasswordInputState();
+}
+
+class _PasswordInputState extends State<PasswordInput> {
+  bool passwordVisible=false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        child: TextFormField(
+          obscureText: !passwordVisible,
+          focusNode: widget.passwordFocus,
+          controller: widget.textEditingController,
+          cursorColor: Provider.of<Mode>(context).isLightMode
+              ? Colors.black
+              : Colors.white,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            hintText: 'Password',
+            suffixIcon: IconButton(
+              color: Colors.grey,
+              icon: Icon(passwordVisible?
+              Icons.visibility:Icons.visibility_off),
+              onPressed: (){
+                setState(() {
+                  passwordVisible=!passwordVisible;
+                });
+              },
+            ),
+          ),
+        ),
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey, width: 1.5),
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+      ),);
+  }
+}
+

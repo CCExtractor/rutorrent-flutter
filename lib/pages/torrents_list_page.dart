@@ -70,7 +70,7 @@ class _TorrentsListPageState extends State<TorrentsListPage> {
             SearchBar(),
             Expanded(
               child: StreamBuilder(
-                stream: ApiRequests.initTorrentsData(
+                stream: ApiRequests.getTorrentsList(
                     context, Provider.of<Api>(context), general),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting &&
