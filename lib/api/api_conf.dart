@@ -3,17 +3,12 @@ import 'dart:io';
 import 'package:http/io_client.dart';
 
 class Api {
-  IOClient _ioClient;
-
-  Api() {
-    // url with some issue with their SSL certificates can be trusted explicitly with this
-    bool trustSelfSigned = true;
-    HttpClient httpClient = new HttpClient()
-      ..badCertificateCallback =
-          ((X509Certificate cert, String host, int port) => trustSelfSigned);
-    _ioClient = new IOClient(httpClient);
-  }
-
+  // url with some issue with their SSL certificates can be trusted explicitly with this
+  static bool trustSelfSigned = true;
+  static HttpClient httpClient = new HttpClient()
+    ..badCertificateCallback =
+        ((X509Certificate cert, String host, int port) => trustSelfSigned);
+  IOClient _ioClient = new IOClient(httpClient);
   get ioClient => _ioClient;
 
   String _url;
@@ -32,6 +27,7 @@ class Api {
   get addTorrentPluginUrl => url + '/php/addtorrent.php';
   get diskSpacePluginUrl => url + '/plugins/diskspace/action.php';
   get rssPluginUrl => url + '/plugins/rss/action.php';
+  get historyPluginUrl => url + '/plugins/history/action.php';
 
   Map<String, String> getAuthHeader() => {
         'authorization':

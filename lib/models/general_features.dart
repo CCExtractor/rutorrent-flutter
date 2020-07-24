@@ -2,8 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rutorrentflutter/components/filter_tile.dart';
+import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
-
+import 'package:rutorrentflutter/services/notifications.dart';
 import 'disk_space.dart';
 
 enum Sort {
@@ -26,6 +27,9 @@ enum Filter {
 }
 
 class GeneralFeatures extends ChangeNotifier {
+  /// Generating notifications
+  Notifications notifications = Notifications();
+
   /// Page Controller for Home Page
   final PageController _pageController = PageController();
   get pageController => _pageController;
@@ -103,7 +107,7 @@ class GeneralFeatures extends ChangeNotifier {
     notifyListeners();
 
     if (_diskSpace.isLow() && _diskSpace.alertUser)
-      _diskSpace.generateLowDiskSpaceAlert();
+      _diskSpace.generateLowDiskSpaceAlert(notifications);
   }
 
   /// Torrent Filtering
@@ -182,4 +186,28 @@ class GeneralFeatures extends ChangeNotifier {
     return _activeDownloads;
   }
   setActiveDownloads(List<Torrent> list) => _activeDownloads = list;
+
+  /// History Check
+  List<HistoryItem> _historyItems = [];
+  get historyItems => _historyItems;
+  updateHistoryItems(List<HistoryItem> updatedList){
+    _historyItems = updatedList;
+    for(var item in updatedList){
+      switch(item.action){
+        case 1:// Added
+          if(DateTime.now().millisecondsSinceEpoch~/1000-item.actionTime==1)
+            notifications.generate('New Torrent Added', item.name);
+          break;
+        case 2:// Finished
+          if(DateTime.now().millisecondsSinceEpoch~/1000-item.actionTime==1)
+            notifications.generate('Download Completed', item.name);
+          break;
+        case 3:// Deleted
+          //TODO: Show a Red colored SnackBar
+          if(DateTime.now().millisecondsSinceEpoch~/1000-item.actionTime==1)
+            notifications.generate('Torrent Removed', item.name);
+          break;
+      }
+    }
+  }
 }

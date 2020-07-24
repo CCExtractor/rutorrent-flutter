@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/rss.dart';
 import 'api_conf.dart';
@@ -10,20 +11,50 @@ import 'package:xml/xml.dart' as xml;
 class ApiRequests {
   /// This class will be responsible for making all API Calls to the ruTorrent server
 
+  static updateHistory(Api api, GeneralFeatures general) async {
+    String timestamp = ((DateTime.now().millisecondsSinceEpoch -
+                Duration(hours: 1).inMilliseconds) ~/
+            1000)
+        .toString();
+    List<HistoryItem> historyItems = [];
+    var response = await api.ioClient.post(Uri.parse(api.historyPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {
+          'cmd': 'get',
+          'mark': timestamp,
+        });
+
+    var items = jsonDecode(response.body)['items'];
+    for (var item in items) {
+      HistoryItem historyItem =
+          HistoryItem(item['name'], item['action'], item['action_time']);
+      historyItems.add(historyItem);
+    }
+    general.updateHistoryItems(historyItems);
+  }
+
+  static updateDiskSpace(Api api, GeneralFeatures general) async {
+    var diskSpaceResponse = await api.ioClient
+        .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
+    var diskSpace = jsonDecode(diskSpaceResponse.body);
+    general.updateDiskSpace(diskSpace['total'], diskSpace['free']);
+  }
+
   static Stream<List<Torrent>> initTorrentsData(
       BuildContext context, Api api, GeneralFeatures general) async* {
     while (true) {
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
 
-      //Updating DiskSpace
-      var diskSpaceResponse = await api.ioClient
-          .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
-      var diskSpace = jsonDecode(diskSpaceResponse.body);
+      /// Updating DiskSpace
+      updateDiskSpace(api, general);
 
-      general.updateDiskSpace(diskSpace['total'], diskSpace['free']);
+      /// Updating History Sheet
+      updateHistory(api, general);
 
+      /// Fetching torrents Data
       List<Torrent> torrentsList = [];
+      // A list of active torrents is required for changing the connection state from waiting to active
       List<Torrent> activeTorrents = [];
       try {
         //Fetching torrents Info
@@ -64,15 +95,11 @@ class ApiRequests {
           if (torrent.status == Status.downloading &&
               torrent.percentageDownload < 100) activeTorrents.add(torrent);
         }
-        /* A separate list of active torrents is required for changing the connection state
-           from waiting to active and for notifying user when a new torrent is added or when
-           an active torrent download is completed
-         */
         general.setActiveDownloads(activeTorrents);
         yield torrentsList;
       } catch (e) {
         print('Exception caught in Api Request ' + e.toString());
-        /*returning null since the stream has to be active all times to return something
+        /*returning null since the stream has to be active all the times to return something
           this usually occurs when there is no torrent task available or when the connect
           to rTorrent is not established
         */
@@ -281,5 +308,26 @@ class ApiRequests {
       print(e);
     }
     return dataAvailable;
+  }
+
+  static Future<List<HistoryItem>> getHistory(Api api) async{
+    String timestamp = ((DateTime.now().millisecondsSinceEpoch -
+        Duration(hours: 24).inMilliseconds) ~/
+        1000).toString();
+    List<HistoryItem> historyItems = [];
+    var response = await api.ioClient.post(Uri.parse(api.historyPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {
+          'cmd': 'get',
+          'mark': timestamp,
+        });
+
+    var items = jsonDecode(response.body)['items'];
+    for (var item in items) {
+      HistoryItem historyItem =
+      HistoryItem(item['name'], item['action'], item['action_time']);
+      historyItems.add(historyItem);
+    }
+    return historyItems;
   }
 }

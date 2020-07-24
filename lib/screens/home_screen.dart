@@ -1,7 +1,9 @@
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
 import 'package:rutorrentflutter/components/add_dialog.dart';
+import 'package:rutorrentflutter/components/history_sheet.dart';
 import 'package:rutorrentflutter/pages/rss_feeds.dart';
 import 'package:rutorrentflutter/pages/torrents_list_page.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
@@ -44,11 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 showDialog(
                     context: context,
                     builder: (context) => AddDialog(
-                      dialogHint: 'Enter torrent url',
-                      apiRequest: (url){
-                        ApiRequests.addTorrent(api, url);
-                      },
-                    ));
+                          dialogHint: 'Enter torrent url',
+                          apiRequest: (url) {
+                            ApiRequests.addTorrent(api, url);
+                          },
+                        ));
               },
               icon: Icon(
                 Icons.library_add,
@@ -70,7 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               DrawerHeader(
                 child: Image(
-                  image: mode.isLightMode ? AssetImage('assets/logo/light_mode.png')
+                  image: mode.isLightMode
+                      ? AssetImage('assets/logo/light_mode.png')
                       : AssetImage('assets/logo/dark_mode.png'),
                 ),
               ),
@@ -81,6 +84,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   'Filters',
                 ),
                 children: general.filterTileList,
+              ),
+              ListTile(
+                onTap: () async {
+                  Navigator.pop(context);
+                  showMaterialModalBottomSheet(
+                      context: context,
+                      builder: (context, controller) => HistorySheet());
+                },
+                title: Text('History'),
               ),
               ListTile(
                 onTap: () {
@@ -118,25 +130,37 @@ class _HomeScreenState extends State<HomeScreen> {
           },
           items: <BottomNavyBarItem>[
             BottomNavyBarItem(
-                title: Text('Home'),
-                icon: Icon(Icons.home),
-                activeColor: mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
-                inactiveColor: mode.isLightMode ? Constants.kDarkGrey : Colors.white,),
+              title: Text('Home'),
+              icon: Icon(Icons.home),
+              activeColor:
+                  mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
+              inactiveColor:
+                  mode.isLightMode ? Constants.kDarkGrey : Colors.white,
+            ),
             BottomNavyBarItem(
-                title: Text('Feeds'),
-                icon: Icon(Icons.rss_feed),
-                activeColor: mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
-                inactiveColor: mode.isLightMode ? Constants.kDarkGrey : Colors.white,),
+              title: Text('Feeds'),
+              icon: Icon(Icons.rss_feed),
+              activeColor:
+                  mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
+              inactiveColor:
+                  mode.isLightMode ? Constants.kDarkGrey : Colors.white,
+            ),
             BottomNavyBarItem(
-                title: Text('Downloads'),
-                icon: Icon(Icons.file_download),
-                activeColor: mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
-                inactiveColor: mode.isLightMode ? Constants.kDarkGrey : Colors.white,),
+              title: Text('Downloads'),
+              icon: Icon(Icons.file_download),
+              activeColor:
+                  mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
+              inactiveColor:
+                  mode.isLightMode ? Constants.kDarkGrey : Colors.white,
+            ),
             BottomNavyBarItem(
-                title: Text('Settings'),
-                icon: Icon(Icons.settings),
-                activeColor: mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
-                inactiveColor: mode.isLightMode ? Constants.kDarkGrey : Colors.white,),
+              title: Text('Settings'),
+              icon: Icon(Icons.settings),
+              activeColor:
+                  mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
+              inactiveColor:
+                  mode.isLightMode ? Constants.kDarkGrey : Colors.white,
+            ),
           ],
         ),
       );
