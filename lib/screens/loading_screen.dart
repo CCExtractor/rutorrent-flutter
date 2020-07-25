@@ -27,7 +27,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       api.setUsername(apis[0].username);
       api.setPassword(apis[0].password);
       Navigator.pushReplacement(context, MaterialPageRoute(
-          builder: (context)=>HomeScreen(apis)
+          builder: (context)=>HomeScreen()
       ));
     }
   }

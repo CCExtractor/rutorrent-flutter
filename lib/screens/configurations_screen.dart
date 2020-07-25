@@ -56,7 +56,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
         context,
         MaterialPageRoute(
           builder: (context) =>
-              HomeScreen(apis),
+              HomeScreen(),
         ));
   }
 
@@ -132,7 +132,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                         children: <Widget>[
                           DataInput(
                             textEditingController: urlController,
-                            hintText: 'Enter url here',
+                            hintText: 'Location of ruTorrent',
                             focus: urlFocus,
                             suffixIconButton: IconButton(
                               color: Colors.grey,
@@ -156,15 +156,8 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                                 child: Icon(Icons.info_outline,color: Colors.grey,),
                               ),
                               Flexible(
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(text: 'Location of ruTorrent',
-                                      style: TextStyle(color: Colors.grey,fontSize: 14,fontStyle: FontStyle.italic),),
-                                      TextSpan(text: '\n(Check your browser address bar)',
-                                        style: TextStyle(color: Colors.grey,fontSize: 10,fontStyle: FontStyle.italic),),
-                                    ]
-                                  )
+                                child: Text('Check your browser address bar',
+                                  style: TextStyle(color: Colors.grey,fontSize: 12,fontWeight: FontWeight.w600),
                                 ),
                               ),
                             ],
@@ -246,6 +239,7 @@ class _PasswordInputState extends State<PasswordInput> {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         child: TextFormField(
+          style: TextStyle(fontWeight: FontWeight.w600),
           obscureText: !passwordVisible,
           focusNode: widget.passwordFocus,
           controller: widget.textEditingController,
@@ -260,7 +254,9 @@ class _PasswordInputState extends State<PasswordInput> {
             suffixIcon: IconButton(
               color: Colors.grey,
               icon: Icon(passwordVisible?
-              Icons.visibility:Icons.visibility_off),
+              Icons.visibility:Icons.visibility_off,
+              color: Colors.grey,
+                ),
               onPressed: (){
                 setState(() {
                   passwordVisible=!passwordVisible;

@@ -12,6 +12,7 @@ import 'package:rutorrentflutter/pages/torrents_list_page.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
+import 'package:rutorrentflutter/services/preferences.dart';
 import '../api/api_conf.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,20 +20,14 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import '../constants.dart' as Constants;
 
 class HomeScreen extends StatefulWidget {
-  final List<Api> apis;
-  HomeScreen(this.apis);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int _currentIndex = 0;
-  List<Api> apis;
-
-  Future<void> _refreshState() async {
-    await Future.delayed(Duration(milliseconds: 500), () {});
-    setState(() {});
-  }
+  List<Api> apis=[];
 
   bool matchApi(Api api1,Api api2){
     if(api1.url==api2.url &&
@@ -44,6 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _initPlugins() async{
+    Provider.of<GeneralFeatures>(context,listen: false).scaffoldKey=_scaffoldKey;
+    apis = await Preferences.fetchSavedLogin();
+    setState(() {
+    });
     while(mounted){
       try {
         await Future.delayed(Duration(seconds: 1), () {});
@@ -59,14 +58,18 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _initPlugins();
-    apis=widget.apis;
   }
+
   @override
   Widget build(BuildContext context) {
     return Consumer3<Mode, Api, GeneralFeatures>(
         builder: (context, mode, api, general, child) {
       return Scaffold(
+        key: general.scaffoldKey,
         appBar: AppBar(
+          backgroundColor: mode.isLightMode
+              ?Colors.grey[300]
+              :Colors.grey[900],
           leading: Builder(builder: (context) {
             return IconButton(
                 icon: Icon(
@@ -138,8 +141,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       api.setUrl(e.url);
                       api.setUsername(e.username);
                       api.setPassword(e.password);
-                      Navigator.pop(context);
-                      _refreshState();
+                      Navigator.pushReplacement(context, MaterialPageRoute(
+                        builder: (context)=>HomeScreen()
+                      ));
                     },
                   ),
                 )).toList(),

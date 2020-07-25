@@ -136,7 +136,6 @@ class ApiRequests {
   }
 
   static removeTorrent(Api api, String hashValue) async {
-    Fluttertoast.showToast(msg: 'Removing Torrent');
     await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {

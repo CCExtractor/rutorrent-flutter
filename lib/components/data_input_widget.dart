@@ -25,6 +25,7 @@ class DataInput extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         child: TextFormField(
+          style: TextStyle(fontWeight: FontWeight.w600),
           textInputAction: textInputAction,
           focusNode: focus,
           onFieldSubmitted: onFieldSubmittedCallback,

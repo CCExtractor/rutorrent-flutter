@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rutorrentflutter/components/filter_tile.dart';
+import 'package:rutorrentflutter/constants.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/services/notifications.dart';
@@ -27,6 +28,8 @@ enum Filter {
 }
 
 class GeneralFeatures extends ChangeNotifier {
+  GlobalKey<ScaffoldState> scaffoldKey;
+
   /// Generating notifications
   Notifications notifications = Notifications();
 
@@ -194,18 +197,31 @@ class GeneralFeatures extends ChangeNotifier {
     _historyItems = updatedList;
     for(var item in updatedList){
       switch(item.action){
-        case 1:// Added
+        case 1: // Added
           if(DateTime.now().millisecondsSinceEpoch~/1000-item.actionTime==1)
-            notifications.generate('New Torrent Added', item.name);
+            scaffoldKey.currentState.showSnackBar(
+                SnackBar(
+                  content: Text('${item.name.substring(0, item.name.contains('[')
+                          ? item.name.indexOf('[')
+                          : item.name.length)} Added '),
+                  duration: Duration(seconds: 1),
+                  backgroundColor: kGreen,
+                ));
           break;
-        case 2:// Finished
+        case 2: // Finished
           if(DateTime.now().millisecondsSinceEpoch~/1000-item.actionTime==1)
             notifications.generate('Download Completed', item.name);
           break;
-        case 3:// Deleted
-          //TODO: Show a Red colored SnackBar
+        case 3: // Deleted
           if(DateTime.now().millisecondsSinceEpoch~/1000-item.actionTime==1)
-            notifications.generate('Torrent Removed', item.name);
+              scaffoldKey.currentState.showSnackBar(
+                  SnackBar(
+                    content: Text('${item.name.substring(0, item.name.contains('[')
+                        ? item.name.indexOf('[')
+                        : item.name.length)} Removed'),
+                    duration: Duration(seconds: 1),
+                    backgroundColor: kRed,
+                  ));
           break;
       }
     }

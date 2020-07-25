@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
         textTheme: ThemeData.light().textTheme.apply(
               fontFamily: 'SFUIDisplay',
             ),
-        primaryColor: Colors.grey[300],
       ),
       darkTheme: ThemeData.dark().copyWith(
         accentColor: Constants.kIndigo,
