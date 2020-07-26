@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/rss.dart';
+import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'api_conf.dart';
 import '../models/torrent.dart';
 import 'package:xml/xml.dart' as xml;
@@ -307,6 +308,29 @@ class ApiRequests {
       print(e);
     }
     return dataAvailable;
+  }
+
+  static Future<List<RSSFilter>> getRSSFilters(Api api) async{
+    List<RSSFilter> rssFilters = [];
+    var response = await api.ioClient
+        .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(),
+        body:{
+          'mode': 'getfilters',
+        });
+
+    var filters = jsonDecode(response.body);
+    for (var filter in filters) {
+      RSSFilter rssFilter = RSSFilter(
+        filter['name'],
+        filter['enabled'],
+        filter['pattern'],
+        filter['label'],
+        filter['exclude'],
+        filter['dir'],
+      );
+      rssFilters.add(rssFilter);
+    }
+    return rssFilters;
   }
 
   static Future<List<HistoryItem>> getHistory(Api api) async{

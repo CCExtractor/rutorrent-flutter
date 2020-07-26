@@ -4,7 +4,7 @@ import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/search_bar.dart';
 import 'package:rutorrentflutter/components/torrent_tile.dart';
-import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/constants.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
@@ -64,7 +64,7 @@ class _TorrentsListPageState extends State<TorrentsListPage> {
     return Consumer<GeneralFeatures>(builder: (context, general, child) {
       return RefreshIndicator(
         onRefresh: _refreshState,
-        color: Provider.of<Mode>(context).isLightMode?Constants.kBlue:Constants.kIndigo,
+        color: Provider.of<Mode>(context).isLightMode?kBlue:kIndigo,
         child: Column(
           children: <Widget>[
             SearchBar(),
@@ -81,10 +81,10 @@ class _TorrentsListPageState extends State<TorrentsListPage> {
                     return Shimmer.fromColors(
                       baseColor: Provider.of<Mode>(context).isLightMode
                           ? Colors.grey[300]
-                          : Constants.kDarkGrey,
+                          : kDarkGrey,
                       highlightColor: Provider.of<Mode>(context).isLightMode
                           ? Colors.grey[100]
-                          : Constants.kLightGrey,
+                          : kLightGrey,
                       child: ListView.builder(
                           itemCount: 5,
                           itemBuilder: (context, index) {

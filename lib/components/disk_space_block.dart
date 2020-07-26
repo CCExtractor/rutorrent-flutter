@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
-import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/constants.dart';
 
 class ShowDiskSpace extends StatelessWidget {
   @override
@@ -31,8 +31,8 @@ class ShowDiskSpace extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 12,
                       color: mode.isLightMode
-                          ? Constants.kDarkGrey
-                          : Constants.kLightGrey,
+                          ? kDarkGrey
+                          : kLightGrey,
                       fontFamily: 'SFUIDisplay/sf-ui-display-medium.otf')),
               SizedBox(
                 height: 5,
@@ -41,11 +41,11 @@ class ShowDiskSpace extends StatelessWidget {
                 height: 8,
                 child: LinearProgressIndicator(
                   value: general.diskSpace.getPercentage() / 100,
-                  backgroundColor: mode.isLightMode?Constants.kLightGrey:Constants.kDarkGrey,
+                  backgroundColor: mode.isLightMode?kLightGrey:kDarkGrey,
                   valueColor: AlwaysStoppedAnimation<Color>(
                       general.diskSpace.isLow()
-                          ? Constants.kRed
-                          : (mode.isLightMode?Constants.kBlue:Constants.kIndigo)),
+                          ? kRed
+                          : (mode.isLightMode?kBlue:kIndigo)),
                 ),
               )
             ],

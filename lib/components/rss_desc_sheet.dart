@@ -3,7 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
-import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
@@ -51,10 +51,10 @@ class _RSSDescSheetState extends State<RSSDescSheet> {
             ? Shimmer.fromColors(
                 baseColor: Provider.of<Mode>(context).isLightMode
                     ? Colors.grey[300]
-                    : Constants.kDarkGrey,
+                    : kDarkGrey,
                 highlightColor: Provider.of<Mode>(context).isLightMode
                     ? Colors.grey[100]
-                    : Constants.kLightGrey,
+                    : kLightGrey,
                 child: ListView.builder(
                     itemCount: 2,
                     itemBuilder: (context, index) {

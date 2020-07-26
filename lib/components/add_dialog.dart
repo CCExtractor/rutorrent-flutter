@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/models/mode.dart';
-import '../constants.dart' as Constants;
+import '../constants.dart';
 import 'package:flutter/material.dart';
 
 class AddDialog extends StatelessWidget {
@@ -35,7 +35,7 @@ class AddDialog extends StatelessWidget {
                 children: <Widget>[
                   Flexible(
                     child: TextFormField(
-                      style: TextStyle(fontSize: 16,color: Constants.kDarkGrey),
+                      style: TextStyle(fontSize: 16,color: kDarkGrey),
                       controller: urlTextController,
                       decoration: InputDecoration(
                           border: InputBorder.none,
@@ -57,7 +57,7 @@ class AddDialog extends StatelessWidget {
               height: 50,
               width: double.infinity,
               child: RaisedButton(
-                color: Provider.of<Mode>(context).isLightMode ? Constants.kBlue : Constants.kIndigo,
+                color: Provider.of<Mode>(context).isLightMode ? kBlue : kIndigo,
                 child: Text('Add',style: TextStyle(color: Colors.white,fontSize: 16),),
                 onPressed: () {
                   Navigator.pop(context);

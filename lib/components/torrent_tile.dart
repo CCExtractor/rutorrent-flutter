@@ -8,7 +8,7 @@ import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import '../api/api_conf.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/constants.dart';
 
 class TorrentTile extends StatelessWidget {
   final Torrent torrent;
@@ -18,20 +18,20 @@ class TorrentTile extends StatelessWidget {
     switch (status) {
       case Status.downloading:
         return Provider.of<Mode>(context).isLightMode
-            ? Constants.kBlue
-            : Constants.kIndigo;
+            ? kBlue
+            : kIndigo;
       case Status.paused:
         return Provider.of<Mode>(context).isLightMode
-            ? Constants.kDarkGrey
-            : Constants.kLightGrey;
+            ? kDarkGrey
+            : kLightGrey;
       case Status.errors:
-        return Constants.kRed;
+        return kRed;
       case Status.completed:
         return Provider.of<Mode>(context).isLightMode
-            ? Constants.kGreen
-            : Constants.kLightGreen;
+            ? kGreen
+            : kLightGreen;
       default:
-        return Constants.kDarkGrey;
+        return kDarkGrey;
     }
   }
 
@@ -66,14 +66,14 @@ class TorrentTile extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0),
                       border: Border.all(
                           color: Provider.of<Mode>(context).isLightMode
-                              ? Constants.kDarkGrey
-                              : Constants.kLightGrey,
+                              ? kDarkGrey
+                              : kLightGrey,
                           width: 2)),
                   child: Icon(
                     Icons.clear,
                     color: Provider.of<Mode>(context).isLightMode
-                        ? Constants.kDarkGrey
-                        : Constants.kLightGrey,
+                        ? kDarkGrey
+                        : kLightGrey,
                     size: 34,
                   ),
                 ),
@@ -87,14 +87,14 @@ class TorrentTile extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5.0),
                       border: Border.all(
                           color: Provider.of<Mode>(context).isLightMode
-                              ? Constants.kDarkGrey
-                              : Constants.kLightGrey,
+                              ? kDarkGrey
+                              : kLightGrey,
                           width: 2)),
                   child: Icon(
                     Icons.stop,
                     color: Provider.of<Mode>(context).isLightMode
-                        ? Constants.kDarkGrey
-                        : Constants.kLightGrey,
+                        ? kDarkGrey
+                        : kLightGrey,
                     size: 32,
                   ),
                 ),
@@ -136,8 +136,8 @@ class TorrentTile extends StatelessWidget {
                                         fontSize: 10,
                                         color: Provider.of<Mode>(context)
                                                 .isLightMode
-                                            ? Constants.kDarkGrey
-                                            : Constants.kLightGrey),
+                                            ? kDarkGrey
+                                            : kLightGrey),
                                   ),
                                 ),
                                 Padding(
@@ -153,8 +153,8 @@ class TorrentTile extends StatelessWidget {
                                             fontSize: 10,
                                             color: Provider.of<Mode>(context)
                                                     .isLightMode
-                                                ? Constants.kDarkGrey
-                                                : Constants.kLightGrey),
+                                                ? kDarkGrey
+                                                : kLightGrey),
                                       ),
                                       SizedBox(
                                         height: 4,
@@ -168,8 +168,8 @@ class TorrentTile extends StatelessWidget {
                                           backgroundColor:
                                               Provider.of<Mode>(context)
                                                       .isLightMode
-                                                  ? Constants.kLightGrey
-                                                  : Constants.kDarkGrey),
+                                                  ? kLightGrey
+                                                  : kDarkGrey),
                                     ],
                                   ),
                                 )

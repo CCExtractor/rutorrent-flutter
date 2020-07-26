@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/constants.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 
@@ -16,8 +16,8 @@ class FilterTile extends StatelessWidget {
       return Container(
         color: general.selectedFilter == filter
             ? (Provider.of<Mode>(context).isDarkMode
-                ? Constants.kDarkGrey
-                : Constants.kLightGrey)
+                ? kDarkGrey
+                : kLightGrey)
             : null,
         child: ListTile(
           dense: true,

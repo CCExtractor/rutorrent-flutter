@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
-import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -35,11 +35,11 @@ class _HistorySheetState extends State<HistorySheet> {
   Color getHistoryStatusColor(BuildContext context, int action) {
     switch (action) {
       case 1:
-        return Provider.of<Mode>(context).isLightMode ? Constants.kBlue : Constants.kIndigo;
+        return Provider.of<Mode>(context).isLightMode ? kBlue : kIndigo;
       case 2:
-        return Provider.of<Mode>(context).isLightMode ? Constants.kGreen : Constants.kLightGreen;
+        return Provider.of<Mode>(context).isLightMode ? kGreen : kLightGreen;
       case 3:
-        return Constants.kRed;
+        return kRed;
       default:
         return Provider.of<Mode>(context).isLightMode
             ? Colors.black
@@ -63,10 +63,10 @@ class _HistorySheetState extends State<HistorySheet> {
               ? Shimmer.fromColors(
             baseColor: Provider.of<Mode>(context).isLightMode
                 ? Colors.grey[300]
-                : Constants.kDarkGrey,
+                : kDarkGrey,
             highlightColor: Provider.of<Mode>(context).isLightMode
                 ? Colors.grey[100]
-                : Constants.kLightGrey,
+                : kLightGrey,
             child: LoadingShimmer()
           ):
           Expanded(

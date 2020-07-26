@@ -5,6 +5,7 @@ import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
 import 'package:rutorrentflutter/components/add_dialog.dart';
 import 'package:rutorrentflutter/components/history_sheet.dart';
+import 'package:rutorrentflutter/components/rss_filter_details.dart';
 import 'package:rutorrentflutter/pages/downloads_page.dart';
 import 'package:rutorrentflutter/pages/rss_feeds.dart';
 import 'package:rutorrentflutter/pages/settings_page.dart';
@@ -17,7 +18,7 @@ import '../api/api_conf.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import '../constants.dart' as Constants;
+import '../constants.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -26,7 +27,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  int _currentIndex = 0;
+  int _currentIndex = 0; // TorrentsListPage
   List<Api> apis=[];
 
   bool matchApi(Api api1,Api api2){
@@ -76,34 +77,45 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icons.subject,
                   size: 34,
                 ),
-                color: mode.isLightMode ? Constants.kDarkGrey : Colors.white,
+                color: mode.isLightMode ? kDarkGrey : Colors.white,
                 onPressed: () {
                   Scaffold.of(context).openDrawer();
                 });
           }),
           actions: <Widget>[
+            _currentIndex==0?
             IconButton(
+              icon: Icon(
+                Icons.library_add,
+                color: mode.isLightMode ? kDarkGrey : Colors.white,
+              ),
               onPressed: () {
                 showDialog(
                     context: context,
                     builder: (context) => AddDialog(
-                          dialogHint: 'Enter torrent url',
-                          apiRequest: (url) {
-                            ApiRequests.addTorrent(api, url);
-                          },
-                        ));
+                      dialogHint: 'Enter torrent url',
+                      apiRequest: (url) {
+                        ApiRequests.addTorrent(api, url);
+                      },
+                    ));
               },
-              icon: Icon(
-                Icons.library_add,
-                color: mode.isLightMode ? Constants.kDarkGrey : Colors.white,
+            ):
+            _currentIndex==1?IconButton(
+              icon: FaIcon(
+                FontAwesomeIcons.rss,
+                color: mode.isLightMode ? kDarkGrey : Colors.white,
               ),
-            ),
+              onPressed: (){
+                showDialog(context: context,
+                    builder: (context) => RSSFilterDetails());
+              },
+            ):Container(),
             IconButton(
                 icon: Icon(
                   mode.isLightMode
                       ? FontAwesomeIcons.solidMoon
                       : FontAwesomeIcons.solidSun,
-                  color: mode.isLightMode ? Constants.kDarkGrey : Colors.white,
+                  color: mode.isLightMode ? kDarkGrey : Colors.white,
                 ),
                 onPressed: () => mode.toggleMode()),
           ],
@@ -131,19 +143,24 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: Text('Accounts'),
                 children: apis.map((e) => Container(
                   color: matchApi(e, api)?(mode.isLightMode?
-                    Constants.kLightGrey:
-                    Constants.kDarkGrey):null,
+                    kLightGrey:
+                    kDarkGrey):null,
                   child: ListTile(
                     dense: true,
                     title: Text(e.url,
                     style: TextStyle(fontSize: 12),),
                     onTap: (){
-                      api.setUrl(e.url);
-                      api.setUsername(e.username);
-                      api.setPassword(e.password);
-                      Navigator.pushReplacement(context, MaterialPageRoute(
-                        builder: (context)=>HomeScreen()
-                      ));
+                      if(!matchApi(e, api)) {
+                        api.setUrl(e.url);
+                        api.setUsername(e.username);
+                        api.setPassword(e.password);
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                            builder: (context) => HomeScreen()
+                        ));
+                      }
+                      else{
+                        Navigator.pop(context);
+                      }
                     },
                   ),
                 )).toList(),
@@ -201,33 +218,33 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Text('Home'),
               icon: Icon(Icons.home),
               activeColor:
-                  mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
+                  mode.isLightMode ? kBlue : kIndigo,
               inactiveColor:
-                  mode.isLightMode ? Constants.kDarkGrey : Colors.white,
+                  mode.isLightMode ? kDarkGrey : Colors.white,
             ),
             BottomNavyBarItem(
               title: Text('Feeds'),
               icon: Icon(Icons.rss_feed),
               activeColor:
-                  mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
+                  mode.isLightMode ? kBlue : kIndigo,
               inactiveColor:
-                  mode.isLightMode ? Constants.kDarkGrey : Colors.white,
+                  mode.isLightMode ? kDarkGrey : Colors.white,
             ),
             BottomNavyBarItem(
               title: Text('Downloads'),
               icon: Icon(Icons.file_download),
               activeColor:
-                  mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
+                  mode.isLightMode ? kBlue : kIndigo,
               inactiveColor:
-                  mode.isLightMode ? Constants.kDarkGrey : Colors.white,
+                  mode.isLightMode ? kDarkGrey : Colors.white,
             ),
             BottomNavyBarItem(
               title: Text('Settings'),
               icon: Icon(Icons.settings),
               activeColor:
-                  mode.isLightMode ? Constants.kBlue : Constants.kIndigo,
+                  mode.isLightMode ? kBlue : kIndigo,
               inactiveColor:
-                  mode.isLightMode ? Constants.kDarkGrey : Colors.white,
+                  mode.isLightMode ? kDarkGrey : Colors.white,
             ),
           ],
         ),

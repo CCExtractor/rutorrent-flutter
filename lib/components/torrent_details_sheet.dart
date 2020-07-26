@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/torrent_tile.dart';
-import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 
@@ -75,7 +75,7 @@ class TorrentDetailSheet extends StatelessWidget {
                           Row(
                             children: <Widget>[
                               IconButton(
-                                color: Constants.kRed,
+                                color: kRed,
                                 iconSize: 40,
                                 icon: Icon(Icons.close),
                                 onPressed: () {
@@ -85,7 +85,7 @@ class TorrentDetailSheet extends StatelessWidget {
                               ),
                               SizedBox(width: 25,),
                               IconButton(
-                                color: Provider.of<Mode>(context).isLightMode?Constants.kBlue:Constants.kIndigo,
+                                color: Provider.of<Mode>(context).isLightMode?kBlue:kIndigo,
                                 iconSize: 40,
                                 icon: Icon(_getTorrentIconData(torrent)),
                                 onPressed: () => ApiRequests.toggleTorrentStatus(

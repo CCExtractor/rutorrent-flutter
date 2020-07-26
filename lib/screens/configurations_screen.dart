@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/data_input_widget.dart';
-import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -107,8 +107,8 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
       progressIndicator: CircularProgressIndicator(
         valueColor: AlwaysStoppedAnimation<Color>(
             Provider.of<Mode>(context).isLightMode
-                ? Constants.kBlue
-                : Constants.kIndigo),
+                ? kBlue
+                : kIndigo),
       ),
       inAsyncCall: isValidating,
       child: Scaffold(
@@ -193,8 +193,8 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                         Colors.black:Colors.white),
                       ),
                       color: Provider.of<Mode>(context).isLightMode?
-                              Constants.kBlue:
-                              Constants.kIndigo,
+                              kBlue:
+                              kIndigo,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 28, vertical: 16),
