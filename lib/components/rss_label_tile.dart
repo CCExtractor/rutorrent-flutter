@@ -13,8 +13,10 @@ import 'package:rutorrentflutter/constants.dart';
 
 class RSSLabelTile extends StatefulWidget {
   final RSSLabel rssLabel;
+
   final Function refreshCallback;
-  RSSLabelTile(this.rssLabel,this.refreshCallback);
+
+  RSSLabelTile(this.rssLabel, this.refreshCallback);
 
   @override
   _RSSLabelTileState createState() => _RSSLabelTileState();
@@ -48,12 +50,13 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
                   contentPadding: EdgeInsets.fromLTRB(16, 0, 4, 0),
                   leading: FaIcon(FontAwesomeIcons.rssSquare),
                   title: Text(
-                    widget.rssLabel.label + ' (${widget.rssLabel.items.length})',
+                    widget.rssLabel.label +
+                        ' (${widget.rssLabel.items.length})',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                   trailing: IconButton(
                       icon: Icon(Icons.delete),
-                      onPressed: () async{
+                      onPressed: () async {
                         Fluttertoast.showToast(msg: 'Removing');
                         await ApiRequests.removeRSS(api, widget.rssLabel.hash);
                         widget.refreshCallback();
@@ -62,7 +65,8 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
               : ExpansionTile(
                   leading: FaIcon(FontAwesomeIcons.rssSquare),
                   title: Text(
-                    widget.rssLabel.label + ' (${widget.rssLabel.items.length})',
+                    widget.rssLabel.label +
+                        ' (${widget.rssLabel.items.length})',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                   children: widget.rssLabel.items
@@ -73,19 +77,30 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
                             showBarModalBottomSheet(
                                 expand: false,
                                 context: context,
-                                builder: (context,scrollController){
-                                  return RSSDescSheet(item,widget.rssLabel.hash);
-                                }
-                            );
+                                builder: (context, scrollController) {
+                                  return RSSDescSheet(
+                                      item, widget.rssLabel.hash);
+                                });
                           },
                           title: Text(
                             item.title,
-                            style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w500),
                           ),
-                          subtitle: Text(DateFormat('dd MMM yyyy').format(DateTime.fromMillisecondsSinceEpoch(item.time * 1000)),style: TextStyle(fontSize: 10,fontWeight: FontWeight.w500),),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+                            child: Text(
+                              DateFormat('dd MMM yyyy').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      item.time * 1000)),
+                              style: TextStyle(
+                                  fontSize: 10, fontWeight: FontWeight.w500),
+                            ),
+                          ),
                           trailing: IconButton(
                             icon: Icon(Icons.add),
-                            onPressed: ()=>ApiRequests.addTorrent(api, item.url),
+                            onPressed: () =>
+                                ApiRequests.addTorrent(api, item.url),
                           ),
                         ),
                       )

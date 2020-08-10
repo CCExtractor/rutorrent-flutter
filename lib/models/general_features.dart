@@ -201,9 +201,7 @@ class GeneralFeatures extends ChangeNotifier {
           if(DateTime.now().millisecondsSinceEpoch~/1000-item.actionTime==1)
             scaffoldKey.currentState.showSnackBar(
                 SnackBar(
-                  content: Text('${item.name.substring(0, item.name.contains('[')
-                          ? item.name.indexOf('[')
-                          : item.name.length)} Added '),
+                  content: Text('${item.name} Added'),
                   duration: Duration(seconds: 1),
                   backgroundColor: kGreen,
                 ));
@@ -216,9 +214,7 @@ class GeneralFeatures extends ChangeNotifier {
           if(DateTime.now().millisecondsSinceEpoch~/1000-item.actionTime==1)
               scaffoldKey.currentState.showSnackBar(
                   SnackBar(
-                    content: Text('${item.name.substring(0, item.name.contains('[')
-                        ? item.name.indexOf('[')
-                        : item.name.length)} Removed'),
+                    content: Text('${item.name} Removed'),
                     duration: Duration(seconds: 1),
                     backgroundColor: kRed,
                   ));

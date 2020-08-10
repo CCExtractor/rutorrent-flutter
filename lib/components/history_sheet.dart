@@ -78,11 +78,7 @@ class _HistorySheetState extends State<HistorySheet> {
                     title: SizedBox(
                         width: 40,
                         child: Text(
-                            items[index].name.substring(
-                                0,
-                                items[index].name.contains('[')
-                                    ? items[index].name.indexOf('[')
-                                    : items[index].name.length),
+                            items[index].name,
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w600))),
                     leading: SizedBox(

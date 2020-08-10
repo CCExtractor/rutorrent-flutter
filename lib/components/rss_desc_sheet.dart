@@ -83,7 +83,7 @@ class _RSSDescSheetState extends State<RSSDescSheet> {
                                                   .isLightMode
                                               ? Colors.black
                                               : Colors.white,
-                                          width: 5)),
+                                          width: 2)),
                                   height: 200,
                                   child: ClipRRect(
                                     child: Image.network(

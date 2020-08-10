@@ -4,10 +4,12 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
+import 'package:rutorrentflutter/components/file_tile.dart';
 import 'package:rutorrentflutter/components/torrent_tile.dart';
 import 'package:rutorrentflutter/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
+import 'package:rutorrentflutter/models/torrent_file.dart';
 
 class TorrentDetailSheet extends StatelessWidget {
   final Torrent torrent;
@@ -19,20 +21,6 @@ class TorrentDetailSheet extends StatelessWidget {
         : torrent.getState == 0
         ? (Icons.play_arrow)
         : Icons.pause;
-  }
-
-  IconData _getFileIcon(String filename){
-    String ext = filename.substring(filename.lastIndexOf('.'),filename.length);
-    switch(ext){
-      case '.mp4':
-        return Icons.ondemand_video;
-      case '.mp3':
-        return Icons.music_video;
-      case '.jpg':
-        return Icons.image;
-      default:
-        return Icons.insert_drive_file;
-    }
   }
 
   @override
@@ -269,19 +257,13 @@ class TorrentDetailSheet extends StatelessWidget {
                 FutureBuilder(
                     future: ApiRequests.getFiles(api, torrent.hash),
                     builder: (context, snapshot) {
-                      List<String> list = snapshot.data ?? [];
+                      List<TorrentFile> filesList = snapshot.data ?? [];
                       return ExpansionTile(
+                        initiallyExpanded: true,
                         title: Text('Files',
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w600)),
-                        children: list
-                            .map((e) => ListTile(
-                          leading: Icon(_getFileIcon(e)),
-                                    title: Text(
-                                  e,
-                                  style:TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                                )))
-                            .toList(),
+                        children: filesList.map((e) => FileTile(e,torrent.name,torrent.savePath)).toList(),
                       );
                     }),
                 FutureBuilder(

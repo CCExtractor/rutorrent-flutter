@@ -5,6 +5,7 @@ import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/models/rss_filter.dart';
+import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'api_conf.dart';
 import '../models/torrent.dart';
 import 'package:xml/xml.dart' as xml;
@@ -187,15 +188,16 @@ class ApiRequests {
     return trackersList;
   }
 
-  static Future<List<String>> getFiles(Api api, String hashValue) async {
-    List<String> filesList = [];
+  static Future<List<TorrentFile>> getFiles(Api api, String hashValue) async {
+    List<TorrentFile> filesList = [];
 
     var flsResponse = await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
         headers: api.getAuthHeader(), body: {'mode': 'fls', 'hash': hashValue});
 
     var files = jsonDecode(flsResponse.body);
     for (var file in files) {
-      filesList.add(file[0]);
+      TorrentFile torrentFile = TorrentFile(file[0],file[1],file[2],file[3]);
+      filesList.add(torrentFile);
     }
     return filesList;
   }
