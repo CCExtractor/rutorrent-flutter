@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rutorrentflutter/components/file_tile.dart';
 
@@ -64,6 +65,9 @@ class _DownloadsPageState extends State<DownloadsPage> {
                       if(filesList[index] is Directory) {
                         directory = filesList[index].path + '/';
                         _syncFiles();
+                      }
+                      else if (filesList[index] is File){
+                        OpenFile.open(filesList[index].path);
                       }
                     },
                     leading: Icon(filesList[index] is Directory?Icons.folder:FileTile.getFileIcon(filesList[index].path)),

@@ -30,6 +30,7 @@ dependencies:
   path_provider: ^1.6.11
   dio: ^3.0.9
   step_progress_indicator: ^0.2.3+6
+  open_file: ^3.0.1
 
 dev_dependencies:
   flutter_test:
