@@ -17,7 +17,7 @@ class FilterTile extends StatelessWidget {
         color: general.selectedFilter == filter
             ? (Provider.of<Mode>(context).isDarkMode
                 ? kDarkGrey
-                : kLightGrey)
+                : Colors.grey[300])
             : null,
         child: ListTile(
           dense: true,

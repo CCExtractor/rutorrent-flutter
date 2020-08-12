@@ -1,3 +1,5 @@
+import 'package:rutorrentflutter/api/api_conf.dart';
+
 enum Status {
   downloading,
   paused,
@@ -10,6 +12,7 @@ class Torrent{
 
   Torrent(this.hash);
 
+  Api api;
   String hash; // hash value is a unique value for a torrent torrent
   String name;
   Status status;

@@ -28,37 +28,84 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int _currentIndex = 0; // TorrentsListPage
-  List<Api> apis=[];
+  List<Api> apis = []; // Containing info of all saved accounts
+  bool showAllAccounts = false;
 
-  bool matchApi(Api api1,Api api2){
-    if(api1.url==api2.url &&
-        api1.username==api2.username &&
-        api1.password==api2.password)
-      return true;
-    else
-      return false;
-  }
+  _initPlugins() async {
+    Provider.of<GeneralFeatures>(context, listen: false).scaffoldKey =
+        _scaffoldKey;
 
-  _initPlugins() async{
-    Provider.of<GeneralFeatures>(context,listen: false).scaffoldKey=_scaffoldKey;
     apis = await Preferences.fetchSavedLogin();
-    setState(() {
-    });
-    while(mounted){
+//    setState(() {});
+    while (mounted) {
       try {
         await Future.delayed(Duration(seconds: 1), () {});
         ApiRequests.updatePlugins(Provider.of(context, listen: false),
             Provider.of<GeneralFeatures>(context, listen: false));
-      }
-      catch(e){
-      }
+      } catch (e) {}
     }
+  }
+
+  List<Widget> _getAccountsList(Api api, Mode mode) {
+    List<Widget> accountsList = apis
+        .map((e) => Container(
+              color: matchApi(e, api) && !showAllAccounts
+                  ? (mode.isLightMode ? Colors.grey[300] : kDarkGrey)
+                  : null,
+              child: ListTile(
+                dense: true,
+                title: Text(
+                  e.url,
+                  style: TextStyle(fontSize: 12),
+                ),
+                onTap: () {
+                  if (!matchApi(e, api)) {
+                    api.setUrl(e.url);
+                    api.setUsername(e.username);
+                    api.setPassword(e.password);
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                  } else {
+                    Navigator.pop(context);
+                    setState(() => showAllAccounts = false);
+                  }
+                },
+              ),
+            ))
+        .toList();
+    accountsList.insert(
+        0,
+        Container(
+          color: showAllAccounts
+              ? (mode.isLightMode ? Colors.grey[300] : kDarkGrey)
+              : null,
+          child: ListTile(
+            onTap: () {
+              setState(() => showAllAccounts = true);
+              Navigator.pop(context);
+            },
+            title: Text(
+              'All Accounts',
+              style: TextStyle(fontSize: 12),
+            ),
+          ),
+        ));
+    return accountsList;
   }
 
   @override
   void initState() {
     super.initState();
     _initPlugins();
+  }
+
+  bool matchApi(Api api1, Api api2) {
+    if (api1.url == api2.url &&
+        api1.username == api2.username &&
+        api1.password == api2.password)
+      return true;
+    else
+      return false;
   }
 
   @override
@@ -68,9 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         key: general.scaffoldKey,
         appBar: AppBar(
-          backgroundColor: mode.isLightMode
-              ?Colors.grey[300]
-              :Colors.grey[900],
+          backgroundColor:
+              mode.isLightMode ? Colors.grey[300] : Colors.grey[900],
           leading: Builder(builder: (context) {
             return IconButton(
                 icon: Icon(
@@ -83,33 +129,36 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
           }),
           actions: <Widget>[
-            _currentIndex==0?
-            IconButton(
-              icon: Icon(
-                Icons.library_add,
-                color: mode.isLightMode ? kDarkGrey : Colors.white,
-              ),
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (context) => AddDialog(
-                      dialogHint: 'Enter torrent url',
-                      apiRequest: (url) {
-                        ApiRequests.addTorrent(api, url);
-                      },
-                    ));
-              },
-            ):
-            _currentIndex==1?IconButton(
-              icon: FaIcon(
-                FontAwesomeIcons.rss,
-                color: mode.isLightMode ? kDarkGrey : Colors.white,
-              ),
-              onPressed: (){
-                showDialog(context: context,
-                    builder: (context) => RSSFilterDetails());
-              },
-            ):Container(),
+            _currentIndex == 0
+                ? IconButton(
+                    icon: Icon(
+                      Icons.library_add,
+                      color: mode.isLightMode ? kDarkGrey : Colors.white,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AddDialog(
+                                dialogHint: 'Enter torrent url',
+                                apiRequest: (url) {
+                                  ApiRequests.addTorrent(api, url);
+                                },
+                              ));
+                    },
+                  )
+                : _currentIndex == 1
+                    ? IconButton(
+                        icon: FaIcon(
+                          FontAwesomeIcons.rss,
+                          color: mode.isLightMode ? kDarkGrey : Colors.white,
+                        ),
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => RSSFilterDetails());
+                        },
+                      )
+                    : Container(),
             IconButton(
                 icon: Icon(
                   mode.isLightMode
@@ -134,46 +183,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           : AssetImage('assets/logo/dark_mode.png'),
                     ),
                     SizedBox(height: 15),
-                    Text('Application version: 1.01',style: TextStyle(fontSize: 12,fontStyle: FontStyle.italic),),
+                    Text(
+                      'Application version: 1.01',
+                      style:
+                          TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+                    ),
                   ],
                 ),
               ),
               ShowDiskSpace(),
               ExpansionTile(
                 title: Text('Accounts'),
-                children: apis.map((e) => Container(
-                  color: matchApi(e, api)?(mode.isLightMode?
-                    kLightGrey:
-                    kDarkGrey):null,
-                  child: ListTile(
-                    dense: true,
-                    title: Text(e.url,
-                    style: TextStyle(fontSize: 12),),
-                    onTap: (){
-                      if(!matchApi(e, api)) {
-                        api.setUrl(e.url);
-                        api.setUsername(e.username);
-                        api.setPassword(e.password);
-                        Navigator.pushReplacement(context, MaterialPageRoute(
-                            builder: (context) => HomeScreen()
-                        ));
-                      }
-                      else{
-                        Navigator.pop(context);
-                      }
-                    },
-                  ),
-                )).toList(),
+                children: _getAccountsList(api, mode),
               ),
               ListTile(
                 dense: true,
                 leading: Icon(Icons.add),
                 title: Text('Add another account'),
-                onTap: (){
-                  Navigator.pushReplacement(context,
+                onTap: () {
+                  Navigator.pushReplacement(
+                      context,
                       MaterialPageRoute(
-                        builder: (context)=> ConfigurationsScreen(),
-                  ));
+                        builder: (context) => ConfigurationsScreen(),
+                      ));
                 },
               ),
               ExpansionTile(
@@ -201,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
             setState(() => _currentIndex = index);
           },
           children: <Widget>[
-            TorrentsListPage(),
+            TorrentsListPage(showAllAccounts, apis),
             RSSFeeds(),
             DownloadsPage(),
             SettingsPage(),
@@ -217,34 +249,26 @@ class _HomeScreenState extends State<HomeScreen> {
             BottomNavyBarItem(
               title: Text('Home'),
               icon: Icon(Icons.home),
-              activeColor:
-                  mode.isLightMode ? kBlue : kIndigo,
-              inactiveColor:
-                  mode.isLightMode ? kDarkGrey : Colors.white,
+              activeColor: mode.isLightMode ? kBlue : kIndigo,
+              inactiveColor: mode.isLightMode ? kDarkGrey : Colors.white,
             ),
             BottomNavyBarItem(
               title: Text('Feeds'),
               icon: Icon(Icons.rss_feed),
-              activeColor:
-                  mode.isLightMode ? kBlue : kIndigo,
-              inactiveColor:
-                  mode.isLightMode ? kDarkGrey : Colors.white,
+              activeColor: mode.isLightMode ? kBlue : kIndigo,
+              inactiveColor: mode.isLightMode ? kDarkGrey : Colors.white,
             ),
             BottomNavyBarItem(
               title: Text('Downloads'),
               icon: Icon(Icons.file_download),
-              activeColor:
-                  mode.isLightMode ? kBlue : kIndigo,
-              inactiveColor:
-                  mode.isLightMode ? kDarkGrey : Colors.white,
+              activeColor: mode.isLightMode ? kBlue : kIndigo,
+              inactiveColor: mode.isLightMode ? kDarkGrey : Colors.white,
             ),
             BottomNavyBarItem(
               title: Text('Settings'),
               icon: Icon(Icons.settings),
-              activeColor:
-                  mode.isLightMode ? kBlue : kIndigo,
-              inactiveColor:
-                  mode.isLightMode ? kDarkGrey : Colors.white,
+              activeColor: mode.isLightMode ? kBlue : kIndigo,
+              inactiveColor: mode.isLightMode ? kDarkGrey : Colors.white,
             ),
           ],
         ),

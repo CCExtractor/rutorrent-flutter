@@ -12,6 +12,11 @@ import 'package:shimmer/shimmer.dart';
 import '../components/loading_shimmer.dart';
 
 class TorrentsListPage extends StatefulWidget {
+  final bool showAllAccounts;
+  final List<Api> apis;
+
+  TorrentsListPage(this.showAllAccounts,this.apis);
+
   @override
   _TorrentsListPageState createState() => _TorrentsListPageState();
 }
@@ -70,8 +75,9 @@ class _TorrentsListPageState extends State<TorrentsListPage> {
             SearchBar(),
             Expanded(
               child: StreamBuilder(
-                stream: ApiRequests.getTorrentsList(
-                    context, Provider.of<Api>(context), general),
+                stream: widget.showAllAccounts?
+                ApiRequests.getAllAccountsTorrentList(widget.apis, general):
+                ApiRequests.getTorrentList(Provider.of<Api>(context), general),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting &&
                       !snapshot.hasData) {

@@ -17,19 +17,13 @@ class TorrentTile extends StatelessWidget {
   static Color getStatusColor(Status status, BuildContext context) {
     switch (status) {
       case Status.downloading:
-        return Provider.of<Mode>(context).isLightMode
-            ? kBlue
-            : kIndigo;
+        return Provider.of<Mode>(context).isLightMode ? kBlue : kIndigo;
       case Status.paused:
-        return Provider.of<Mode>(context).isLightMode
-            ? kDarkGrey
-            : kLightGrey;
+        return Provider.of<Mode>(context).isLightMode ? kDarkGrey : kLightGrey;
       case Status.errors:
         return kRed;
       case Status.completed:
-        return Provider.of<Mode>(context).isLightMode
-            ? kGreen
-            : kLightGreen;
+        return Provider.of<Mode>(context).isLightMode ? kGreen : kLightGreen;
       default:
         return kDarkGrey;
     }
@@ -77,7 +71,7 @@ class TorrentTile extends StatelessWidget {
                     size: 34,
                   ),
                 ),
-                onTap: () => ApiRequests.removeTorrent(api, torrent.hash),
+                onTap: () => ApiRequests.removeTorrent(torrent.api, torrent.hash),
               )
             ],
             secondaryActions: <Widget>[
@@ -98,7 +92,7 @@ class TorrentTile extends StatelessWidget {
                     size: 32,
                   ),
                 ),
-                onTap: () => ApiRequests.stopTorrent(api, torrent.hash),
+                onTap: () => ApiRequests.stopTorrent(torrent.api, torrent.hash),
               ),
             ],
             child: Padding(
@@ -195,7 +189,7 @@ class TorrentTile extends StatelessWidget {
                             iconSize: 40,
                             icon: Icon(_getTorrentIconData()),
                             onPressed: () => ApiRequests.toggleTorrentStatus(
-                                api,
+                                torrent.api,
                                 torrent.hash,
                                 torrent.isOpen,
                                 torrent.getState),
