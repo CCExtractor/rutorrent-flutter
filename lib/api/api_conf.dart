@@ -23,7 +23,7 @@ class Api {
   get username => _username;
   get password => _password;
 
-  get httprpcPluginUrl => url + '/plugins/httprpc/action.php';
+  get httpRpcPluginUrl => url + '/plugins/httprpc/action.php';
   get addTorrentPluginUrl => url + '/php/addtorrent.php';
   get diskSpacePluginUrl => url + '/plugins/diskspace/action.php';
   get rssPluginUrl => url + '/plugins/rss/action.php';

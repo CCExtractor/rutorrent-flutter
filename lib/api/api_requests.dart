@@ -98,7 +98,7 @@ class ApiRequests {
         List<Torrent> allTorrentList = [];
         for (Api api in apis) {
           var response = await api.ioClient.post(
-              Uri.parse(api.httprpcPluginUrl),
+              Uri.parse(api.httpRpcPluginUrl),
               headers: api.getAuthHeader(),
               body: {
                 'mode': 'list',
@@ -118,7 +118,7 @@ class ApiRequests {
       Api api, GeneralFeatures general) async* {
     while (true) {
       try {
-        var response = await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
+        var response = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
             headers: api.getAuthHeader(),
             body: {
               'mode': 'list',
@@ -140,7 +140,7 @@ class ApiRequests {
   }
 
   static startTorrent(Api api, String hashValue) async {
-    await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
+    await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': 'start',
@@ -149,7 +149,7 @@ class ApiRequests {
   }
 
   static pauseTorrent(Api api, String hashValue) async {
-    await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
+    await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': 'pause',
@@ -158,7 +158,7 @@ class ApiRequests {
   }
 
   static stopTorrent(Api api, String hashValue) async {
-    await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
+    await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': 'stop',
@@ -167,7 +167,7 @@ class ApiRequests {
   }
 
   static removeTorrent(Api api, String hashValue) async {
-    await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
+    await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': 'remove',
@@ -187,7 +187,7 @@ class ApiRequests {
         ? Status.downloading
         : getState == 0 ? (Status.downloading) : Status.paused;
 
-    await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
+    await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': statusMap[toggleStatus],
@@ -207,7 +207,7 @@ class ApiRequests {
   static Future<List<String>> getTrackers(Api api, String hashValue) async {
     List<String> trackersList = [];
 
-    var trKResponse = await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
+    var trKResponse = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(), body: {'mode': 'trk', 'hash': hashValue});
 
     var trackers = jsonDecode(trKResponse.body);
@@ -220,7 +220,7 @@ class ApiRequests {
   static Future<List<TorrentFile>> getFiles(Api api, String hashValue) async {
     List<TorrentFile> filesList = [];
 
-    var flsResponse = await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
+    var flsResponse = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(), body: {'mode': 'fls', 'hash': hashValue});
 
     var files = jsonDecode(flsResponse.body);
@@ -234,7 +234,7 @@ class ApiRequests {
   static Stream<Torrent> updateSheetData(Api api, Torrent torrent) async* {
     try {
       while (true) {
-        var response = await api.ioClient.post(Uri.parse(api.httprpcPluginUrl),
+        var response = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
             headers: api.getAuthHeader(),
             body: {
               'mode': 'list',

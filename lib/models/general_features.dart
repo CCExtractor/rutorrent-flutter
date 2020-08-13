@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/components/filter_tile.dart';
 import 'package:rutorrentflutter/constants.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
