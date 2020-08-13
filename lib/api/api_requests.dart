@@ -373,7 +373,7 @@ class ApiRequests {
         headers: api.getAuthHeader(),
         body: {
           'cmd': 'get',
-          'mark': timestamp,
+          'mark': '0',
         });
 
     var items = jsonDecode(response.body)['items'];

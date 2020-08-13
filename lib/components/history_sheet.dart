@@ -48,60 +48,58 @@ class _HistorySheetState extends State<HistorySheet> {
   }
 
   Widget build(BuildContext context) {
-    return Container(
-      height: 400,
-      child: Column(
-        children: <Widget>[
-          Container(
-              padding: EdgeInsets.all(8),
-              child: Text(
-                'History',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              )),
-          Divider(),
-          isLoading
-              ? Shimmer.fromColors(
-            baseColor: Provider.of<Mode>(context).isLightMode
-                ? Colors.grey[300]
-                : kDarkGrey,
-            highlightColor: Provider.of<Mode>(context).isLightMode
-                ? Colors.grey[100]
-                : kLightGrey,
-            child: LoadingShimmer()
-          ):
-          Expanded(
-            child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    dense: true,
-                    title: SizedBox(
-                        width: 40,
-                        child: Text(
-                            items[index].name,
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w600))),
-                    leading: SizedBox(
-                      width: 80,
-                      child:
-                          Text(HistoryItem.historyStatus[items[index].action],
-                              style: TextStyle(
-                                color: getHistoryStatusColor(
-                                    context, items[index].action),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              )),
-                    ),
-                    trailing: Text(
-                      '${DateFormat('dd.MM.yyyy\nHH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))}',
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                    ),
-                  );
-                }),
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 32, 8,8),
+          child: Text(
+            'History',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
-        ],
-      ),
+        ),
+        Divider(),
+        isLoading
+            ? Shimmer.fromColors(
+          baseColor: Provider.of<Mode>(context).isLightMode
+              ? Colors.grey[300]
+              : kDarkGrey,
+          highlightColor: Provider.of<Mode>(context).isLightMode
+              ? Colors.grey[100]
+              : kLightGrey,
+          child: LoadingShimmer()
+        ):
+        Expanded(
+          child: ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  dense: true,
+                  title: SizedBox(
+                      width: 40,
+                      child: Text(
+                          items[index].name,
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w600))),
+                  leading: SizedBox(
+                    width: 80,
+                    child:
+                        Text(HistoryItem.historyStatus[items[index].action],
+                            style: TextStyle(
+                              color: getHistoryStatusColor(
+                                  context, items[index].action),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                            )),
+                  ),
+                  trailing: Text(
+                    '${DateFormat('dd.MM.yyyy\nHH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))}',
+                    style:
+                        TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                  ),
+                );
+              }),
+        ),
+      ],
     );
   }
 }

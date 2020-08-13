@@ -44,12 +44,9 @@ class TorrentTile extends StatelessWidget {
       builder: (context, api, child) {
         return GestureDetector(
           onTap: () {
-            showMaterialModalBottomSheet(
-                expand: true,
-                context: context,
-                builder: (context, scrollContainer) => Provider<Api>(
-                    create: (context) => api,
-                    child: TorrentDetailSheet(torrent)));
+            Navigator.push(context, MaterialPageRoute(
+              builder: (context)=>TorrentDetailSheet(torrent)
+            ));
           },
           child: Slidable(
             actionPane: SlidableScrollActionPane(),

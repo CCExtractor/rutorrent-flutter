@@ -8,7 +8,7 @@ import 'models/mode.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
-    Provider<Api>(create: (context)=>Api()),
+    Provider<Api>(create: (context) => Api()),
     ChangeNotifierProvider<Mode>(create: (context) => Mode()),
     ChangeNotifierProvider<GeneralFeatures>(
       create: (context) => GeneralFeatures(),

@@ -36,7 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
         _scaffoldKey;
 
     apis = await Preferences.fetchSavedLogin();
-//    setState(() {});
+    setState(() {});// updating the drawer list
+
     while (mounted) {
       try {
         await Future.delayed(Duration(seconds: 1), () {});
@@ -184,7 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     SizedBox(height: 15),
                     Text(
-                      'Application version: 1.01',
+                      'Application version: 0.01',
                       style:
                           TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
                     ),
@@ -219,6 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () async {
                   Navigator.pop(context);
                   showMaterialModalBottomSheet(
+                      expand: true,
                       context: context,
                       builder: (context, controller) => HistorySheet());
                 },
