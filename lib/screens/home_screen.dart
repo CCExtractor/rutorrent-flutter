@@ -13,12 +13,12 @@ import 'package:rutorrentflutter/pages/torrents_list_page.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
-import 'package:rutorrentflutter/services/preferences.dart';
+import 'package:rutorrentflutter/utilities/preferences.dart';
 import '../api/api_conf.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import '../constants.dart';
+import '../utilities/constants.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _scaffoldKey;
 
     apis = await Preferences.fetchSavedLogin();
-    setState(() {});// updating the drawer list
+    setState(() {}); // updating the drawer list
 
     while (mounted) {
       try {

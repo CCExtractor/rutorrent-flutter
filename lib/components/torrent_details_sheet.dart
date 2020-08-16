@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/file_tile.dart';
 import 'package:rutorrentflutter/components/torrent_tile.dart';
-import 'package:rutorrentflutter/constants.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';

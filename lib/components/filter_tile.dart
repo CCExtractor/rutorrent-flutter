@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rutorrentflutter/constants.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 

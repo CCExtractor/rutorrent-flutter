@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
-import 'package:rutorrentflutter/services/preferences.dart';
+import 'package:rutorrentflutter/utilities/preferences.dart';
 
 class SettingsPage extends StatelessWidget {
   @override

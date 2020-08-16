@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rutorrentflutter/components/filter_tile.dart';
-import 'package:rutorrentflutter/constants.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/services/notifications.dart';
@@ -51,10 +51,7 @@ class GeneralFeatures extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Torrent> sortList(
-    List<Torrent> torrentsList,
-    Sort sort,
-  ) {
+  List<Torrent> sortList(List<Torrent> torrentsList, Sort sort) {
     switch (sort) {
       case Sort.name:
         torrentsList.sort((a, b) => a.name.compareTo(b.name));
@@ -117,7 +114,7 @@ class GeneralFeatures extends ChangeNotifier {
   Filter _selectedFilter = Filter.All;
   List<FilterTile> _filterTileList = [
     FilterTile(
-      icon: Icons.select_all,
+      icon: Icons.filter_tilt_shift,
       filter: Filter.All,
     ),
     FilterTile(
@@ -188,36 +185,37 @@ class GeneralFeatures extends ChangeNotifier {
   get activeDownloads {
     return _activeDownloads;
   }
+
   setActiveDownloads(List<Torrent> list) => _activeDownloads = list;
 
   /// History Check
   List<HistoryItem> _historyItems = [];
   get historyItems => _historyItems;
-  updateHistoryItems(List<HistoryItem> updatedList){
+  updateHistoryItems(List<HistoryItem> updatedList) {
     _historyItems = updatedList;
-    for(var item in updatedList){
-      switch(item.action){
+    for (var item in updatedList) {
+      switch (item.action) {
         case 1: // Added
-          if(DateTime.now().millisecondsSinceEpoch~/1000-item.actionTime==1)
-            scaffoldKey.currentState.showSnackBar(
-                SnackBar(
-                  content: Text('${item.name} Added'),
-                  duration: Duration(seconds: 1),
-                  backgroundColor: kGreen,
-                ));
+          if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime ==
+              1)
+            scaffoldKey.currentState.showSnackBar(SnackBar(
+              content: Text('${item.name} Added'),
+              duration: Duration(seconds: 1),
+              backgroundColor: kGreen,
+            ));
           break;
         case 2: // Finished
-          if(DateTime.now().millisecondsSinceEpoch~/1000-item.actionTime==1)
-            notifications.generate('Download Completed', item.name);
+          if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime ==
+              1) notifications.generate('Download Completed', item.name);
           break;
         case 3: // Deleted
-          if(DateTime.now().millisecondsSinceEpoch~/1000-item.actionTime==1)
-              scaffoldKey.currentState.showSnackBar(
-                  SnackBar(
-                    content: Text('${item.name} Removed'),
-                    duration: Duration(seconds: 1),
-                    backgroundColor: kRed,
-                  ));
+          if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime ==
+              1)
+            scaffoldKey.currentState.showSnackBar(SnackBar(
+              content: Text('${item.name} Removed'),
+              duration: Duration(seconds: 1),
+              backgroundColor: kRed,
+            ));
           break;
       }
     }

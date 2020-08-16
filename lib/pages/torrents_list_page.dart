@@ -4,7 +4,7 @@ import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/search_bar.dart';
 import 'package:rutorrentflutter/components/torrent_tile.dart';
-import 'package:rutorrentflutter/constants.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';

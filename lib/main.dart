@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rutorrentflutter/constants.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/screens/loading_screen.dart';
 import 'api/api_conf.dart';
 import 'models/general_features.dart';

@@ -4,7 +4,7 @@ import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:flare_splash_screen/flare_splash_screen.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
 import 'package:rutorrentflutter/screens/home_screen.dart';
-import 'package:rutorrentflutter/services/preferences.dart';
+import 'package:rutorrentflutter/utilities/preferences.dart';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -28,7 +28,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
     }
     setState(() {
       isLoading = false;
-      print('Done');
     });
   }
 

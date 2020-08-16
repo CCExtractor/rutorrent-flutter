@@ -9,7 +9,7 @@ import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/rss_desc_sheet.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/rss.dart';
-import 'package:rutorrentflutter/constants.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 
 class RSSLabelTile extends StatefulWidget {
   final RSSLabel rssLabel;
@@ -42,7 +42,7 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
         child: Container(
           color: isLongPressed
               ? (Provider.of<Mode>(context).isLightMode
-                  ? kLightGrey
+                  ? Colors.grey[300]
                   : kDarkGrey)
               : null,
           child: isLongPressed
@@ -55,7 +55,9 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                   trailing: IconButton(
-                      icon: Icon(Icons.delete),
+                      icon: Icon(
+                          Icons.delete,
+                      ),
                       onPressed: () async {
                         Fluttertoast.showToast(msg: 'Removing');
                         await ApiRequests.removeRSS(api, widget.rssLabel.hash);
@@ -63,7 +65,10 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
                       }),
                 )
               : ExpansionTile(
-                  leading: FaIcon(FontAwesomeIcons.rssSquare),
+                  leading: FaIcon(
+                    FontAwesomeIcons.rssSquare,
+                    color: Colors.orange[500],
+                  ),
                   title: Text(
                     widget.rssLabel.label +
                         ' (${widget.rssLabel.items.length})',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:rutorrentflutter/constants.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 
@@ -18,7 +18,8 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<GeneralFeatures,Mode>(builder: (context, general,mode, child) {
+    return Consumer2<GeneralFeatures, Mode>(
+        builder: (context, general, mode, child) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -28,18 +29,18 @@ class SearchBar extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Icon(
                   Icons.search,
-                  color: mode.isLightMode?kDarkGrey:kLightGrey,
+                  color: mode.isLightMode ? kDarkGrey : kLightGrey,
                 ),
               ),
               Expanded(
                 child: TextFormField(
                   style: TextStyle(fontWeight: FontWeight.w600),
                   focusNode: general.searchBarFocus,
-                  onTap: (){
+                  onTap: () {
                     general.setSearchingState(true);
                   },
                   controller: general.searchTextController,
-                  cursorColor: mode.isLightMode?Colors.black:Colors.white,
+                  cursorColor: mode.isLightMode ? Colors.black : Colors.white,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                       border: InputBorder.none,
@@ -52,7 +53,7 @@ class SearchBar extends StatelessWidget {
                   ? IconButton(
                       icon: Icon(
                         Icons.clear,
-                        color: mode.isLightMode?kDarkGrey:kLightGrey,
+                        color: mode.isLightMode ? kDarkGrey : kLightGrey,
                       ),
                       onPressed: () {
                         general.searchTextController.clear();
@@ -65,12 +66,9 @@ class SearchBar extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Icon(
                           FontAwesomeIcons.slidersH,
-                          color: mode.isLightMode?kDarkGrey:kLightGrey,
+                          color: mode.isLightMode ? kDarkGrey : kLightGrey,
                         ),
                       ),
-                      onSelected: (selectedChoice) {
-                        general.setSortPreference(selectedChoice);
-                      },
                       itemBuilder: (BuildContext context) {
                         return Sort.values.map((Sort choice) {
                           return PopupMenuItem<Sort>(
@@ -79,6 +77,9 @@ class SearchBar extends StatelessWidget {
                             child: Text(SearchBar.sortMap[choice]),
                           );
                         }).toList();
+                      },
+                      onSelected: (selectedChoice) {
+                        general.setSortPreference(selectedChoice);
                       },
                     ),
             ],

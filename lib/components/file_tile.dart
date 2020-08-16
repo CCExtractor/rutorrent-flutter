@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
-import 'package:rutorrentflutter/constants.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';

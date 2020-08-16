@@ -14,7 +14,7 @@ class ApiRequests {
 
   static updateHistory(Api api, GeneralFeatures general) async {
     String timestamp = ((DateTime.now().millisecondsSinceEpoch -
-                Duration(minutes: 1).inMilliseconds) ~/
+                Duration(seconds: 10).inMilliseconds) ~/
             1000)
         .toString();
     List<HistoryItem> historyItems = [];
@@ -50,7 +50,7 @@ class ApiRequests {
   }
 
   static List<Torrent> parseTorrentsData(
-      String responseBody, GeneralFeatures general,Api api) {
+      String responseBody, GeneralFeatures general, Api api) {
     // takes response and parse and return the torrents data
     List<Torrent> torrentsList = [];
     // A list of active torrents is required for changing the connection state from waiting to active
@@ -103,7 +103,7 @@ class ApiRequests {
               body: {
                 'mode': 'list',
               });
-          allTorrentList.addAll(parseTorrentsData(response.body, general,api));
+          allTorrentList.addAll(parseTorrentsData(response.body, general, api));
         }
         yield allTorrentList;
       } catch (e) {
@@ -124,7 +124,7 @@ class ApiRequests {
               'mode': 'list',
             });
 
-        yield parseTorrentsData(response.body, general,api);
+        yield parseTorrentsData(response.body, general, api);
       } catch (e) {
         print('Exception caught in Api Request ' + e.toString());
         /*returning null since the stream has to be active all the times to return something
@@ -363,20 +363,25 @@ class ApiRequests {
     return rssFilters;
   }
 
-  static Future<List<HistoryItem>> getHistory(Api api) async {
-    String timestamp = ((DateTime.now().millisecondsSinceEpoch -
-                Duration(hours: 24).inMilliseconds) ~/
-            1000)
-        .toString();
-    List<HistoryItem> historyItems = [];
+  static Future<List<HistoryItem>> getHistory(Api api, {int lastHours}) async {
+    String timestamp = '0';
+    if (lastHours != null) {
+      timestamp = ((DateTime.now().millisecondsSinceEpoch -
+                  Duration(hours: lastHours).inMilliseconds) ~/
+              1000)
+          .toString();
+    }
+
     var response = await api.ioClient.post(Uri.parse(api.historyPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'cmd': 'get',
-          'mark': '0',
+          'mark': timestamp,
         });
 
     var items = jsonDecode(response.body)['items'];
+
+    List<HistoryItem> historyItems = [];
     for (var item in items) {
       HistoryItem historyItem =
           HistoryItem(item['name'], item['action'], item['action_time']);

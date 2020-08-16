@@ -5,7 +5,7 @@ import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:rutorrentflutter/constants.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 
 import 'loading_shimmer.dart';
 

@@ -6,7 +6,7 @@ import 'package:rutorrentflutter/components/add_dialog.dart';
 import 'package:rutorrentflutter/components/rss_label_tile.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/rss.dart';
-import 'package:rutorrentflutter/constants.dart' as Constants;
+import 'package:rutorrentflutter/utilities/constants.dart' as Constants;
 
 class RSSFeeds extends StatefulWidget {
   @override

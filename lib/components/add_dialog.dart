@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/models/mode.dart';
-import '../constants.dart';
+import '../utilities/constants.dart';
 import 'package:flutter/material.dart';
 
 class AddDialog extends StatelessWidget {

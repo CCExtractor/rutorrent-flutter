@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:rutorrentflutter/components/data_input_widget.dart';
-import 'package:rutorrentflutter/constants.dart';
+import 'package:rutorrentflutter/components/data_input.dart';
+import 'package:rutorrentflutter/components/password_input.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/home_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:rutorrentflutter/services/preferences.dart';
+import 'package:rutorrentflutter/utilities/preferences.dart';
 import '../api/api_conf.dart';
 
 class ConfigurationsScreen extends StatefulWidget {
@@ -219,56 +220,6 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
         ),
       ),
     );
-  }
-}
-
-class PasswordInput extends StatefulWidget {
-  final TextEditingController textEditingController;
-  final FocusNode passwordFocus;
-  PasswordInput({this.textEditingController,this.passwordFocus});
-  @override
-  _PasswordInputState createState() => _PasswordInputState();
-}
-
-class _PasswordInputState extends State<PasswordInput> {
-  bool passwordVisible=false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        child: TextFormField(
-          style: TextStyle(fontWeight: FontWeight.w600),
-          obscureText: !passwordVisible,
-          focusNode: widget.passwordFocus,
-          controller: widget.textEditingController,
-          cursorColor: Provider.of<Mode>(context).isLightMode
-              ? Colors.black
-              : Colors.white,
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            hintText: 'Password',
-            suffixIcon: IconButton(
-              color: Colors.grey,
-              icon: Icon(passwordVisible?
-              Icons.visibility:Icons.visibility_off,
-              color: Colors.grey,
-                ),
-              onPressed: (){
-                setState(() {
-                  passwordVisible=!passwordVisible;
-                });
-              },
-            ),
-          ),
-        ),
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey, width: 1.5),
-            borderRadius: BorderRadius.all(Radius.circular(5))),
-      ),);
   }
 }
 
