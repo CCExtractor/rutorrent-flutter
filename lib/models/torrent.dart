@@ -13,8 +13,6 @@ class Torrent{
 
   Torrent(this.hash);
 
-  List<TorrentFile> files = [];
-  List<String> trackers = [];
 
   Api api;
   String hash; // hash value is a unique value for a torrent torrent

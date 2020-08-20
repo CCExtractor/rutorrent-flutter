@@ -2,14 +2,13 @@ import 'dart:io';
 
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/file_tile.dart';
-import 'package:rutorrentflutter/components/torrent_tile.dart';
-import 'package:rutorrentflutter/utilities/constants.dart';
-import 'package:rutorrentflutter/models/mode.dart';
+import 'package:rutorrentflutter/models/general_features.dart';
+import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 
 class TorrentDetailSheet extends StatefulWidget {
@@ -22,6 +21,8 @@ class TorrentDetailSheet extends StatefulWidget {
 
 class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   Torrent torrent;
+  List<TorrentFile> files = [];
+  List<String> trackers = [];
   final ScrollController _scrollController = ScrollController();
 
   IconData _getTorrentIconData(Torrent torrent) {
@@ -30,41 +31,57 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
         : torrent.getState == 0 ? (Icons.play_arrow) : Icons.pause;
   }
 
-  syncFiles() async{
-    String localFilesPath = (await getExternalStorageDirectory()).path+'/';
+  syncFiles() async {
+    String localFilesPath = (await getExternalStorageDirectory()).path + '/';
     var localItems = Directory(localFilesPath).listSync(recursive: true);
 
-    List<String> localFiles=[];
-    for(dynamic localItem in localItems){
-      if(localItem is File){
-        localItem = localItem.path.substring(localItem.path.lastIndexOf('/')+1);
+    List<String> localFiles = [];
+    for (dynamic localItem in localItems) {
+      if (localItem is File) {
+        localItem =
+            localItem.path.substring(localItem.path.lastIndexOf('/') + 1);
         localFiles.add(localItem);
       }
     }
-    for(var file in torrent.files)
-      if(localFiles.contains(file.name))
-        file.isPresentLocally = true;
+
+    for (var file in files)
+      if (localFiles.contains(file.name)) file.isPresentLocally = true;
 
     setState(() {});
   }
 
   _getFiles() async {
-    torrent.files =
-        await ApiRequests.getFiles(widget.torrent.api, widget.torrent.hash);
+    files = await ApiRequests.getFiles(torrent.api, torrent.hash);
     syncFiles();
     setState(() {});
   }
 
   _getTrackers() async {
-    torrent.trackers =
-        await ApiRequests.getTrackers(widget.torrent.api, widget.torrent.hash);
+    trackers = await ApiRequests.getTrackers(torrent.api, torrent.hash);
     setState(() {});
+  }
+
+  _updateTorrent() async {
+    while (this.mounted) {
+      List<Torrent> torrentsList =
+          Provider.of<GeneralFeatures>(context, listen: false).torrentsList;
+      Torrent updatedTorrent;
+      for (var torrent in torrentsList)
+        if (torrent.hash == widget.torrent.hash) {
+          updatedTorrent = torrent;
+          break;
+        }
+
+      setState(() => torrent = updatedTorrent);
+      await Future.delayed(Duration(seconds: 1), () {});
+    }
   }
 
   @override
   void initState() {
     super.initState();
     torrent = widget.torrent;
+    _updateTorrent();
     _getFiles();
     _getTrackers();
   }
@@ -74,285 +91,317 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
-                  child: Row(
-                    children: <Widget>[
-                      IconButton(
-                        onPressed: () => Navigator.pop(context),
-                        icon: Icon(
-                          Icons.keyboard_backspace,
-                          color: Provider.of<Mode>(context).isLightMode
-                              ? Colors.black
-                              : Colors.white,
-                        ),
-                      ),
-                      Flexible(
-                        child: Center(
-                          child: Text(widget.torrent.name,
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
-                        ),
-                      ),
-                    ],
+          child: Column(
+            children: <Widget>[
+              Stack(
+                children: <Widget>[
+                  Container(height: 430,color: Colors.black,),
+                  Image(
+                    width: double.infinity,
+                    height: 430,
+                    image: AssetImage('assets/logo/sample.png'),
                   ),
-                ),
-                StreamBuilder(
-                    initialData: widget.torrent,
-                    stream: ApiRequests.updateSheetData(
-                        widget.torrent.api, widget.torrent),
-                    builder: (context, snapshot) {
-                      Torrent updatedTorrent = snapshot.data ?? widget.torrent;
-                      return Column(
-                        children: <Widget>[
-                          Row(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 8),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            IconButton(
+                              onPressed: () => Navigator.pop(context),
+                              icon: Icon(
+                                Icons.keyboard_backspace,
+                                color: Colors.white
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 150,),
+                        Text(torrent.name,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+
+                        SizedBox(height: 8,),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              IconButton(
-                                  color: kRed,
-                                  iconSize: 40,
+                              Text(
+                                  torrent.percentageDownload<100?
+                                  '${filesize(torrent.size-torrent.downloadedData)} left of ${filesize(torrent.size)}'
+                                  : 'Size: ${filesize(torrent.size)}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  )
+                              ),
+                              Text(
+                                  '${torrent.percentageDownload}%',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  )
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 40),
+                        Row(
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle
+                              ),
+                              child: IconButton(
+                                  color: Colors.black,
+                                  iconSize: 20,
                                   icon: Icon(Icons.close),
                                   onPressed: () {
                                     ApiRequests.removeTorrent(
-                                        widget.torrent.api,
-                                        widget.torrent.hash);
+                                        torrent.api, torrent.hash);
                                     Navigator.pop(context);
                                   }),
-                              SizedBox(
-                                width: 25,
+                            ),
+                            SizedBox(
+                              width: 35,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle
                               ),
-                              IconButton(
-                                color: Provider.of<Mode>(context).isLightMode
-                                    ? kBlue
-                                    : kIndigo,
+                              child: IconButton(
+                                color: Colors.black,
                                 iconSize: 40,
-                                icon: Icon(_getTorrentIconData(widget.torrent)),
-                                onPressed: () =>
-                                    ApiRequests.toggleTorrentStatus(
-                                        widget.torrent.api,
-                                        updatedTorrent.hash,
-                                        updatedTorrent.isOpen,
-                                        updatedTorrent.getState),
+                                icon: Icon(_getTorrentIconData(torrent)),
+                                onPressed: () => ApiRequests.toggleTorrentStatus(
+                                    torrent.api,
+                                    torrent.hash,
+                                    torrent.isOpen,
+                                    torrent.getState),
                               ),
-                              SizedBox(
-                                width: 25,
+                            ),
+                            SizedBox(
+                              width: 35,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle
                               ),
-                              IconButton(
-                                  color: Colors.grey,
-                                  iconSize: 44,
+                              child: IconButton(
+                                  color: Colors.black,
+                                  iconSize: 25,
                                   icon: Icon(Icons.stop),
                                   onPressed: () => ApiRequests.stopTorrent(
-                                      widget.torrent.api, widget.torrent.hash)),
-                            ],
-                            mainAxisAlignment: MainAxisAlignment.center,
+                                      torrent.api, torrent.hash)),
+                            ),
+                          ],
+                          mainAxisAlignment: MainAxisAlignment.center,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 16),
+                          child: LinearProgressIndicator(
+                            value: torrent.percentageDownload/100,
+                            backgroundColor: Colors.grey,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
-                          Text(
-                            '${updatedTorrent.percentageDownload}%',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: TorrentTile.getStatusColor(
-                                    updatedTorrent.status, context)),
-                          ),
-                          Divider(
-                            thickness: 8,
-                            color: TorrentTile.getStatusColor(
-                                updatedTorrent.status, context),
-                          ),
-                        ],
-                      );
-                    }),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('Size: ${filesize(widget.torrent.size)}',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w600)),
-                      Text(
-                          'Added: ${DateFormat('dd/MM/yyyy').format(DateTime.fromMillisecondsSinceEpoch(widget.torrent.torrentAdded * 1000))}',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Save Path: ${widget.torrent.savePath}',
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
-                ),
-                StreamBuilder(
-                  initialData: widget.torrent,
-                  stream: ApiRequests.updateSheetData(
-                      widget.torrent.api, widget.torrent),
-                  builder: (context, snapshot) {
-                    Torrent updatedTorrent = snapshot.data ?? widget.torrent;
-                    return Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            border: Border.all(color: Colors.grey)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 12),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              ExpansionTile(
+                title: Text('More Info',style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 16),
+                    child: Column(
+                      children: <Widget>[
+
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Seed',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),)
+                        ),
+                        Container(
+                          height: 70,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(color: Colors.grey)),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  Text(
-                                      updatedTorrent.dlSpeed > 0
-                                          ? updatedTorrent.eta
-                                          : '∞',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600)),
-                                  Text('ETA',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600)),
-                                  SizedBox(
-                                    height: 12,
+
+                                  Row(
+                                    children: <Widget>[
+                                      Text('ETA : ',style: TextStyle(fontWeight: FontWeight.w600),),
+                                      Text(torrent.dlSpeed > 0 ? torrent.eta : '∞',
+                                        style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w600,fontSize: 12),),
+                                    ],
                                   ),
-                                  Text('${updatedTorrent.seedsActual}',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600)),
-                                  Text('Seeds',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600)),
-                                  SizedBox(
-                                    height: 12,
+
+                                  SizedBox(height: 5,),
+
+                                  Row(
+                                    children: <Widget>[
+                                      Text('Seeds : ',style: TextStyle(fontWeight: FontWeight.w600),),
+                                      Text('${torrent.seedsActual}',
+                                        style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w600,fontSize: 12),),
+                                    ],
                                   ),
-                                  Text(
-                                    '${filesize(updatedTorrent.downloadedData)}',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    'Downloaded',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  SizedBox(
-                                    height: 12,
-                                  ),
-                                  Text('${filesize(updatedTorrent.dlSpeed)}',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600)),
-                                  Text('Downloading Speed',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600)),
+
                                 ],
                               ),
+
+
                               Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  Text('${updatedTorrent.ratio / 1000}',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600)),
-                                  Text('Ratio',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600)),
-                                  SizedBox(
-                                    height: 12,
+
+                                  Row(
+                                    children: <Widget>[
+                                      Text('Ratio : ',style: TextStyle(fontWeight: FontWeight.w600),),
+                                      Text('${torrent.ratio / 1000}',
+                                        style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w600,fontSize: 12),),
+                                    ],
                                   ),
-                                  Text('${updatedTorrent.peersActual}',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600)),
-                                  Text('Peers',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600)),
-                                  SizedBox(
-                                    height: 12,
+
+                                  SizedBox(height: 5,),
+
+                                  Row(
+                                    children: <Widget>[
+                                      Text('Peer : ',style: TextStyle(fontWeight: FontWeight.w600),),
+                                      Text('${torrent.peersActual}',
+                                        style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w600,fontSize: 12),),
+                                    ],
                                   ),
-                                  Text(
-                                    '${filesize(updatedTorrent.uploadedData)}',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    'Uploaded',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  SizedBox(
-                                    height: 12,
-                                  ),
-                                  Text('${filesize(updatedTorrent.ulSpeed)}',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600)),
-                                  Text('Uploading Speed',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600)),
+
                                 ],
-                              )
+                              ),
                             ],
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                ExpansionTile(
-                  initiallyExpanded: true,
-                  title: Text('Files',
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-                  children: <Widget>[
-                    ListView.builder(
-                      controller: _scrollController,
-                        shrinkWrap: true,
-                        itemCount: torrent.files.length,
-                        itemBuilder: (context, index) {
-                          return FileTile(torrent.files[index], torrent, syncFiles);
-                        })
-                  ],
-                ),
-                ExpansionTile(
-                  title: Text(
-                    'Trackers',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+
+
+                        SizedBox(height: 15,),
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text('Data',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),)
+                        ),
+                        Container(
+                          height: 70,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(color: Colors.grey)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Text('Downloaded : ',style: TextStyle(fontWeight: FontWeight.w600),),
+                                  Text('${filesize(torrent.downloadedData)}',
+                                    style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w600,fontSize: 12),),
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Text('Uploaded : ',style: TextStyle(fontWeight: FontWeight.w600)),
+                                  Text('${filesize(torrent.uploadedData)}',
+                                    style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w600,fontSize: 12),),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: 15,),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                            child: Text('Speed',style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),)
+                        ),
+                        Container(
+                          height: 70,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(color: Colors.grey)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Text('Download : ',style: TextStyle(fontWeight: FontWeight.w600),),
+                                  Text('${filesize(torrent.dlSpeed)}',
+                                    style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w600,fontSize: 12),),
+                                ],
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Text('Upload : ',style: TextStyle(fontWeight: FontWeight.w600)),
+                                  Text('${filesize(torrent.ulSpeed)}',
+                                    style: TextStyle(color: Colors.grey,fontWeight: FontWeight.w600,fontSize: 12),),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: 20,),
+                        Text('Save Path:\n${torrent.savePath}',
+                            style:
+                            TextStyle(fontSize: 12, fontWeight: FontWeight.w600,color: Colors.grey)),
+                      ],
+                    ),
                   ),
-                  children: <Widget>[
-                    ListView.builder(
+                ],
+              ),
+              ExpansionTile(
+                title: Text('Files',
+                    style:
+                        TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                children: <Widget>[
+                  ListView.builder(
                       controller: _scrollController,
                       shrinkWrap: true,
-                      itemCount: torrent.trackers.length,
+                      itemCount: files.length,
                       itemBuilder: (context, index) {
-                        return ListTile(
-                            dense: true,
-                            title: Text(
-                              torrent.trackers[index],
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.w600),
-                            ));
-                      },
-                    )
-                  ],
+                        return FileTile(files[index], torrent, syncFiles);
+                      })
+                ],
+              ),
+              ExpansionTile(
+                title: Text(
+                  'Trackers',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
-              ],
-            ),
+                children: <Widget>[
+                  ListView.builder(
+                    controller: _scrollController,
+                    shrinkWrap: true,
+                    itemCount: trackers.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                          dense: true,
+                          title: Text(
+                            trackers[index],
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w600),
+                          ));
+                    },
+                  )
+                ],
+              ),
+            ],
           ),
         ),
       ),

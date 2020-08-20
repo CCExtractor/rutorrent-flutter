@@ -231,49 +231,6 @@ class ApiRequests {
     return filesList;
   }
 
-  static Stream<Torrent> updateSheetData(Api api, Torrent torrent) async* {
-    try {
-      while (true) {
-        var response = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
-            headers: api.getAuthHeader(),
-            body: {
-              'mode': 'list',
-            });
-
-        var torrentObject = jsonDecode(response.body)['t'][torrent.hash];
-        Torrent updatedTorrent = torrent;
-        // updating the values which possibly change over time
-        updatedTorrent.completedChunks = int.parse(torrentObject[6]);
-        updatedTorrent.totalChunks = int.parse(torrentObject[7]);
-        updatedTorrent.sizeOfChunk = int.parse(torrentObject[13]);
-        updatedTorrent.seedsActual = int.parse(torrentObject[18]);
-        updatedTorrent.peersActual = int.parse(torrentObject[15]);
-        updatedTorrent.ulSpeed = int.parse(torrentObject[11]);
-        updatedTorrent.dlSpeed = int.parse(torrentObject[12]);
-        updatedTorrent.isOpen = int.parse(torrentObject[0]);
-        updatedTorrent.getState = int.parse(torrentObject[3]);
-        updatedTorrent.msg = torrentObject[29];
-        updatedTorrent.downloadedData = int.parse(torrentObject[8]);
-        updatedTorrent.uploadedData = int.parse(torrentObject[9]);
-        updatedTorrent.ratio = int.parse(torrentObject[10]);
-
-        updatedTorrent.eta = updatedTorrent.getEta;
-        updatedTorrent.percentageDownload =
-            updatedTorrent.getPercentageDownload;
-        updatedTorrent.status = updatedTorrent.getTorrentStatus;
-
-        yield updatedTorrent;
-
-        await Future.delayed(Duration(seconds: 1), () {});
-      }
-    } catch (e) {
-      print('Exception Caught in Torrent Details ' + e.toString());
-      /* Exception may arise when you are constantly updating the torrent details and
-      that torrent task might have been removed either from
-      web interface or through any other device.*/
-    }
-  }
-
   static Future<List<RSSLabel>> loadRSS(Api api) async {
     List<RSSLabel> rssLabels = [];
     var rssResponse = await api.ioClient
