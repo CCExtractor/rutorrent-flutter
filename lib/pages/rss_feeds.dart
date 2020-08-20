@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
-import 'package:rutorrentflutter/components/add_dialog.dart';
 import 'package:rutorrentflutter/components/rss_label_tile.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/rss.dart';
@@ -14,6 +13,7 @@ class RSSFeeds extends StatefulWidget {
 }
 
 class _RSSFeedsState extends State<RSSFeeds> {
+
   _getTotalFeeds(List<RSSLabel> rssLabelsList) {
     int feeds = 0;
     for (var rss in rssLabelsList) feeds += rss.items.length;
@@ -31,22 +31,6 @@ class _RSSFeedsState extends State<RSSFeeds> {
     return Consumer<Api>(
       builder: (context,api,child) {
         return Scaffold(
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Provider.of<Mode>(context).isLightMode ? Constants.kBlue : Constants.kIndigo,
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) =>
-                      AddDialog(
-                        dialogHint: 'Enter rss url',
-                        apiRequest: (rssUrl) async{
-                          await ApiRequests.addRSS(api, rssUrl);
-                          _refreshState();
-                        },
-                      ));
-            },
-            child: Icon(Icons.add,color: Colors.white,),
-          ),
           body: RefreshIndicator(
             color: Provider.of<Mode>(context).isLightMode?Constants.kBlue:Constants.kIndigo,
             onRefresh: _refreshState,

@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ruTorrent Mobile',
       theme: ThemeData.light().copyWith(
+        primaryColor: kSlightGrey,
         accentColor: kBlue,
         textTheme: ThemeData.light().textTheme.apply(
               fontFamily: 'SFUIDisplay',

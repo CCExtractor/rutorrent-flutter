@@ -4,6 +4,7 @@ class TorrentFile{
   String chunksDownloaded;
   String chunksTotal;
   String size; //in bytes
+  bool isPresentLocally=false;
 
   bool isComplete()=> chunksDownloaded==chunksTotal;
 

@@ -28,7 +28,7 @@ class _DownloadsPageState extends State<DownloadsPage> {
 
   _syncFiles() {
     setState(() {
-      filesList = Directory("$_directory/").listSync();
+      filesList = Directory(_directory).listSync();
     });
   }
 

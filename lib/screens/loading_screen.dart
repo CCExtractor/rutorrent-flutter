@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:flare_splash_screen/flare_splash_screen.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
-import 'package:rutorrentflutter/screens/home_screen.dart';
+import 'package:rutorrentflutter/screens/main_screen.dart';
 import 'package:rutorrentflutter/utilities/preferences.dart';
 
 class LoadingScreen extends StatefulWidget {
@@ -48,7 +48,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
               height: 240,
               name: 'assets/animation/diamond.flr',
               next: (_) =>
-                  isUserLoggedIn ? HomeScreen() : ConfigurationsScreen(),
+                  isUserLoggedIn ? MainScreen() : ConfigurationsScreen(),
               isLoading: isLoading,
               loopAnimation: 'tofro',
               startAnimation: 'tofro',

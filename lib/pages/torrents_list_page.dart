@@ -11,22 +11,7 @@ import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:shimmer/shimmer.dart';
 import '../components/loading_shimmer.dart';
 
-class TorrentsListPage extends StatefulWidget {
-  final bool showAllAccounts;
-  final List<Api> apis;
-
-  TorrentsListPage(this.showAllAccounts,this.apis);
-
-  @override
-  _TorrentsListPageState createState() => _TorrentsListPageState();
-}
-
-class _TorrentsListPageState extends State<TorrentsListPage> {
-
-  Future<void> _refreshState() async {
-    await Future.delayed(Duration(milliseconds: 500), () {});
-    setState(() {});
-  }
+class TorrentsListPage extends StatelessWidget {
 
   List<Torrent> _getDisplayList(List<Torrent> list, GeneralFeatures general) {
     List<Torrent> displayList = list;
@@ -48,16 +33,17 @@ class _TorrentsListPageState extends State<TorrentsListPage> {
     return displayList;
   }
 
-  checkForActiveDownloads(Api api) async {
+  checkForActiveDownloads(Api api,GeneralFeatures general) async {
     /* this method is responsible for changing the connection state from waiting to active by
     temporary pausing the active downloads and then resuming them again
      */
+
     List<Torrent> tempPausedDownloads = [];
-    for (Torrent torrent
-        in Provider.of<GeneralFeatures>(context).activeDownloads) {
+    for (Torrent torrent in general.activeDownloads) {
       await ApiRequests.pauseTorrent(api, torrent.hash);
       tempPausedDownloads.add(torrent);
     }
+
     // Resuming the temporary paused active downloads
     for (Torrent torrent in tempPausedDownloads) {
       await ApiRequests.startTorrent(api, torrent.hash);
@@ -67,69 +53,67 @@ class _TorrentsListPageState extends State<TorrentsListPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<GeneralFeatures>(builder: (context, general, child) {
-      return RefreshIndicator(
-        onRefresh: _refreshState,
-        color: Provider.of<Mode>(context).isLightMode?kBlue:kIndigo,
-        child: Column(
-          children: <Widget>[
-            SearchBar(),
-            Expanded(
-              child: StreamBuilder(
-                stream: widget.showAllAccounts?
-                ApiRequests.getAllAccountsTorrentList(widget.apis, general):
-                ApiRequests.getTorrentList(Provider.of<Api>(context), general),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting &&
-                      !snapshot.hasData) {
-                    checkForActiveDownloads(
-                        Provider.of<Api>(context, listen: false));
-                    // showing loading list of Shimmer
-                    return Shimmer.fromColors(
-                      baseColor: Provider.of<Mode>(context).isLightMode
-                          ? Colors.grey[300]
-                          : kDarkGrey,
-                      highlightColor: Provider.of<Mode>(context).isLightMode
-                          ? Colors.grey[100]
-                          : kLightGrey,
-                      child: ListView.builder(
-                          itemCount: 5,
-                          itemBuilder: (context, index) {
-                            return LoadingShimmer();
-                          }),
-                    );
-                  }
+      return Column(
+        children: <Widget>[
+          SearchBar(),
+          Expanded(
+            child: StreamBuilder(
+              stream: general.allAccounts?
+              ApiRequests.getAllAccountsTorrentList(general.apis, general):
+              ApiRequests.getTorrentList(Provider.of<Api>(context), general),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting &&
+                    !snapshot.hasData) {
 
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: Text(
-                        'No Torrents to Show',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    );
-                  }
+                  checkForActiveDownloads(Provider.of<Api>(context, listen: false),
+                      Provider.of<GeneralFeatures>(context,listen: false));
 
-                  general.updateTorrentsList(
-                      _getDisplayList(snapshot.data, general));
-
-                  if (general.torrentsList.length == 0) {
-                    return Center(
-                      child: Text(
-                        'No Torrents to Show',
-                        style: TextStyle(fontSize: 14),
-                      ),
-                    );
-                  }
-                  return ListView.builder(
-                    itemCount: general.torrentsList.length,
-                    itemBuilder: (context, index) {
-                      return TorrentTile(general.torrentsList[index]);
-                    },
+                  // showing loading list of Shimmer
+                  return Shimmer.fromColors(
+                    baseColor: Provider.of<Mode>(context).isLightMode
+                        ? Colors.grey[300]
+                        : kDarkGrey,
+                    highlightColor: Provider.of<Mode>(context).isLightMode
+                        ? Colors.grey[100]
+                        : kLightGrey,
+                    child: ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          return LoadingShimmer();
+                        }),
                   );
-                },
-              ),
+                }
+
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: Text(
+                      'No Torrents to Show',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  );
+                }
+
+                general.updateTorrentsList(
+                    _getDisplayList(snapshot.data, general));
+
+                if (general.torrentsList.length == 0) {
+                  return Center(
+                    child: Text(
+                      'No Torrents to Show',
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: general.torrentsList.length,
+                  itemBuilder: (context, index) {
+                    return TorrentTile(general.torrentsList[index]);
+                  },
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       );
     });
   }

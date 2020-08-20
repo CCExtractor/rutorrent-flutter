@@ -43,9 +43,10 @@ class SearchBar extends StatelessWidget {
                   cursorColor: mode.isLightMode ? Colors.black : Colors.white,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
+                      isDense: true,
                       border: InputBorder.none,
                       contentPadding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          EdgeInsets.symmetric(horizontal: 16),
                       hintText: 'Search torrent by name'),
                 ),
               ),
@@ -85,7 +86,7 @@ class SearchBar extends StatelessWidget {
             ],
           ),
           width: double.infinity,
-          height: 50,
+          height: 45,
           decoration: BoxDecoration(
               border: Border.all(color: Colors.grey, width: 1.5),
               borderRadius: BorderRadius.all(Radius.circular(5))),

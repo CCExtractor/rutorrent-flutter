@@ -12,3 +12,4 @@ const Color kLightGrey = Color(0xFFC6C7C6);
 const Color kWhitishGrey = Color(0xFFF7F7F7);
 const Color kDarkGrey = Color(0xFF424342);
 const Color kIndigo = Color(0xFF3D3EE6);
+const Color kSlightGrey = Color(0xFFEFEFF4);

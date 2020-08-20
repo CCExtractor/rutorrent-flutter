@@ -1,15 +1,13 @@
 import 'dart:async';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
 import 'package:rutorrentflutter/components/add_dialog.dart';
 import 'package:rutorrentflutter/components/history_sheet.dart';
 import 'package:rutorrentflutter/components/rss_filter_details.dart';
-import 'package:rutorrentflutter/pages/downloads_page.dart';
+import 'package:rutorrentflutter/pages/home_page.dart';
 import 'package:rutorrentflutter/pages/rss_feeds.dart';
 import 'package:rutorrentflutter/pages/settings_page.dart';
-import 'package:rutorrentflutter/pages/torrents_list_page.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
@@ -17,25 +15,23 @@ import 'package:rutorrentflutter/utilities/preferences.dart';
 import '../api/api_conf.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import '../utilities/constants.dart';
 
-class HomeScreen extends StatefulWidget {
+class MainScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _MainScreenState createState() => _MainScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  int _currentIndex = 0; // TorrentsListPage
-  List<Api> apis = []; // Containing info of all saved accounts
-  bool showAllAccounts = false;
+  int _currentIndex = 0; // HomePage
 
   _initPlugins() async {
     Provider.of<GeneralFeatures>(context, listen: false).scaffoldKey =
         _scaffoldKey;
 
-    apis = await Preferences.fetchSavedLogin();
+    Provider.of<GeneralFeatures>(context, listen: false).apis =
+        await Preferences.fetchSavedLogin();
     setState(() {}); // updating the drawer list
 
     while (mounted) {
@@ -47,10 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  List<Widget> _getAccountsList(Api api, Mode mode) {
-    List<Widget> accountsList = apis
+  List<Widget> _getAccountsList(Api api, Mode mode, GeneralFeatures general) {
+    List<Widget> accountsList = Provider.of<GeneralFeatures>(context)
+        .apis
         .map((e) => Container(
-              color: matchApi(e, api) && !showAllAccounts
+              color: matchApi(e, api) && !general.allAccounts
                   ? (mode.isLightMode ? Colors.grey[300] : kDarkGrey)
                   : null,
               child: ListTile(
@@ -65,24 +62,25 @@ class _HomeScreenState extends State<HomeScreen> {
                     api.setUsername(e.username);
                     api.setPassword(e.password);
                     Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                        MaterialPageRoute(builder: (context) => MainScreen()));
                   } else {
                     Navigator.pop(context);
-                    setState(() => showAllAccounts = false);
+                    setState(() => general.doNotShowAllAccounts());
                   }
                 },
               ),
             ))
         .toList();
+
     accountsList.insert(
         0,
         Container(
-          color: showAllAccounts
+          color: general.allAccounts
               ? (mode.isLightMode ? Colors.grey[300] : kDarkGrey)
               : null,
           child: ListTile(
             onTap: () {
-              setState(() => showAllAccounts = true);
+              setState(() => general.showAllAccounts());
               Navigator.pop(context);
             },
             title: Text(
@@ -91,6 +89,21 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ));
+
+    accountsList.add(Container(
+      child: ListTile(
+        dense: true,
+        leading: Icon(Icons.add),
+        title: Text('Add another account'),
+        onTap: () {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ConfigurationsScreen(),
+              ));
+        },
+      ),
+    ));
     return accountsList;
   }
 
@@ -116,8 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         key: general.scaffoldKey,
         appBar: AppBar(
-          backgroundColor:
-              mode.isLightMode ? Colors.grey[300] : Colors.grey[900],
           leading: Builder(builder: (context) {
             return IconButton(
                 icon: Icon(
@@ -130,36 +141,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
           }),
           actions: <Widget>[
-            _currentIndex == 0
-                ? IconButton(
-                    icon: Icon(
-                      Icons.library_add,
-                      color: mode.isLightMode ? kDarkGrey : Colors.white,
-                    ),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) => AddDialog(
-                                dialogHint: 'Enter torrent url',
-                                apiRequest: (url) {
-                                  ApiRequests.addTorrent(api, url);
-                                },
-                              ));
-                    },
-                  )
-                : _currentIndex == 1
-                    ? IconButton(
-                        icon: FaIcon(
-                          FontAwesomeIcons.rss,
-                          color: mode.isLightMode ? kDarkGrey : Colors.white,
-                        ),
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) => RSSFilterDetails());
-                        },
-                      )
-                    : Container(),
+            IconButton(
+              icon: FaIcon(
+                FontAwesomeIcons.rss,
+                color: mode.isLightMode ? kDarkGrey : Colors.white,
+              ),
+              onPressed: () {
+                showDialog(
+                    context: context, builder: (context) => RSSFilterDetails());
+              },
+            ),
             IconButton(
                 icon: Icon(
                   mode.isLightMode
@@ -195,22 +186,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ShowDiskSpace(),
               ExpansionTile(
                 title: Text('Accounts'),
-                children: _getAccountsList(api, mode),
-              ),
-              ListTile(
-                dense: true,
-                leading: Icon(Icons.add),
-                title: Text('Add another account'),
-                onTap: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ConfigurationsScreen(),
-                      ));
-                },
+                children: _getAccountsList(api, mode, general),
               ),
               ExpansionTile(
-                initiallyExpanded: true,
+                initiallyExpanded: false,
                 title: Text(
                   'Filters',
                 ),
@@ -219,60 +198,79 @@ class _HomeScreenState extends State<HomeScreen> {
               ListTile(
                 onTap: () async {
                   Navigator.pop(context);
-                  showMaterialModalBottomSheet(
-                      expand: true,
-                      context: context,
-                      builder: (context, controller) => HistorySheet());
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context)=>HistorySheet()
+                  ));
                 },
-                title: Text('Show History'),
+                title: Text('History'),
               ),
+              ListTile(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingsPage(),
+                    )),
+                title: Text('Settings'),
+              )
             ],
           ),
         ),
         body: PageView(
+          physics: NeverScrollableScrollPhysics(),
           controller: general.pageController,
           onPageChanged: (index) {
             setState(() => _currentIndex = index);
           },
           children: <Widget>[
-            TorrentsListPage(showAllAccounts, apis),
+            HomePage(),
             RSSFeeds(),
-            DownloadsPage(),
-            SettingsPage(),
           ],
         ),
-        bottomNavigationBar: BottomNavyBar(
-          selectedIndex: _currentIndex,
-          onItemSelected: (index) {
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          selectedItemColor: mode.isLightMode ? kBlue : kIndigo,
+          currentIndex: _currentIndex,
+          type: BottomNavigationBarType.fixed,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              title: new Text('Home',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.rss_feed),
+              title: Text(
+                'Feeds',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            )
+          ],
+          onTap: (index) {
             setState(() => _currentIndex = index);
             general.pageController.jumpToPage(index);
           },
-          items: <BottomNavyBarItem>[
-            BottomNavyBarItem(
-              title: Text('Home'),
-              icon: Icon(Icons.home),
-              activeColor: mode.isLightMode ? kBlue : kIndigo,
-              inactiveColor: mode.isLightMode ? kDarkGrey : Colors.white,
-            ),
-            BottomNavyBarItem(
-              title: Text('Feeds'),
-              icon: Icon(Icons.rss_feed),
-              activeColor: mode.isLightMode ? kBlue : kIndigo,
-              inactiveColor: mode.isLightMode ? kDarkGrey : Colors.white,
-            ),
-            BottomNavyBarItem(
-              title: Text('Downloads'),
-              icon: Icon(Icons.file_download),
-              activeColor: mode.isLightMode ? kBlue : kIndigo,
-              inactiveColor: mode.isLightMode ? kDarkGrey : Colors.white,
-            ),
-            BottomNavyBarItem(
-              title: Text('Settings'),
-              icon: Icon(Icons.settings),
-              activeColor: mode.isLightMode ? kBlue : kIndigo,
-              inactiveColor: mode.isLightMode ? kDarkGrey : Colors.white,
-            ),
-          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: mode.isLightMode ? kBlue : kIndigo,
+          child: Icon(
+            Icons.library_add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) => AddDialog(
+                      dialogHint: _currentIndex == 0
+                          ? 'Enter torrent url'
+                          : 'Enter rss url',
+                      apiRequest: (url) {
+                        _currentIndex == 0
+                            ? ApiRequests.addTorrent(api, url)
+                            : ApiRequests.addRSS(api, url);
+                      },
+                    ));
+          },
         ),
       );
     });

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/components/filter_tile.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
@@ -28,6 +29,24 @@ enum Filter {
 }
 
 class GeneralFeatures extends ChangeNotifier {
+
+  List<Api> apis = [];// Containing info of all saved accounts
+  bool _allAccounts=false;
+
+  get allAccounts => _allAccounts;
+
+  showAllAccounts(){
+    _allAccounts=true;
+    notifyListeners();
+  }
+
+  doNotShowAllAccounts(){
+    _allAccounts=false;
+    notifyListeners();
+  }
+
+
+
   GlobalKey<ScaffoldState> scaffoldKey;
 
   /// Generating notifications

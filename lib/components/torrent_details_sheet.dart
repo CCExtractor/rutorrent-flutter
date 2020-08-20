@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/file_tile.dart';
@@ -8,16 +11,62 @@ import 'package:rutorrentflutter/components/torrent_tile.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
-import 'package:rutorrentflutter/models/torrent_file.dart';
 
-class TorrentDetailSheet extends StatelessWidget {
+class TorrentDetailSheet extends StatefulWidget {
   final Torrent torrent;
   TorrentDetailSheet(this.torrent);
+
+  @override
+  _TorrentDetailSheetState createState() => _TorrentDetailSheetState();
+}
+
+class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
+  Torrent torrent;
+  final ScrollController _scrollController = ScrollController();
 
   IconData _getTorrentIconData(Torrent torrent) {
     return torrent.isOpen == 0
         ? Icons.play_arrow
         : torrent.getState == 0 ? (Icons.play_arrow) : Icons.pause;
+  }
+
+  syncFiles() async{
+    String localFilesPath = (await getExternalStorageDirectory()).path+'/';
+    var localItems = Directory(localFilesPath).listSync(recursive: true);
+
+    List<String> localFiles=[];
+    for(dynamic localItem in localItems){
+      if(localItem is File){
+        localItem = localItem.path.substring(localItem.path.lastIndexOf('/')+1);
+        localFiles.add(localItem);
+      }
+    }
+    for(var file in torrent.files)
+      if(localFiles.contains(file.name))
+        file.isPresentLocally = true;
+
+    setState(() {});
+  }
+
+  _getFiles() async {
+    torrent.files =
+        await ApiRequests.getFiles(widget.torrent.api, widget.torrent.hash);
+    syncFiles();
+    setState(() {});
+  }
+
+  _getTrackers() async {
+    torrent.trackers =
+        await ApiRequests.getTrackers(widget.torrent.api, widget.torrent.hash);
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    torrent = widget.torrent;
+    _getFiles();
+    _getTrackers();
   }
 
   @override
@@ -44,7 +93,7 @@ class TorrentDetailSheet extends StatelessWidget {
                       ),
                       Flexible(
                         child: Center(
-                          child: Text(torrent.name,
+                          child: Text(widget.torrent.name,
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
                         ),
@@ -53,10 +102,11 @@ class TorrentDetailSheet extends StatelessWidget {
                   ),
                 ),
                 StreamBuilder(
-                    initialData: torrent,
-                    stream: ApiRequests.updateSheetData(torrent.api, torrent),
+                    initialData: widget.torrent,
+                    stream: ApiRequests.updateSheetData(
+                        widget.torrent.api, widget.torrent),
                     builder: (context, snapshot) {
-                      Torrent updatedTorrent = snapshot.data ?? torrent;
+                      Torrent updatedTorrent = snapshot.data ?? widget.torrent;
                       return Column(
                         children: <Widget>[
                           Row(
@@ -67,7 +117,8 @@ class TorrentDetailSheet extends StatelessWidget {
                                   icon: Icon(Icons.close),
                                   onPressed: () {
                                     ApiRequests.removeTorrent(
-                                        torrent.api, torrent.hash);
+                                        widget.torrent.api,
+                                        widget.torrent.hash);
                                     Navigator.pop(context);
                                   }),
                               SizedBox(
@@ -78,12 +129,13 @@ class TorrentDetailSheet extends StatelessWidget {
                                     ? kBlue
                                     : kIndigo,
                                 iconSize: 40,
-                                icon: Icon(_getTorrentIconData(torrent)),
-                                onPressed: () => ApiRequests.toggleTorrentStatus(
-                                    torrent.api,
-                                    updatedTorrent.hash,
-                                    updatedTorrent.isOpen,
-                                    updatedTorrent.getState),
+                                icon: Icon(_getTorrentIconData(widget.torrent)),
+                                onPressed: () =>
+                                    ApiRequests.toggleTorrentStatus(
+                                        widget.torrent.api,
+                                        updatedTorrent.hash,
+                                        updatedTorrent.isOpen,
+                                        updatedTorrent.getState),
                               ),
                               SizedBox(
                                 width: 25,
@@ -93,7 +145,7 @@ class TorrentDetailSheet extends StatelessWidget {
                                   iconSize: 44,
                                   icon: Icon(Icons.stop),
                                   onPressed: () => ApiRequests.stopTorrent(
-                                      torrent.api, torrent.hash)),
+                                      widget.torrent.api, widget.torrent.hash)),
                             ],
                             mainAxisAlignment: MainAxisAlignment.center,
                           ),
@@ -118,11 +170,11 @@ class TorrentDetailSheet extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text('Size: ${filesize(torrent.size)}',
+                      Text('Size: ${filesize(widget.torrent.size)}',
                           style: TextStyle(
                               fontSize: 14, fontWeight: FontWeight.w600)),
                       Text(
-                          'Added: ${DateFormat('dd/MM/yyyy').format(DateTime.fromMillisecondsSinceEpoch(torrent.torrentAdded * 1000))}',
+                          'Added: ${DateFormat('dd/MM/yyyy').format(DateTime.fromMillisecondsSinceEpoch(widget.torrent.torrentAdded * 1000))}',
                           style: TextStyle(
                               fontSize: 14, fontWeight: FontWeight.w600)),
                     ],
@@ -130,15 +182,16 @@ class TorrentDetailSheet extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('Save Path: ${torrent.savePath}',
+                  child: Text('Save Path: ${widget.torrent.savePath}',
                       style:
                           TextStyle(fontSize: 12, fontWeight: FontWeight.w600)),
                 ),
                 StreamBuilder(
-                  initialData: torrent,
-                  stream: ApiRequests.updateSheetData(torrent.api, torrent),
+                  initialData: widget.torrent,
+                  stream: ApiRequests.updateSheetData(
+                      widget.torrent.api, widget.torrent),
                   builder: (context, snapshot) {
-                    Torrent updatedTorrent = snapshot.data ?? torrent;
+                    Torrent updatedTorrent = snapshot.data ?? widget.torrent;
                     return Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Container(
@@ -261,42 +314,42 @@ class TorrentDetailSheet extends StatelessWidget {
                     );
                   },
                 ),
-                FutureBuilder(
-                    future: ApiRequests.getFiles(torrent.api, torrent.hash),
-                    builder: (context, snapshot) {
-                      List<TorrentFile> filesList = snapshot.data ?? [];
-                      return ExpansionTile(
-                        initiallyExpanded: true,
-                        title: Text('Files',
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w600)),
-                        children: filesList
-                            .map((e) =>
-                                FileTile(e, torrent.name, torrent.savePath))
-                            .toList(),
-                      );
-                    }),
-                FutureBuilder(
-                  future: ApiRequests.getTrackers(torrent.api, torrent.hash),
-                  builder: (context, snapshot) {
-                    List<String> list = snapshot.data ?? [];
-                    return ExpansionTile(
-                      title: Text(
-                        'Trackers',
-                        style:
-                            TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                      ),
-                      children: list
-                          .map((e) => ListTile(
-                              dense: true,
-                              title: Text(
-                                e,
-                                style: TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w600),
-                              )))
-                          .toList(),
-                    );
-                  },
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text('Files',
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                  children: <Widget>[
+                    ListView.builder(
+                      controller: _scrollController,
+                        shrinkWrap: true,
+                        itemCount: torrent.files.length,
+                        itemBuilder: (context, index) {
+                          return FileTile(torrent.files[index], torrent, syncFiles);
+                        })
+                  ],
+                ),
+                ExpansionTile(
+                  title: Text(
+                    'Trackers',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                  children: <Widget>[
+                    ListView.builder(
+                      controller: _scrollController,
+                      shrinkWrap: true,
+                      itemCount: torrent.trackers.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                            dense: true,
+                            title: Text(
+                              torrent.trackers[index],
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.w600),
+                            ));
+                      },
+                    )
+                  ],
                 ),
               ],
             ),

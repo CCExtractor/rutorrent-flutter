@@ -7,7 +7,6 @@ import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:shimmer/shimmer.dart';
-
 import 'loading_shimmer.dart';
 
 class HistorySheet extends StatefulWidget {
@@ -59,88 +58,87 @@ class _HistorySheetState extends State<HistorySheet> {
   ];
 
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
-              ),
-              Text(
-                'History',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              PopupMenuButton<String>(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(Icons.filter_list),
-                ),
-                itemBuilder: (context) {
-                  return choices
-                      .map((e) => PopupMenuItem<String>(
-                            value: e,
-                            child: Text(e),
-                          ))
-                      .toList();
-                },
-                onSelected: (e) {
-                  loadHistoryItems(lastHrs: int.parse(e.split(' ')[2]));
-                },
-              )
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Center(
+          child: Text(
+            'History',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.black),
           ),
         ),
-        Divider(),
-        isLoading
-            ? Shimmer.fromColors(
-                baseColor: Provider.of<Mode>(context).isLightMode
-                    ? Colors.grey[300]
-                    : kDarkGrey,
-                highlightColor: Provider.of<Mode>(context).isLightMode
-                    ? Colors.grey[100]
-                    : kLightGrey,
-                child: LoadingShimmer())
-            : Expanded(
-                child: ListView.builder(
-                    itemCount: items.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        dense: true,
-                        title: SizedBox(
-                            width: 40,
-                            child: Text(items[index].name,
-                                style: TextStyle(
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.filter_list),
+            ),
+            itemBuilder: (context) {
+              return choices
+                  .map((e) => PopupMenuItem<String>(
+                    value: e,
+                    child: Text(e),
+              ))
+                  .toList();
+            },
+            onSelected: (e) {
+              loadHistoryItems(lastHrs: int.parse(e.split(' ')[2]));
+            },
+          )
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          children: <Widget>[
+            isLoading
+                ? Shimmer.fromColors(
+                    baseColor: Provider.of<Mode>(context).isLightMode
+                        ? Colors.grey[300]
+                        : kDarkGrey,
+                    highlightColor: Provider.of<Mode>(context).isLightMode
+                        ? Colors.grey[100]
+                        : kLightGrey,
+                    child: LoadingShimmer())
+                : Expanded(
+                    child: ListView.builder(
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            dense: true,
+                            title: SizedBox(
+                                width: 40,
+                                child: Text(items[index].name,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600))),
+                            trailing: Container(
+                              padding: const EdgeInsets.all(4),
+                              width: 70,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: getHistoryStatusColor(
+                                    context, items[index].action),)
+                              ),
+                              child: Text(
+                                  HistoryItem.historyStatus[items[index].action],
+                                  style: TextStyle(
+                                    color: getHistoryStatusColor(
+                                        context, items[index].action),
                                     fontSize: 14,
-                                    fontWeight: FontWeight.w600))),
-                        trailing: Container(
-                          padding: const EdgeInsets.all(4),
-                          width: 70,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: getHistoryStatusColor(
-                                context, items[index].action),)
-                          ),
-                          child: Text(
-                              HistoryItem.historyStatus[items[index].action],
+                                    fontWeight: FontWeight.w600,
+                                  )),
+                            ),
+                            leading: Text(
+                              '${DateFormat('dd.MM.yyyy\nHH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))}',
                               style: TextStyle(
-                                color: getHistoryStatusColor(
-                                    context, items[index].action),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              )),
-                        ),
-                        leading: Text(
-                          '${DateFormat('dd.MM.yyyy\nHH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))}',
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w600),
-                        ),
-                      );
-                    }),
-              ),
-      ],
+                                  fontSize: 12, fontWeight: FontWeight.w600),
+                            ),
+                          );
+                        }),
+                  ),
+          ],
+        ),
+      ),
     );
   }
 }

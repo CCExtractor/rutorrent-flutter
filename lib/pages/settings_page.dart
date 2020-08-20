@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/utilities/preferences.dart';
 
 class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(color: kDarkGrey),
+        title: Text('Settings',style: TextStyle(color: kDarkGrey,fontWeight: FontWeight.w400),),
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
