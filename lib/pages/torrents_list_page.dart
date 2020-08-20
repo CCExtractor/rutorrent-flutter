@@ -88,7 +88,7 @@ class TorrentsListPage extends StatelessWidget {
                   return Center(
                     child: Text(
                       'No Torrents to Show',
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
                     ),
                   );
                 }
@@ -100,7 +100,7 @@ class TorrentsListPage extends StatelessWidget {
                   return Center(
                     child: Text(
                       'No Torrents to Show',
-                      style: TextStyle(fontSize: 14),
+                      style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
                     ),
                   );
                 }

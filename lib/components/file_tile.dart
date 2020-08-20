@@ -14,22 +14,47 @@ import 'package:rutorrentflutter/models/torrent_file.dart';
 class FileTile extends StatefulWidget {
   final TorrentFile file;
   final Torrent torrent;
-  final Function syncFiles;
+  final Function syncFilesCallback;
+  final Function playMediaFileCallback;
 
-  FileTile(this.file, this.torrent,this.syncFiles);
+  FileTile(this.file, this.torrent,this.syncFilesCallback,this.playMediaFileCallback);
+
+  static String getFileExtension(String filename){
+    return filename.substring(filename.lastIndexOf('.'), filename.length);
+  }
+
+  static bool isImage(String filename){
+    String ext  = getFileExtension(filename);
+    if(ext=='.jpg'||ext=='.jpeg'||ext=='png')
+      return true;
+    return false;
+  }
+
+  static bool isAudio(String filename){
+    String ext  = getFileExtension(filename);
+    if(ext=='.mp3'||ext=='.wav')
+      return true;
+    return false;
+  }
+
+  static bool isVideo(String filename){
+    String ext  = getFileExtension(filename);
+    if(ext=='.mp4' || ext=='.mkv')
+      return true;
+    return false;
+  }
 
   static IconData getFileIcon(String filename) {
-    String ext = filename.substring(filename.lastIndexOf('.'), filename.length);
-    switch (ext) {
-      case '.mp4':
-        return Icons.ondemand_video;
-      case '.mp3':
-        return Icons.music_video;
-      case '.jpg':
-        return Icons.image;
-      default:
-        return Icons.insert_drive_file;
-    }
+    if(isVideo(filename))
+      return Icons.ondemand_video;
+
+    if(isAudio(filename))
+      return Icons.music_video;
+
+    if(isImage(filename))
+      return Icons.image;
+
+    return Icons.insert_drive_file;
   }
 
   @override
@@ -68,7 +93,7 @@ class _FileTileState extends State<FileTile> {
       },
       cancelToken: cancelToken,
     ).then((_) {
-      widget.syncFiles();
+      widget.syncFilesCallback();
       Fluttertoast.showToast(msg: 'Download Successful');
       setState(() {
         isDownloading = false;
@@ -81,6 +106,10 @@ class _FileTileState extends State<FileTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: () {
+        if(FileTile.isAudio(widget.file.name) || FileTile.isVideo(widget.file.name))
+          widget.playMediaFileCallback(widget.file.name);
+      },
       leading: Icon(FileTile.getFileIcon(widget.file.name)),
       title: Text(
         widget.file.name,

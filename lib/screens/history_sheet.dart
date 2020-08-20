@@ -7,7 +7,7 @@ import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:shimmer/shimmer.dart';
-import 'loading_shimmer.dart';
+import '../components/loading_shimmer.dart';
 
 class HistorySheet extends StatefulWidget {
   @override

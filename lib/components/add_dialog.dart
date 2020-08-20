@@ -35,7 +35,7 @@ class AddDialog extends StatelessWidget {
                 children: <Widget>[
                   Flexible(
                     child: TextFormField(
-                      style: TextStyle(fontSize: 16,color: kDarkGrey),
+                      style: TextStyle(fontSize: 16),
                       controller: urlTextController,
                       decoration: InputDecoration(
                           border: InputBorder.none,

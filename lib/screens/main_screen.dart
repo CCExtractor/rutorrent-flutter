@@ -3,11 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
 import 'package:rutorrentflutter/components/add_dialog.dart';
-import 'package:rutorrentflutter/components/history_sheet.dart';
+import 'package:rutorrentflutter/screens/history_sheet.dart';
 import 'package:rutorrentflutter/components/rss_filter_details.dart';
 import 'package:rutorrentflutter/pages/home_page.dart';
 import 'package:rutorrentflutter/pages/rss_feeds.dart';
-import 'package:rutorrentflutter/pages/settings_page.dart';
+import 'package:rutorrentflutter/screens/settings_page.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
@@ -34,7 +34,7 @@ class _MainScreenState extends State<MainScreen> {
         await Preferences.fetchSavedLogin();
     setState(() {}); // updating the drawer list
 
-    while (mounted) {
+    while (this.mounted) {
       try {
         await Future.delayed(Duration(seconds: 1), () {});
         ApiRequests.updatePlugins(Provider.of(context, listen: false),
