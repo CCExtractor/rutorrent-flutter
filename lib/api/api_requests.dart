@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
@@ -12,7 +13,7 @@ import 'package:xml/xml.dart' as xml;
 class ApiRequests {
   /// This class will be responsible for making all API Calls to the ruTorrent server
 
-  static updateHistory(Api api, GeneralFeatures general) async {
+  static updateHistory(Api api, GeneralFeatures general, BuildContext context) async {
     String timestamp = ((DateTime.now().millisecondsSinceEpoch -
                 Duration(seconds: 10).inMilliseconds) ~/
             1000)
@@ -31,22 +32,22 @@ class ApiRequests {
           HistoryItem(item['name'], item['action'], item['action_time']);
       historyItems.add(historyItem);
     }
-    general.updateHistoryItems(historyItems);
+    general.updateHistoryItems(historyItems, context);
   }
 
-  static updateDiskSpace(Api api, GeneralFeatures general) async {
+  static updateDiskSpace(Api api, GeneralFeatures general, BuildContext context) async {
     var diskSpaceResponse = await api.ioClient
         .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
     var diskSpace = jsonDecode(diskSpaceResponse.body);
-    general.updateDiskSpace(diskSpace['total'], diskSpace['free']);
+    general.updateDiskSpace(diskSpace['total'], diskSpace['free'],context);
   }
 
-  static updatePlugins(Api api, GeneralFeatures general) {
+  static updatePlugins(Api api, GeneralFeatures general, BuildContext context) {
     /// Updating DiskSpace
-    updateDiskSpace(api, general);
+    updateDiskSpace(api, general, context);
 
     /// Updating History
-    updateHistory(api, general);
+    updateHistory(api, general, context);
   }
 
   static List<Torrent> parseTorrentsData(

@@ -2,7 +2,7 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
-import 'package:rutorrentflutter/components/torrent_details_sheet.dart';
+import 'package:rutorrentflutter/screens/torrent_details_screen.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import '../api/api_conf.dart';

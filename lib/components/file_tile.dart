@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
@@ -107,8 +108,12 @@ class _FileTileState extends State<FileTile> {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        if(FileTile.isAudio(widget.file.name) || FileTile.isVideo(widget.file.name))
+        if(widget.file.isPresentLocally)
+          OpenFile.open(widget.file.localFilePath);
+        else if(FileTile.isAudio(widget.file.name) || FileTile.isVideo(widget.file.name))
           widget.playMediaFileCallback(widget.file.name);
+        else
+          Fluttertoast.showToast(msg: 'File cannot be streamed');
       },
       leading: Icon(FileTile.getFileIcon(widget.file.name)),
       title: Text(

@@ -3,11 +3,12 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
 import 'package:rutorrentflutter/components/add_dialog.dart';
-import 'package:rutorrentflutter/screens/history_sheet.dart';
+import 'package:rutorrentflutter/models/settings.dart';
+import 'package:rutorrentflutter/screens/history_screen.dart';
 import 'package:rutorrentflutter/components/rss_filter_details.dart';
 import 'package:rutorrentflutter/pages/home_page.dart';
 import 'package:rutorrentflutter/pages/rss_feeds.dart';
-import 'package:rutorrentflutter/screens/settings_page.dart';
+import 'package:rutorrentflutter/screens/settings_screen.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
@@ -38,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
       try {
         await Future.delayed(Duration(seconds: 1), () {});
         ApiRequests.updatePlugins(Provider.of(context, listen: false),
-            Provider.of<GeneralFeatures>(context, listen: false));
+            Provider.of<GeneralFeatures>(context, listen: false),context);
       } catch (e) {}
     }
   }
@@ -152,13 +153,17 @@ class _MainScreenState extends State<MainScreen> {
               },
             ),
             IconButton(
-                icon: Icon(
+                icon: FaIcon(
                   mode.isLightMode
                       ? FontAwesomeIcons.solidMoon
                       : FontAwesomeIcons.solidSun,
                   color: mode.isLightMode ? kDarkGrey : Colors.white,
                 ),
-                onPressed: () => mode.toggleMode()),
+                onPressed: () async{
+                  mode.toggleMode();
+                  Provider.of<Settings>(context,listen: false).setShowDarkMode(mode.isDarkMode);
+                  await Preferences.saveSettings(Provider.of<Settings>(context,listen: false));
+                }),
           ],
         ),
         drawer: Drawer(
@@ -196,7 +201,7 @@ class _MainScreenState extends State<MainScreen> {
                 children: general.filterTileList,
               ),
               ListTile(
-                onTap: () async {
+                onTap: () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context)=>HistorySheet()
@@ -205,12 +210,13 @@ class _MainScreenState extends State<MainScreen> {
                 title: Text('History'),
               ),
               ListTile(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(
                       builder: (context) => SettingsPage(),
-                    )),
-                title: Text('Settings'),
+                      ));
+                },
+                  title: Text('Settings'),
               )
             ],
           ),
@@ -258,19 +264,29 @@ class _MainScreenState extends State<MainScreen> {
             color: Colors.white,
           ),
           onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) => AddDialog(
-                      dialogHint: _currentIndex == 0
-                          ? 'Enter torrent url'
-                          : 'Enter rss url',
-                      apiRequest: (url) {
-                        _currentIndex == 0
-                            ? ApiRequests.addTorrent(api, url)
-                            : ApiRequests.addRSS(api, url);
-                      },
-                    ));
-          },
+            if(_currentIndex==0){
+              showDialog(context: context,builder: (context){
+                return AddDialog(
+                  dialogHint: 'Enter Torrent Url',
+                  apiRequest: (url){
+                    ApiRequests.addTorrent(api, url);
+                  }
+                );
+              });
+            }
+            else{
+              showDialog(context: context,builder: (context){
+                return AddDialog(
+                    dialogHint: 'Enter Rss Url',
+                    apiRequest: (url) async{
+                      await ApiRequests.addRSS(api, url);
+                      setState(() {
+                      });
+                    }
+                );
+              });
+            }
+          }
         ),
       );
     });

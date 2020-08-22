@@ -1,5 +1,4 @@
 import 'package:rutorrentflutter/api/api_conf.dart';
-import 'package:rutorrentflutter/models/torrent_file.dart';
 
 enum Status {
   downloading,

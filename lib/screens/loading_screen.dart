@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:flare_splash_screen/flare_splash_screen.dart';
+import 'package:rutorrentflutter/models/mode.dart';
+import 'package:rutorrentflutter/models/settings.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
 import 'package:rutorrentflutter/screens/main_screen.dart';
 import 'package:rutorrentflutter/utilities/preferences.dart';
@@ -15,7 +17,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   bool isLoading = true;
   bool isUserLoggedIn = false;
 
-  _checkSavedAccounts() async {
+  _fetchPreferences() async {
     List<Api> apis = await Preferences.fetchSavedLogin();
     if (apis.isEmpty) {
       isUserLoggedIn = false;
@@ -26,6 +28,18 @@ class _LoadingScreenState extends State<LoadingScreen> {
       api.setPassword(apis[0].password);
       isUserLoggedIn = true;
     }
+
+    _fetchSettings();
+  }
+
+  _fetchSettings() async {
+    Settings settings = await Preferences.fetchSettings();
+    Provider.of<Settings>(context,listen: false).setSettings(settings);
+
+    Mode mode = Provider.of<Mode>(context,listen: false);
+    if(mode.isDarkMode!=settings.showDarkMode)
+      mode.toggleMode();
+
     setState(() {
       isLoading = false;
     });
@@ -34,7 +48,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
-    _checkSavedAccounts();
+    _fetchPreferences();
   }
 
   @override

@@ -102,14 +102,20 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
     List<String> localFiles = [];
     for (dynamic localItem in localItems) {
       if (localItem is File) {
-        localItem =
-            localItem.path.substring(localItem.path.lastIndexOf('/') + 1);
-        localFiles.add(localItem);
+        localFiles.add(localItem.path);
       }
     }
 
-    for (var file in files)
-      if (localFiles.contains(file.name)) file.isPresentLocally = true;
+    // Checking whether a file is downloaded locally
+    for (var file in files) {
+      String folderPath = torrent.name+'/'+file.name;
+      for(var localFile in localFiles){
+        if(localFile.endsWith(folderPath)){
+          file.isPresentLocally = true;
+          file.localFilePath=localFilesPath+folderPath;
+        }
+      }
+    }
 
     setState(() {});
   }
@@ -154,16 +160,14 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
 
   playMediaFile(String fileName) {
     String url = getFileUrl(fileName);
-    if(FileTile.isAudio(fileName))
-      isPlayingAudio=true;
+    if (FileTile.isAudio(fileName)) isPlayingAudio = true;
 
-    if(!showMediaPlayer){
+    if (!showMediaPlayer) {
       //Media Player is inactive that is nothing is streaming
       mediaUrl = url;
       showMediaPlayer = true;
       isPlaying = true;
-    }
-    else{
+    } else {
       //Media Player is playing a file so we have to change the url via controller
       _videoViewController2.setStreamUrl(url);
       isPlaying = true;
@@ -193,6 +197,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                 color: Colors.black,
                 child: !showMediaPlayer
                     ?
+
                     /// Torrent Downloading Stack
                     Stack(
                         children: <Widget>[
@@ -325,6 +330,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                         ],
                       )
                     :
+
                     /// Vlc Media Player Stack
                     Stack(
                         children: <Widget>[
@@ -336,7 +342,9 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                 : AssetImage('assets/logo/sample.png'),
                           ),
                           SizedBox(
-                            height: isPlayingAudio?1:430, //shrinks the player so that display image is visible
+                            height: isPlayingAudio
+                                ? 1
+                                : 430, //shrinks the player so that display image is visible
                             child: new VlcPlayer(
                               aspectRatio: 16 / 9,
                               url: mediaUrl,
@@ -354,16 +362,21 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                           ),
                           Column(
                             children: <Widget>[
-                              SizedBox(height: 20,),
+                              SizedBox(
+                                height: 20,
+                              ),
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: IconButton(
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 16, horizontal: 8),
-                                  icon: Icon(Icons.clear,color: Colors.white,),
-                                  onPressed: (){
+                                  icon: Icon(
+                                    Icons.clear,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
                                     setState(() {
-                                      showMediaPlayer=false;
+                                      showMediaPlayer = false;
                                     });
                                   },
                                 ),

@@ -1,24 +1,59 @@
 import 'dart:convert';
 import 'package:rutorrentflutter/api/api_conf.dart';
+import 'package:rutorrentflutter/models/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Preferences {
 
+  static saveSettings(Settings settings) async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(Settings.kAllNotification, settings.allNotificationEnabled);
+    prefs.setBool(Settings.kDiskSpaceNotifications, settings.diskSpaceNotification);
+    prefs.setBool(Settings.kAddTorrentNotifications, settings.addTorrentNotification);
+    prefs.setBool(Settings.kDownloadCompleteNotification, settings.downloadCompleteNotification);
+    prefs.setBool(Settings.kShowDarkMode, settings.showDarkMode);
+  }
+
+  static fetchSettings() async{
+    Settings settings = Settings();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if(prefs.containsKey(Settings.kAllNotification))
+      settings.setAllNotification(prefs.getBool(Settings.kAllNotification));
+
+    if(prefs.containsKey(Settings.kDiskSpaceNotifications))
+      settings.setDiskSpaceNotification(prefs.getBool(Settings.kDiskSpaceNotifications));
+
+    if(prefs.containsKey(Settings.kAddTorrentNotifications))
+      settings.setAddTorrentNotification(prefs.getBool(Settings.kAddTorrentNotifications));
+
+    if(prefs.containsKey(Settings.kDownloadCompleteNotification))
+      settings.setDownloadCompleteNotification(prefs.getBool(Settings.kDownloadCompleteNotification));
+
+    if(prefs.containsKey(Settings.kShowDarkMode))
+      settings.setShowDarkMode(prefs.getBool(Settings.kShowDarkMode));
+
+    return settings;
+  }
+  
+  
+  static const String accountsData = 'data';
+  
   static clearLogin() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('data');
+    prefs.remove(accountsData);
   }
 
   static saveLogin(List<Api> apis) async{
     final String data = Preferences.encodeApis(apis);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('data', data);
+    prefs.setString(accountsData, data);
   }
 
   static Future<List<Api>> fetchSavedLogin() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(prefs.containsKey('data'))
-      return decodeApis(prefs.getString('data'));
+    if(prefs.containsKey(accountsData))
+      return decodeApis(prefs.getString(accountsData));
     else
       return [];
   }
@@ -47,4 +82,5 @@ class Preferences {
       (json.decode(data) as List<dynamic>)
           .map<Api>((item) => Preferences.fromJson(item))
           .toList();
+  
 }

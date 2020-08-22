@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/components/filter_tile.dart';
+import 'package:rutorrentflutter/models/settings.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
@@ -30,7 +32,7 @@ enum Filter {
 
 class GeneralFeatures extends ChangeNotifier {
 
-  List<Api> apis = [];// Containing info of all saved accounts
+  List<Api> apis = [];// Containing information of all saved accounts
   bool _allAccounts=false;
 
   get allAccounts => _allAccounts;
@@ -44,8 +46,6 @@ class GeneralFeatures extends ChangeNotifier {
     _allAccounts=false;
     notifyListeners();
   }
-
-
 
   GlobalKey<ScaffoldState> scaffoldKey;
 
@@ -117,7 +117,7 @@ class GeneralFeatures extends ChangeNotifier {
   DiskSpace _diskSpace = DiskSpace();
   get diskSpace => _diskSpace;
 
-  updateDiskSpace(int total, int free) {
+  updateDiskSpace(int total, int free, BuildContext context) {
     //check if there is any change in freeSpace of disk
     if (free == _diskSpace.free)
       return; // returning since there is no change and UI does not need to update
@@ -125,7 +125,7 @@ class GeneralFeatures extends ChangeNotifier {
     _diskSpace.update(total, free);
     notifyListeners();
 
-    if (_diskSpace.isLow() && _diskSpace.alertUser)
+    if (_diskSpace.isLow() && _diskSpace.alertUser && Provider.of<Settings>(context,listen: false).diskSpaceNotification)
       _diskSpace.generateLowDiskSpaceAlert(notifications);
   }
 
@@ -210,31 +210,41 @@ class GeneralFeatures extends ChangeNotifier {
   /// History Check
   List<HistoryItem> _historyItems = [];
   get historyItems => _historyItems;
-  updateHistoryItems(List<HistoryItem> updatedList) {
+
+  updateHistoryItems(List<HistoryItem> updatedList, BuildContext context) {
     _historyItems = updatedList;
     for (var item in updatedList) {
       switch (item.action) {
+
         case 1: // Added
-          if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime ==
-              1)
+          if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1) {
+            if(Provider.of<Settings>(context,listen: false).addTorrentNotification) {
+              notifications.generate('New Torrent Added', item.name);
+            }
             scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text('${item.name} Added'),
               duration: Duration(seconds: 1),
               backgroundColor: kGreen,
             ));
+          }
           break;
+
         case 2: // Finished
-          if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime ==
-              1) notifications.generate('Download Completed', item.name);
+          if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime ==1) {
+            if(Provider.of<Settings>(context,listen: false).downloadCompleteNotification) {
+              notifications.generate('Download Completed', item.name);
+            }
+          }
           break;
+
         case 3: // Deleted
-          if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime ==
-              1)
+          if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1) {
             scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text('${item.name} Removed'),
               duration: Duration(seconds: 1),
               backgroundColor: kRed,
             ));
+          }
           break;
       }
     }
