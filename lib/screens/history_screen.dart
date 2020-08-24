@@ -38,16 +38,15 @@ class _HistorySheetState extends State<HistorySheet> {
 
   Color getHistoryStatusColor(BuildContext context, int action) {
     switch (action) {
-      case 1:
-        return Provider.of<Mode>(context).isLightMode ? kBlue : kIndigo;
-      case 2:
-        return Provider.of<Mode>(context).isLightMode ? kGreen : kLightGreen;
-      case 3:
-        return kRed;
+      case 1: // Added
+        return Theme.of(context).accentColor;
+      case 2: // Finished
+        return Provider.of<Mode>(context).isLightMode ? kGreenActiveLT : kGreenActiveDT;
+      case 3: // Deleted
+        return Provider.of<Mode>(context).isLightMode ?kRedErrorLT:kRedErrorDT;
       default:
         return Provider.of<Mode>(context).isLightMode
-            ? Colors.black
-            : Colors.white;
+            ? Colors.black : Colors.white;
     }
   }
 
@@ -60,12 +59,9 @@ class _HistorySheetState extends State<HistorySheet> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        title: Center(
-          child: Text(
-            'History',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.black),
-          ),
+        iconTheme: IconThemeData(),
+        title: Text(
+          'History', style: TextStyle(fontWeight: FontWeight.w400),
         ),
         actions: <Widget>[
           PopupMenuButton<String>(
@@ -77,7 +73,7 @@ class _HistorySheetState extends State<HistorySheet> {
               return choices
                   .map((e) => PopupMenuItem<String>(
                     value: e,
-                    child: Text(e),
+                    child: Text(e,style: TextStyle(fontWeight: FontWeight.w600),),
               ))
                   .toList();
             },
@@ -105,7 +101,6 @@ class _HistorySheetState extends State<HistorySheet> {
                         itemCount: items.length,
                         itemBuilder: (context, index) {
                           return ListTile(
-                            dense: true,
                             title: SizedBox(
                                 width: 40,
                                 child: Text(items[index].name,
@@ -128,8 +123,8 @@ class _HistorySheetState extends State<HistorySheet> {
                                     fontWeight: FontWeight.w600,
                                   )),
                             ),
-                            leading: Text(
-                              '${DateFormat('dd.MM.yyyy\nHH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))}',
+                            subtitle: Text(
+                              '${DateFormat('HH:mm:ss dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))}',
                               style: TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.w600),
                             ),

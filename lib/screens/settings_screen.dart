@@ -22,6 +22,7 @@ class SettingsPage extends StatelessWidget {
                 title: Text('Notifications',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 trailing: Checkbox(
+                  activeColor: Theme.of(context).primaryColorLight,
                   onChanged: (val) {
                     settings.toggleAllNotificationsEnabled();
                     Preferences.saveSettings(settings);
@@ -38,6 +39,7 @@ class SettingsPage extends StatelessWidget {
                 subtitle: Text('When disk space is lower than 10%'
                   , style: TextStyle(fontSize: 12),),
                 trailing: Checkbox(
+                  activeColor: Theme.of(context).primaryColorLight,
                   value: settings.diskSpaceNotification,
                   onChanged: (val) {
                     if(settings.allNotificationEnabled) {
@@ -56,6 +58,7 @@ class SettingsPage extends StatelessWidget {
                 subtitle: Text('When a new torrent is added'
                   , style: TextStyle(fontSize: 12),),
                 trailing: Checkbox(
+                  activeColor: Theme.of(context).primaryColorLight,
                   value: settings.addTorrentNotification,
                   onChanged: (val) {
                     if(settings.allNotificationEnabled) {
@@ -74,6 +77,7 @@ class SettingsPage extends StatelessWidget {
                 subtitle: Text('When a torrent download is completed'
                   , style: TextStyle(fontSize: 12),),
                 trailing: Checkbox(
+                  activeColor: Theme.of(context).primaryColorLight,
                   value: settings.downloadCompleteNotification,
                   onChanged: (val) {
                     if(settings.allNotificationEnabled) {
@@ -103,5 +107,4 @@ class SettingsPage extends StatelessWidget {
       }
     );
   }
-
 }

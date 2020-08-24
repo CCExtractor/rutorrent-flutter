@@ -41,11 +41,11 @@ class ShowDiskSpace extends StatelessWidget {
                 height: 8,
                 child: LinearProgressIndicator(
                   value: general.diskSpace.getPercentage() / 100,
-                  backgroundColor: mode.isLightMode?kLightGrey:kDarkGrey,
+                  backgroundColor: Theme.of(context).disabledColor,
                   valueColor: AlwaysStoppedAnimation<Color>(
                       general.diskSpace.isLow()
-                          ? kRed
-                          : (mode.isLightMode?kBlue:kIndigo)),
+                          ? mode.isLightMode?kRedErrorLT:kRedErrorDT
+                          : Theme.of(context).primaryColorLight),
                 ),
               )
             ],

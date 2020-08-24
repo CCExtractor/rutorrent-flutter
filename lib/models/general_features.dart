@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/components/filter_tile.dart';
+import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/settings.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
@@ -224,7 +225,8 @@ class GeneralFeatures extends ChangeNotifier {
             scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text('${item.name} Added'),
               duration: Duration(seconds: 1),
-              backgroundColor: kGreen,
+              backgroundColor: Provider.of<Mode>(context).isLightMode
+                              ?kGreenActiveLT:kGreenActiveDT,
             ));
           }
           break;
@@ -242,7 +244,8 @@ class GeneralFeatures extends ChangeNotifier {
             scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text('${item.name} Removed'),
               duration: Duration(seconds: 1),
-              backgroundColor: kRed,
+              backgroundColor: Provider.of<Mode>(context).isLightMode
+                  ?kRedErrorLT:kRedErrorDT,
             ));
           }
           break;

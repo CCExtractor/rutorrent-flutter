@@ -2,8 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/io_client.dart';
 
+/// This class deals with storing API endpoints (and credentials) of deployed ruTorrent server
+
 class Api {
-  // url with some issue with their SSL certificates can be trusted explicitly with this
+
+  /// Url with some issue with their SSL certificates can be trusted explicitly with this
   static bool trustSelfSigned = true;
   static HttpClient httpClient = new HttpClient()
     ..badCertificateCallback =
@@ -31,6 +34,7 @@ class Api {
 
   Map<String, String> getAuthHeader() => {
         'authorization':
-            'Basic ' + base64Encode(utf8.encode('$_username:$_password'))
+            'Basic ' + base64Encode(utf8.encode('$_username:$_password')),
+        'HttpHeaders.contentTypeHeader': 'application/json',
       };
 }

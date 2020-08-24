@@ -108,12 +108,16 @@ class _FileTileState extends State<FileTile> {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        if(widget.file.isPresentLocally)
+        if(widget.file.isPresentLocally) {
           OpenFile.open(widget.file.localFilePath);
-        else if(FileTile.isAudio(widget.file.name) || FileTile.isVideo(widget.file.name))
+        }
+        else if(FileTile.isAudio(widget.file.name) || FileTile.isVideo(widget.file.name)) {
           widget.playMediaFileCallback(widget.file.name);
-        else
+          Fluttertoast.showToast(msg: 'Streaming Media');
+        }
+        else {
           Fluttertoast.showToast(msg: 'File cannot be streamed');
+        }
       },
       leading: Icon(FileTile.getFileIcon(widget.file.name)),
       title: Text(
@@ -126,7 +130,7 @@ class _FileTileState extends State<FileTile> {
             ? LinearProgressIndicator(
                 value: progress / 100,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  Provider.of<Mode>(context).isDarkMode ? kIndigo : kBlue,
+                  Provider.of<Mode>(context).isDarkMode ? kIndigoSecondaryLT : kBluePrimaryLT,
                 ),
                 backgroundColor: Provider.of<Mode>(context).isLightMode
                     ? kLightGrey

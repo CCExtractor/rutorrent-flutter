@@ -15,13 +15,13 @@ class TorrentTile extends StatelessWidget {
   static Color getStatusColor(Status status, BuildContext context) {
     switch (status) {
       case Status.downloading:
-        return Provider.of<Mode>(context).isLightMode ? kBlue : kIndigo;
+        return Theme.of(context).primaryColor;
       case Status.paused:
         return Provider.of<Mode>(context).isLightMode ? kDarkGrey : kLightGrey;
       case Status.errors:
-        return kRed;
+        return Provider.of<Mode>(context).isLightMode ? kGreenActiveLT : kRedErrorDT;
       case Status.completed:
-        return Provider.of<Mode>(context).isLightMode ? kGreen : kLightGreen;
+        return Provider.of<Mode>(context).isLightMode ? kGreenActiveLT : kGreenActiveDT;
       default:
         return kDarkGrey;
     }

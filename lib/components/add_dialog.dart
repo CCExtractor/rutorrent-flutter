@@ -1,7 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:rutorrentflutter/models/mode.dart';
-import '../utilities/constants.dart';
 import 'package:flutter/material.dart';
 
 class AddDialog extends StatelessWidget {
@@ -57,7 +54,7 @@ class AddDialog extends StatelessWidget {
               height: 50,
               width: double.infinity,
               child: RaisedButton(
-                color: Provider.of<Mode>(context).isLightMode ? kBlue : kIndigo,
+                color: Theme.of(context).accentColor,
                 child: Text('Add',style: TextStyle(color: Colors.white,fontSize: 16),),
                 onPressed: () {
                   Navigator.pop(context);

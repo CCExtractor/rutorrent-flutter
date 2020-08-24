@@ -6,7 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/data_input.dart';
 import 'package:rutorrentflutter/components/password_input.dart';
-import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/main_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -106,10 +105,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   Widget build(BuildContext context) {
     return ModalProgressHUD(
       progressIndicator: CircularProgressIndicator(
-        valueColor: AlwaysStoppedAnimation<Color>(
-            Provider.of<Mode>(context).isLightMode
-                ? kBlue
-                : kIndigo),
+        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
       ),
       inAsyncCall: isValidating,
       child: Scaffold(
@@ -190,12 +186,9 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                     RaisedButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5.0),
-                        side: BorderSide(color: Provider.of<Mode>(context).isLightMode?
-                        Colors.black:Colors.white),
+                        side: BorderSide(),
                       ),
-                      color: Provider.of<Mode>(context).isLightMode?
-                              kBlue:
-                              kIndigo,
+                      color: Theme.of(context).accentColor,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 28, vertical: 16),

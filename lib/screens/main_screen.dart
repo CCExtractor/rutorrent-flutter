@@ -233,10 +233,11 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          selectedItemColor: mode.isLightMode ? kBlue : kIndigo,
+          backgroundColor: Theme.of(context).appBarTheme.color,
+          selectedItemColor: Theme.of(context).primaryColorLight,
           currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
+
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -258,7 +259,7 @@ class _MainScreenState extends State<MainScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          backgroundColor: mode.isLightMode ? kBlue : kIndigo,
+          backgroundColor: Theme.of(context).primaryColorLight,
           child: Icon(
             Icons.library_add,
             color: Colors.white,

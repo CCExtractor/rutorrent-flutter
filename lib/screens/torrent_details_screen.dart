@@ -28,6 +28,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   final ScrollController _scrollController = ScrollController();
 
   /// Media Player fields
+  String playingMediaName;
   bool showMediaPlayer = false;
   String displayImageUrl;
   bool isPlayingAudio = false;
@@ -35,6 +36,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   VlcPlayerController _videoViewController2;
   bool isPlaying = false;
   double sliderValue = 0.0;
+  bool playerControlsVisibility = true;
 
   _initVlcPlayer() {
     _videoViewController2 = new VlcPlayerController(onInit: () {
@@ -160,6 +162,8 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
 
   playMediaFile(String fileName) {
     String url = getFileUrl(fileName);
+    playingMediaName = fileName;
+
     if (FileTile.isAudio(fileName)) isPlayingAudio = true;
 
     if (!showMediaPlayer) {
@@ -330,7 +334,6 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                         ],
                       )
                     :
-
                     /// Vlc Media Player Stack
                     Stack(
                         children: <Widget>[
@@ -354,13 +357,15 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    CircularProgressIndicator()
+                                    CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+                                    )
                                   ],
                                 ),
                               ),
                             ),
                           ),
-                          Column(
+                          playerControlsVisibility?Column(
                             children: <Widget>[
                               SizedBox(
                                 height: 20,
@@ -381,15 +386,35 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                   },
                                 ),
                               ),
-                              SizedBox(
-                                height: 240,
-                                width: double.infinity,
+                              GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: (){
+                                  print('Tap');
+                                  print(playerControlsVisibility);
+                                  setState(() {
+                                    playerControlsVisibility = !playerControlsVisibility;
+                                  });
+                                },
+                                child: SizedBox(
+                                  height: 180,
+                                  width: double.infinity,
+                                ),
+                              ),
+                              Flexible(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Text(playingMediaName,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold)),
+                                ),
                               ),
                               Container(
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     shape: BoxShape.circle),
-                                child: IconButton(
+                                  child: IconButton(
                                     color: Colors.black,
                                     iconSize: 40,
                                     icon: Icon(isPlaying
@@ -416,18 +441,28 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                 },
                               ),
                             ],
+                          ):
+                          GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: (){
+                                setState(() {
+                                  playerControlsVisibility=!playerControlsVisibility;
+                                });
+                              },
+                              child: SizedBox(
+                                height: 400,
+                                width: double.infinity,
+                              )
                           ),
                         ],
                       ),
               ),
               ExpansionTile(
                 title: Text('More Info',
-                    style:
-                        TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                 children: <Widget>[
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: Column(
                       children: <Widget>[
                         Align(

@@ -75,7 +75,7 @@ class SearchBar extends StatelessWidget {
                           return PopupMenuItem<Sort>(
                             enabled: !(general.sortPreference == choice),
                             value: choice,
-                            child: Text(SearchBar.sortMap[choice]),
+                            child: Text(SearchBar.sortMap[choice],style: TextStyle(fontWeight: FontWeight.w600),),
                           );
                         }).toList();
                       },

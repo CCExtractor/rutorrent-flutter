@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/pages/torrents_list_page.dart';
-import 'package:rutorrentflutter/utilities/constants.dart';
 import 'downloads_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,18 +29,14 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: _currentIndex == 0
-                              ? (Provider.of<Mode>(context).isLightMode
-                                  ? kBlue
-                                  : kIndigo)
+                              ? Theme.of(context).primaryColorLight
                               : Colors.grey,
                         )),
                     Container(
                       height: 3.5,
                       width: 60,
                       color: _currentIndex == 0
-                          ? (Provider.of<Mode>(context).isLightMode
-                          ? kBlue
-                          : kIndigo)
+                          ?  Theme.of(context).primaryColorLight
                           : null,
                     )
                   ],
@@ -59,9 +52,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: _currentIndex == 1
-                            ? (Provider.of<Mode>(context).isLightMode
-                                ? kBlue
-                                : kIndigo)
+                            ? Theme.of(context).primaryColorLight
                             : Colors.grey,
                       ),
                     ),
@@ -69,9 +60,7 @@ class _HomePageState extends State<HomePage> {
                       height: 3.5,
                       width: 60,
                       color: _currentIndex == 1
-                          ? (Provider.of<Mode>(context).isLightMode
-                          ? kBlue
-                          : kIndigo)
+                          ? Theme.of(context).primaryColorLight
                           : null,
                     ),
                   ],
