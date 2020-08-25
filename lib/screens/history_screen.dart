@@ -1,3 +1,4 @@
+import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -124,7 +125,7 @@ class _HistorySheetState extends State<HistorySheet> {
                                   )),
                             ),
                             subtitle: Text(
-                              '${DateFormat('HH:mm:ss dd.MM.yyyy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))}',
+                              '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
                               style: TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.w600),
                             ),

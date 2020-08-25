@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
@@ -35,6 +36,7 @@ class _RSSFilterDetailsState extends State<RSSFilterDetails> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       child: Container(
         height: 500,
         child: Column(
@@ -54,10 +56,10 @@ class _RSSFilterDetailsState extends State<RSSFilterDetails> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
-                        child: Text('RSS Filters', style: TextStyle(fontWeight: FontWeight.w600,fontSize: 18),
+                        child: Text('RSS Filters', style: TextStyle(color: Theme.of(context).accentColor,fontWeight: FontWeight.w600,fontSize: 18),
                     )),
                   ),
-                  Divider(),
+                  Divider(color: Theme.of(context).accentColor,thickness: 2,),
                   Expanded(
                     child: ListView.builder(
                         itemCount: rssFilters.length,
@@ -71,12 +73,12 @@ class _RSSFilterDetailsState extends State<RSSFilterDetails> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Text(rssFilters[index].name,
+                                      Text('${index+1}. ${rssFilters[index].name}',
                                         style: TextStyle(fontWeight: FontWeight.w600,fontSize: 16),
                                       ),
                                       Checkbox(
-                                        activeColor: Colors.grey,
-                                        onChanged: (val){},
+                                        activeColor: Theme.of(context).accentColor,
+                                        onChanged: (val){Fluttertoast.showToast(msg: 'Please use ruTorrent web interface to change filter settings');},
                                         value: rssFilters[index].enabled==1,
                                       )
                                     ],

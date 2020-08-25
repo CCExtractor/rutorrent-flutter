@@ -14,6 +14,7 @@ class Api {
   IOClient _ioClient = new IOClient(httpClient);
   get ioClient => _ioClient;
 
+
   String _url;
   String _username;
   String _password;
@@ -26,12 +27,14 @@ class Api {
   get username => _username;
   get password => _password;
 
+  /// Plugins url
   get httpRpcPluginUrl => url + '/plugins/httprpc/action.php';
   get addTorrentPluginUrl => url + '/php/addtorrent.php';
   get diskSpacePluginUrl => url + '/plugins/diskspace/action.php';
   get rssPluginUrl => url + '/plugins/rss/action.php';
   get historyPluginUrl => url + '/plugins/history/action.php';
 
+  /// Authentication header
   Map<String, String> getAuthHeader() => {
         'authorization':
             'Basic ' + base64Encode(utf8.encode('$_username:$_password')),

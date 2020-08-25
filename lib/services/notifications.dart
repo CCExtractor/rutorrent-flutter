@@ -1,7 +1,10 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+/// Notifications class using flutter local notifications to generate Alert
+
 class Notifications{
-  /// Using flutter local Notifications to generate Alert
+
+  /// Initialization setting for both the platforms
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   var platformChannelSpecifics;
@@ -24,6 +27,7 @@ class Notifications{
     platformChannelSpecifics = new NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
   }
 
+  /// Public Method to generate Notification
   generate(String header,String body) async{
     await flutterLocalNotificationsPlugin.show(
       0,

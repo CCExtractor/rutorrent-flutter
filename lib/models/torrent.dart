@@ -14,7 +14,7 @@ class Torrent{
 
 
   Api api;
-  String hash; // hash value is a unique value for a torrent torrent
+  String hash; // hash value is a unique value for a torrent
   String name;
   Status status;
   int size; // size in bytes
@@ -36,7 +36,6 @@ class Torrent{
   int downloadedData;// in bytes
   int uploadedData;// in bytes
   int ratio;
-
 
 
   Status get getTorrentStatus {

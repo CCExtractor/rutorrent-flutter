@@ -96,6 +96,7 @@ class SettingsPage extends StatelessWidget {
                   style: TextStyle(fontSize: 12),),
                 onTap: () async {
                   await Preferences.clearLogin();
+                  Navigator.pop(context);
                   Navigator.pushReplacement(context, MaterialPageRoute(
                     builder: (context) => ConfigurationsScreen(),
                   ));

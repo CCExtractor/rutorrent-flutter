@@ -8,6 +8,7 @@ class RSSFilter{
       this.exclude,
       this.dir
       );
+
   String name;
   int enabled;
   String pattern;

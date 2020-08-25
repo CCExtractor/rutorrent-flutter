@@ -194,7 +194,7 @@ class _MainScreenState extends State<MainScreen> {
                 children: _getAccountsList(api, mode, general),
               ),
               ExpansionTile(
-                initiallyExpanded: false,
+                initiallyExpanded: true,
                 title: Text(
                   'Filters',
                 ),

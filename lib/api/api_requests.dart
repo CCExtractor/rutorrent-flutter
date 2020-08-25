@@ -13,6 +13,7 @@ import 'package:xml/xml.dart' as xml;
 class ApiRequests {
   /// This class will be responsible for making all API Calls to the ruTorrent server
 
+  /// Checks Added and Finished Torrents asynchronously by fetching History of last ten seconds
   static updateHistory(Api api, GeneralFeatures general, BuildContext context) async {
     String timestamp = ((DateTime.now().millisecondsSinceEpoch -
                 Duration(seconds: 10).inMilliseconds) ~/
@@ -29,12 +30,13 @@ class ApiRequests {
     var items = jsonDecode(response.body)['items'];
     for (var item in items) {
       HistoryItem historyItem =
-          HistoryItem(item['name'], item['action'], item['action_time']);
+          HistoryItem(item['name'], item['action'], item['action_time'],item['size']);
       historyItems.add(historyItem);
     }
     general.updateHistoryItems(historyItems, context);
   }
 
+  /// Checks disk space asynchronously for low disk space alert
   static updateDiskSpace(Api api, GeneralFeatures general, BuildContext context) async {
     var diskSpaceResponse = await api.ioClient
         .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
@@ -50,6 +52,7 @@ class ApiRequests {
     updateHistory(api, general, context);
   }
 
+  /// Parses json data into list of torrents
   static List<Torrent> parseTorrentsData(
       String responseBody, GeneralFeatures general, Api api) {
     // takes response and parse and return the torrents data
@@ -92,6 +95,7 @@ class ApiRequests {
     return torrentsList;
   }
 
+  /// Gets list of torrents for all saved accounts [Apis]
   static Stream<List<Torrent>> getAllAccountsTorrentList(
       List<Api> apis, GeneralFeatures general) async* {
     while (true) {
@@ -115,6 +119,7 @@ class ApiRequests {
     }
   }
 
+  /// Gets list of torrents for a particular account
   static Stream<List<Torrent>> getTorrentList(
       Api api, GeneralFeatures general) async* {
     while (true) {
@@ -134,7 +139,6 @@ class ApiRequests {
         */
         yield null;
       }
-
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
     }
@@ -205,6 +209,7 @@ class ApiRequests {
         });
   }
 
+  /// Gets list of trackers for a particular torrent
   static Future<List<String>> getTrackers(Api api, String hashValue) async {
     List<String> trackersList = [];
 
@@ -218,6 +223,7 @@ class ApiRequests {
     return trackersList;
   }
 
+  /// Gets list of files for a particular torrent
   static Future<List<TorrentFile>> getFiles(Api api, String hashValue) async {
     List<TorrentFile> filesList = [];
 
@@ -232,6 +238,7 @@ class ApiRequests {
     return filesList;
   }
 
+  /// Gets list of saved RSS Feeds
   static Future<List<RSSLabel>> loadRSS(Api api) async {
     List<RSSLabel> rssLabels = [];
     var rssResponse = await api.ioClient
@@ -249,6 +256,7 @@ class ApiRequests {
     return rssLabels;
   }
 
+  /// Removes RSS Feed
   static removeRSS(Api api, String hashValue) async {
     await api.ioClient
         .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(), body: {
@@ -257,6 +265,7 @@ class ApiRequests {
     });
   }
 
+  /// Adds new RSS Feed
   static addRSS(Api api, String rssUrl) async {
     Fluttertoast.showToast(msg: 'Adding RSS');
     await api.ioClient
@@ -266,6 +275,7 @@ class ApiRequests {
     });
   }
 
+  /// Gets details of available torrent in RSS Feed
   static Future<bool> getRSSDetails(
       Api api, RSSItem rssItem, String labelHash) async {
     bool dataAvailable = true;
@@ -299,6 +309,7 @@ class ApiRequests {
     return dataAvailable;
   }
 
+  /// Gets details of RSS Filters
   static Future<List<RSSFilter>> getRSSFilters(Api api) async {
     List<RSSFilter> rssFilters = [];
     var response = await api.ioClient
@@ -321,6 +332,7 @@ class ApiRequests {
     return rssFilters;
   }
 
+  /// Gets History of last [lastHours] hours
   static Future<List<HistoryItem>> getHistory(Api api, {int lastHours}) async {
     String timestamp = '0';
     if (lastHours != null) {
@@ -342,7 +354,7 @@ class ApiRequests {
     List<HistoryItem> historyItems = [];
     for (var item in items) {
       HistoryItem historyItem =
-          HistoryItem(item['name'], item['action'], item['action_time']);
+          HistoryItem(item['name'], item['action'], item['action_time'],item['size']);
       historyItems.add(historyItem);
     }
     return historyItems;

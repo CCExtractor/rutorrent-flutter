@@ -130,11 +130,11 @@ class _FileTileState extends State<FileTile> {
             ? LinearProgressIndicator(
                 value: progress / 100,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  Provider.of<Mode>(context).isDarkMode ? kIndigoSecondaryLT : kBluePrimaryLT,
+                  Theme.of(context).accentColor,
                 ),
                 backgroundColor: Provider.of<Mode>(context).isLightMode
-                    ? kLightGrey
-                    : kDarkGrey)
+                    ? kGreyLT
+                    : kGreyDT)
             : Text(
                 filesize(widget.file.size),
                 style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),

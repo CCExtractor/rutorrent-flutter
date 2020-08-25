@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Preferences {
 
+  /// Saving and fetching [Settings] from [Preferences]
   static saveSettings(Settings settings) async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(Settings.kAllNotification, settings.allNotificationEnabled);
@@ -35,8 +36,10 @@ class Preferences {
 
     return settings;
   }
-  
-  
+
+
+  /// Saving and fetching [Apis] from [Preferences]
+
   static const String accountsData = 'data';
   
   static clearLogin() async{
@@ -78,9 +81,10 @@ class Preferences {
         .toList(),
   );
 
-  static List<Api> decodeApis(String data) =>
-      (json.decode(data) as List<dynamic>)
-          .map<Api>((item) => Preferences.fromJson(item))
-          .toList();
-  
+  static List<Api> decodeApis(String data) {
+    return (json.decode(data) as List<dynamic>)
+        .map<Api>((item) => Preferences.fromJson(item))
+        .toList();
+  }
+
 }

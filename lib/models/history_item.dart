@@ -18,6 +18,7 @@ class HistoryItem{
   String name;
   int action;
   int actionTime;
+  int size;
 
-  HistoryItem(this.name,this.action,this.actionTime);
+  HistoryItem(this.name,this.action,this.actionTime,this.size);
 }

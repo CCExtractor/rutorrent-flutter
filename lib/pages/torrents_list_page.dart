@@ -13,6 +13,22 @@ import '../components/loading_shimmer.dart';
 
 class TorrentsListPage extends StatelessWidget {
 
+  checkForActiveDownloads(Api api,GeneralFeatures general) async {
+    /* this method is responsible for changing the connection state from waiting to active by
+    temporary pausing the active downloads and then resuming them again
+     */
+    List<Torrent> tempPausedDownloads = [];
+    for (Torrent torrent in general.activeDownloads) {
+      await ApiRequests.pauseTorrent(api, torrent.hash);
+      tempPausedDownloads.add(torrent);
+    }
+
+    // Resuming the temporary paused active downloads
+    for (Torrent torrent in tempPausedDownloads) {
+      await ApiRequests.startTorrent(api, torrent.hash);
+    }
+  }
+
   List<Torrent> _getDisplayList(List<Torrent> list, GeneralFeatures general) {
     List<Torrent> displayList = list;
 
@@ -31,23 +47,6 @@ class TorrentsListPage extends StatelessWidget {
           .toList();
     }
     return displayList;
-  }
-
-  checkForActiveDownloads(Api api,GeneralFeatures general) async {
-    /* this method is responsible for changing the connection state from waiting to active by
-    temporary pausing the active downloads and then resuming them again
-     */
-
-    List<Torrent> tempPausedDownloads = [];
-    for (Torrent torrent in general.activeDownloads) {
-      await ApiRequests.pauseTorrent(api, torrent.hash);
-      tempPausedDownloads.add(torrent);
-    }
-
-    // Resuming the temporary paused active downloads
-    for (Torrent torrent in tempPausedDownloads) {
-      await ApiRequests.startTorrent(api, torrent.hash);
-    }
   }
 
   @override
@@ -104,6 +103,7 @@ class TorrentsListPage extends StatelessWidget {
                     ),
                   );
                 }
+
                 return ListView.builder(
                   itemCount: general.torrentsList.length,
                   itemBuilder: (context, index) {

@@ -1,3 +1,5 @@
+import 'package:rutorrentflutter/api/api_requests.dart';
+
 class RSSLabel {
   RSSLabel(this.hash, this.label);
 
@@ -13,7 +15,7 @@ class RSSItem {
   int time;
   String url;
 
-  // These fields will be fetched via getRSSDetails request
+  /// {Additional fields} fetched via [ApiRequests.getRSSDetails] request for some RSS Feeds
   String imageUrl;
   String name;
   String rating;

@@ -33,21 +33,25 @@ enum Filter {
 
 class GeneralFeatures extends ChangeNotifier {
 
-  List<Api> apis = [];// Containing information of all saved accounts
-  bool _allAccounts=false;
+  /// List of all saved accounts [Apis]
+  List<Api> apis = [];
+  bool _allAccounts = false;
 
   get allAccounts => _allAccounts;
 
+  /// show torrents from all saved accounts
   showAllAccounts(){
     _allAccounts=true;
     notifyListeners();
   }
 
+  /// show torrents from only selected account
   doNotShowAllAccounts(){
     _allAccounts=false;
     notifyListeners();
   }
 
+  /// Global Key Scaffold key for showing Snackbar
   GlobalKey<ScaffoldState> scaffoldKey;
 
   /// Generating notifications
@@ -213,17 +217,18 @@ class GeneralFeatures extends ChangeNotifier {
   get historyItems => _historyItems;
 
   updateHistoryItems(List<HistoryItem> updatedList, BuildContext context) {
+
     _historyItems = updatedList;
     for (var item in updatedList) {
-      switch (item.action) {
 
+      switch (item.action) {
         case 1: // Added
           if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1) {
             if(Provider.of<Settings>(context,listen: false).addTorrentNotification) {
               notifications.generate('New Torrent Added', item.name);
             }
             scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text('${item.name} Added'),
+              content: Text('${item.name} Added',style: TextStyle(color: Colors.white),),
               duration: Duration(seconds: 1),
               backgroundColor: Provider.of<Mode>(context).isLightMode
                               ?kGreenActiveLT:kGreenActiveDT,
@@ -242,7 +247,7 @@ class GeneralFeatures extends ChangeNotifier {
         case 3: // Deleted
           if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1) {
             scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text('${item.name} Removed'),
+              content: Text('${item.name} Removed',style: TextStyle(color: Colors.white),),
               duration: Duration(seconds: 1),
               backgroundColor: Provider.of<Mode>(context).isLightMode
                   ?kRedErrorLT:kRedErrorDT,

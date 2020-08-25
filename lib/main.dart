@@ -9,6 +9,9 @@ import 'models/settings.dart';
 
 void main() {
   runApp(MultiProvider(providers: [
+
+    /// Providing at the top of the widget tree to grant access to the whole app
+
     Provider<Api>(create: (context) => Api()),
     ChangeNotifierProvider<Mode>(create: (context) => Mode()),
     ChangeNotifierProvider<Settings>(create: (context) => Settings()),
