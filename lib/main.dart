@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
       title: 'ruTorrent Mobile',
       theme: ThemeData.light().copyWith(
         appBarTheme: AppBarTheme(
+          iconTheme: IconThemeData(color: Colors.black),
             color: kSlightGrey
         ),
         primaryTextTheme: TextTheme(

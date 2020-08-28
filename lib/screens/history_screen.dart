@@ -10,12 +10,12 @@ import 'package:rutorrentflutter/models/mode.dart';
 import 'package:shimmer/shimmer.dart';
 import '../components/loading_shimmer.dart';
 
-class HistorySheet extends StatefulWidget {
+class HistoryScreen extends StatefulWidget {
   @override
-  _HistorySheetState createState() => _HistorySheetState();
+  _HistoryScreenState createState() => _HistoryScreenState();
 }
 
-class _HistorySheetState extends State<HistorySheet> {
+class _HistoryScreenState extends State<HistoryScreen> {
   List<HistoryItem> items = [];
   bool isLoading;
 

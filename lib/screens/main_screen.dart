@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
@@ -26,14 +27,20 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int _currentIndex = 0; // HomePage
+  PackageInfo packageInfo = PackageInfo();
 
   _initPlugins() async {
+    /// Setting application version
+    packageInfo = await PackageInfo.fromPlatform();
+
+    /// Setting Scaffold Key
     Provider.of<GeneralFeatures>(context, listen: false).scaffoldKey =
         _scaffoldKey;
 
+    /// Setting accounts list
     Provider.of<GeneralFeatures>(context, listen: false).apis =
         await Preferences.fetchSavedLogin();
-    setState(() {}); // updating the drawer list
+    setState(() {});
 
     while (this.mounted) {
       try {
@@ -181,7 +188,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     SizedBox(height: 15),
                     Text(
-                      'Application version: 0.01',
+                      'Application version: ${packageInfo.version}',
                       style:
                           TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
                     ),
@@ -210,7 +217,7 @@ class _MainScreenState extends State<MainScreen> {
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(
-                    builder: (context)=>HistorySheet()
+                    builder: (context)=>HistoryScreen()
                   ));
                 },
                 title: Text('History'),
@@ -225,7 +232,34 @@ class _MainScreenState extends State<MainScreen> {
                       ));
                 },
                   title: Text('Settings'),
-              )
+              ),
+              ListTile(
+                leading: Icon(Icons.info_outline,
+                    color: mode.isLightMode?kDarkGrey:Colors.white),
+                onTap: () {
+                  showAboutDialog(
+                      context: context,
+                    applicationVersion: packageInfo.version,
+                    applicationIcon: Image(
+                      height: 75,
+                      image: mode.isLightMode?
+                        AssetImage('assets/logo/light_mode_icon.png'):
+                        AssetImage('assets/logo/dark_mode_icon.png'),
+                    ),
+                    children: [
+                      Text('Build Number : ${packageInfo.buildNumber}',
+                        style: TextStyle(fontSize: 14),),
+                      SizedBox(height: 15,),
+                      Text('Release Date : 30/08/2020',
+                        style: TextStyle(fontSize: 14),),
+                      SizedBox(height: 15,),
+                      Text('Package Name : ${packageInfo.packageName}',
+                        style: TextStyle(fontSize: 14),),
+                    ],
+                  );
+                },
+                title: Text('About'),
+              ),
             ],
           ),
         ),
