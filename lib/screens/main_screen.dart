@@ -190,10 +190,14 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ShowDiskSpace(),
               ExpansionTile(
+                leading: Icon(Icons.supervisor_account,
+                    color: mode.isLightMode?kDarkGrey:Colors.white),
                 title: Text('Accounts'),
                 children: _getAccountsList(api, mode, general),
               ),
               ExpansionTile(
+                leading: Icon(Icons.sort,
+                    color: mode.isLightMode?kDarkGrey:Colors.white),
                 initiallyExpanded: true,
                 title: Text(
                   'Filters',
@@ -201,6 +205,8 @@ class _MainScreenState extends State<MainScreen> {
                 children: general.filterTileList,
               ),
               ListTile(
+                leading: Icon(Icons.history,
+                    color: mode.isLightMode?kDarkGrey:Colors.white),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(
@@ -210,6 +216,8 @@ class _MainScreenState extends State<MainScreen> {
                 title: Text('History'),
               ),
               ListTile(
+                leading: Icon(Icons.settings,
+                    color: mode.isLightMode?kDarkGrey:Colors.white),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(context, MaterialPageRoute(

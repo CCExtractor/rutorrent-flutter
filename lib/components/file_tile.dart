@@ -153,6 +153,7 @@ class _FileTileState extends State<FileTile> {
                   cancelToken.cancel();
                   setState(() {
                     isDownloading = false;
+                    cancelToken=CancelToken();
                   });
                 }
               },

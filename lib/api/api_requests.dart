@@ -99,23 +99,24 @@ class ApiRequests {
   static Stream<List<Torrent>> getAllAccountsTorrentList(
       List<Api> apis, GeneralFeatures general) async* {
     while (true) {
-      try {
-        List<Torrent> allTorrentList = [];
+      List<Torrent> allTorrentList = [];
         for (Api api in apis) {
-          var response = await api.ioClient.post(
-              Uri.parse(api.httpRpcPluginUrl),
-              headers: api.getAuthHeader(),
-              body: {
-                'mode': 'list',
-              });
-          allTorrentList.addAll(parseTorrentsData(response.body, general, api));
+          try {
+            var response = await api.ioClient.post(
+                Uri.parse(api.httpRpcPluginUrl),
+                headers: api.getAuthHeader(),
+                body: {
+                  'mode': 'list',
+                });
+            allTorrentList.addAll(
+                parseTorrentsData(response.body, general, api));
+          }
+          catch (e) {
+            print(e);
+          }
         }
         yield allTorrentList;
-      } catch (e) {
-        print(e);
-        yield null;
-      }
-      await Future.delayed(Duration(seconds: 1), () {});
+        await Future.delayed(Duration(seconds: 1), () {});
     }
   }
 

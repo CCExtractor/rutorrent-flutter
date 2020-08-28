@@ -77,28 +77,36 @@ class GeneralFeatures extends ChangeNotifier {
 
   List<Torrent> sortList(List<Torrent> torrentsList, Sort sort) {
     switch (sort) {
+
       case Sort.name:
         torrentsList.sort((a, b) => a.name.compareTo(b.name));
         return torrentsList;
+
       case Sort.dateAdded:
         torrentsList.sort((a, b) => a.torrentAdded.compareTo(b.torrentAdded));
         return torrentsList;
+
       case Sort.percentDownloaded:
         torrentsList.sort(
             (a, b) => a.percentageDownload.compareTo(b.percentageDownload));
         return torrentsList;
+
       case Sort.downloadSpeed:
         torrentsList.sort((a, b) => a.dlSpeed.compareTo(b.dlSpeed));
         return torrentsList;
+
       case Sort.uploadSpeed:
         torrentsList.sort((a, b) => a.ulSpeed.compareTo(b.ulSpeed));
         return torrentsList;
+
       case Sort.ratio:
         torrentsList.sort((a, b) => a.ratio.compareTo(b.ratio));
         return torrentsList;
+
       case Sort.size:
         torrentsList.sort((a, b) => a.size.compareTo(b.size));
         return torrentsList;
+
       default:
         return torrentsList;
     }
@@ -174,30 +182,38 @@ class GeneralFeatures extends ChangeNotifier {
 
   List<Torrent> filterList(List<Torrent> torrentsList, Filter filter) {
     switch (filter) {
+
       case Filter.All:
         return torrentsList;
+
       case Filter.Downloading:
         return torrentsList
-            .where((torrent) => torrent.status == Status.downloading)
+            .where((torrent) => torrent.status == Status.downloading ||
+            (torrent.status == Status.paused && torrent.status != Status.completed))
             .toList();
+
       case Filter.Completed:
         return torrentsList
             .where((torrent) => torrent.status == Status.completed)
             .toList();
+
       case Filter.Active:
         return torrentsList
             .where((torrent) => torrent.ulSpeed > 0 || torrent.dlSpeed > 0)
             .toList();
+
       case Filter.Inactive:
         return torrentsList
             .where((torrent) => torrent.ulSpeed == 0 && torrent.dlSpeed == 0)
             .toList();
+
       case Filter.Error:
         return torrentsList
             .where((torrent) =>
                 torrent.msg.length > 0 &&
                 torrent.msg != 'Tracker: [Tried all trackers.]')
             .toList();
+
       default:
         return torrentsList;
     }

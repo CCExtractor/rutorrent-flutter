@@ -2,6 +2,7 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
+import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/screens/torrent_details_screen.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
@@ -92,15 +93,31 @@ class TorrentTile extends StatelessWidget {
                                   crossAxisAlignment:
                                       CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text(
-                                      '↓ ${filesize(torrent.dlSpeed.toString()) + '/s'} | ↑ ${filesize(torrent.ulSpeed.toString()) + '/s'}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 10,
-                                          color: Provider.of<Mode>(context)
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          '↓ ${filesize(torrent.dlSpeed.toString()) + '/s'} | ↑ ${filesize(torrent.ulSpeed.toString()) + '/s'}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 10,
+                                              color: Provider.of<Mode>(context)
+                                                      .isLightMode
+                                                  ? kDarkGrey
+                                                  : kLightGrey),
+                                        ),
+                                        Provider.of<GeneralFeatures>(context).allAccounts?
+                                        Text(
+                                          '${Uri.parse(torrent.api.url).host}',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 10,
+                                              color: Provider.of<Mode>(context)
                                                   .isLightMode
-                                              ? kDarkGrey
-                                              : kLightGrey),
+                                                  ? kDarkGrey
+                                                  : kLightGrey),
+                                        ):Container(),
+                                      ],
                                     ),
                                     SizedBox(
                                       height: 4,
