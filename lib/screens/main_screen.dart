@@ -52,8 +52,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   List<Widget> _getAccountsList(Api api, Mode mode, GeneralFeatures general) {
-    List<Widget> accountsList = Provider.of<GeneralFeatures>(context)
-        .apis
+    List<Widget> accountsList = general.apis
         .map((e) => Container(
               color: matchApi(e, api) && !general.allAccounts
                   ? (mode.isLightMode ? Colors.grey[300] : kDarkGrey)
@@ -69,6 +68,14 @@ class _MainScreenState extends State<MainScreen> {
                     api.setUrl(e.url);
                     api.setUsername(e.username);
                     api.setPassword(e.password);
+
+                    // Swapping Apis to make selected api as default
+                    int index = general.apis.indexOf(e);
+                    Api swapApi = general.apis[0];
+                    general.apis[0] = general.apis[index];
+                    general.apis[index] = swapApi;
+                    Preferences.saveLogin(general.apis);
+
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => MainScreen()));
                   } else {
@@ -235,7 +242,9 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.info_outline,
-                    color: mode.isLightMode?kDarkGrey:Colors.white),
+                    color: mode.isLightMode
+                        ? kDarkGrey
+                        :Colors.white),
                 onTap: () {
                   showAboutDialog(
                       context: context,

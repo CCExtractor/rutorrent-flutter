@@ -10,6 +10,7 @@ class DataInput extends StatelessWidget {
   final IconButton suffixIconButton;
   final onFieldSubmittedCallback;
   final textInputAction;
+  final Color borderColor;
 
   DataInput(
       {this.hintText,
@@ -17,7 +18,8 @@ class DataInput extends StatelessWidget {
       this.onFieldSubmittedCallback,
       this.focus,
       this.textInputAction,
-      this.suffixIconButton});
+      this.suffixIconButton,
+      this.borderColor});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,7 @@ class DataInput extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         child: TextFormField(
-          style: TextStyle(fontWeight: FontWeight.w600),
+          style: TextStyle(fontWeight: FontWeight.w600,color: borderColor),
           textInputAction: textInputAction,
           focusNode: focus,
           onFieldSubmitted: onFieldSubmittedCallback,
@@ -38,11 +40,12 @@ class DataInput extends StatelessWidget {
             border: InputBorder.none,
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             hintText: hintText,
+            hintStyle: TextStyle(color: borderColor),
             suffixIcon: suffixIconButton,
           ),
         ),
         decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey, width: 1.5),
+            border: Border.all(color: borderColor!=null?borderColor:Colors.grey, width: 1.5),
             borderRadius: BorderRadius.all(Radius.circular(5))),
       ),
     );
