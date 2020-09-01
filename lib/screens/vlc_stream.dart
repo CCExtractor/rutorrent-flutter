@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class VlcStream extends StatefulWidget {
   final String streamUrl;
@@ -32,11 +33,21 @@ class _VlcStreamState extends State<VlcStream> {
       setState(() {});
     });
 
+    int stopCounter = 0;
+    bool checkForError = true;
     while (this.mounted) {
       PlayingState state = _videoViewController.playingState;
       if (state == PlayingState.PLAYING &&
           sliderValue < _videoViewController.duration.inSeconds) {
+        checkForError=false;
         sliderValue = _videoViewController.position.inSeconds.toDouble();
+      }
+      else if (state==PlayingState.STOPPED){
+        stopCounter++;
+        if(checkForError && stopCounter>2){
+          Fluttertoast.showToast(msg: 'Error in playing file');
+          Navigator.pop(context);
+        }
       }
       setState(() {});
       await Future.delayed(Duration(seconds: 1), () {});
