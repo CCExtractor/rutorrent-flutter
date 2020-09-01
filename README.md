@@ -6,6 +6,8 @@
 
 # ruTorrent Mobile
 
+<img src="https://raw.githubusercontent.com/harchani-ritik/rutorrent-flutter/master/gsoc_2020.png" alt="GSOC 2020" height=30px>
+
 **A ruTorrent-based client build in Flutter**
 
 The project is a flutter application for ruTorrent web interface. The app communicates with ruTorrent's backend via REST APIs to display the information about the torrents and the functionality to control its basic features. It also supports some plugin functionalities such as **RSS Feeds**, **History**, **Disk Space** etc. as provided in the ruTorrent web.
@@ -66,7 +68,7 @@ You may join the gsoc-rutorrent channel of CCExtractor community through slack a
 
 ## License
 
-The test suite is released under the [MIT License](http://www.opensource.org/licenses/mit-license.php). The license can be found [here](LICENSE).
+The project is released under the [MIT License](http://www.opensource.org/licenses/mit-license.php). The license can be found [here](LICENSE).
 
 ## Flutter
 
