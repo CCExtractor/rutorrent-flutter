@@ -25,17 +25,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   int _currentIndex = 0; // HomePage
   PackageInfo packageInfo = PackageInfo();
 
   _initPlugins() async {
     /// Setting application version
     packageInfo = await PackageInfo.fromPlatform();
-
-    /// Setting Scaffold Key
-    Provider.of<GeneralFeatures>(context, listen: false).scaffoldKey =
-        _scaffoldKey;
 
     /// Setting accounts list
     Provider.of<GeneralFeatures>(context, listen: false).apis =
@@ -52,11 +47,11 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   List<Widget> _getAccountsList(Api api, Mode mode, GeneralFeatures general) {
+
     List<Widget> accountsList = general.apis
         .map((e) => Container(
-              color: matchApi(e, api) && !general.allAccounts
-                  ? (mode.isLightMode ? Colors.grey[300] : kDarkGrey)
-                  : null,
+              color: matchApi(e, api)?
+                  Theme.of(context).disabledColor : null,
               child: ListTile(
                 dense: true,
                 title: Text(
@@ -74,10 +69,12 @@ class _MainScreenState extends State<MainScreen> {
                     Api swapApi = general.apis[0];
                     general.apis[0] = general.apis[index];
                     general.apis[index] = swapApi;
+
                     Preferences.saveLogin(general.apis);
 
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => MainScreen()));
+
                   } else {
                     Navigator.pop(context);
                     setState(() => general.doNotShowAllAccounts());
@@ -90,10 +87,16 @@ class _MainScreenState extends State<MainScreen> {
     accountsList.insert(
         0,
         Container(
-          color: general.allAccounts
-              ? (mode.isLightMode ? Colors.grey[300] : kDarkGrey)
-              : null,
           child: ListTile(
+            dense: true,
+            leading: Container(
+              height: 12,
+              width: 12,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                color: general.allAccounts?Theme.of(context).accentColor:Theme.of(context).disabledColor,
+              ),
+            ),
             onTap: () {
               setState(() => general.showAllAccounts());
               Navigator.pop(context);
@@ -142,7 +145,6 @@ class _MainScreenState extends State<MainScreen> {
     return Consumer3<Mode, Api, GeneralFeatures>(
         builder: (context, mode, api, general, child) {
       return Scaffold(
-        key: general.scaffoldKey,
         appBar: AppBar(
           leading: Builder(builder: (context) {
             return IconButton(

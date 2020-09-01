@@ -4,9 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/components/filter_tile.dart';
-import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/settings.dart';
-import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/services/notifications.dart';
@@ -41,7 +39,7 @@ class GeneralFeatures extends ChangeNotifier {
 
   /// show torrents from all saved accounts
   showAllAccounts(){
-    _allAccounts=true;
+    _allAccounts=!_allAccounts;
     notifyListeners();
   }
 
@@ -50,9 +48,6 @@ class GeneralFeatures extends ChangeNotifier {
     _allAccounts=false;
     notifyListeners();
   }
-
-  /// Global Key Scaffold key for showing Snackbar
-  GlobalKey<ScaffoldState> scaffoldKey;
 
   /// Generating notifications
   Notifications notifications = Notifications();
@@ -234,40 +229,37 @@ class GeneralFeatures extends ChangeNotifier {
 
   updateHistoryItems(List<HistoryItem> updatedList, BuildContext context) {
 
+    bool happenedNow(HistoryItem item){
+      if(DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1)
+        return true;
+      return false;
+    }
+
     _historyItems = updatedList;
     for (var item in updatedList) {
 
       switch (item.action) {
-        case 1: // Added
-          if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1) {
+        case 1: // Torrent Added
+          if (happenedNow(item)) {
+            // Generate Notification
             if(Provider.of<Settings>(context,listen: false).addTorrentNotification) {
               notifications.generate('New Torrent Added', item.name);
             }
-            scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text('${item.name} Added',style: TextStyle(color: Colors.white),),
-              duration: Duration(seconds: 1),
-              backgroundColor: Provider.of<Mode>(context).isLightMode
-                              ?kGreenActiveLT:kGreenActiveDT,
-            ));
           }
           break;
 
-        case 2: // Finished
-          if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime ==1) {
+        case 2: // Torrent Finished
+          if (happenedNow(item)) {
+            // Generate Notification
             if(Provider.of<Settings>(context,listen: false).downloadCompleteNotification) {
               notifications.generate('Download Completed', item.name);
             }
           }
           break;
 
-        case 3: // Deleted
-          if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1) {
-            scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text('${item.name} Removed',style: TextStyle(color: Colors.white),),
-              duration: Duration(seconds: 1),
-              backgroundColor: Provider.of<Mode>(context).isLightMode
-                  ?kRedErrorLT:kRedErrorDT,
-            ));
+        case 3: // Torrent Deleted
+          if (happenedNow(item)) {
+            // Do Something
           }
           break;
       }

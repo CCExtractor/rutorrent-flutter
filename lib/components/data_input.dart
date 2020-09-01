@@ -27,14 +27,16 @@ class DataInput extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
         child: TextFormField(
-          style: TextStyle(fontWeight: FontWeight.w600,color: borderColor),
+          style: TextStyle(fontWeight: FontWeight.w600, color: borderColor),
           textInputAction: textInputAction,
           focusNode: focus,
           onFieldSubmitted: onFieldSubmittedCallback,
           controller: textEditingController,
-          cursorColor: Provider.of<Mode>(context).isLightMode
-              ? Colors.black
-              : Colors.white,
+          cursorColor: borderColor != null
+              ? borderColor
+              : Provider.of<Mode>(context).isLightMode
+                  ? Colors.black
+                  : Colors.white,
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
             border: InputBorder.none,
@@ -45,7 +47,9 @@ class DataInput extends StatelessWidget {
           ),
         ),
         decoration: BoxDecoration(
-            border: Border.all(color: borderColor!=null?borderColor:Colors.grey, width: 1.5),
+            border: Border.all(
+                color: borderColor != null ? borderColor : Colors.grey,
+                width: 1.5),
             borderRadius: BorderRadius.all(Radius.circular(5))),
       ),
     );

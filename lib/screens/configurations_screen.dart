@@ -119,72 +119,63 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
           child: Column(
             children: <Widget>[
               Container(
+                color: Theme.of(context).primaryColorDark,
                 height: 260,
                 width: double.infinity,
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(10),
-                        bottomRight: Radius.circular(10),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 16.0, horizontal: 8.0),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        child: Image(
+                          image: AssetImage('assets/logo/white_logo.png'),
+                          height: 50,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      DataInput(
+                        borderColor: Colors.white,
+                        textEditingController: urlController,
+                        hintText: 'Location of ruTorrent',
+                        focus: urlFocus,
+                        suffixIconButton: IconButton(
+                          color: Colors.white,
+                          onPressed: () async {
+                            ClipboardData data =
+                                await Clipboard.getData('text/plain');
+                            if (data != null)
+                              urlController.text = data.text.toString();
+                            if (urlFocus.hasFocus) urlFocus.unfocus();
+                          },
+                          icon: Icon(Icons.content_paste),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(
+                              Icons.info_outline,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Flexible(
+                            child: Text(
+                              'Check your browser address bar',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
                       )
-                  ),
-                  elevation: 2,
-                  color: Theme.of(context).primaryColorDark,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16.0, horizontal: 8.0),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 24),
-                          child: Image(
-                            image: AssetImage('assets/logo/white_logo.png'),
-                            height: 50,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        DataInput(
-                          borderColor: Colors.white,
-                          textEditingController: urlController,
-                          hintText: 'Location of ruTorrent',
-                          focus: urlFocus,
-                          suffixIconButton: IconButton(
-                            color: Colors.white,
-                            onPressed: () async {
-                              ClipboardData data =
-                                  await Clipboard.getData('text/plain');
-                              if (data != null)
-                                urlController.text = data.text.toString();
-                              if (urlFocus.hasFocus) urlFocus.unfocus();
-                            },
-                            icon: Icon(Icons.content_paste),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(
-                                Icons.info_outline,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Flexible(
-                              child: Text(
-                                'Check your browser address bar',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                    ],
                   ),
                 ),
               ),

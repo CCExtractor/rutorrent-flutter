@@ -202,10 +202,14 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
         ':' +
         torrent.api.password +
         '@' +
-        uri.authority +
+        uri.host +
         torrent.savePath +
         '/' +
         fileName;
+
+    print(torrent.savePath);
+
+    url = Uri.encodeFull(url);
     return url;
   }
 

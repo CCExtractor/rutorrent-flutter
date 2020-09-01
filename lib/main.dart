@@ -18,7 +18,7 @@ void main() {
     ChangeNotifierProvider<GeneralFeatures>(
       create: (context) => GeneralFeatures(),
     ),
-  ], child: MyApp()));
+    ], child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
