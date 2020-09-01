@@ -12,7 +12,6 @@ class SettingsPage extends StatelessWidget {
       builder: (context,Settings settings,child) {
         return Scaffold(
           appBar: AppBar(
-            iconTheme: IconThemeData(),
             title: Text(
               'Settings', style: TextStyle(fontWeight: FontWeight.w400),),
           ),

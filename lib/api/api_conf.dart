@@ -6,7 +6,6 @@ import 'package:http/io_client.dart';
 
 class Api {
 
-
   get ioClient {
 
     /// Url with some issue with their SSL certificates can be trusted explicitly with this
@@ -43,7 +42,7 @@ class Api {
 
   get historyPluginUrl => url + '/plugins/history/action.php';
 
-  get explorerPluginUrl => url + 'plugins/explorer/action.php';
+  get explorerPluginUrl => url + '/plugins/explorer/action.php';
 
   /// Authentication header
   Map<String, String> getAuthHeader() => {

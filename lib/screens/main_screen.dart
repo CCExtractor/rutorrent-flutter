@@ -5,6 +5,7 @@ import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
 import 'package:rutorrentflutter/components/add_dialog.dart';
 import 'package:rutorrentflutter/models/settings.dart';
+import 'package:rutorrentflutter/screens/disk_explorer_screen.dart';
 import 'package:rutorrentflutter/screens/history_screen.dart';
 import 'package:rutorrentflutter/components/rss_filter_details.dart';
 import 'package:rutorrentflutter/pages/home_page.dart';
@@ -214,7 +215,6 @@ class _MainScreenState extends State<MainScreen> {
               ExpansionTile(
                 leading: Icon(Icons.sort,
                     color: mode.isLightMode?kDarkGrey:Colors.white),
-                initiallyExpanded: true,
                 title: Text(
                   'Filters',
                 ),
@@ -230,6 +230,17 @@ class _MainScreenState extends State<MainScreen> {
                   ));
                 },
                 title: Text('History'),
+              ),
+              ListTile(
+                leading: Icon(Icons.folder_open,
+                    color: mode.isLightMode?kDarkGrey:Colors.white),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (context)=>DiskExplorer(),
+                  ));
+                },
+                title: Text('Explorer'),
               ),
               ListTile(
                 leading: Icon(Icons.settings,

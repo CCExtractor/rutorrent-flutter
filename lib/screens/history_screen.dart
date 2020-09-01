@@ -60,7 +60,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(),
         title: Text(
           'History', style: TextStyle(fontWeight: FontWeight.w400),
         ),

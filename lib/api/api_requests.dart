@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rutorrentflutter/models/disk_file.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/rss.dart';
@@ -359,5 +360,29 @@ class ApiRequests {
       historyItems.add(historyItem);
     }
     return historyItems;
+  }
+
+  /// Gets Disk Files
+  static Future<List<DiskFile>> getDiskFiles(Api api, String path) async{
+    var response = await api.ioClient.post(Uri.parse(api.explorerPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {
+          'cmd': 'get',
+          'src': path,
+        });
+
+    var files = jsonDecode(response.body)['files'];
+
+    List<DiskFile> diskFiles = [];
+
+    for(var file in files){
+      DiskFile diskFile = DiskFile();
+
+      diskFile.isDirectory = file['is_dir'];
+      diskFile.name = file['data']['name'];
+      diskFiles.add(diskFile);
+    }
+
+    return diskFiles;
   }
 }
