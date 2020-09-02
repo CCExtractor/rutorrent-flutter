@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 
 class VlcStream extends StatefulWidget {
   final String streamUrl;
@@ -35,6 +36,7 @@ class _VlcStreamState extends State<VlcStream> {
 
     int stopCounter = 0;
     bool checkForError = true;
+
     while (this.mounted) {
       PlayingState state = _videoViewController.playingState;
       if (state == PlayingState.PLAYING &&
@@ -80,6 +82,7 @@ class _VlcStreamState extends State<VlcStream> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundDT,
       body: Stack(
         children: <Widget>[
           Align(

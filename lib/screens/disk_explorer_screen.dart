@@ -56,7 +56,6 @@ class _DiskExplorerState extends State<DiskExplorer> {
 
   @override
   Widget build(BuildContext context) {
-    print(diskFiles.length);
     return WillPopScope(
       onWillPop: _onBackPress,
       child: Scaffold(

@@ -111,7 +111,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
     return ModalProgressHUD(
       progressIndicator: CircularProgressIndicator(
         valueColor:
-            AlwaysStoppedAnimation<Color>(Theme.of(context).accentColor),
+            AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColorDark),
       ),
       inAsyncCall: isValidating,
       child: Scaffold(

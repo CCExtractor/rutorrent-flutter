@@ -86,6 +86,10 @@ class _DiskFileTileState extends State<DiskFileTile> {
       });
     }).catchError((e) {
       print(e);
+      Fluttertoast.showToast(msg: 'Error in downloading file');
+      setState(() {
+        isDownloading=false;
+      });
     });
   }
 
