@@ -258,12 +258,10 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
               ExpansionTile(
                 initiallyExpanded: torrent.status == Status.downloading,
                 title: Text('More Info',
-                    style:
-                        TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                 children: <Widget>[
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: Column(
                       children: <Widget>[
                         Align(
@@ -469,9 +467,35 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                         SizedBox(
                           height: 15,
                         ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('Save Path',style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16),),
+                        ),
+                        Container(
+                          height: 70,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(color: Colors.grey)),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text('${torrent.savePath}',
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12),),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
                       ],
                     ),
                   ),
+
                 ],
               ),
               ExpansionTile(

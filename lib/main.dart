@@ -28,8 +28,9 @@ class MyApp extends StatelessWidget {
       title: 'ruTorrent Mobile',
       theme: ThemeData.light().copyWith(
         appBarTheme: AppBarTheme(
-          iconTheme: IconThemeData(color: Colors.black),
-            color: kSlightGrey
+          iconTheme: IconThemeData(
+              color: Colors.black),
+              color: kSlightGrey,
         ),
         primaryTextTheme: TextTheme(
           headline6: TextStyle(color: Colors.black)
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         primaryColorDark: kBluePrimaryLT,
         primaryColorLight: kIndigoSecondaryLT,
         disabledColor: kGreyLT,
+        toggleableActiveColor: kIndigoSecondaryLT,
       ),
       darkTheme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: kBackgroundDT,
@@ -57,6 +59,7 @@ class MyApp extends StatelessWidget {
         primaryColorDark: kPrimaryDT,
         primaryColorLight: kSecondaryDT,
         disabledColor: kGreyDT,
+        toggleableActiveColor: kSecondaryDT,
       ),
       themeMode: Provider.of<Mode>(context).isLightMode
           ? ThemeMode.light

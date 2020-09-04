@@ -42,17 +42,26 @@ class _MainScreenState extends State<MainScreen> {
       try {
         await Future.delayed(Duration(seconds: 1), () {});
         ApiRequests.updatePlugins(Provider.of(context, listen: false),
-            Provider.of<GeneralFeatures>(context, listen: false),context);
+            Provider.of<GeneralFeatures>(context, listen: false), context);
       } catch (e) {}
     }
   }
 
   List<Widget> _getAccountsList(Api api, Mode mode, GeneralFeatures general) {
+    // Function to math two Api configurations
+    bool matchApi(Api api1, Api api2) {
+      if (api1.url == api2.url &&
+          api1.username == api2.username &&
+          api1.password == api2.password) {
+        return true;
+      }
+      return false;
+    }
 
+    // Add List of Accounts
     List<Widget> accountsList = general.apis
         .map((e) => Container(
-              color: matchApi(e, api)?
-                  Theme.of(context).disabledColor : null,
+              color: matchApi(e, api) ? Theme.of(context).disabledColor : null,
               child: ListTile(
                 dense: true,
                 title: Text(
@@ -61,6 +70,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 onTap: () {
                   if (!matchApi(e, api)) {
+                    // Change Account
                     api.setUrl(e.url);
                     api.setUsername(e.username);
                     api.setPassword(e.password);
@@ -85,6 +95,7 @@ class _MainScreenState extends State<MainScreen> {
             ))
         .toList();
 
+    // Add "All Accounts" Mode Option
     accountsList.insert(
         0,
         Container(
@@ -95,7 +106,9 @@ class _MainScreenState extends State<MainScreen> {
               width: 12,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: general.allAccounts?Theme.of(context).accentColor:Theme.of(context).disabledColor,
+                color: general.allAccounts
+                    ? Theme.of(context).accentColor
+                    : Theme.of(context).disabledColor,
               ),
             ),
             onTap: () {
@@ -109,6 +122,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ));
 
+    // Add "Add Another Accounts" Option
     accountsList.add(Container(
       child: ListTile(
         dense: true,
@@ -130,15 +144,6 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _initPlugins();
-  }
-
-  bool matchApi(Api api1, Api api2) {
-    if (api1.url == api2.url &&
-        api1.username == api2.username &&
-        api1.password == api2.password)
-      return true;
-    else
-      return false;
   }
 
   @override
@@ -176,10 +181,12 @@ class _MainScreenState extends State<MainScreen> {
                       : FontAwesomeIcons.solidSun,
                   color: mode.isLightMode ? kDarkGrey : Colors.white,
                 ),
-                onPressed: () async{
+                onPressed: () async {
                   mode.toggleMode();
-                  Provider.of<Settings>(context,listen: false).setShowDarkMode(mode.isDarkMode);
-                  await Preferences.saveSettings(Provider.of<Settings>(context,listen: false));
+                  Provider.of<Settings>(context, listen: false)
+                      .setShowDarkMode(mode.isDarkMode);
+                  await Preferences.saveSettings(
+                      Provider.of<Settings>(context, listen: false));
                 }),
           ],
         ),
@@ -196,11 +203,20 @@ class _MainScreenState extends State<MainScreen> {
                           ? AssetImage('assets/logo/light_mode.png')
                           : AssetImage('assets/logo/dark_mode.png'),
                     ),
-                    SizedBox(height: 15),
+                    SizedBox(height: 8),
                     Text(
                       'Application version: ${packageInfo.version}',
                       style:
                           TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+                    ),
+                    SizedBox(height: 8,),
+                    Divider(),
+                    Flexible(
+                      child: Text(
+                        'Active Account: ${Uri.parse(api.url).host}\nUsername: ${api.username}',
+                        style:
+                        TextStyle(fontSize: 12),
+                      ),
                     ),
                   ],
                 ),
@@ -208,13 +224,13 @@ class _MainScreenState extends State<MainScreen> {
               ShowDiskSpace(),
               ExpansionTile(
                 leading: Icon(Icons.supervisor_account,
-                    color: mode.isLightMode?kDarkGrey:Colors.white),
+                    color: mode.isLightMode ? kDarkGrey : Colors.white),
                 title: Text('Accounts'),
                 children: _getAccountsList(api, mode, general),
               ),
               ExpansionTile(
                 leading: Icon(Icons.sort,
-                    color: mode.isLightMode?kDarkGrey:Colors.white),
+                    color: mode.isLightMode ? kDarkGrey : Colors.white),
                 title: Text(
                   'Filters',
                 ),
@@ -222,61 +238,72 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.history,
-                    color: mode.isLightMode?kDarkGrey:Colors.white),
+                    color: mode.isLightMode ? kDarkGrey : Colors.white),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context)=>HistoryScreen()
-                  ));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => HistoryScreen()));
                 },
                 title: Text('History'),
               ),
               ListTile(
                 leading: Icon(Icons.folder_open,
-                    color: mode.isLightMode?kDarkGrey:Colors.white),
+                    color: mode.isLightMode ? kDarkGrey : Colors.white),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context)=>DiskExplorer(),
-                  ));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DiskExplorer(),
+                      ));
                 },
                 title: Text('Explorer'),
               ),
               ListTile(
                 leading: Icon(Icons.settings,
-                    color: mode.isLightMode?kDarkGrey:Colors.white),
+                    color: mode.isLightMode ? kDarkGrey : Colors.white),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (context) => SettingsPage(),
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SettingsPage(),
                       ));
                 },
-                  title: Text('Settings'),
+                title: Text('Settings'),
               ),
               ListTile(
                 leading: Icon(Icons.info_outline,
-                    color: mode.isLightMode
-                        ? kDarkGrey
-                        :Colors.white),
+                    color: mode.isLightMode ? kDarkGrey : Colors.white),
                 onTap: () {
                   showAboutDialog(
-                      context: context,
+                    context: context,
                     applicationVersion: packageInfo.version,
                     applicationIcon: Image(
                       height: 75,
-                      image: mode.isLightMode?
-                        AssetImage('assets/logo/light_mode_icon.png'):
-                        AssetImage('assets/logo/dark_mode_icon.png'),
+                      image: mode.isLightMode
+                          ? AssetImage('assets/logo/light_mode_icon.png')
+                          : AssetImage('assets/logo/dark_mode_icon.png'),
                     ),
                     children: [
-                      Text('Build Number : ${packageInfo.buildNumber}',
-                        style: TextStyle(fontSize: 14),),
-                      SizedBox(height: 15,),
-                      Text('Release Date : 30/08/2020',
-                        style: TextStyle(fontSize: 14),),
-                      SizedBox(height: 15,),
-                      Text('Package Name : ${packageInfo.packageName}',
-                        style: TextStyle(fontSize: 14),),
+                      Text(
+                        'Build Number : ${packageInfo.buildNumber}',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Release Date : 30/08/2020',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Package Name : ${packageInfo.packageName}',
+                        style: TextStyle(fontSize: 14),
+                      ),
                     ],
                   );
                 },
@@ -301,7 +328,6 @@ class _MainScreenState extends State<MainScreen> {
           selectedItemColor: Theme.of(context).primaryColorLight,
           currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
-
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
@@ -323,36 +349,35 @@ class _MainScreenState extends State<MainScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColorLight,
-          child: Icon(
-            Icons.library_add,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            if(_currentIndex==0){
-              showDialog(context: context,builder: (context){
-                return AddDialog(
-                  dialogHint: 'Enter Torrent Url',
-                  apiRequest: (url){
-                    ApiRequests.addTorrent(api, url);
-                  }
-                );
-              });
-            }
-            else{
-              showDialog(context: context,builder: (context){
-                return AddDialog(
-                    dialogHint: 'Enter Rss Url',
-                    apiRequest: (url) async{
-                      await ApiRequests.addRSS(api, url);
-                      setState(() {
-                      });
-                    }
-                );
-              });
-            }
-          }
-        ),
+            backgroundColor: Theme.of(context).primaryColorLight,
+            child: Icon(
+              Icons.library_add,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              if (_currentIndex == 0) {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AddDialog(
+                          dialogHint: 'Enter Torrent Url',
+                          apiRequest: (url) {
+                            ApiRequests.addTorrent(api, url);
+                          });
+                    });
+              } else {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AddDialog(
+                          dialogHint: 'Enter Rss Url',
+                          apiRequest: (url) async {
+                            await ApiRequests.addRSS(api, url);
+                            setState(() {});
+                          });
+                    });
+              }
+            }),
       );
     });
   }

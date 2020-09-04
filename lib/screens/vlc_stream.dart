@@ -162,9 +162,11 @@ class _VlcStreamState extends State<VlcStream> {
                                 : _videoViewController.duration.inSeconds
                                     .toDouble(),
                             onChanged: (progress) {
-                              setState(() {
-                                sliderValue = progress.floor().toDouble();
-                              });
+                              if(this.mounted) {
+                                setState(() {
+                                  sliderValue = progress.floor().toDouble();
+                                });
+                              }
                               //convert to Milliseconds since VLC requires MS to set time
                               _videoViewController
                                   .setTime(sliderValue.toInt() * 1000);

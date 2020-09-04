@@ -15,7 +15,8 @@ class ApiRequests {
   /// This class will be responsible for making all API Calls to the ruTorrent server
 
   /// Checks Added and Finished Torrents asynchronously by fetching History of last ten seconds
-  static updateHistory(Api api, GeneralFeatures general, BuildContext context) async {
+  static updateHistory(
+      Api api, GeneralFeatures general, BuildContext context) async {
     String timestamp = ((DateTime.now().millisecondsSinceEpoch -
                 Duration(seconds: 10).inMilliseconds) ~/
             1000)
@@ -30,19 +31,20 @@ class ApiRequests {
 
     var items = jsonDecode(response.body)['items'];
     for (var item in items) {
-      HistoryItem historyItem =
-          HistoryItem(item['name'], item['action'], item['action_time'],item['size']);
+      HistoryItem historyItem = HistoryItem(
+          item['name'], item['action'], item['action_time'], item['size']);
       historyItems.add(historyItem);
     }
     general.updateHistoryItems(historyItems, context);
   }
 
   /// Checks disk space asynchronously for low disk space alert
-  static updateDiskSpace(Api api, GeneralFeatures general, BuildContext context) async {
+  static updateDiskSpace(
+      Api api, GeneralFeatures general, BuildContext context) async {
     var diskSpaceResponse = await api.ioClient
         .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
     var diskSpace = jsonDecode(diskSpaceResponse.body);
-    general.updateDiskSpace(diskSpace['total'], diskSpace['free'],context);
+    general.updateDiskSpace(diskSpace['total'], diskSpace['free'], context);
   }
 
   static updatePlugins(Api api, GeneralFeatures general, BuildContext context) {
@@ -101,6 +103,7 @@ class ApiRequests {
       List<Api> apis, GeneralFeatures general) async* {
     while (true) {
       List<Torrent> allTorrentList = [];
+      try {
         for (Api api in apis) {
           try {
             var response = await api.ioClient.post(
@@ -109,15 +112,17 @@ class ApiRequests {
                 body: {
                   'mode': 'list',
                 });
-            allTorrentList.addAll(
-                parseTorrentsData(response.body, general, api));
-          }
-          catch (e) {
+            allTorrentList
+                .addAll(parseTorrentsData(response.body, general, api));
+          } catch (e) {
             print(e);
           }
         }
-        yield allTorrentList;
-        await Future.delayed(Duration(seconds: 1), () {});
+      } catch (e) {
+        print('Account Changes');
+      }
+      yield allTorrentList;
+      await Future.delayed(Duration(seconds: 1), () {});
     }
   }
 
@@ -355,15 +360,15 @@ class ApiRequests {
 
     List<HistoryItem> historyItems = [];
     for (var item in items) {
-      HistoryItem historyItem =
-          HistoryItem(item['name'], item['action'], item['action_time'],item['size']);
+      HistoryItem historyItem = HistoryItem(
+          item['name'], item['action'], item['action_time'], item['size']);
       historyItems.add(historyItem);
     }
     return historyItems;
   }
 
   /// Gets Disk Files
-  static Future<List<DiskFile>> getDiskFiles(Api api, String path) async{
+  static Future<List<DiskFile>> getDiskFiles(Api api, String path) async {
     var response = await api.ioClient.post(Uri.parse(api.explorerPluginUrl),
         headers: api.getAuthHeader(),
         body: {
@@ -375,7 +380,7 @@ class ApiRequests {
 
     List<DiskFile> diskFiles = [];
 
-    for(var file in files){
+    for (var file in files) {
       DiskFile diskFile = DiskFile();
 
       diskFile.isDirectory = file['is_dir'];
