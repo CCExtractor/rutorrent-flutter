@@ -34,21 +34,12 @@ cd rutorrent-flutter
 flutter doctor
 ```
 
-5. For IOS
+4. For IOS
 - Delete ios folder from the root directory ```/ios```
-- Run 
-```bash
-flutter create -i swift --project-name rutorrent . 
-```
+- From the root directory```flutter create -i swift --project-name rutorrent . ```
 - Uncomment ```platform :ios, '9.0'``` from ios/Podfile
-- Cd into the new ios directory
-```bash
-cd ios
-```
--Run
-```bash
-pod install 
-```
+- Cd into the new ios directory```cd ios```
+- From the ios directory ```pod install ```
 
 5. Run the app:
 
