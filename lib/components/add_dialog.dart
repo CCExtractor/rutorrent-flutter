@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 class AddDialog extends StatelessWidget {
 
   final Function apiRequest;
+
   final String dialogHint;
+
   final TextEditingController urlTextController = TextEditingController();
 
   AddDialog({this.apiRequest,this.dialogHint});

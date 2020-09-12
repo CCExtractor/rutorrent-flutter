@@ -7,7 +7,6 @@ import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
-import 'package:shimmer/shimmer.dart';
 import '../components/loading_shimmer.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -85,54 +84,41 @@ class _HistoryScreenState extends State<HistoryScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16),
-        child: Column(
-          children: <Widget>[
-            isLoading
-                ? Shimmer.fromColors(
-                    baseColor: Provider.of<Mode>(context).isLightMode
-                        ? Colors.grey[300]
-                        : kDarkGrey,
-                    highlightColor: Provider.of<Mode>(context).isLightMode
-                        ? Colors.grey[100]
-                        : kLightGrey,
-                    child: LoadingShimmer())
-                : Expanded(
-                    child: ListView.builder(
-                        itemCount: items.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: SizedBox(
-                                width: 40,
-                                child: Text(items[index].name,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600))),
-                            trailing: Container(
-                              padding: const EdgeInsets.all(4),
-                              width: 70,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: getHistoryStatusColor(
-                                    context, items[index].action),)
-                              ),
-                              child: Text(
-                                  HistoryItem.historyStatus[items[index].action],
-                                  style: TextStyle(
-                                    color: getHistoryStatusColor(
-                                        context, items[index].action),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  )),
-                            ),
-                            subtitle: Text(
-                              '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.w600),
-                            ),
-                          );
-                        }),
-                  ),
-          ],
-        ),
+        child: isLoading
+            ? LoadingShimmer().loadingEffect(context)
+            : ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: SizedBox(
+                        width: 40,
+                        child: Text(items[index].name,
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600))),
+                    trailing: Container(
+                      padding: const EdgeInsets.all(4),
+                      width: 70,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: getHistoryStatusColor(
+                            context, items[index].action),)
+                      ),
+                      child: Text(
+                          HistoryItem.historyStatus[items[index].action],
+                          style: TextStyle(
+                            color: getHistoryStatusColor(
+                                context, items[index].action),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          )),
+                    ),
+                    subtitle: Text(
+                      '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
+                      style: TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                  );
+                }),
       ),
     );
   }

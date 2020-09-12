@@ -3,11 +3,9 @@ import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
-import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
-import 'package:shimmer/shimmer.dart';
 
 import 'loading_shimmer.dart';
 
@@ -48,19 +46,7 @@ class _RSSDescSheetState extends State<RSSDescSheet> {
       height: 400,
       child: Scaffold(
         body: isFetching
-            ? Shimmer.fromColors(
-                baseColor: Provider.of<Mode>(context).isLightMode
-                    ? Colors.grey[300]
-                    : kDarkGrey,
-                highlightColor: Provider.of<Mode>(context).isLightMode
-                    ? Colors.grey[100]
-                    : kLightGrey,
-                child: ListView.builder(
-                    itemCount: 2,
-                    itemBuilder: (context, index) {
-                      return LoadingShimmer();
-                    }),
-              )
+            ? LoadingShimmer().loadingEffect(context,length:2)
             : !dataAvailable
                 ? Center(
                     child: Text(

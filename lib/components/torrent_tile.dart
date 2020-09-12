@@ -13,18 +13,18 @@ class TorrentTile extends StatelessWidget {
   final Torrent torrent;
   TorrentTile(this.torrent);
 
-  static Color getStatusColor(Status status, BuildContext context) {
+  static getStatusColor(Status status, BuildContext context) {
     switch (status) {
       case Status.downloading:
         return Theme.of(context).primaryColor;
       case Status.paused:
-        return Provider.of<Mode>(context).isLightMode ? kDarkGrey : kLightGrey;
-      case Status.errors:
-        return Provider.of<Mode>(context).isLightMode ? kGreenActiveLT : kRedErrorDT;
+        return Provider.of<Mode>(context).isLightMode?kGreyDT:kGreyLT;
+      case Status.stopped:
+        return Provider.of<Mode>(context).isLightMode?kGreyDT:kGreyLT;
       case Status.completed:
         return Provider.of<Mode>(context).isLightMode ? kGreenActiveLT : kGreenActiveDT;
-      default:
-        return kDarkGrey;
+      case Status.errors:
+        return Provider.of<Mode>(context).isLightMode ? kGreenActiveLT : kRedErrorDT;
     }
   }
 
@@ -80,11 +80,7 @@ class TorrentTile extends StatelessWidget {
                                   '${filesize(torrent.downloadedData)}${torrent.dlSpeed == 0 ? '' : ' | ' + torrent.getEta}',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 10,
-                                      color: Provider.of<Mode>(context)
-                                              .isLightMode
-                                          ? kDarkGrey
-                                          : kLightGrey),
+                                      fontSize: 10,),
                                 ),
                               ),
                               Padding(
@@ -101,10 +97,7 @@ class TorrentTile extends StatelessWidget {
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 10,
-                                              color: Provider.of<Mode>(context)
-                                                      .isLightMode
-                                                  ? kDarkGrey
-                                                  : kLightGrey),
+                                              ),
                                         ),
                                         Provider.of<GeneralFeatures>(context).allAccounts?
                                         Text(
@@ -112,10 +105,7 @@ class TorrentTile extends StatelessWidget {
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 10,
-                                              color: Provider.of<Mode>(context)
-                                                  .isLightMode
-                                                  ? kDarkGrey
-                                                  : kLightGrey),
+                                             ),
                                         ):Container(),
                                       ],
                                     ),
@@ -123,16 +113,11 @@ class TorrentTile extends StatelessWidget {
                                       height: 4,
                                     ),
                                     LinearProgressIndicator(
-                                        value:
-                                            torrent.percentageDownload / 100,
+                                      backgroundColor: Provider.of<Mode>(context).isLightMode?kGreyLT:kGreyDT,
+                                        value: torrent.percentageDownload / 100,
                                         valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                statusColor),
-                                        backgroundColor:
-                                            Provider.of<Mode>(context)
-                                                    .isLightMode
-                                                ? kLightGrey
-                                                : kDarkGrey),
+                                            AlwaysStoppedAnimation<Color>(statusColor),
+                                        ),
                                   ],
                                 ),
                               )

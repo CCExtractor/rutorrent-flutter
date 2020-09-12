@@ -223,8 +223,10 @@ class _SettingsPageState extends State<SettingsPage> {
                             _changePassword(context, general, index);
                           },
                           child: ListTile(
+                            dense: true,
                             leading: Icon(
                               Icons.supervisor_account,
+                              color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,
                             ),
                             title: Text(Uri.parse(general.apis[index].url).host,
                                 style: TextStyle(
@@ -235,7 +237,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                   fontWeight: FontWeight.w600, fontSize: 12),
                             ),
                             trailing: IconButton(
-                                icon: Icon(Icons.delete_forever),
+                                icon: Icon(Icons.delete_forever,
+                                  color: Theme.of(context).accentColor,size: 28,),
                                 onPressed: () {
                                   // DELETE ACCOUNT
                                   _deleteAccount(context, general, index);
@@ -249,7 +252,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: Text('Notifications',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 trailing: Checkbox(
-                  activeColor: Theme.of(context).primaryColorLight,
+                  activeColor: Theme.of(context).accentColor,
                   onChanged: (val) {
                     settings.toggleAllNotificationsEnabled();
                     Preferences.saveSettings(settings);
@@ -260,7 +263,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 enabled: settings.allNotificationEnabled,
                 dense: true,
-                leading: Icon(Icons.disc_full),
+                leading: Icon(Icons.disc_full,
+                  color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,),
                 title: Text('Disk Space Notification',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 subtitle: Text(
@@ -268,7 +272,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: TextStyle(fontSize: 12),
                 ),
                 trailing: Checkbox(
-                  activeColor: Theme.of(context).primaryColorLight,
+                  activeColor: Theme.of(context).accentColor,
                   value: settings.diskSpaceNotification,
                   onChanged: (val) {
                     if (settings.allNotificationEnabled) {
@@ -281,7 +285,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 enabled: settings.allNotificationEnabled,
                 dense: true,
-                leading: Icon(Icons.add_alert),
+                leading: Icon(Icons.add_alert,
+                  color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,),
                 title: Text('Torrent Add Notification',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 subtitle: Text(
@@ -289,7 +294,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: TextStyle(fontSize: 12),
                 ),
                 trailing: Checkbox(
-                  activeColor: Theme.of(context).primaryColorLight,
+                  activeColor: Theme.of(context).accentColor,
                   value: settings.addTorrentNotification,
                   onChanged: (val) {
                     if (settings.allNotificationEnabled) {
@@ -302,7 +307,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 enabled: settings.allNotificationEnabled,
                 dense: true,
-                leading: Icon(Icons.notifications),
+                leading: Icon(Icons.notifications,
+                  color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,),
                 title: Text('Download Notification',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 subtitle: Text(
@@ -310,7 +316,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: TextStyle(fontSize: 12),
                 ),
                 trailing: Checkbox(
-                  activeColor: Theme.of(context).primaryColorLight,
+                  activeColor: Theme.of(context).accentColor,
                   value: settings.downloadCompleteNotification,
                   onChanged: (val) {
                     if (settings.allNotificationEnabled) {
@@ -322,7 +328,8 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               Divider(),
               ListTile(
-                leading: FaIcon(FontAwesomeIcons.signOutAlt),
+                leading: FaIcon(FontAwesomeIcons.signOutAlt,
+                  color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,),
                 title: Text(
                   'Logout',
                   style: TextStyle(fontWeight: FontWeight.w600),

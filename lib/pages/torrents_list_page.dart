@@ -4,11 +4,8 @@ import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/search_bar.dart';
 import 'package:rutorrentflutter/components/torrent_tile.dart';
-import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
-import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
-import 'package:shimmer/shimmer.dart';
 import '../components/loading_shimmer.dart';
 
 class TorrentsListPage extends StatelessWidget {
@@ -68,19 +65,7 @@ class TorrentsListPage extends StatelessWidget {
                       Provider.of<GeneralFeatures>(context,listen: false));
 
                   // showing loading list of Shimmer
-                  return Shimmer.fromColors(
-                    baseColor: Provider.of<Mode>(context).isLightMode
-                        ? Colors.grey[300]
-                        : kDarkGrey,
-                    highlightColor: Provider.of<Mode>(context).isLightMode
-                        ? Colors.grey[100]
-                        : kLightGrey,
-                    child: ListView.builder(
-                        itemCount: 5,
-                        itemBuilder: (context, index) {
-                          return LoadingShimmer();
-                        }),
-                  );
+                  return LoadingShimmer().loadingEffect(context,length: 5);
                 }
 
                 if (!snapshot.hasData) {

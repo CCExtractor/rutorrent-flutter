@@ -17,11 +17,11 @@ class _DownloadsPageState extends State<DownloadsPage> {
   @override
   void initState() {
     super.initState();
-    _initFilesList();
+    _initFiles();
   }
 
-  _initFilesList() async {
-    _homeDirectory = (await getExternalStorageDirectory()).path+'/';
+  _initFiles() async {
+    _homeDirectory = (await getExternalStorageDirectory()).path + '/';
     _directory = _homeDirectory;
     _syncFiles();
   }
@@ -70,11 +70,12 @@ class _DownloadsPageState extends State<DownloadsPage> {
                       }
                     },
                     leading: Icon(
-                      filesList[index] is Directory
-                        ? Icons.folder
-                        : FileTile.getFileIcon(filesList[index].path),
-                    color: filesList[index] is Directory?
-                      Colors.yellow[600]:null),
+                        filesList[index] is Directory
+                            ? Icons.folder
+                            : FileTile.getFileIcon(filesList[index].path),
+                        color: filesList[index] is Directory
+                            ? Colors.yellow[600]
+                            : null),
                     title: Text(
                       filesList[index].path.substring(
                           filesList[index].path.lastIndexOf('/') + 1),

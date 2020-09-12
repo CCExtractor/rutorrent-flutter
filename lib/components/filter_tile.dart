@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
+import 'package:rutorrentflutter/models/mode.dart';
 
 class FilterTile extends StatelessWidget {
   final Filter filter;
@@ -17,7 +18,7 @@ class FilterTile extends StatelessWidget {
             : null,
         child: ListTile(
           dense: true,
-          leading: Icon(icon),
+          leading: Icon(icon,color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,),
           title: Text(
               filter.toString().substring(filter.toString().indexOf('.') + 1)),
           onTap: () {

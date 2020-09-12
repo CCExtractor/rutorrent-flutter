@@ -7,9 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/rss_desc_sheet.dart';
-import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/rss.dart';
-import 'package:rutorrentflutter/utilities/constants.dart';
 
 class RSSLabelTile extends StatefulWidget {
   final RSSLabel rssLabel;
@@ -41,9 +39,7 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
         },
         child: Container(
           color: isLongPressed
-              ? (Provider.of<Mode>(context).isLightMode
-                  ? Colors.grey[300]
-                  : kDarkGrey)
+              ? Theme.of(context).disabledColor
               : null,
           child: isLongPressed
               ? ListTile(
