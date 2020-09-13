@@ -10,9 +10,40 @@
 
 **A ruTorrent-based client build in Flutter**
 
-The project is a flutter application for ruTorrent web interface. The app communicates with ruTorrent's backend via REST APIs to display the information about the torrents and the functionality to control its basic features. It also supports some plugin functionalities such as **RSS Feeds**, **History**, **Disk Space** etc. as provided in the ruTorrent web.
+The project is a flutter application for ruTorrent web interface. The app communicates with ruTorrent's backend via REST APIs to display the information about the torrents and the functionality to control its basic features. It also supports some plugin functionalities as provided in the ruTorrent web.
 
 Additionally, you can also stream torrents from your server (or seedbox) and download them locally to your mobile device (a save offline feature), which makes torrenting a seamless experience for ruTorrent users.
+
+## ruTorrent and rtorrent
+
+<img src="https://raw.githubusercontent.com/CCExtractor/rutorrent-flutter/master/rutorrent.jpeg" alt="ruTorrent Web" height=100px>
+
+[ruTorrent](https://github.com/Novik/ruTorrent) is the most popular web interface for [rtorrent](https://github.com/rakshasa/rtorrent), which is possibly the most used BitTorrent client in Linux. It is mostly a web application, but it has its own backend that connects to rtorrent.
+
+In short: 
+
+rtorrent ⇒ The BitTorrent client, a console-based tool that also has an API to interact with it.
+
+ruTorrent ⇒ A web interface for rtorrent that uses that API. It also does other things, for example, it can download torrents from an RSS feed. You configure RSS feeds in rutorrent's web interface, but there's also a backend service (written in PHP) that is part of rutorrent to do the actual download.
+
+Thus, our Flutter application talks with ruTorrent's backend service to provide a native interface.
+
+## Usage
+
+In order to use this flutter application you should have ruTorrent configured on your system, after which you can connect your mobile on the same network as your system and use the app by entering the configuration (IP address).
+
+If you find any difficulty to run ruTorrent and rtorrent on your system, you can use this [docker image](https://hub.docker.com/r/crazymax/rtorrent-rutorrent).
+
+Though the primary usage of this application is to control ruTorrent hosted on your seedbox account.
+
+## Seedbox
+
+A seedbox is a dedicated BitTorrent server. Oftentimes they are rented out by companies called seedbox providers.
+
+Seedboxes usually have a high speed Internet connection. This allows users to download torrents quickly and seed the torrents for a long time.
+
+You can learn more about seedbox [here](https://en.wikipedia.org/wiki/Seedbox).
+
 
 ## Getting Started
 
