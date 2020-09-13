@@ -11,9 +11,13 @@ import 'package:rutorrentflutter/models/disk_file.dart';
 import 'package:rutorrentflutter/screens/vlc_stream.dart';
 
 class DiskFileTile extends StatefulWidget {
+
   final DiskFile diskFile;
+
   final String path;
+
   final Function goBackwards;
+
   final Function goForwards;
 
   DiskFileTile(this.diskFile,this.path,this.goBackwards,this.goForwards);
@@ -96,6 +100,7 @@ class _DiskFileTileState extends State<DiskFileTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      dense: true,
       onTap: () {
         if (widget.diskFile.isDirectory) {
           widget.diskFile.name == '..'

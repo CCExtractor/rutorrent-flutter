@@ -48,7 +48,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   List<Widget> _getAccountsList(Api api, Mode mode, GeneralFeatures general) {
-    // Function to math two Api configurations
+    // Function to match two Api configurations
     bool matchApi(Api api1, Api api2) {
       if (api1.url == api2.url &&
           api1.username == api2.username &&
@@ -152,13 +152,13 @@ class _MainScreenState extends State<MainScreen> {
         builder: (context, mode, api, general, child) {
       return Scaffold(
         appBar: AppBar(
+          elevation: 0.0,
           leading: Builder(builder: (context) {
             return IconButton(
                 icon: Icon(
                   Icons.subject,
                   size: 34,
                 ),
-                color: mode.isLightMode ? kDarkGrey : Colors.white,
                 onPressed: () {
                   Scaffold.of(context).openDrawer();
                 });
@@ -167,7 +167,6 @@ class _MainScreenState extends State<MainScreen> {
             IconButton(
               icon: FaIcon(
                 FontAwesomeIcons.rss,
-                color: mode.isLightMode ? kDarkGrey : Colors.white,
               ),
               onPressed: () {
                 showDialog(
@@ -179,7 +178,6 @@ class _MainScreenState extends State<MainScreen> {
                   mode.isLightMode
                       ? FontAwesomeIcons.solidMoon
                       : FontAwesomeIcons.solidSun,
-                  color: mode.isLightMode ? kDarkGrey : Colors.white,
                 ),
                 onPressed: () async {
                   mode.toggleMode();
@@ -224,13 +222,13 @@ class _MainScreenState extends State<MainScreen> {
               ShowDiskSpace(),
               ExpansionTile(
                 leading: Icon(Icons.supervisor_account,
-                    color: mode.isLightMode ? kDarkGrey : Colors.white),
+                    color: mode.isLightMode ? Colors.black  : Colors.white),
                 title: Text('Accounts'),
                 children: _getAccountsList(api, mode, general),
               ),
               ExpansionTile(
                 leading: Icon(Icons.sort,
-                    color: mode.isLightMode ? kDarkGrey : Colors.white),
+                    color: mode.isLightMode ? Colors.black : Colors.white),
                 title: Text(
                   'Filters',
                 ),
@@ -238,7 +236,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.history,
-                    color: mode.isLightMode ? kDarkGrey : Colors.white),
+                    color: mode.isLightMode ? Colors.black : Colors.white),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(context,
@@ -248,7 +246,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.folder_open,
-                    color: mode.isLightMode ? kDarkGrey : Colors.white),
+                    color: mode.isLightMode ? Colors.black  : Colors.white),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -261,7 +259,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.settings,
-                    color: mode.isLightMode ? kDarkGrey : Colors.white),
+                    color: mode.isLightMode ? Colors.black  : Colors.white),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -274,7 +272,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.info_outline,
-                    color: mode.isLightMode ? kDarkGrey : Colors.white),
+                    color: mode.isLightMode ? Colors.black  : Colors.white),
                 onTap: () {
                   showAboutDialog(
                     context: context,
@@ -324,14 +322,14 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Theme.of(context).appBarTheme.color,
-          selectedItemColor: Theme.of(context).primaryColorLight,
+          backgroundColor: Provider.of<Mode>(context).isDarkMode?kGreyDT:null,
+          selectedItemColor: Theme.of(context).primaryColor,
           currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              title: new Text('Home',
+              title: Text('Home',
                   style: TextStyle(fontWeight: FontWeight.bold)),
             ),
             BottomNavigationBarItem(
@@ -349,7 +347,7 @@ class _MainScreenState extends State<MainScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColorLight,
+            backgroundColor: Theme.of(context).primaryColor,
             child: Icon(
               Icons.library_add,
               color: Colors.white,

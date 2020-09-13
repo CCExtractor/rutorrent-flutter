@@ -1,6 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rutorrentflutter/models/mode.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
+import 'package:shimmer/shimmer.dart';
 
 class LoadingShimmer extends StatelessWidget {
+
+
+  Widget loadingEffect(BuildContext context,{int length}){
+    return Shimmer.fromColors(
+      baseColor: Provider.of<Mode>(context).isLightMode
+          ? Colors.grey[300]
+          : kGreyLT,
+      highlightColor: Provider.of<Mode>(context).isLightMode
+          ? Colors.grey[100]
+          : kGreyDT,
+      child: ListView.builder(
+          itemCount: length??1,
+          itemBuilder: (context, index) {
+            return LoadingShimmer();
+          }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

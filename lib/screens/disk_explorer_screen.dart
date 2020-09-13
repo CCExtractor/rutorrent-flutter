@@ -5,9 +5,6 @@ import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/disk_file_tile.dart';
 import 'package:rutorrentflutter/components/loading_shimmer.dart';
 import 'package:rutorrentflutter/models/disk_file.dart';
-import 'package:rutorrentflutter/models/mode.dart';
-import 'package:rutorrentflutter/utilities/constants.dart';
-import 'package:shimmer/shimmer.dart';
 
 class DiskExplorer extends StatefulWidget {
   @override
@@ -79,14 +76,7 @@ class _DiskExplorerState extends State<DiskExplorer> {
               ),
             ),
               isLoading
-                ? Shimmer.fromColors(
-                    baseColor: Provider.of<Mode>(context).isLightMode
-                        ? Colors.grey[300]
-                        : kDarkGrey,
-                    highlightColor: Provider.of<Mode>(context).isLightMode
-                        ? Colors.grey[100]
-                        : kLightGrey,
-                    child: LoadingShimmer())
+                ? Expanded(child: LoadingShimmer().loadingEffect(context))
                 : Expanded(
                     child: ListView.builder(
                       itemCount: diskFiles.length,

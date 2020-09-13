@@ -6,6 +6,7 @@ import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 
 class ShowDiskSpace extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<GeneralFeatures, Mode>(
@@ -30,9 +31,6 @@ class ShowDiskSpace extends StatelessWidget {
                   '${filesize(general.diskSpace.free)} left of ${filesize(general.diskSpace.total)}',
                   style: TextStyle(
                       fontSize: 12,
-                      color: mode.isLightMode
-                          ? kDarkGrey
-                          : kLightGrey,
                       fontFamily: 'SFUIDisplay/sf-ui-display-medium.otf')),
               SizedBox(
                 height: 5,
@@ -45,7 +43,7 @@ class ShowDiskSpace extends StatelessWidget {
                   valueColor: AlwaysStoppedAnimation<Color>(
                       general.diskSpace.isLow()
                           ? mode.isLightMode?kRedErrorLT:kRedErrorDT
-                          : Theme.of(context).primaryColorLight),
+                          : Theme.of(context).accentColor),
                 ),
               )
             ],
