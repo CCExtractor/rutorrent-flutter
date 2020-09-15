@@ -1,5 +1,5 @@
 
-<img src="https://raw.githubusercontent.com/CCExtractor/rutorrent-flutter/master/assets/logo/light_mode.png" alt="ruTorrent Mobile" height=100px>
+<img src="https://raw.githubusercontent.com/harchani-ritik/rutorrent-flutter/master/assets/logo/light_mode_white_background.png" alt="ruTorrent Mobile" height=200px>
 
 
 

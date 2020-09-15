@@ -439,7 +439,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                         TextStyle(fontWeight: FontWeight.w600),
                                   ),
                                   Text(
-                                    '${filesize(torrent.dlSpeed)}',
+                                    '${filesize(torrent.dlSpeed)}/s',
                                     style: TextStyle(
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w600,
@@ -453,7 +453,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600)),
                                   Text(
-                                    '${filesize(torrent.ulSpeed)}',
+                                    '${filesize(torrent.ulSpeed)}/s',
                                     style: TextStyle(
                                         color: Colors.grey,
                                         fontWeight: FontWeight.w600,
