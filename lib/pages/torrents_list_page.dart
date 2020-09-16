@@ -9,8 +9,7 @@ import 'package:rutorrentflutter/models/torrent.dart';
 import '../components/loading_shimmer.dart';
 
 class TorrentsListPage extends StatelessWidget {
-
-  checkForActiveDownloads(Api api,GeneralFeatures general) async {
+  checkForActiveDownloads(Api api, GeneralFeatures general) async {
     /* this method is responsible for changing the connection state from waiting to active by
     temporary pausing the active downloads and then resuming them again
      */
@@ -54,46 +53,48 @@ class TorrentsListPage extends StatelessWidget {
           SearchBar(),
           Expanded(
             child: StreamBuilder(
-              stream: general.allAccounts?
-              ApiRequests.getAllAccountsTorrentList(general.apis, general):
-              ApiRequests.getTorrentList(Provider.of<Api>(context), general),
+              stream: general.allAccounts
+                  ? ApiRequests.getAllAccountsTorrentList(general.apis, general)
+                  : ApiRequests.getTorrentList(
+                      Provider.of<Api>(context), general),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting &&
-                    !snapshot.hasData) {
+                if (snapshot.data != null) {
+                  if (snapshot.connectionState == ConnectionState.waiting &&
+                      !snapshot.hasData) {
+                    checkForActiveDownloads(
+                        Provider.of<Api>(context, listen: false),
+                        Provider.of<GeneralFeatures>(context, listen: false));
 
-                  checkForActiveDownloads(Provider.of<Api>(context, listen: false),
-                      Provider.of<GeneralFeatures>(context,listen: false));
+                    // showing loading list of Shimmer
+                    return LoadingShimmer().loadingEffect(context, length: 5);
+                  }
 
-                  // showing loading list of Shimmer
-                  return LoadingShimmer().loadingEffect(context,length: 5);
-                }
+                  if (snapshot.hasData) {
+                    general.updateTorrentsList(
+                        _getDisplayList(snapshot.data, general));
+                  }
 
-                if (!snapshot.hasData) {
-                  return Center(
-                    child: Text(
-                      'No Torrents to Show',
-                      style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
-                    ),
+                  return ListView.builder(
+                    itemCount: general.torrentsList.length,
+                    itemBuilder: (context, index) {
+                      return (snapshot.hasData &&
+                              general.torrentsList.length != 0)
+                          ? TorrentTile(general.torrentsList[index])
+                          : Center(
+                              child: Text(
+                                'No Torrents to Show',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                            );
+                    },
                   );
                 }
-
-                general.updateTorrentsList(
-                    _getDisplayList(snapshot.data, general));
-
-                if (general.torrentsList.length == 0) {
-                  return Center(
-                    child: Text(
-                      'No Torrents to Show',
-                      style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
-                    ),
-                  );
-                }
-
-                return ListView.builder(
-                  itemCount: general.torrentsList.length,
-                  itemBuilder: (context, index) {
-                    return TorrentTile(general.torrentsList[index]);
-                  },
+                return Center(
+                  child: Text(
+                    'No Torrents to Show',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
                 );
               },
             ),
