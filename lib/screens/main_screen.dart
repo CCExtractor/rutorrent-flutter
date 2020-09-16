@@ -85,7 +85,6 @@ class _MainScreenState extends State<MainScreen> {
 
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => MainScreen()));
-
                   } else {
                     Navigator.pop(context);
                     setState(() => general.doNotShowAllAccounts());
@@ -152,6 +151,10 @@ class _MainScreenState extends State<MainScreen> {
         builder: (context, mode, api, general, child) {
       return Scaffold(
         appBar: AppBar(
+          title: Text(
+            'Hey, ${api.username}',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+          ),
           elevation: 0.0,
           leading: Builder(builder: (context) {
             return IconButton(
@@ -201,28 +204,20 @@ class _MainScreenState extends State<MainScreen> {
                           ? AssetImage('assets/logo/light_mode.png')
                           : AssetImage('assets/logo/dark_mode.png'),
                     ),
-                    SizedBox(height: 8),
+                    SizedBox(height: 20),
                     Text(
                       'Application version: ${packageInfo.version}',
                       style:
                           TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
-                    ),
-                    SizedBox(height: 8,),
-                    Divider(),
-                    Flexible(
-                      child: Text(
-                        'Active Account: ${Uri.parse(api.url).host}\nUsername: ${api.username}',
-                        style:
-                        TextStyle(fontSize: 12),
-                      ),
                     ),
                   ],
                 ),
               ),
               ShowDiskSpace(),
               ExpansionTile(
+                initiallyExpanded: true,
                 leading: Icon(Icons.supervisor_account,
-                    color: mode.isLightMode ? Colors.black  : Colors.white),
+                    color: mode.isLightMode ? Colors.black : Colors.white),
                 title: Text('Accounts'),
                 children: _getAccountsList(api, mode, general),
               ),
@@ -246,7 +241,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.folder_open,
-                    color: mode.isLightMode ? Colors.black  : Colors.white),
+                    color: mode.isLightMode ? Colors.black : Colors.white),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -259,7 +254,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.settings,
-                    color: mode.isLightMode ? Colors.black  : Colors.white),
+                    color: mode.isLightMode ? Colors.black : Colors.white),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
@@ -272,7 +267,7 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ListTile(
                 leading: Icon(Icons.info_outline,
-                    color: mode.isLightMode ? Colors.black  : Colors.white),
+                    color: mode.isLightMode ? Colors.black : Colors.white),
                 onTap: () {
                   showAboutDialog(
                     context: context,
@@ -322,15 +317,16 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Provider.of<Mode>(context).isDarkMode?kGreyDT:null,
+          backgroundColor:
+              Provider.of<Mode>(context).isDarkMode ? kGreyDT : null,
           selectedItemColor: Theme.of(context).primaryColor,
           currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              title: Text('Home',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              title:
+                  Text('Home', style: TextStyle(fontWeight: FontWeight.bold)),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.rss_feed),

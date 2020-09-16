@@ -111,7 +111,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
     return ModalProgressHUD(
       progressIndicator: CircularProgressIndicator(
         valueColor:
-            AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColorDark),
+            AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
       ),
       inAsyncCall: isValidating,
       child: Scaffold(
@@ -119,7 +119,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
           child: Column(
             children: <Widget>[
               Container(
-                color: Theme.of(context).primaryColorDark,
+                color: Theme.of(context).primaryColor,
                 height: 260,
                 width: double.infinity,
                 child: Padding(
@@ -209,7 +209,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
                       side:
-                          BorderSide(color: Theme.of(context).primaryColorDark),
+                          BorderSide(color: Theme.of(context).primaryColor),
                     ),
                     color: Provider.of<Mode>(context).isLightMode
                         ? Colors.white
@@ -220,7 +220,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                       child: Text(
                         'Let\'s get started',
                         style: TextStyle(
-                            color: Theme.of(context).primaryColorDark,
+                            color: Theme.of(context).primaryColor,
                             fontSize: 18),
                       ),
                     ),
