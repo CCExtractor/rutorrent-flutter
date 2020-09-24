@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:rutorrentflutter/components/new_data_input.dart';
 import 'package:rutorrentflutter/components/data_input.dart';
+import 'package:rutorrentflutter/components/new_password_input.dart';
 import 'package:rutorrentflutter/components/password_input.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/main_screen.dart';
@@ -35,7 +37,6 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   }
 
   saveLogin(Api api) async {
-
     bool alreadyLoggedIn = false;
     List<Api> apis = await Preferences.fetchSavedLogin();
 
@@ -108,10 +109,12 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double hp = MediaQuery.of(context).size.height;
+    double wp = MediaQuery.of(context).size.width;
     return ModalProgressHUD(
       progressIndicator: CircularProgressIndicator(
         valueColor:
-            AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+            AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColorDark),
       ),
       inAsyncCall: isValidating,
       child: Scaffold(
@@ -119,12 +122,24 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
           child: Column(
             children: <Widget>[
               Container(
-                color: Theme.of(context).primaryColor,
-                height: 260,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    new BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 30.0,
+                    ),
+                  ],
+                  color: Theme.of(context).primaryColorDark,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(50),
+                    bottomRight: Radius.circular(50),
+                  ),
+                ),
+                height: hp * 0.33,
                 width: double.infinity,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 16.0, horizontal: 8.0),
+                  padding: EdgeInsets.symmetric(
+                      vertical: hp * 0.04, horizontal: wp * 0.05),
                   child: Column(
                     children: <Widget>[
                       Padding(
@@ -180,11 +195,11 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 40,
               ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: DataInput(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: NewDataInput(
                   onFieldSubmittedCallback: (v) {
                     FocusScope.of(context).requestFocus(passwordFocus);
                   },
@@ -194,47 +209,77 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: PasswordInput(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: NewPasswordInput(
                   textEditingController: passwordController,
                   passwordFocus: passwordFocus,
                 ),
               ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                child: Container(
-                  width: double.infinity,
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                      side:
-                          BorderSide(color: Theme.of(context).primaryColor),
+              Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 40, horizontal: 32),
+                height: hp * 0.07,
+                width: MediaQuery.of(context).size.width * 0.8,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                child: RaisedButton(
+                  onPressed: () {
+                    Api api = Provider.of<Api>(context,
+                        listen: false); // One call to provider
+                    api.setUrl(urlController.text);
+                    api.setUsername(usernameController.text);
+                    api.setPassword(passwordController.text);
+                    _validateConfigurationDetails(api);
+                  },
+                  color: Theme.of(context).primaryColorDark,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Center(
+                    child: Text(
+                      "Let\'s get started",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900),
                     ),
-                    color: Provider.of<Mode>(context).isLightMode
-                        ? Colors.white
-                        : Colors.black,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 28, vertical: 16),
-                      child: Text(
-                        'Let\'s get started',
-                        style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 18),
-                      ),
-                    ),
-                    onPressed: () {
-                      Api api = Provider.of<Api>(context,
-                          listen: false); // One call to provider
-                      api.setUrl(urlController.text);
-                      api.setUsername(usernameController.text);
-                      api.setPassword(passwordController.text);
-                      _validateConfigurationDetails(api);
-                    },
                   ),
                 ),
               )
+//              Padding(
+//                padding:
+//                    const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+//                child: Container(
+//                  width: double.infinity,
+//                  child: RaisedButton(
+//                    shape: RoundedRectangleBorder(
+//                      borderRadius: BorderRadius.circular(5.0),
+//                      side:
+//                          BorderSide(color: Theme.of(context).primaryColorDark),
+//                    ),
+//                    color: Provider.of<Mode>(context).isLightMode
+//                        ? Colors.white
+//                        : Colors.black,
+//                    child: Padding(
+//                      padding: const EdgeInsets.symmetric(
+//                          horizontal: 28, vertical: 16),
+//                      child: Text(
+//                        'Let\'s get started',
+//                        style: TextStyle(
+//                            color: Theme.of(context).primaryColorDark,
+//                            fontSize: 18),
+//                      ),
+//                    ),
+//                    onPressed: () {
+//                      Api api = Provider.of<Api>(context,
+//                          listen: false); // One call to provider
+//                      api.setUrl(urlController.text);
+//                      api.setUsername(usernameController.text);
+//                      api.setPassword(passwordController.text);
+//                      _validateConfigurationDetails(api);
+//                    },
+//                  ),
+//                ),
+//              )
             ],
           ),
         ),
