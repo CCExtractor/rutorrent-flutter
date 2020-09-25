@@ -129,10 +129,10 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                       blurRadius: 30.0,
                     ),
                   ],
-                  color: Theme.of(context).primaryColorDark,
+                  color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(50),
-                    bottomRight: Radius.circular(50),
+                    bottomLeft: Radius.circular(0),
+                    bottomRight: Radius.circular(0),
                   ),
                 ),
                 height: hp * 0.33,
@@ -231,7 +231,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                     api.setPassword(passwordController.text);
                     _validateConfigurationDetails(api);
                   },
-                  color: Theme.of(context).primaryColorDark,
+                  color: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   child: Center(
