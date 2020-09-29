@@ -7,9 +7,7 @@ import 'package:rutorrentflutter/components/add_dialog.dart';
 import 'package:rutorrentflutter/models/settings.dart';
 import 'package:rutorrentflutter/screens/disk_explorer_screen.dart';
 import 'package:rutorrentflutter/screens/history_screen.dart';
-import 'package:rutorrentflutter/components/rss_filter_details.dart';
 import 'package:rutorrentflutter/pages/home_page.dart';
-import 'package:rutorrentflutter/pages/rss_feeds.dart';
 import 'package:rutorrentflutter/screens/settings_screen.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
@@ -168,15 +166,6 @@ class _MainScreenState extends State<MainScreen> {
           }),
           actions: <Widget>[
             IconButton(
-              icon: FaIcon(
-                FontAwesomeIcons.rss,
-              ),
-              onPressed: () {
-                showDialog(
-                    context: context, builder: (context) => RSSFilterDetails());
-              },
-            ),
-            IconButton(
                 icon: FaIcon(
                   mode.isLightMode
                       ? FontAwesomeIcons.solidMoon
@@ -215,13 +204,13 @@ class _MainScreenState extends State<MainScreen> {
               ),
               ShowDiskSpace(),
               ExpansionTile(
-                initiallyExpanded: true,
                 leading: Icon(Icons.supervisor_account,
                     color: mode.isLightMode ? Colors.black : Colors.white),
                 title: Text('Accounts'),
                 children: _getAccountsList(api, mode, general),
               ),
               ExpansionTile(
+                initiallyExpanded: true,
                 leading: Icon(Icons.sort,
                     color: mode.isLightMode ? Colors.black : Colors.white),
                 title: Text(
@@ -280,22 +269,22 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     children: [
                       Text(
-                        'Build Number : ${packageInfo.buildNumber}',
-                        style: TextStyle(fontSize: 14),
+                        'Build Number : 1',
+                        style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
                         height: 15,
                       ),
                       Text(
-                        'Release Date : 30/08/2020',
-                        style: TextStyle(fontSize: 14),
+                        'Release Date : 30.09.20',
+                        style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
                         height: 15,
                       ),
                       Text(
                         'Package Name : ${packageInfo.packageName}',
-                        style: TextStyle(fontSize: 14),
+                        style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600),
                       ),
                     ],
                   );
@@ -312,8 +301,8 @@ class _MainScreenState extends State<MainScreen> {
             setState(() => _currentIndex = index);
           },
           children: <Widget>[
-            HomePage(),
-            RSSFeeds(),
+            HomePage(0),
+            HomePage(1),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

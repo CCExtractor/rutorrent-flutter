@@ -14,12 +14,6 @@ class AddDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(10),
-        topRight: Radius.circular(10),
-    ),
-      ),
       child: Container(
         height: 120,
         decoration: BoxDecoration(
@@ -34,7 +28,7 @@ class AddDialog extends StatelessWidget {
                 children: <Widget>[
                   Flexible(
                     child: TextFormField(
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
                       controller: urlTextController,
                       decoration: InputDecoration(
                           border: InputBorder.none,
@@ -56,7 +50,7 @@ class AddDialog extends StatelessWidget {
               height: 50,
               width: double.infinity,
               child: RaisedButton(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).primaryColor,
                 child: Text('Add',style: TextStyle(color: Colors.white,fontSize: 16),),
                 onPressed: () {
                   Navigator.pop(context);
