@@ -177,9 +177,9 @@ class _SettingsPageState extends State<SettingsPage> {
                       child: RaisedButton(
                         color: Provider.of<Mode>(context).isLightMode? Colors.white:kGreyDT,
                         shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Theme.of(context).accentColor),
+                          side: BorderSide(color: Theme.of(context).primaryColor),
                         ),
-                        child: Text('VALIDATE',style: TextStyle(color: Theme.of(context).accentColor),),
+                        child: Text('VALIDATE',style: TextStyle(color: Theme.of(context).primaryColor),),
                         onPressed: (){
                           _validatePassword(fieldController.text);
                         },
@@ -238,7 +238,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                             trailing: IconButton(
                                 icon: Icon(Icons.delete_forever,
-                                  color: Theme.of(context).accentColor,size: 28,),
+                                  color: Theme.of(context).primaryColor,size: 28,),
                                 onPressed: () {
                                   // DELETE ACCOUNT
                                   _deleteAccount(context, general, index);
@@ -252,7 +252,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: Text('Notifications',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 trailing: Checkbox(
-                  activeColor: Theme.of(context).accentColor,
+                  activeColor: Theme.of(context).primaryColor,
                   onChanged: (val) {
                     settings.toggleAllNotificationsEnabled();
                     Preferences.saveSettings(settings);
@@ -272,7 +272,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: TextStyle(fontSize: 12),
                 ),
                 trailing: Checkbox(
-                  activeColor: Theme.of(context).accentColor,
+                  activeColor: Theme.of(context).primaryColor,
                   value: settings.diskSpaceNotification,
                   onChanged: (val) {
                     if (settings.allNotificationEnabled) {
@@ -294,7 +294,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: TextStyle(fontSize: 12),
                 ),
                 trailing: Checkbox(
-                  activeColor: Theme.of(context).accentColor,
+                  activeColor: Theme.of(context).primaryColor,
                   value: settings.addTorrentNotification,
                   onChanged: (val) {
                     if (settings.allNotificationEnabled) {
@@ -316,7 +316,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   style: TextStyle(fontSize: 12),
                 ),
                 trailing: Checkbox(
-                  activeColor: Theme.of(context).accentColor,
+                  activeColor: Theme.of(context).primaryColor,
                   value: settings.downloadCompleteNotification,
                   onChanged: (val) {
                     if (settings.allNotificationEnabled) {
