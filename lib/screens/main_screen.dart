@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
+import 'package:rutorrentflutter/components/add_bottom_sheet.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
 import 'package:rutorrentflutter/components/add_dialog.dart';
 import 'package:rutorrentflutter/models/settings.dart';
@@ -270,21 +271,24 @@ class _MainScreenState extends State<MainScreen> {
                     children: [
                       Text(
                         'Build Number : 1',
-                        style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
                         height: 15,
                       ),
                       Text(
                         'Release Date : 30.09.20',
-                        style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                       SizedBox(
                         height: 15,
                       ),
                       Text(
                         'Package Name : ${packageInfo.packageName}',
-                        style: TextStyle(fontSize: 14,fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                     ],
                   );
@@ -339,15 +343,24 @@ class _MainScreenState extends State<MainScreen> {
             ),
             onPressed: () {
               if (_currentIndex == 0) {
-                showDialog(
+                showModalBottomSheet(
                     context: context,
-                    builder: (context) {
-                      return AddDialog(
-                          dialogHint: 'Enter Torrent Url',
+                    builder: (BuildContext bc) {
+                      return AddTorrentBottomSheet(
                           apiRequest: (url) {
                             ApiRequests.addTorrent(api, url);
-                          });
+                          },
+                          dialogHint: 'Enter Torrent Url');
                     });
+                // showDialog(
+                //     context: context,
+                //     builder: (context) {
+                //       return AddDialog(
+                //           dialogHint: 'Enter Torrent Url',
+                //           apiRequest: (url) {
+                //             ApiRequests.addTorrent(api, url);
+                //           });
+                //     });
               } else {
                 showDialog(
                     context: context,
