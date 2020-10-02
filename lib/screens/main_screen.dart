@@ -346,7 +346,7 @@ class _MainScreenState extends State<MainScreen> {
                 showModalBottomSheet(
                     context: context,
                     builder: (BuildContext bc) {
-                      return AddTorrentBottomSheet(
+                      return AddBottomSheet(
                           apiRequest: (url) {
                             ApiRequests.addTorrent(api, url);
                           },
@@ -362,16 +362,26 @@ class _MainScreenState extends State<MainScreen> {
                 //           });
                 //     });
               } else {
-                showDialog(
+                showModalBottomSheet(
                     context: context,
-                    builder: (context) {
-                      return AddDialog(
-                          dialogHint: 'Enter Rss Url',
+                    builder: (BuildContext bc) {
+                      return AddBottomSheet(
                           apiRequest: (url) async {
                             await ApiRequests.addRSS(api, url);
                             setState(() {});
-                          });
+                          },
+                          dialogHint: 'Enter Rss Url');
                     });
+                // showDialog(
+                //     context: context,
+                //     builder: (context) {
+                //       return AddDialog(
+                //           dialogHint: 'Enter Rss Url',
+                //           apiRequest: (url) async {
+                //             await ApiRequests.addRSS(api, url);
+                //             setState(() {});
+                //           });
+                //     });
               }
             }),
       );

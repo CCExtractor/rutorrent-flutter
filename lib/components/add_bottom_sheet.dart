@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'data_input.dart';
 
-class AddTorrentBottomSheet extends StatelessWidget {
+class AddBottomSheet extends StatelessWidget {
   final Function apiRequest;
   final String dialogHint;
   final TextEditingController urlTextController = TextEditingController();
   final FocusNode urlFocus = FocusNode();
-  AddTorrentBottomSheet({@required this.apiRequest, @required this.dialogHint});
+  AddBottomSheet({@required this.apiRequest, @required this.dialogHint});
   @override
   Widget build(BuildContext context) {
     double wp = MediaQuery.of(context).size.width;
@@ -48,7 +48,7 @@ class AddTorrentBottomSheet extends StatelessWidget {
                   ? Theme.of(context).primaryColor
                   : Colors.white,
               textEditingController: urlTextController,
-              hintText: 'Enter Torrent Url',
+              hintText: dialogHint,
               focus: urlFocus,
               suffixIconButton: IconButton(
                 color: Provider.of<Mode>(context).isLightMode
