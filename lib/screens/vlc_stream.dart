@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
+import 'package:wakelock/wakelock.dart';
 
 class VlcStream extends StatefulWidget {
   final String streamUrl;
@@ -77,6 +78,7 @@ class _VlcStreamState extends State<VlcStream> {
     super.initState();
     _initVlcPlayer();
     SystemChrome.setEnabledSystemUIOverlays([]);
+    Wakelock.enable();
   }
 
   @override
@@ -193,6 +195,7 @@ class _VlcStreamState extends State<VlcStream> {
 
   @override
   void dispose() {
+    Wakelock.disable();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     super.dispose();
   }

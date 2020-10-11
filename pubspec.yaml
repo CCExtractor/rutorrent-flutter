@@ -30,6 +30,7 @@ dependencies:
   flare_splash_screen: ^3.0.1
   flutter_vlc_player: ^3.0.6
   package_info: ^0.4.3
+  wakelock: ^0.2.0+1
 
 dev_dependencies:
   flutter_test:
