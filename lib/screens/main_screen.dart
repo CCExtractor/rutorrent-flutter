@@ -277,7 +277,7 @@ class _MainScreenState extends State<MainScreen> {
                         height: 15,
                       ),
                       Text(
-                        'Release Date : 30.09.20',
+                        'Release Date : 11.10.20',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600),
                       ),
