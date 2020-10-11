@@ -24,7 +24,7 @@ class AddBottomSheet extends StatelessWidget {
               horizontal: wp * 0.35,
             ),
             height: 5,
-            color: Color(0xffE8E8E8),
+            color: Theme.of(context).primaryColor,
           ),
           SizedBox(
             height: 20,

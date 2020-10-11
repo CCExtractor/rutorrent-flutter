@@ -2,9 +2,8 @@ import 'dart:async';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
-import 'package:rutorrentflutter/components/add_bottom_sheet.dart';
+import 'package:rutorrentflutter/components/add_url_bottom_sheet.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
-import 'package:rutorrentflutter/components/add_dialog.dart';
 import 'package:rutorrentflutter/models/settings.dart';
 import 'package:rutorrentflutter/screens/disk_explorer_screen.dart';
 import 'package:rutorrentflutter/screens/history_screen.dart';
@@ -352,15 +351,6 @@ class _MainScreenState extends State<MainScreen> {
                           },
                           dialogHint: 'Enter Torrent Url');
                     });
-                // showDialog(
-                //     context: context,
-                //     builder: (context) {
-                //       return AddDialog(
-                //           dialogHint: 'Enter Torrent Url',
-                //           apiRequest: (url) {
-                //             ApiRequests.addTorrent(api, url);
-                //           });
-                //     });
               } else {
                 showModalBottomSheet(
                     context: context,
@@ -372,16 +362,6 @@ class _MainScreenState extends State<MainScreen> {
                           },
                           dialogHint: 'Enter Rss Url');
                     });
-                // showDialog(
-                //     context: context,
-                //     builder: (context) {
-                //       return AddDialog(
-                //           dialogHint: 'Enter Rss Url',
-                //           apiRequest: (url) async {
-                //             await ApiRequests.addRSS(api, url);
-                //             setState(() {});
-                //           });
-                //     });
               }
             }),
       );
