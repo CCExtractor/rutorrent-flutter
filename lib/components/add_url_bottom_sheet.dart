@@ -2,14 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/models/mode.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+import '../api/api_conf.dart';
+import '../api/api_requests.dart';
 import 'data_input.dart';
 
 class AddBottomSheet extends StatelessWidget {
+  final Api api;
   final Function apiRequest;
   final String dialogHint;
   final TextEditingController urlTextController = TextEditingController();
   final FocusNode urlFocus = FocusNode();
-  AddBottomSheet({@required this.apiRequest, @required this.dialogHint});
+  AddBottomSheet({this.api , @required this.apiRequest, @required this.dialogHint});
+  String torrentPath;
+  File torrentFile;
+  void pickTorrentFile() async {
+    FilePickerResult result = await FilePicker.platform.pickFiles();
+    torrentPath = result.files.first.path;
+    print("path: $torrentPath");
+    ApiRequests.addTorrentFile(api, torrentPath);
+  }
   @override
   Widget build(BuildContext context) {
     double wp = MediaQuery.of(context).size.width;
@@ -18,6 +31,7 @@ class AddBottomSheet extends StatelessWidget {
       height: 300,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Container(
             margin: EdgeInsets.symmetric(
@@ -26,9 +40,6 @@ class AddBottomSheet extends StatelessWidget {
             height: 5,
             color: Theme.of(context).primaryColor,
           ),
-          SizedBox(
-            height: 20,
-          ),
           Text(
             'Add link',
             style: TextStyle(
@@ -36,9 +47,6 @@ class AddBottomSheet extends StatelessWidget {
                 color: Provider.of<Mode>(context).isLightMode
                     ? Colors.black54
                     : Colors.white),
-          ),
-          SizedBox(
-            height: 30,
           ),
           Container(
             width: double.infinity,
@@ -83,6 +91,29 @@ class AddBottomSheet extends StatelessWidget {
               ),
               onPressed: () {
                 apiRequest(urlTextController.text);
+                Navigator.pop(context);
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 36),
+            width: double.infinity,
+            child: RaisedButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0),
+                side: BorderSide(color: Theme.of(context).primaryColor),
+              ),
+              color: Theme.of(context).primaryColor,
+              child: Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+                child: Text(
+                  'Browse Torrent File',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
+              onPressed: () {
+                pickTorrentFile();
                 Navigator.pop(context);
               },
             ),

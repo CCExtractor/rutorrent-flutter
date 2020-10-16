@@ -346,6 +346,7 @@ class _MainScreenState extends State<MainScreen> {
                     context: context,
                     builder: (BuildContext bc) {
                       return AddBottomSheet(
+                          api: api,
                           apiRequest: (url) {
                             ApiRequests.addTorrent(api, url);
                           },
