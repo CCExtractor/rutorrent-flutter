@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/models/mode.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import '../api/api_conf.dart';
@@ -19,9 +20,14 @@ class AddBottomSheet extends StatelessWidget {
   File torrentFile;
   void pickTorrentFile() async {
     FilePickerResult result = await FilePicker.platform.pickFiles();
-    torrentPath = result.files.first.path;
-    print("path: $torrentPath");
-    ApiRequests.addTorrentFile(api, torrentPath);
+    if (result == null){
+      Fluttertoast.showToast(msg: 'No file selected');
+    }
+    else {
+      torrentPath = result.files.first.path;
+      print("path: $torrentPath");
+      ApiRequests.addTorrentFile(api, torrentPath);
+    }
   }
   @override
   Widget build(BuildContext context) {
