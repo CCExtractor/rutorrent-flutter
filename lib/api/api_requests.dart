@@ -8,6 +8,7 @@ import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'api_conf.dart';
+import 'package:http/http.dart' as http;
 import '../models/torrent.dart';
 import 'package:xml/xml.dart' as xml;
 
@@ -214,6 +215,20 @@ class ApiRequests {
         body: {
           'url': url,
         });
+  }
+
+  static addTorrentFile(Api api , String torrentPath) async {
+    Fluttertoast.showToast(msg: 'Adding torrent');
+    var request = http.MultipartRequest('POST' , Uri.parse(api.addTorrentPluginUrl));
+    request.files.add(
+        await http.MultipartFile.fromPath('torrent_file', torrentPath)
+    );
+    try {
+      var response = await request.send();
+      print(response.headers);
+    } catch(e) {
+      print(e.toString());
+    }
   }
 
   /// Gets list of trackers for a particular torrent
