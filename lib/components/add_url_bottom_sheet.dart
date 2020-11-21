@@ -9,15 +9,26 @@ import '../api/api_conf.dart';
 import '../api/api_requests.dart';
 import 'data_input.dart';
 
-class AddBottomSheet extends StatelessWidget {
+class AddBottomSheet extends StatefulWidget {
   final Api api;
   final Function apiRequest;
   final String dialogHint;
-  final TextEditingController urlTextController = TextEditingController();
-  final FocusNode urlFocus = FocusNode();
+
   AddBottomSheet({this.api , @required this.apiRequest, @required this.dialogHint});
+
+  @override
+  _AddBottomSheetState createState() => _AddBottomSheetState();
+}
+
+class _AddBottomSheetState extends State<AddBottomSheet> {
+  final TextEditingController urlTextController = TextEditingController();
+
+  final FocusNode urlFocus = FocusNode();
+
   String torrentPath;
+
   File torrentFile;
+
   void pickTorrentFile() async {
     FilePickerResult result = await FilePicker.platform.pickFiles();
     if (result == null){
@@ -26,9 +37,10 @@ class AddBottomSheet extends StatelessWidget {
     else {
       torrentPath = result.files.first.path;
       print("path: $torrentPath");
-      ApiRequests.addTorrentFile(api, torrentPath);
+      ApiRequests.addTorrentFile(widget.api, torrentPath);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     double wp = MediaQuery.of(context).size.width;
@@ -62,7 +74,7 @@ class AddBottomSheet extends StatelessWidget {
                   ? Theme.of(context).primaryColor
                   : Colors.white,
               textEditingController: urlTextController,
-              hintText: dialogHint,
+              hintText: widget.dialogHint,
               focus: urlFocus,
               suffixIconButton: IconButton(
                 color: Provider.of<Mode>(context).isLightMode
@@ -96,7 +108,7 @@ class AddBottomSheet extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                apiRequest(urlTextController.text);
+                widget.apiRequest(urlTextController.text);
                 Navigator.pop(context);
               },
             ),
