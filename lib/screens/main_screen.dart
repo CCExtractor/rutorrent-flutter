@@ -343,6 +343,7 @@ class _MainScreenState extends State<MainScreen> {
             onPressed: () {
               if (_currentIndex == 0) {
                 showModalBottomSheet(
+                  isScrollControlled: true,
                     context: context,
                     builder: (BuildContext bc) {
                       return AddBottomSheet(
@@ -354,6 +355,7 @@ class _MainScreenState extends State<MainScreen> {
                     });
               } else {
                 showModalBottomSheet(
+                  isScrollControlled: true,
                     context: context,
                     builder: (BuildContext bc) {
                       return AddBottomSheet(
