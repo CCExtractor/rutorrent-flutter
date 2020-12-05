@@ -23,7 +23,7 @@ class CustomDialog extends StatelessWidget {
           onPressed: optionLeftOnPressed,
         ),
         FlatButton(
-          child: Text('Yes',style: TextStyle(color: Theme.of(context).accentColor),),
+          child: Text(optionRightText,style: TextStyle(color: Theme.of(context).accentColor),),
           onPressed: optionRightOnPressed,
         ),
       ],
