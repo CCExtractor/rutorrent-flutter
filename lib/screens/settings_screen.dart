@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
+import 'package:rutorrentflutter/components/custom_dialog.dart';
 import 'package:rutorrentflutter/components/password_input.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
@@ -35,57 +36,48 @@ class _SettingsPageState extends State<SettingsPage> {
   _deleteAccount(BuildContext context, GeneralFeatures general, int index) {
     showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-              title: Text(
-                'Are you sure you want to delete this account?'+
-                    '${general.apis.length==1?'\n\nYou will be logged out!':''}',
-                style: TextStyle(fontSize: 15),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('No',style: TextStyle(color: Theme.of(context).accentColor),),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
+        builder: (context) => CustomDialog(
+          title: 'Are you sure you want to delete this account?'+
+              '${general.apis.length==1?'\n\nYou will be logged out!':''}',
+          optionLeftText: 'No',
+          optionRightText: 'Yes',
+          optionLeftOnPressed: (){
+            Navigator.pop(context);
+          },
+          optionRightOnPressed: (){
+            // closes dialog
+            Navigator.pop(context);
 
-                FlatButton(
-                  child: Text('Yes',style: TextStyle(color: Theme.of(context).accentColor),),
-                  onPressed: () {
-                    // closes dialog
-                    Navigator.pop(context);
+            if(general.apis.length==1){
+              // If only one account was added then log out user
+              _logoutAllAccounts(context);
+            }
+            else{
+              if(index==0){
+                // If active account is being deleted
+                general.apis.removeAt(index);
+                Preferences.saveLogin(general.apis);
 
-                    if(general.apis.length==1){
-                      // If only one account was added then log out user
-                      _logoutAllAccounts(context);
-                    }
-                    else{
-                      if(index==0){
-                        // If active account is being deleted
-                        general.apis.removeAt(index);
-                        Preferences.saveLogin(general.apis);
+                // Change the active account
+                Api api = Provider.of<Api>(context,listen: false);
+                api.setUrl(general.apis[0].url);
+                api.setUsername(general.apis[0].username);
+                api.setPassword(general.apis[0].password);
+              }
+              else{
+                general.apis.removeAt(index);
+                Preferences.saveLogin(general.apis);
+              }
 
-                        // Change the active account
-                        Api api = Provider.of<Api>(context,listen: false);
-                        api.setUrl(general.apis[0].url);
-                        api.setUsername(general.apis[0].username);
-                        api.setPassword(general.apis[0].password);
-                      }
-                      else{
-                        general.apis.removeAt(index);
-                        Preferences.saveLogin(general.apis);
-                      }
-
-                      //closes SettingsScreen
-                      Navigator.pop(context);
-                      // Refresh to MainScreen
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => MainScreen()));
-                    }
-                  },
-                ),
-              ],
-            ));
+              //closes SettingsScreen
+              Navigator.pop(context);
+              // Refresh to MainScreen
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => MainScreen()));
+            }
+          },
+        )
+    );
   }
 
 
@@ -347,3 +339,5 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 }
+
+
