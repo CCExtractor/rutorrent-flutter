@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
+import 'package:rutorrentflutter/components/custom_dialog.dart';
 import 'package:rutorrentflutter/components/file_tile.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
@@ -199,9 +200,26 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                       iconSize: 20,
                                       icon: Icon(Icons.close),
                                       onPressed: () {
-                                        ApiRequests.removeTorrent(
-                                            torrent.api, torrent.hash);
-                                        Navigator.pop(context);
+                                        showDialog(
+                                          context: context,
+                                          builder: (context)=> CustomDialog(
+                                            title: 'Remove Torrent',
+                                            optionRightText: 'Remove Torrent and Delete Data',
+                                            optionLeftText: 'Remove Torrent',
+                                            optionRightOnPressed: (){
+                                              ApiRequests.removeTorrentWithData(
+                                                  torrent.api, torrent.hash);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                            optionLeftOnPressed: (){
+                                              ApiRequests.removeTorrent(
+                                                  torrent.api, torrent.hash);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                          )
+                                        );
                                       }),
                                 ),
                                 SizedBox(
