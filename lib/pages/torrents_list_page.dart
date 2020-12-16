@@ -51,7 +51,7 @@ class TorrentsListPage extends StatelessWidget {
       return Column(
         children: <Widget>[
           SearchBar(),
-          Expanded(
+          Flexible(
             child: StreamBuilder(
               stream: general.allAccounts
                   ? ApiRequests.getAllAccountsTorrentList(general.apis, general)
@@ -75,6 +75,8 @@ class TorrentsListPage extends StatelessWidget {
                   }
 
                   return ListView.builder(
+                    reverse: general.reverseSort,
+                    shrinkWrap: true,
                     itemCount: general.torrentsList.length,
                     itemBuilder: (context, index) {
                       return (snapshot.hasData &&

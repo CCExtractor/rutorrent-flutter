@@ -18,6 +18,7 @@ enum Sort {
   uploadSpeed,
   ratio,
   size,
+  reverse
 }
 
 enum Filter {
@@ -27,7 +28,9 @@ enum Filter {
   Active,
   Inactive,
   Error,
+
 }
+
 
 class GeneralFeatures extends ChangeNotifier {
 
@@ -65,10 +68,20 @@ class GeneralFeatures extends ChangeNotifier {
   Sort _sortPreference;
   get sortPreference => _sortPreference;
 
+  //order of sorting
+  bool _reverseSort=false;
+  get reverseSort => _reverseSort;
+
   setSortPreference(Sort newPreference) {
     _sortPreference = newPreference;
     notifyListeners();
   }
+  setSortOrder()
+  {
+    _reverseSort = !_reverseSort;
+    notifyListeners();
+  }
+
 
   List<Torrent> sortList(List<Torrent> torrentsList, Sort sort) {
     switch (sort) {
