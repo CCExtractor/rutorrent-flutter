@@ -11,13 +11,12 @@ import 'package:rutorrentflutter/services/notifications.dart';
 import 'disk_space.dart';
 
 enum Sort {
-  name,
+  name_ascending,
+  name_descending,
   dateAdded,
-  percentDownloaded,
-  downloadSpeed,
-  uploadSpeed,
   ratio,
-  size,
+  size_ascending,
+  size_descending,
 }
 
 enum Filter {
@@ -73,34 +72,29 @@ class GeneralFeatures extends ChangeNotifier {
   List<Torrent> sortList(List<Torrent> torrentsList, Sort sort) {
     switch (sort) {
 
-      case Sort.name:
+      case Sort.name_ascending:
         torrentsList.sort((a, b) => a.name.compareTo(b.name));
         return torrentsList;
 
+      case Sort.name_descending:
+        torrentsList.sort((a, b) => a.name.compareTo(b.name));
+        return torrentsList.reversed.toList();
+
       case Sort.dateAdded:
         torrentsList.sort((a, b) => a.torrentAdded.compareTo(b.torrentAdded));
-        return torrentsList;
-
-      case Sort.percentDownloaded:
-        torrentsList.sort(
-            (a, b) => a.percentageDownload.compareTo(b.percentageDownload));
-        return torrentsList;
-
-      case Sort.downloadSpeed:
-        torrentsList.sort((a, b) => a.dlSpeed.compareTo(b.dlSpeed));
-        return torrentsList;
-
-      case Sort.uploadSpeed:
-        torrentsList.sort((a, b) => a.ulSpeed.compareTo(b.ulSpeed));
         return torrentsList;
 
       case Sort.ratio:
         torrentsList.sort((a, b) => a.ratio.compareTo(b.ratio));
         return torrentsList;
 
-      case Sort.size:
+      case Sort.size_ascending:
         torrentsList.sort((a, b) => a.size.compareTo(b.size));
         return torrentsList;
+
+      case Sort.size_descending:
+        torrentsList.sort((a, b) => a.size.compareTo(b.size));
+        return torrentsList.reversed.toList();
 
       default:
         return torrentsList;
