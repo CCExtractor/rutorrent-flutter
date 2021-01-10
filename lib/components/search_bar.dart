@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:rutorrentflutter/components/sort_bottom_sheet.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
@@ -8,13 +9,12 @@ import 'package:rutorrentflutter/utilities/constants.dart';
 class SearchBar extends StatelessWidget {
 
   static const Map<Sort, String> sortMap = {
-    Sort.name: 'Name',
+    Sort.name_ascending: 'Name - A to Z',
+    Sort.name_descending: 'Name - Z to A',
     Sort.dateAdded: 'Date Added',
-    Sort.percentDownloaded: 'Percent Downloaded',
-    Sort.downloadSpeed: 'Download Speed',
-    Sort.uploadSpeed: 'Upload Speed',
     Sort.ratio: 'Ratio',
-    Sort.size: 'Size',
+    Sort.size_ascending: 'Size - Small to Large',
+    Sort.size_descending: 'Size - Large to Small',
   };
 
   @override
@@ -77,29 +77,25 @@ class SearchBar extends StatelessWidget {
               ),
             ),
             SizedBox(width: 10,),
-            Container(
-              padding: const EdgeInsets.all(12.0),
-              decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.all(Radius.circular(5))
-              ),
-              child: PopupMenuButton<Sort>(
+            GestureDetector(
+              onTap: (){
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context){
+                      return SortBottomSheet();
+                  }
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(12.0),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.all(Radius.circular(5))
+                ),
                 child: Icon(
                     FontAwesomeIcons.slidersH,
                     color: Colors.white
                 ),
-                itemBuilder: (BuildContext context) {
-                  return Sort.values.map((Sort choice) {
-                    return PopupMenuItem<Sort>(
-                      enabled: !(general.sortPreference == choice),
-                      value: choice,
-                      child: Text(SearchBar.sortMap[choice],style: TextStyle(fontWeight: FontWeight.w600),),
-                    );
-                  }).toList();
-                },
-                onSelected: (selectedChoice) {
-                  general.setSortPreference(selectedChoice);
-                },
               ),
             )
           ],
