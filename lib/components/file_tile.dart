@@ -9,42 +9,36 @@ class FileTile extends StatefulWidget {
   final Torrent torrent;
   final Function syncFilesCallback;
 
-  FileTile(this.file, this.torrent,this.syncFilesCallback);
+  FileTile(this.file, this.torrent, this.syncFilesCallback);
 
-  static String getFileExtension(String filename){
+  static String getFileExtension(String filename) {
     return filename.substring(filename.lastIndexOf('.'), filename.length);
   }
 
-  static bool isImage(String filename){
-    String ext  = getFileExtension(filename);
-    if(ext=='.jpg'||ext=='.jpeg'||ext=='png')
-      return true;
+  static bool isImage(String filename) {
+    String ext = getFileExtension(filename);
+    if (ext == '.jpg' || ext == '.jpeg' || ext == 'png') return true;
     return false;
   }
 
-  static bool isAudio(String filename){
-    String ext  = getFileExtension(filename);
-    if(ext=='.mp3'||ext=='.wav')
-      return true;
+  static bool isAudio(String filename) {
+    String ext = getFileExtension(filename);
+    if (ext == '.mp3' || ext == '.wav') return true;
     return false;
   }
 
-  static bool isVideo(String filename){
-    String ext  = getFileExtension(filename);
-    if(ext=='.mp4' || ext=='.mkv')
-      return true;
+  static bool isVideo(String filename) {
+    String ext = getFileExtension(filename);
+    if (ext == '.mp4' || ext == '.mkv') return true;
     return false;
   }
 
   static IconData getFileIcon(String filename) {
-    if(isVideo(filename))
-      return Icons.ondemand_video;
+    if (isVideo(filename)) return Icons.ondemand_video;
 
-    if(isAudio(filename))
-      return Icons.music_video;
+    if (isAudio(filename)) return Icons.music_video;
 
-    if(isImage(filename))
-      return Icons.image;
+    if (isImage(filename)) return Icons.image;
 
     return Icons.insert_drive_file;
   }
@@ -54,12 +48,11 @@ class FileTile extends StatefulWidget {
 }
 
 class _FileTileState extends State<FileTile> {
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        if(widget.file.isPresentLocally) {
+        if (widget.file.isPresentLocally) {
           OpenFile.open(widget.file.localFilePath);
         }
       },
@@ -73,15 +66,11 @@ class _FileTileState extends State<FileTile> {
         child: Text(
           filesize(widget.file.size),
           style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
-        ) ,
+        ),
       ),
-      trailing: widget.file.isPresentLocally?
-          IconButton(
-              onPressed: (){},
-              icon: Icon(Icons.check_box)
-          ):
-          null,
+      trailing: widget.file.isPresentLocally
+          ? IconButton(onPressed: () {}, icon: Icon(Icons.check_box))
+          : null,
     );
   }
 }
-

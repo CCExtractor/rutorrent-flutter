@@ -6,7 +6,6 @@ import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 
 class ShowDiskSpace extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Consumer2<GeneralFeatures, Mode>(
@@ -20,8 +19,8 @@ class ShowDiskSpace extends StatelessWidget {
               Text(
                 'Disk Space (${general.diskSpace.getPercentage()}%)',
                 style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
               SizedBox(
@@ -40,9 +39,11 @@ class ShowDiskSpace extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: general.diskSpace.getPercentage() / 100,
                   backgroundColor: Theme.of(context).disabledColor,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      general.diskSpace.isLow()
-                          ? mode.isLightMode?kRedErrorLT:kRedErrorDT
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(general.diskSpace.isLow()
+                          ? mode.isLightMode
+                              ? kRedErrorLT
+                              : kRedErrorDT
                           : Theme.of(context).accentColor),
                 ),
               )

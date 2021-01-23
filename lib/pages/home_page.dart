@@ -36,14 +36,14 @@ class _HomePageState extends State<HomePage> {
     RSSFilterDetails(),
   ];
 
-  String _getTitle(int titleNumber){
-    return widget.pageIndex==0?
-      kTorrentTitle[titleNumber]:kFeedsTitle[titleNumber];
+  String _getTitle(int titleNumber) {
+    return widget.pageIndex == 0
+        ? kTorrentTitle[titleNumber]
+        : kFeedsTitle[titleNumber];
   }
 
-  List<Widget> _getPagesList(){
-    return widget.pageIndex==0?
-        kTorrentPages:kFeedPages;
+  List<Widget> _getPagesList() {
+    return widget.pageIndex == 0 ? kTorrentPages : kFeedPages;
   }
 
   @override
@@ -56,22 +56,24 @@ class _HomePageState extends State<HomePage> {
           child: Row(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 child: GestureDetector(
                   onTap: () => _pageController.animateToPage(0,
                       duration: Duration(milliseconds: 100),
                       curve: Curves.linear),
-                  child: Text(_getTitle(0),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: _currentIndex == 0
-                            ? Colors.white
-                            : Colors.grey,
-                      )),
+                  child: Text(
+                    _getTitle(0),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: _currentIndex == 0 ? Colors.white : Colors.grey,
+                    ),
+                  ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                 child: GestureDetector(
                   onTap: () => _pageController.animateToPage(1,
                       duration: Duration(milliseconds: 100),
@@ -80,9 +82,7 @@ class _HomePageState extends State<HomePage> {
                     _getTitle(1),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: _currentIndex == 1
-                          ? Colors.white
-                          : Colors.grey,
+                      color: _currentIndex == 1 ? Colors.white : Colors.grey,
                     ),
                   ),
                 ),

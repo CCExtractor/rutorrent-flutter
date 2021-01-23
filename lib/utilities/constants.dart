@@ -1,6 +1,7 @@
 /// This dart library contains constants which can be used in any part of the project
 
 library constants;
+
 import 'package:flutter/material.dart';
 
 /// Colors for light theme

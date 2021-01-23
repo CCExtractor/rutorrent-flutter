@@ -21,7 +21,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
   _logoutAllAccounts(BuildContext context) {
     Preferences.clearLogin();
 
@@ -37,82 +36,78 @@ class _SettingsPageState extends State<SettingsPage> {
     showDialog(
         context: context,
         builder: (context) => CustomDialog(
-          title: 'Are you sure you want to delete this account?'+
-              '${general.apis.length==1?'\n\nYou will be logged out!':''}',
-          optionLeftText: 'No',
-          optionRightText: 'Yes',
-          optionLeftOnPressed: (){
-            Navigator.pop(context);
-          },
-          optionRightOnPressed: (){
-            // closes dialog
-            Navigator.pop(context);
+              title: 'Are you sure you want to delete this account?' +
+                  '${general.apis.length == 1 ? '\n\nYou will be logged out!' : ''}',
+              optionLeftText: 'No',
+              optionRightText: 'Yes',
+              optionLeftOnPressed: () {
+                Navigator.pop(context);
+              },
+              optionRightOnPressed: () {
+                // closes dialog
+                Navigator.pop(context);
 
-            if(general.apis.length==1){
-              // If only one account was added then log out user
-              _logoutAllAccounts(context);
-            }
-            else{
-              if(index==0){
-                // If active account is being deleted
-                general.apis.removeAt(index);
-                Preferences.saveLogin(general.apis);
+                if (general.apis.length == 1) {
+                  // If only one account was added then log out user
+                  _logoutAllAccounts(context);
+                } else {
+                  if (index == 0) {
+                    // If active account is being deleted
+                    general.apis.removeAt(index);
+                    Preferences.saveLogin(general.apis);
 
-                // Change the active account
-                Api api = Provider.of<Api>(context,listen: false);
-                api.setUrl(general.apis[0].url);
-                api.setUsername(general.apis[0].username);
-                api.setPassword(general.apis[0].password);
-              }
-              else{
-                general.apis.removeAt(index);
-                Preferences.saveLogin(general.apis);
-              }
+                    // Change the active account
+                    Api api = Provider.of<Api>(context, listen: false);
+                    api.setUrl(general.apis[0].url);
+                    api.setUsername(general.apis[0].username);
+                    api.setPassword(general.apis[0].password);
+                  } else {
+                    general.apis.removeAt(index);
+                    Preferences.saveLogin(general.apis);
+                  }
 
-              //closes SettingsScreen
-              Navigator.pop(context);
-              // Refresh to MainScreen
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => MainScreen()));
-            }
-          },
-        )
-    );
+                  //closes SettingsScreen
+                  Navigator.pop(context);
+                  // Refresh to MainScreen
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => MainScreen()));
+                }
+              },
+            ));
   }
 
-
-  _changePassword(BuildContext context, GeneralFeatures general, int index){
+  _changePassword(BuildContext context, GeneralFeatures general, int index) {
     StateSetter _setState;
 
     TextEditingController fieldController = TextEditingController();
     bool isValidating = false;
 
-    _validatePassword(String newPassword) async{
-
-      if(newPassword == general.apis[index].password){
-        Fluttertoast.showToast(msg: 'New password cannot be same as old password');
+    _validatePassword(String newPassword) async {
+      if (newPassword == general.apis[index].password) {
+        Fluttertoast.showToast(
+            msg: 'New password cannot be same as old password');
         return;
       }
 
       _setState(() {
-        isValidating=true;
+        isValidating = true;
       });
 
       var response;
       int total;
       try {
-        response = await general.apis[index].ioClient.get(Uri.parse(general.apis[index].diskSpacePluginUrl),
-                  headers: {
-                    'authorization':
-                    'Basic ' + base64Encode(utf8.encode('${general.apis[index].username}:$newPassword')),
-                  });
+        response = await general.apis[index].ioClient
+            .get(Uri.parse(general.apis[index].diskSpacePluginUrl), headers: {
+          'authorization': 'Basic ' +
+              base64Encode(
+                  utf8.encode('${general.apis[index].username}:$newPassword')),
+        });
         total = jsonDecode(response.body)['total'];
-      }
-      catch (e) {
+      } catch (e) {
         Fluttertoast.showToast(msg: 'Invalid Password');
       }
       _setState(() {
-        isValidating=false;
+        isValidating = false;
       });
 
       if (response != null && total != null && response.statusCode == 200) {
@@ -122,36 +117,38 @@ class _SettingsPageState extends State<SettingsPage> {
         Fluttertoast.showToast(msg: 'Password Changed Successfully');
         Navigator.pop(context);
 
-        if(index==0){
+        if (index == 0) {
           // If active account password was changed
 
           // closes Settings Screen
           Navigator.pop(context);
 
           // change password of active account
-          Provider.of<Api>(context,listen: false).setPassword(newPassword);
+          Provider.of<Api>(context, listen: false).setPassword(newPassword);
 
           // refresh main screen
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => MainScreen()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => MainScreen()));
         }
       }
     }
 
-    showDialog(context: context,
-    builder: (context){
-      return AlertDialog(
-        title: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState){
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
               _setState = setState;
               return Column(
                 children: <Widget>[
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('New Password',
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600),),
+                    child: Text(
+                      'New Password',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -162,29 +159,35 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: isValidating?CircularProgressIndicator():
-                    Container(
-                      height: 40,
-                      width: double.infinity,
-                      child: RaisedButton(
-                        color: Provider.of<Mode>(context).isLightMode? Colors.white:kGreyDT,
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Theme.of(context).primaryColor),
-                        ),
-                        child: Text('VALIDATE',style: TextStyle(color: Theme.of(context).primaryColor),),
-                        onPressed: (){
-                          _validatePassword(fieldController.text);
-                        },
-                      ),
-                    ),
+                    child: isValidating
+                        ? CircularProgressIndicator()
+                        : Container(
+                            height: 40,
+                            width: double.infinity,
+                            child: RaisedButton(
+                              color: Provider.of<Mode>(context).isLightMode
+                                  ? Colors.white
+                                  : kGreyDT,
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                              child: Text(
+                                'VALIDATE',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                              onPressed: () {
+                                _validatePassword(fieldController.text);
+                              },
+                            ),
+                          ),
                   )
                 ],
               );
-            }
-        ),
-      );
-    });
-
+            }),
+          );
+        });
   }
 
   @override
@@ -218,7 +221,9 @@ class _SettingsPageState extends State<SettingsPage> {
                             dense: true,
                             leading: Icon(
                               Icons.supervisor_account,
-                              color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,
+                              color: Provider.of<Mode>(context).isLightMode
+                                  ? Colors.black
+                                  : Colors.white,
                             ),
                             title: Text(Uri.parse(general.apis[index].url).host,
                                 style: TextStyle(
@@ -229,8 +234,11 @@ class _SettingsPageState extends State<SettingsPage> {
                                   fontWeight: FontWeight.w600, fontSize: 12),
                             ),
                             trailing: IconButton(
-                                icon: Icon(Icons.delete_forever,
-                                  color: Theme.of(context).primaryColor,size: 28,),
+                                icon: Icon(
+                                  Icons.delete_forever,
+                                  color: Theme.of(context).primaryColor,
+                                  size: 28,
+                                ),
                                 onPressed: () {
                                   // DELETE ACCOUNT
                                   _deleteAccount(context, general, index);
@@ -255,8 +263,12 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 enabled: settings.allNotificationEnabled,
                 dense: true,
-                leading: Icon(Icons.disc_full,
-                  color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,),
+                leading: Icon(
+                  Icons.disc_full,
+                  color: Provider.of<Mode>(context).isLightMode
+                      ? Colors.black
+                      : Colors.white,
+                ),
                 title: Text('Disk Space Notification',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 subtitle: Text(
@@ -277,8 +289,12 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 enabled: settings.allNotificationEnabled,
                 dense: true,
-                leading: Icon(Icons.add_alert,
-                  color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,),
+                leading: Icon(
+                  Icons.add_alert,
+                  color: Provider.of<Mode>(context).isLightMode
+                      ? Colors.black
+                      : Colors.white,
+                ),
                 title: Text('Torrent Add Notification',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 subtitle: Text(
@@ -299,8 +315,12 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 enabled: settings.allNotificationEnabled,
                 dense: true,
-                leading: Icon(Icons.notifications,
-                  color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,),
+                leading: Icon(
+                  Icons.notifications,
+                  color: Provider.of<Mode>(context).isLightMode
+                      ? Colors.black
+                      : Colors.white,
+                ),
                 title: Text('Download Notification',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 subtitle: Text(
@@ -320,8 +340,12 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               Divider(),
               ListTile(
-                leading: FaIcon(FontAwesomeIcons.signOutAlt,
-                  color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,),
+                leading: FaIcon(
+                  FontAwesomeIcons.signOutAlt,
+                  color: Provider.of<Mode>(context).isLightMode
+                      ? Colors.black
+                      : Colors.white,
+                ),
                 title: Text(
                   'Logout',
                   style: TextStyle(fontWeight: FontWeight.w600),
@@ -339,5 +363,3 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 }
-
-

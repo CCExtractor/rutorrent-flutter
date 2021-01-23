@@ -5,19 +5,16 @@ import 'package:http/io_client.dart';
 /// This class deals with storing API endpoints (and credentials) of deployed ruTorrent server
 
 class Api {
-
   get ioClient {
-
     /// Url with some issue with their SSL certificates can be trusted explicitly with this
     bool trustSelfSigned = true;
     HttpClient httpClient = HttpClient()
       ..badCertificateCallback =
-      ((X509Certificate cert, String host, int port) => trustSelfSigned);
+          ((X509Certificate cert, String host, int port) => trustSelfSigned);
 
     IOClient _ioClient = new IOClient(httpClient);
     return _ioClient;
   }
-
 
   String _url;
   String _username;

@@ -187,7 +187,7 @@ class ApiRequests {
           'hash': hashValue,
         });
 
-    if(response.statusCode==200)
+    if (response.statusCode == 200)
       Fluttertoast.showToast(msg: 'Removed Torrent Successfully');
   }
 
@@ -198,14 +198,17 @@ class ApiRequests {
       Uri.parse(api.httpRpcPluginUrl),
     );
     request.headers.addAll(api.getAuthHeader());
-    var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>system.multicall</methodName><params><param><value><array><data><value><struct><member><name>methodName</name><value><string>d.custom5.set</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value><value><string>1</string></value></data></array></value></member></struct></value><value><struct><member><name>methodName</name><value><string>d.delete_tied</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value></data></array></value></member></struct></value><value><struct><member><name>methodName</name><value><string>d.erase</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value></data></array></value></member></struct></value></data></array></value></param></params></methodCall>";
+    var xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>system.multicall</methodName><params><param><value><array><data><value><struct><member><name>methodName</name><value><string>d.custom5.set</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value><value><string>1</string></value></data></array></value></member></struct></value><value><struct><member><name>methodName</name><value><string>d.delete_tied</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value></data></array></value></member></struct></value><value><struct><member><name>methodName</name><value><string>d.erase</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value></data></array></value></member></struct></value></data></array></value></param></params></methodCall>";
     request.body = xml;
     var streamedResponse = await client.send(request);
 
-    if(streamedResponse.statusCode==200)
-      Fluttertoast.showToast(msg: 'Removed Torrent and Deleted Data Successfully');
+    if (streamedResponse.statusCode == 200)
+      Fluttertoast.showToast(
+          msg: 'Removed Torrent and Deleted Data Successfully');
 
-    var responseBody = await streamedResponse.stream.transform(utf8.decoder).join();
+    var responseBody =
+        await streamedResponse.stream.transform(utf8.decoder).join();
     print(responseBody);
     client.close();
   }

@@ -35,7 +35,6 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   }
 
   saveLogin(Api api) async {
-
     bool alreadyLoggedIn = false;
     List<Api> apis = await Preferences.fetchSavedLogin();
 
@@ -208,8 +207,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                   child: RaisedButton(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5.0),
-                      side:
-                          BorderSide(color: Theme.of(context).primaryColor),
+                      side: BorderSide(color: Theme.of(context).primaryColor),
                     ),
                     color: Provider.of<Mode>(context).isLightMode
                         ? Colors.white

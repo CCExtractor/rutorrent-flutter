@@ -42,12 +42,11 @@ class _VlcStreamState extends State<VlcStream> {
       PlayingState state = _videoViewController.playingState;
       if (state == PlayingState.PLAYING &&
           sliderValue < _videoViewController.duration.inSeconds) {
-        checkForError=false;
+        checkForError = false;
         sliderValue = _videoViewController.position.inSeconds.toDouble();
-      }
-      else if (state==PlayingState.STOPPED){
+      } else if (state == PlayingState.STOPPED) {
         stopCounter++;
-        if(checkForError && stopCounter>2){
+        if (checkForError && stopCounter > 2) {
           Fluttertoast.showToast(msg: 'Error in playing file');
           Navigator.pop(context);
         }
@@ -102,7 +101,6 @@ class _VlcStreamState extends State<VlcStream> {
               ),
             ),
           ),
-
           showControls
               ? GestureDetector(
                   behavior: HitTestBehavior.opaque,
@@ -138,21 +136,24 @@ class _VlcStreamState extends State<VlcStream> {
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(widget.playingMediaName,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold)),
+                            child: Text(
+                              widget.playingMediaName,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
                           Container(
                             decoration: BoxDecoration(
                                 color: Colors.white, shape: BoxShape.circle),
                             child: IconButton(
-                                color: Colors.black,
-                                iconSize: 40,
-                                icon: Icon(
-                                    isPlaying ? Icons.pause : Icons.play_arrow),
-                                onPressed: () => playOrPauseVideo()),
+                              color: Colors.black,
+                              iconSize: 40,
+                              icon: Icon(
+                                  isPlaying ? Icons.pause : Icons.play_arrow),
+                              onPressed: () => playOrPauseVideo(),
+                            ),
                           ),
                           Slider(
                             inactiveColor: Colors.grey,
@@ -164,7 +165,7 @@ class _VlcStreamState extends State<VlcStream> {
                                 : _videoViewController.duration.inSeconds
                                     .toDouble(),
                             onChanged: (progress) {
-                              if(this.mounted) {
+                              if (this.mounted) {
                                 setState(() {
                                   sliderValue = progress.floor().toDouble();
                                 });

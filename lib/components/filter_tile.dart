@@ -18,7 +18,12 @@ class FilterTile extends StatelessWidget {
             : null,
         child: ListTile(
           dense: true,
-          leading: Icon(icon,color: Provider.of<Mode>(context).isLightMode?Colors.black:Colors.white,),
+          leading: Icon(
+            icon,
+            color: Provider.of<Mode>(context).isLightMode
+                ? Colors.black
+                : Colors.white,
+          ),
           title: Text(
               filter.toString().substring(filter.toString().indexOf('.') + 1)),
           onTap: () {

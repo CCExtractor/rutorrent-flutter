@@ -6,14 +6,14 @@ class PasswordInput extends StatefulWidget {
   final TextEditingController textEditingController;
   final FocusNode passwordFocus;
   final bool autoFocus;
-  PasswordInput({this.textEditingController,this.passwordFocus, this.autoFocus});
+  PasswordInput(
+      {this.textEditingController, this.passwordFocus, this.autoFocus});
   @override
   _PasswordInputState createState() => _PasswordInputState();
 }
 
 class _PasswordInputState extends State<PasswordInput> {
-
-  bool passwordVisible=false;
+  bool passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class _PasswordInputState extends State<PasswordInput> {
       child: Container(
         child: TextFormField(
           style: TextStyle(fontWeight: FontWeight.w600),
-          autofocus: widget.autoFocus!=null?widget.autoFocus:false,
+          autofocus: widget.autoFocus != null ? widget.autoFocus : false,
           obscureText: !passwordVisible,
           focusNode: widget.passwordFocus,
           controller: widget.textEditingController,
@@ -36,13 +36,13 @@ class _PasswordInputState extends State<PasswordInput> {
             hintText: 'Password',
             suffixIcon: IconButton(
               color: Colors.grey,
-              icon: Icon(passwordVisible?
-              Icons.visibility:Icons.visibility_off,
+              icon: Icon(
+                passwordVisible ? Icons.visibility : Icons.visibility_off,
                 color: Colors.grey,
               ),
-              onPressed: (){
+              onPressed: () {
                 setState(() {
-                  passwordVisible=!passwordVisible;
+                  passwordVisible = !passwordVisible;
                 });
               },
             ),
@@ -51,6 +51,7 @@ class _PasswordInputState extends State<PasswordInput> {
         decoration: BoxDecoration(
             border: Border.all(color: Colors.grey, width: 1.5),
             borderRadius: BorderRadius.all(Radius.circular(5))),
-      ),);
+      ),
+    );
   }
 }
