@@ -29,7 +29,6 @@ enum Filter {
 }
 
 class GeneralFeatures extends ChangeNotifier {
-
   /// List of all saved accounts [Apis]
   List<Api> apis = [];
   bool _allAccounts = false;
@@ -37,14 +36,14 @@ class GeneralFeatures extends ChangeNotifier {
   get allAccounts => _allAccounts;
 
   /// show torrents from all saved accounts
-  showAllAccounts(){
-    _allAccounts=!_allAccounts;
+  showAllAccounts() {
+    _allAccounts = !_allAccounts;
     notifyListeners();
   }
 
   /// show torrents from only selected account
-  doNotShowAllAccounts(){
-    _allAccounts=false;
+  doNotShowAllAccounts() {
+    _allAccounts = false;
     notifyListeners();
   }
 
@@ -71,7 +70,6 @@ class GeneralFeatures extends ChangeNotifier {
 
   List<Torrent> sortList(List<Torrent> torrentsList, Sort sort) {
     switch (sort) {
-
       case Sort.name_ascending:
         torrentsList.sort((a, b) => a.name.compareTo(b.name));
         return torrentsList;
@@ -127,7 +125,9 @@ class GeneralFeatures extends ChangeNotifier {
     _diskSpace.update(total, free);
     notifyListeners();
 
-    if (_diskSpace.isLow() && _diskSpace.alertUser && Provider.of<Settings>(context,listen: false).diskSpaceNotification)
+    if (_diskSpace.isLow() &&
+        _diskSpace.alertUser &&
+        Provider.of<Settings>(context, listen: false).diskSpaceNotification)
       _diskSpace.generateLowDiskSpaceAlert(notifications);
   }
 
@@ -171,14 +171,15 @@ class GeneralFeatures extends ChangeNotifier {
 
   List<Torrent> filterList(List<Torrent> torrentsList, Filter filter) {
     switch (filter) {
-
       case Filter.All:
         return torrentsList;
 
       case Filter.Downloading:
         return torrentsList
-            .where((torrent) => torrent.status == Status.downloading ||
-            (torrent.status == Status.paused && torrent.status != Status.completed))
+            .where((torrent) =>
+                torrent.status == Status.downloading ||
+                (torrent.status == Status.paused &&
+                    torrent.status != Status.completed))
             .toList();
 
       case Filter.Completed:
@@ -222,21 +223,20 @@ class GeneralFeatures extends ChangeNotifier {
   get historyItems => _historyItems;
 
   updateHistoryItems(List<HistoryItem> updatedList, BuildContext context) {
-
-    bool happenedNow(HistoryItem item){
-      if(DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1)
+    bool happenedNow(HistoryItem item) {
+      if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1)
         return true;
       return false;
     }
 
     _historyItems = updatedList;
     for (var item in updatedList) {
-
       switch (item.action) {
         case 1: // Torrent Added
           if (happenedNow(item)) {
             // Generate Notification
-            if(Provider.of<Settings>(context,listen: false).addTorrentNotification) {
+            if (Provider.of<Settings>(context, listen: false)
+                .addTorrentNotification) {
               notifications.generate('New Torrent Added', item.name);
             }
           }
@@ -245,7 +245,8 @@ class GeneralFeatures extends ChangeNotifier {
         case 2: // Torrent Finished
           if (happenedNow(item)) {
             // Generate Notification
-            if(Provider.of<Settings>(context,listen: false).downloadCompleteNotification) {
+            if (Provider.of<Settings>(context, listen: false)
+                .downloadCompleteNotification) {
               notifications.generate('Download Completed', item.name);
             }
           }

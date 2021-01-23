@@ -1,13 +1,6 @@
-class RSSFilter{
-
-  RSSFilter(
-      this.name,
-      this.enabled,
-      this.pattern,
-      this.label,
-      this.exclude,
-      this.dir
-      );
+class RSSFilter {
+  RSSFilter(this.name, this.enabled, this.pattern, this.label, this.exclude,
+      this.dir);
 
   String name;
   int enabled;

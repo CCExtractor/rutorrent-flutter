@@ -29,16 +29,17 @@ class _DiskExplorerState extends State<DiskExplorer> {
 
   goBackwards() {
     path = path.substring(0, path.length - 1);
-    path = path.substring(0, path.lastIndexOf('/')+1);
+    path = path.substring(0, path.lastIndexOf('/') + 1);
     _getDiskFiles();
   }
-  goForwards(String fileName){
+
+  goForwards(String fileName) {
     path += fileName + '/';
     _getDiskFiles();
   }
 
-  Future<bool> _onBackPress() async{
-    if(path=='/'){
+  Future<bool> _onBackPress() async {
+    if (path == '/') {
       return true;
     }
     goBackwards();
@@ -75,13 +76,14 @@ class _DiskExplorerState extends State<DiskExplorer> {
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
-              isLoading
+            isLoading
                 ? Expanded(child: LoadingShimmer().loadingEffect(context))
                 : Expanded(
                     child: ListView.builder(
                       itemCount: diskFiles.length,
                       itemBuilder: (context, index) {
-                        return DiskFileTile(diskFiles[index],path,goBackwards,goForwards);
+                        return DiskFileTile(
+                            diskFiles[index], path, goBackwards, goForwards);
                       },
                     ),
                   ),

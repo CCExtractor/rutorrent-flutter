@@ -18,26 +18,39 @@ class _SortBottomSheetState extends State<SortBottomSheet> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('SORT BY',style: TextStyle(fontSize: 18,),),
-            Divider(thickness: 2,),
+            Text(
+              'SORT BY',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            Divider(
+              thickness: 2,
+            ),
             Expanded(
               child: ListView.builder(
                 itemCount: Sort.values.length,
-                itemBuilder: (context,index){
+                itemBuilder: (context, index) {
                   return GestureDetector(
                     behavior: HitTestBehavior.opaque,
-                    onTap: (){
-                      Provider.of<GeneralFeatures>(context,listen: false).setSortPreference(Sort.values[index]);
+                    onTap: () {
+                      Provider.of<GeneralFeatures>(context, listen: false)
+                          .setSortPreference(Sort.values[index]);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(SearchBar.sortMap[Sort.values[index]],style: TextStyle(fontWeight: FontWeight.w600),),
+                        Text(
+                          SearchBar.sortMap[Sort.values[index]],
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
                         Radio(
-                          groupValue: Provider.of<GeneralFeatures>(context).sortPreference,
+                          groupValue: Provider.of<GeneralFeatures>(context)
+                              .sortPreference,
                           value: Sort.values[index],
-                          onChanged: (selected){
-                            Provider.of<GeneralFeatures>(context,listen: false).setSortPreference(Sort.values[index]);
+                          onChanged: (selected) {
+                            Provider.of<GeneralFeatures>(context, listen: false)
+                                .setSortPreference(Sort.values[index]);
                           },
                         ),
                       ],

@@ -335,38 +335,39 @@ class _MainScreenState extends State<MainScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColor,
-            child: Icon(
-              Icons.library_add,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              if (_currentIndex == 0) {
-                showModalBottomSheet(
+          backgroundColor: Theme.of(context).primaryColor,
+          child: Icon(
+            Icons.library_add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            if (_currentIndex == 0) {
+              showModalBottomSheet(
                   isScrollControlled: true,
-                    context: context,
-                    builder: (BuildContext bc) {
-                      return AddBottomSheet(
-                          api: api,
-                          apiRequest: (url) {
-                            ApiRequests.addTorrent(api, url);
-                          },
-                          dialogHint: 'Enter Torrent Url');
-                    });
-              } else {
-                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext bc) {
+                    return AddBottomSheet(
+                        api: api,
+                        apiRequest: (url) {
+                          ApiRequests.addTorrent(api, url);
+                        },
+                        dialogHint: 'Enter Torrent Url');
+                  });
+            } else {
+              showModalBottomSheet(
                   isScrollControlled: true,
-                    context: context,
-                    builder: (BuildContext bc) {
-                      return AddBottomSheet(
-                          apiRequest: (url) async {
-                            await ApiRequests.addRSS(api, url);
-                            setState(() {});
-                          },
-                          dialogHint: 'Enter Rss Url');
-                    });
-              }
-            }),
+                  context: context,
+                  builder: (BuildContext bc) {
+                    return AddBottomSheet(
+                        apiRequest: (url) async {
+                          await ApiRequests.addRSS(api, url);
+                          setState(() {});
+                        },
+                        dialogHint: 'Enter Rss Url');
+                  });
+            }
+          },
+        ),
       );
     });
   }

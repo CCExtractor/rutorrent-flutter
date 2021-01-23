@@ -20,7 +20,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   loadHistoryItems({int lastHrs}) async {
     setState(() {
-      isLoading=true;
+      isLoading = true;
     });
     items = await ApiRequests.getHistory(
         Provider.of<Api>(context, listen: false),
@@ -41,12 +41,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
       case 1: // Added
         return Theme.of(context).accentColor;
       case 2: // Finished
-        return Provider.of<Mode>(context).isLightMode ? kGreenActiveLT : kGreenActiveDT;
+        return Provider.of<Mode>(context).isLightMode
+            ? kGreenActiveLT
+            : kGreenActiveDT;
       case 3: // Deleted
-        return Provider.of<Mode>(context).isLightMode ?kRedErrorLT:kRedErrorDT;
+        return Provider.of<Mode>(context).isLightMode
+            ? kRedErrorLT
+            : kRedErrorDT;
       default:
         return Provider.of<Mode>(context).isLightMode
-            ? Colors.black : Colors.white;
+            ? Colors.black
+            : Colors.white;
     }
   }
 
@@ -60,7 +65,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'History', style: TextStyle(fontWeight: FontWeight.w400),
+          'History',
+          style: TextStyle(fontWeight: FontWeight.w400),
         ),
         actions: <Widget>[
           PopupMenuButton<String>(
@@ -71,9 +77,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
             itemBuilder: (context) {
               return choices
                   .map((e) => PopupMenuItem<String>(
-                    value: e,
-                    child: Text(e,style: TextStyle(fontWeight: FontWeight.w600),),
-              ))
+                        value: e,
+                        child: Text(
+                          e,
+                          style: TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                      ))
                   .toList();
             },
             onSelected: (e) {
@@ -94,31 +103,32 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         width: 40,
                         child: Text(items[index].name,
                             style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600))),
+                                fontSize: 14, fontWeight: FontWeight.w600))),
                     trailing: Container(
                       padding: const EdgeInsets.all(4),
                       width: 70,
                       decoration: BoxDecoration(
-                        border: Border.all(color: getHistoryStatusColor(
-                            context, items[index].action),)
-                      ),
-                      child: Text(
-                          HistoryItem.historyStatus[items[index].action],
-                          style: TextStyle(
-                            color: getHistoryStatusColor(
-                                context, items[index].action),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          )),
+                          border: Border.all(
+                        color:
+                            getHistoryStatusColor(context, items[index].action),
+                      )),
+                      child:
+                          Text(HistoryItem.historyStatus[items[index].action],
+                              style: TextStyle(
+                                color: getHistoryStatusColor(
+                                    context, items[index].action),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                              )),
                     ),
                     subtitle: Text(
                       '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
-                      style: TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.w600),
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                     ),
                   );
-                }),
+                },
+              ),
       ),
     );
   }
