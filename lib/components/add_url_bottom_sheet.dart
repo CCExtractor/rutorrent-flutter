@@ -44,7 +44,6 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
   @override
   Widget build(BuildContext context) {
     double wp = MediaQuery.of(context).size.width;
-    double hp = MediaQuery.of(context).size.height;
     double bottomPadding = MediaQuery.of(context).viewInsets.bottom;
     return Padding(
       padding: EdgeInsets.only(bottom: bottomPadding),
