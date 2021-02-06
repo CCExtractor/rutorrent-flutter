@@ -164,6 +164,7 @@ class GeneralFeatures extends ChangeNotifier {
   get filterTileList => _filterTileList;
 
   changeFilter(Filter newFilter) {
+    _isLabelSelected = false;
     _selectedFilter = newFilter;
     _pageController.jumpToPage(0); // Show the torrents listing page
     notifyListeners();
@@ -218,46 +219,86 @@ class GeneralFeatures extends ChangeNotifier {
 
   setActiveDownloads(List<Torrent> list) => _activeDownloads = list;
 
-  /// History Check
-  List<HistoryItem> _historyItems = [];
-  get historyItems => _historyItems;
+  /// Active Labels
+  // List of names of all the labels
+  List<String> _listOfLabels = [];
+  get listOfLabels{
+    return _listOfLabels;
+  }
 
-  updateHistoryItems(List<HistoryItem> updatedList, BuildContext context) {
-    bool happenedNow(HistoryItem item) {
-      if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1)
-        return true;
-      return false;
-    }
+  setListOfLabels(List<String> listOfLabels) {
+    _listOfLabels = listOfLabels;
+    notifyListeners();
+  }
 
-    _historyItems = updatedList;
-    for (var item in updatedList) {
-      switch (item.action) {
-        case 1: // Torrent Added
-          if (happenedNow(item)) {
-            // Generate Notification
-            if (Provider.of<Settings>(context, listen: false)
-                .addTorrentNotification) {
-              notifications.generate('New Torrent Added', item.name);
+  //Selected Label
+  String _selectedLabel;
+
+  //Flag, used to know if a label is selected or not
+  bool _isLabelSelected = false;
+
+  get isLabelSelected => _isLabelSelected;
+  get selectedLabel => _selectedLabel;
+  changeLabel(String label){
+    _selectedFilter = Filter.All;
+    _isLabelSelected = true;
+    _selectedLabel = label;
+    _pageController.jumpToPage(0); // Show the torrents listing page
+    notifyListeners();
+  }
+
+  List<Torrent> filterListUsingLabel(List<Torrent> torrentsList, String label) {
+
+        return torrentsList
+            .where((torrent) =>
+        torrent.label == label)
+            .toList();
+
+
+  }
+
+
+    /// History Check
+    List<HistoryItem> _historyItems = [];
+    get historyItems => _historyItems;
+
+    updateHistoryItems(List<HistoryItem> updatedList, BuildContext context) {
+      bool happenedNow(HistoryItem item) {
+        if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1)
+          return true;
+        return false;
+      }
+
+      _historyItems = updatedList;
+      for (var item in updatedList) {
+        switch (item.action) {
+          case 1: // Torrent Added
+            if (happenedNow(item)) {
+              // Generate Notification
+              if (Provider.of<Settings>(context, listen: false)
+                  .addTorrentNotification) {
+                notifications.generate('New Torrent Added', item.name);
+              }
             }
-          }
-          break;
+            break;
 
-        case 2: // Torrent Finished
-          if (happenedNow(item)) {
-            // Generate Notification
-            if (Provider.of<Settings>(context, listen: false)
-                .downloadCompleteNotification) {
-              notifications.generate('Download Completed', item.name);
+          case 2: // Torrent Finished
+            if (happenedNow(item)) {
+              // Generate Notification
+              if (Provider.of<Settings>(context, listen: false)
+                  .downloadCompleteNotification) {
+                notifications.generate('Download Completed', item.name);
+              }
             }
-          }
-          break;
+            break;
 
-        case 3: // Torrent Deleted
-          if (happenedNow(item)) {
-            // Do Something
-          }
-          break;
+          case 3: // Torrent Deleted
+            if (happenedNow(item)) {
+              // Do Something
+            }
+            break;
+        }
       }
     }
   }
-}
+

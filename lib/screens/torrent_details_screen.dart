@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
@@ -15,6 +16,7 @@ import 'package:rutorrentflutter/models/torrent.dart';
 
 class TorrentDetailSheet extends StatefulWidget {
   final Torrent torrent;
+
   TorrentDetailSheet(this.torrent);
 
   @override
@@ -34,8 +36,15 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   List<String> trackers = [];
 
   String torrentUrl;
+
   // scroll controller for screen
   final ScrollController _scrollController = ScrollController();
+
+  // Controller for Label TextField
+  final TextEditingController _labelController = TextEditingController();
+
+  // Form key for label TextField
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   IconData _getTorrentIconData(Torrent torrent) {
     return torrent.isOpen == 0
@@ -118,6 +127,66 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
     _updateTorrent();
     _getFiles();
     _getTrackers();
+    _labelController.text = widget.torrent.label;
+  }
+
+  /// Shows the set and remove label dialog
+  showLabelDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      child: AlertDialog(
+        content: Form(
+          key: _formKey,
+          child: TextFormField(
+            controller: _labelController,
+            validator: (_) {
+              if (_labelController.text != null &&
+                  _labelController.text.trim() != "") {
+                return null;
+              }
+              return "Enter a valid label";
+            },
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5),
+                ),
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              hintText: "Label",
+            ),
+          ),
+        ),
+        actions: [
+          _actionButton(
+              text: "Set Label",
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  await ApiRequests.setTorrentLabel(torrent.api, torrent.hash,
+                      label: _labelController.text);
+                  Provider.of<GeneralFeatures>(context,listen: false).changeLabel(_labelController.text); // Doing this to ensure the filter is set to the label added
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Fluttertoast.showToast(msg: "Label set");
+                }
+              }),
+          _actionButton(
+            text: "Remove Label",
+            onPressed: () async {
+              await ApiRequests.removeTorrentLabel(
+                torrent.api,
+                torrent.hash,
+              );
+              _labelController.text = "";
+              Provider.of<GeneralFeatures>(context,listen: false).changeFilter(Filter.All); // Doing this to ensure that a empty torrent list page is not shown to the user
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Fluttertoast.showToast(msg: "Label removed");
+            },
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -261,6 +330,20 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                       onPressed: () => ApiRequests.stopTorrent(
                                           torrent.api, torrent.hash)),
                                 ),
+                                SizedBox(
+                                  width: 35,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle),
+                                  child: IconButton(
+                                      color: Colors.black,
+                                      iconSize: 25,
+                                      icon: Icon(Icons.label_important_outline),
+                                      onPressed: () =>
+                                          showLabelDialog(context)),
+                                )
                               ],
                               mainAxisAlignment: MainAxisAlignment.center,
                             ),
@@ -578,5 +661,19 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
         ),
       ),
     );
+  }
+
+  /// Action Button for set and remove label dialog
+  Widget _actionButton({String text, Function onPressed}) {
+    return RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+          side: BorderSide(color: Theme.of(context).primaryColor),
+        ),
+        color: Theme.of(context).primaryColor,
+        child: Text(
+          text,
+        ),
+        onPressed: onPressed);
   }
 }

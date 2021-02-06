@@ -63,6 +63,7 @@ class ApiRequests {
     List<Torrent> torrentsList = [];
     // A list of active torrents is required for changing the connection state from waiting to active
     List<Torrent> activeTorrents = [];
+    List<String> labels = [];
     var torrentsPath = jsonDecode(responseBody)['t'];
     for (var hashKey in torrentsPath.keys) {
       var torrentObject = torrentsPath[hashKey];
@@ -70,6 +71,7 @@ class ApiRequests {
       torrent.name = torrentObject[4];
       torrent.size = int.parse(torrentObject[5]);
       torrent.savePath = torrentObject[25];
+      torrent.label = torrentObject[14].toString().replaceAll("%20", " ");
       torrent.completedChunks = int.parse(torrentObject[6]);
       torrent.totalChunks = int.parse(torrentObject[7]);
       torrent.sizeOfChunk = int.parse(torrentObject[13]);
@@ -94,8 +96,13 @@ class ApiRequests {
 
       if (torrent.status == Status.downloading &&
           torrent.percentageDownload < 100) activeTorrents.add(torrent);
+      if(!labels.contains(torrent.label) && torrent.label != ""){
+        labels.add(torrent.label);
+      }
+
     }
     general.setActiveDownloads(activeTorrents);
+    general.setListOfLabels(labels);
     return torrentsList;
   }
 
@@ -115,6 +122,7 @@ class ApiRequests {
                 });
             allTorrentList
                 .addAll(parseTorrentsData(response.body, general, api));
+
           } catch (e) {
             print(e);
           }
@@ -244,18 +252,23 @@ class ApiRequests {
         });
   }
 
+
   static addTorrentFile(Api api, String torrentPath) async {
     Fluttertoast.showToast(msg: 'Adding torrent');
     var request =
         http.MultipartRequest('POST', Uri.parse(api.addTorrentPluginUrl));
+    // request.fields['label'] = "hell";
+
     request.files
         .add(await http.MultipartFile.fromPath('torrent_file', torrentPath));
     try {
       var response = await request.send();
+
       print(response.headers);
     } catch (e) {
       print(e.toString());
     }
+
   }
 
   /// Gets list of trackers for a particular torrent
@@ -431,5 +444,33 @@ class ApiRequests {
     }
 
     return diskFiles;
+  }
+
+  static setTorrentLabel(Api api, String hashValue,{ String label}) async {
+    try {
+      await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'mode': 'setlabel',
+            'hash': hashValue,
+            'v': label.replaceAll(" ", "%20")
+          });
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  static removeTorrentLabel(Api api, String hashValue) async {
+    try {
+      await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'mode': 'setlabel',
+            'hash': hashValue,
+            'v': ''
+          });
+    } on Exception catch (e) {
+      print(e.toString()+"errrrr");
+    }
   }
 }
