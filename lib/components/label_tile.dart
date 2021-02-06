@@ -3,31 +3,31 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 
-class FilterTile extends StatelessWidget {
-  final Filter filter;
-  final IconData icon;
+class LabelTile extends StatelessWidget {
+  final String label;
 
-  FilterTile({this.filter, this.icon});
+  LabelTile({this.label});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<GeneralFeatures>(builder: (context, general, child) {
       return Container(
-        color: (general.selectedFilter == filter && !general.isLabelSelected)
+        color: (general.selectedLabel == label && general.isLabelSelected)
             ? Theme.of(context).disabledColor
             : null,
         child: ListTile(
           dense: true,
           leading: Icon(
-            icon,
+            Icons.label_important_outline,
             color: Provider.of<Mode>(context).isLightMode
                 ? Colors.black
                 : Colors.white,
           ),
           title: Text(
-              filter.toString().substring(filter.toString().indexOf('.') + 1)),
+              label),
           onTap: () {
-            general.changeFilter(filter);
+            print("ontapp label");
+            general.changeLabel(label);
             Navigator.pop(context);
           },
         ),

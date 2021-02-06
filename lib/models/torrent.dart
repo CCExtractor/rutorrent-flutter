@@ -18,6 +18,7 @@ class Torrent {
   int size; // size in bytes
   String savePath; // directory where torrent is saved
   String eta;
+  String label; // label of torrent
   int percentageDownload;
   int totalChunks;
   int completedChunks;

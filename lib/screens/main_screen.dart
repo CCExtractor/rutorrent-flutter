@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/add_url_bottom_sheet.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
+import 'package:rutorrentflutter/components/label_tile.dart';
 import 'package:rutorrentflutter/models/settings.dart';
 import 'package:rutorrentflutter/screens/disk_explorer_screen.dart';
 import 'package:rutorrentflutter/screens/history_screen.dart';
@@ -217,6 +218,15 @@ class _MainScreenState extends State<MainScreen> {
                   'Filters',
                 ),
                 children: general.filterTileList,
+              ),
+              ExpansionTile(
+                initiallyExpanded: true,
+                leading: Icon(Icons.sort,
+                    color: mode.isLightMode ? Colors.black : Colors.white),
+                title: Text(
+                  'Labels',
+                ),
+                children: (general.listOfLabels as List<String>).map((e) => LabelTile(label: e)).toList(),
               ),
               ListTile(
                 leading: Icon(Icons.history,
