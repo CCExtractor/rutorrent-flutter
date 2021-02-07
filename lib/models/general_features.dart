@@ -11,13 +11,12 @@ import 'package:rutorrentflutter/services/notifications.dart';
 import 'disk_space.dart';
 
 enum Sort {
-  name,
+  name_ascending,
+  name_descending,
   dateAdded,
-  percentDownloaded,
-  downloadSpeed,
-  uploadSpeed,
   ratio,
-  size,
+  size_ascending,
+  size_descending,
 }
 
 enum Filter {
@@ -30,7 +29,6 @@ enum Filter {
 }
 
 class GeneralFeatures extends ChangeNotifier {
-
   /// List of all saved accounts [Apis]
   List<Api> apis = [];
   bool _allAccounts = false;
@@ -38,14 +36,14 @@ class GeneralFeatures extends ChangeNotifier {
   get allAccounts => _allAccounts;
 
   /// show torrents from all saved accounts
-  showAllAccounts(){
-    _allAccounts=!_allAccounts;
+  showAllAccounts() {
+    _allAccounts = !_allAccounts;
     notifyListeners();
   }
 
   /// show torrents from only selected account
-  doNotShowAllAccounts(){
-    _allAccounts=false;
+  doNotShowAllAccounts() {
+    _allAccounts = false;
     notifyListeners();
   }
 
@@ -72,35 +70,29 @@ class GeneralFeatures extends ChangeNotifier {
 
   List<Torrent> sortList(List<Torrent> torrentsList, Sort sort) {
     switch (sort) {
-
-      case Sort.name:
+      case Sort.name_ascending:
         torrentsList.sort((a, b) => a.name.compareTo(b.name));
         return torrentsList;
 
+      case Sort.name_descending:
+        torrentsList.sort((a, b) => a.name.compareTo(b.name));
+        return torrentsList.reversed.toList();
+
       case Sort.dateAdded:
         torrentsList.sort((a, b) => a.torrentAdded.compareTo(b.torrentAdded));
-        return torrentsList;
-
-      case Sort.percentDownloaded:
-        torrentsList.sort(
-            (a, b) => a.percentageDownload.compareTo(b.percentageDownload));
-        return torrentsList;
-
-      case Sort.downloadSpeed:
-        torrentsList.sort((a, b) => a.dlSpeed.compareTo(b.dlSpeed));
-        return torrentsList;
-
-      case Sort.uploadSpeed:
-        torrentsList.sort((a, b) => a.ulSpeed.compareTo(b.ulSpeed));
         return torrentsList;
 
       case Sort.ratio:
         torrentsList.sort((a, b) => a.ratio.compareTo(b.ratio));
         return torrentsList;
 
-      case Sort.size:
+      case Sort.size_ascending:
         torrentsList.sort((a, b) => a.size.compareTo(b.size));
         return torrentsList;
+
+      case Sort.size_descending:
+        torrentsList.sort((a, b) => a.size.compareTo(b.size));
+        return torrentsList.reversed.toList();
 
       default:
         return torrentsList;
@@ -133,7 +125,9 @@ class GeneralFeatures extends ChangeNotifier {
     _diskSpace.update(total, free);
     notifyListeners();
 
-    if (_diskSpace.isLow() && _diskSpace.alertUser && Provider.of<Settings>(context,listen: false).diskSpaceNotification)
+    if (_diskSpace.isLow() &&
+        _diskSpace.alertUser &&
+        Provider.of<Settings>(context, listen: false).diskSpaceNotification)
       _diskSpace.generateLowDiskSpaceAlert(notifications);
   }
 
@@ -170,6 +164,7 @@ class GeneralFeatures extends ChangeNotifier {
   get filterTileList => _filterTileList;
 
   changeFilter(Filter newFilter) {
+    _isLabelSelected = false;
     _selectedFilter = newFilter;
     _pageController.jumpToPage(0); // Show the torrents listing page
     notifyListeners();
@@ -177,14 +172,15 @@ class GeneralFeatures extends ChangeNotifier {
 
   List<Torrent> filterList(List<Torrent> torrentsList, Filter filter) {
     switch (filter) {
-
       case Filter.All:
         return torrentsList;
 
       case Filter.Downloading:
         return torrentsList
-            .where((torrent) => torrent.status == Status.downloading ||
-            (torrent.status == Status.paused && torrent.status != Status.completed))
+            .where((torrent) =>
+                torrent.status == Status.downloading ||
+                (torrent.status == Status.paused &&
+                    torrent.status != Status.completed))
             .toList();
 
       case Filter.Completed:
@@ -223,46 +219,86 @@ class GeneralFeatures extends ChangeNotifier {
 
   setActiveDownloads(List<Torrent> list) => _activeDownloads = list;
 
-  /// History Check
-  List<HistoryItem> _historyItems = [];
-  get historyItems => _historyItems;
+  /// Active Labels
+  // List of names of all the labels
+  List<String> _listOfLabels = [];
+  get listOfLabels{
+    return _listOfLabels;
+  }
 
-  updateHistoryItems(List<HistoryItem> updatedList, BuildContext context) {
+  setListOfLabels(List<String> listOfLabels) {
+    _listOfLabels = listOfLabels;
+    notifyListeners();
+  }
 
-    bool happenedNow(HistoryItem item){
-      if(DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1)
-        return true;
-      return false;
-    }
+  //Selected Label
+  String _selectedLabel;
 
-    _historyItems = updatedList;
-    for (var item in updatedList) {
+  //Flag, used to know if a label is selected or not
+  bool _isLabelSelected = false;
 
-      switch (item.action) {
-        case 1: // Torrent Added
-          if (happenedNow(item)) {
-            // Generate Notification
-            if(Provider.of<Settings>(context,listen: false).addTorrentNotification) {
-              notifications.generate('New Torrent Added', item.name);
+  get isLabelSelected => _isLabelSelected;
+  get selectedLabel => _selectedLabel;
+  changeLabel(String label){
+    _selectedFilter = Filter.All;
+    _isLabelSelected = true;
+    _selectedLabel = label;
+    _pageController.jumpToPage(0); // Show the torrents listing page
+    notifyListeners();
+  }
+
+  List<Torrent> filterListUsingLabel(List<Torrent> torrentsList, String label) {
+
+        return torrentsList
+            .where((torrent) =>
+        torrent.label == label)
+            .toList();
+
+
+  }
+
+
+    /// History Check
+    List<HistoryItem> _historyItems = [];
+    get historyItems => _historyItems;
+
+    updateHistoryItems(List<HistoryItem> updatedList, BuildContext context) {
+      bool happenedNow(HistoryItem item) {
+        if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1)
+          return true;
+        return false;
+      }
+
+      _historyItems = updatedList;
+      for (var item in updatedList) {
+        switch (item.action) {
+          case 1: // Torrent Added
+            if (happenedNow(item)) {
+              // Generate Notification
+              if (Provider.of<Settings>(context, listen: false)
+                  .addTorrentNotification) {
+                notifications.generate('New Torrent Added', item.name);
+              }
             }
-          }
-          break;
+            break;
 
-        case 2: // Torrent Finished
-          if (happenedNow(item)) {
-            // Generate Notification
-            if(Provider.of<Settings>(context,listen: false).downloadCompleteNotification) {
-              notifications.generate('Download Completed', item.name);
+          case 2: // Torrent Finished
+            if (happenedNow(item)) {
+              // Generate Notification
+              if (Provider.of<Settings>(context, listen: false)
+                  .downloadCompleteNotification) {
+                notifications.generate('Download Completed', item.name);
+              }
             }
-          }
-          break;
+            break;
 
-        case 3: // Torrent Deleted
-          if (happenedNow(item)) {
-            // Do Something
-          }
-          break;
+          case 3: // Torrent Deleted
+            if (happenedNow(item)) {
+              // Do Something
+            }
+            break;
+        }
       }
     }
   }
-}
+

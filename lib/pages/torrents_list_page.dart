@@ -34,6 +34,13 @@ class TorrentsListPage extends StatelessWidget {
     //Filtering: filtering list on basis of selected filter
     displayList = general.filterList(displayList, general.selectedFilter);
 
+    //If Label is selected, filtering it using the label
+    if(general.isLabelSelected) {
+      displayList =
+          general.filterListUsingLabel(displayList, general.selectedLabel);
+    }
+
+
     if (general.searchTextController.text.isNotEmpty) {
       //Searching : showing list on basis of searched text
       displayList = displayList

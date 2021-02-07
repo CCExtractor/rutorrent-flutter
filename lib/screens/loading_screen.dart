@@ -34,11 +34,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   _fetchSettings() async {
     Settings settings = await Preferences.fetchSettings();
-    Provider.of<Settings>(context,listen: false).setSettings(settings);
+    Provider.of<Settings>(context, listen: false).setSettings(settings);
 
-    Mode mode = Provider.of<Mode>(context,listen: false);
-    if(mode.isDarkMode!=settings.showDarkMode)
-      mode.toggleMode();
+    Mode mode = Provider.of<Mode>(context, listen: false);
+    if (mode.isDarkMode != settings.showDarkMode) mode.toggleMode();
 
     setState(() {
       isLoading = false;

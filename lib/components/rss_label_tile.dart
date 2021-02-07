@@ -38,9 +38,7 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
           });
         },
         child: Container(
-          color: isLongPressed
-              ? Theme.of(context).disabledColor
-              : null,
+          color: isLongPressed ? Theme.of(context).disabledColor : null,
           child: isLongPressed
               ? ListTile(
                   contentPadding: EdgeInsets.fromLTRB(16, 0, 4, 0),
@@ -52,7 +50,7 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
                   ),
                   trailing: IconButton(
                       icon: Icon(
-                          Icons.delete,
+                        Icons.delete,
                       ),
                       onPressed: () async {
                         Fluttertoast.showToast(msg: 'Removing');

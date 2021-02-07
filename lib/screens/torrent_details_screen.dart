@@ -4,9 +4,11 @@ import 'dart:io';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
+import 'package:rutorrentflutter/components/custom_dialog.dart';
 import 'package:rutorrentflutter/components/file_tile.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
@@ -14,6 +16,7 @@ import 'package:rutorrentflutter/models/torrent.dart';
 
 class TorrentDetailSheet extends StatefulWidget {
   final Torrent torrent;
+
   TorrentDetailSheet(this.torrent);
 
   @override
@@ -33,13 +36,22 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   List<String> trackers = [];
 
   String torrentUrl;
+
   // scroll controller for screen
   final ScrollController _scrollController = ScrollController();
+
+  // Controller for Label TextField
+  final TextEditingController _labelController = TextEditingController();
+
+  // Form key for label TextField
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   IconData _getTorrentIconData(Torrent torrent) {
     return torrent.isOpen == 0
         ? Icons.play_arrow
-        : torrent.getState == 0 ? (Icons.play_arrow) : Icons.pause;
+        : torrent.getState == 0
+            ? (Icons.play_arrow)
+            : Icons.pause;
   }
 
   /// Updates torrent in real time
@@ -115,6 +127,66 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
     _updateTorrent();
     _getFiles();
     _getTrackers();
+    _labelController.text = widget.torrent.label;
+  }
+
+  /// Shows the set and remove label dialog
+  showLabelDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      child: AlertDialog(
+        content: Form(
+          key: _formKey,
+          child: TextFormField(
+            controller: _labelController,
+            validator: (_) {
+              if (_labelController.text != null &&
+                  _labelController.text.trim() != "") {
+                return null;
+              }
+              return "Enter a valid label";
+            },
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5),
+                ),
+              ),
+              contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              hintText: "Label",
+            ),
+          ),
+        ),
+        actions: [
+          _actionButton(
+              text: "Set Label",
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  await ApiRequests.setTorrentLabel(torrent.api, torrent.hash,
+                      label: _labelController.text);
+                  Provider.of<GeneralFeatures>(context,listen: false).changeLabel(_labelController.text); // Doing this to ensure the filter is set to the label added
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Fluttertoast.showToast(msg: "Label set");
+                }
+              }),
+          _actionButton(
+            text: "Remove Label",
+            onPressed: () async {
+              await ApiRequests.removeTorrentLabel(
+                torrent.api,
+                torrent.hash,
+              );
+              _labelController.text = "";
+              Provider.of<GeneralFeatures>(context,listen: false).changeFilter(Filter.All); // Doing this to ensure that a empty torrent list page is not shown to the user
+              Navigator.pop(context);
+              Navigator.pop(context);
+              Fluttertoast.showToast(msg: "Label removed");
+            },
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -199,9 +271,30 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                       iconSize: 20,
                                       icon: Icon(Icons.close),
                                       onPressed: () {
-                                        ApiRequests.removeTorrent(
-                                            torrent.api, torrent.hash);
-                                        Navigator.pop(context);
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => CustomDialog(
+                                                  title: 'Remove Torrent',
+                                                  optionRightText:
+                                                      'Remove Torrent and Delete Data',
+                                                  optionLeftText:
+                                                      'Remove Torrent',
+                                                  optionRightOnPressed: () {
+                                                    ApiRequests
+                                                        .removeTorrentWithData(
+                                                            torrent.api,
+                                                            torrent.hash);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  optionLeftOnPressed: () {
+                                                    ApiRequests.removeTorrent(
+                                                        torrent.api,
+                                                        torrent.hash);
+                                                    Navigator.pop(context);
+                                                    Navigator.pop(context);
+                                                  },
+                                                ));
                                       }),
                                 ),
                                 SizedBox(
@@ -237,6 +330,20 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                       onPressed: () => ApiRequests.stopTorrent(
                                           torrent.api, torrent.hash)),
                                 ),
+                                SizedBox(
+                                  width: 35,
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle),
+                                  child: IconButton(
+                                      color: Colors.black,
+                                      iconSize: 25,
+                                      icon: Icon(Icons.label_important_outline),
+                                      onPressed: () =>
+                                          showLabelDialog(context)),
+                                )
                               ],
                               mainAxisAlignment: MainAxisAlignment.center,
                             ),
@@ -257,25 +364,30 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                   )),
               ExpansionTile(
                 initiallyExpanded: torrent.status == Status.downloading,
-                title: Text('More Info',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                title: Text(
+                  'More Info',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     child: Column(
                       children: <Widget>[
                         Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Seed',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 16),
-                            )),
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Seed',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 16),
+                          ),
+                        ),
                         Container(
                           height: 70,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              border: Border.all(color: Colors.grey)),
+                            borderRadius: BorderRadius.circular(5.0),
+                            border: Border.all(color: Colors.grey),
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
@@ -426,8 +538,9 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                         Container(
                           height: 70,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              border: Border.all(color: Colors.grey)),
+                            borderRadius: BorderRadius.circular(5.0),
+                            border: Border.all(color: Colors.grey),
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
@@ -449,15 +562,18 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                               ),
                               Row(
                                 children: <Widget>[
-                                  Text('Upload : ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600)),
+                                  Text(
+                                    'Upload : ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  ),
                                   Text(
                                     '${filesize(torrent.ulSpeed)}/s',
                                     style: TextStyle(
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12),
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -469,23 +585,28 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                         ),
                         Align(
                           alignment: Alignment.centerLeft,
-                          child: Text('Save Path',style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16),),
+                          child: Text(
+                            'Save Path',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 16),
+                          ),
                         ),
                         Container(
                           height: 70,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              border: Border.all(color: Colors.grey)),
+                            borderRadius: BorderRadius.circular(5.0),
+                            border: Border.all(color: Colors.grey),
+                          ),
                           child: Center(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text('${torrent.savePath}',
+                              child: Text(
+                                '${torrent.savePath}',
                                 style: TextStyle(
                                     color: Colors.grey,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12),),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12),
+                              ),
                             ),
                           ),
                         ),
@@ -495,7 +616,6 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                       ],
                     ),
                   ),
-
                 ],
               ),
               ExpansionTile(
@@ -504,12 +624,13 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                         TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                 children: <Widget>[
                   ListView.builder(
-                      controller: _scrollController,
-                      shrinkWrap: true,
-                      itemCount: files.length,
-                      itemBuilder: (context, index) {
-                        return FileTile(files[index], torrent, syncFiles);
-                      })
+                    controller: _scrollController,
+                    shrinkWrap: true,
+                    itemCount: files.length,
+                    itemBuilder: (context, index) {
+                      return FileTile(files[index], torrent, syncFiles);
+                    },
+                  ),
                 ],
               ),
               ExpansionTile(
@@ -524,12 +645,13 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                     itemCount: trackers.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                          dense: true,
-                          title: Text(
-                            trackers[index],
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w600),
-                          ));
+                        dense: true,
+                        title: Text(
+                          trackers[index],
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w600),
+                        ),
+                      );
                     },
                   )
                 ],
@@ -539,5 +661,19 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
         ),
       ),
     );
+  }
+
+  /// Action Button for set and remove label dialog
+  Widget _actionButton({String text, Function onPressed}) {
+    return RaisedButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+          side: BorderSide(color: Theme.of(context).primaryColor),
+        ),
+        color: Theme.of(context).primaryColor,
+        child: Text(
+          text,
+        ),
+        onPressed: onPressed);
   }
 }

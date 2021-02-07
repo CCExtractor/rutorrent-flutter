@@ -8,17 +8,20 @@ import 'models/mode.dart';
 import 'models/settings.dart';
 
 void main() {
-  runApp(MultiProvider(providers: [
-
-    /// Providing at the top of the widget tree to grant access to the whole app
-
-    Provider<Api>(create: (context) => Api()),
-    ChangeNotifierProvider<Mode>(create: (context) => Mode()),
-    ChangeNotifierProvider<Settings>(create: (context) => Settings()),
-    ChangeNotifierProvider<GeneralFeatures>(
-      create: (context) => GeneralFeatures(),
+  runApp(
+    MultiProvider(
+      providers: [
+        /// Providing at the top of the widget tree to grant access to the whole app
+        Provider<Api>(create: (context) => Api()),
+        ChangeNotifierProvider<Mode>(create: (context) => Mode()),
+        ChangeNotifierProvider<Settings>(create: (context) => Settings()),
+        ChangeNotifierProvider<GeneralFeatures>(
+          create: (context) => GeneralFeatures(),
+        ),
+      ],
+      child: MyApp(),
     ),
-    ], child: MyApp()));
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -27,13 +30,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'ruTorrent Mobile',
       theme: ThemeData.light().copyWith(
-
-        appBarTheme: AppBarTheme(
-        ),
-
+        appBarTheme: AppBarTheme(),
         textTheme: ThemeData.light().textTheme.apply(
-          fontFamily: 'SFUIDisplay',
-        ),
+              fontFamily: 'SFUIDisplay',
+            ),
         primaryColor: kBluePrimaryLT,
         accentColor: kIndigoSecondaryLT,
         disabledColor: kGreyLT,
@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
         ),
         canvasColor: kBackgroundDT,
         textTheme: ThemeData.dark().textTheme.apply(
-          fontFamily: 'SFUIDisplay',
-        ),
+              fontFamily: 'SFUIDisplay',
+            ),
         primaryColor: kPrimaryDT,
         accentColor: kSecondaryDT,
         disabledColor: kGreyDT,

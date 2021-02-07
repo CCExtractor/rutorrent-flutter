@@ -63,6 +63,7 @@ class ApiRequests {
     List<Torrent> torrentsList = [];
     // A list of active torrents is required for changing the connection state from waiting to active
     List<Torrent> activeTorrents = [];
+    List<String> labels = [];
     var torrentsPath = jsonDecode(responseBody)['t'];
     for (var hashKey in torrentsPath.keys) {
       var torrentObject = torrentsPath[hashKey];
@@ -70,6 +71,7 @@ class ApiRequests {
       torrent.name = torrentObject[4];
       torrent.size = int.parse(torrentObject[5]);
       torrent.savePath = torrentObject[25];
+      torrent.label = torrentObject[14].toString().replaceAll("%20", " ");
       torrent.completedChunks = int.parse(torrentObject[6]);
       torrent.totalChunks = int.parse(torrentObject[7]);
       torrent.sizeOfChunk = int.parse(torrentObject[13]);
@@ -94,8 +96,13 @@ class ApiRequests {
 
       if (torrent.status == Status.downloading &&
           torrent.percentageDownload < 100) activeTorrents.add(torrent);
+      if(!labels.contains(torrent.label) && torrent.label != ""){
+        labels.add(torrent.label);
+      }
+
     }
     general.setActiveDownloads(activeTorrents);
+    general.setListOfLabels(labels);
     return torrentsList;
   }
 
@@ -115,6 +122,7 @@ class ApiRequests {
                 });
             allTorrentList
                 .addAll(parseTorrentsData(response.body, general, api));
+
           } catch (e) {
             print(e);
           }
@@ -180,12 +188,37 @@ class ApiRequests {
   }
 
   static removeTorrent(Api api, String hashValue) async {
-    await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+    var response = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': 'remove',
           'hash': hashValue,
         });
+
+    if (response.statusCode == 200)
+      Fluttertoast.showToast(msg: 'Removed Torrent Successfully');
+  }
+
+  static removeTorrentWithData(Api api, String hashValue) async {
+    var client = api.ioClient;
+    var request = http.Request(
+      'POST',
+      Uri.parse(api.httpRpcPluginUrl),
+    );
+    request.headers.addAll(api.getAuthHeader());
+    var xml =
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>system.multicall</methodName><params><param><value><array><data><value><struct><member><name>methodName</name><value><string>d.custom5.set</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value><value><string>1</string></value></data></array></value></member></struct></value><value><struct><member><name>methodName</name><value><string>d.delete_tied</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value></data></array></value></member></struct></value><value><struct><member><name>methodName</name><value><string>d.erase</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value></data></array></value></member></struct></value></data></array></value></param></params></methodCall>";
+    request.body = xml;
+    var streamedResponse = await client.send(request);
+
+    if (streamedResponse.statusCode == 200)
+      Fluttertoast.showToast(
+          msg: 'Removed Torrent and Deleted Data Successfully');
+
+    var responseBody =
+        await streamedResponse.stream.transform(utf8.decoder).join();
+    print(responseBody);
+    client.close();
   }
 
   static toggleTorrentStatus(
@@ -198,7 +231,9 @@ class ApiRequests {
 
     Status toggleStatus = isOpen == 0
         ? Status.downloading
-        : getState == 0 ? (Status.downloading) : Status.paused;
+        : getState == 0
+            ? (Status.downloading)
+            : Status.paused;
 
     await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
@@ -217,18 +252,23 @@ class ApiRequests {
         });
   }
 
-  static addTorrentFile(Api api , String torrentPath) async {
+
+  static addTorrentFile(Api api, String torrentPath) async {
     Fluttertoast.showToast(msg: 'Adding torrent');
-    var request = http.MultipartRequest('POST' , Uri.parse(api.addTorrentPluginUrl));
-    request.files.add(
-        await http.MultipartFile.fromPath('torrent_file', torrentPath)
-    );
+    var request =
+        http.MultipartRequest('POST', Uri.parse(api.addTorrentPluginUrl));
+    // request.fields['label'] = "hell";
+
+    request.files
+        .add(await http.MultipartFile.fromPath('torrent_file', torrentPath));
     try {
       var response = await request.send();
+
       print(response.headers);
-    } catch(e) {
+    } catch (e) {
       print(e.toString());
     }
+
   }
 
   /// Gets list of trackers for a particular torrent
@@ -404,5 +444,33 @@ class ApiRequests {
     }
 
     return diskFiles;
+  }
+
+  static setTorrentLabel(Api api, String hashValue,{ String label}) async {
+    try {
+      await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'mode': 'setlabel',
+            'hash': hashValue,
+            'v': label.replaceAll(" ", "%20")
+          });
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  static removeTorrentLabel(Api api, String hashValue) async {
+    try {
+      await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'mode': 'setlabel',
+            'hash': hashValue,
+            'v': ''
+          });
+    } on Exception catch (e) {
+      print(e.toString()+"errrrr");
+    }
   }
 }

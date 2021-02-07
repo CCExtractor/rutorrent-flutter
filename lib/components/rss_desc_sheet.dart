@@ -13,7 +13,6 @@ class RSSDescSheet extends StatefulWidget {
   final RSSItem rssItem;
   final String labelHash;
 
-
   RSSDescSheet(this.rssItem, this.labelHash);
 
   @override
@@ -26,8 +25,8 @@ class _RSSDescSheetState extends State<RSSDescSheet> {
   bool dataAvailable;
 
   fetchRSSDetails() async {
-    dataAvailable =
-        await ApiRequests.getRSSDetails(Provider.of<Api>(context,listen: false), rssItem, widget.labelHash);
+    dataAvailable = await ApiRequests.getRSSDetails(
+        Provider.of<Api>(context, listen: false), rssItem, widget.labelHash);
     setState(() {
       isFetching = false;
     });
@@ -46,7 +45,7 @@ class _RSSDescSheetState extends State<RSSDescSheet> {
       height: 400,
       child: Scaffold(
         body: isFetching
-            ? LoadingShimmer().loadingEffect(context,length:2)
+            ? LoadingShimmer().loadingEffect(context, length: 2)
             : !dataAvailable
                 ? Center(
                     child: Text(
@@ -73,8 +72,10 @@ class _RSSDescSheetState extends State<RSSDescSheet> {
                                   height: 200,
                                   child: ClipRRect(
                                     child: Image.network(
-                                        rssItem.imageUrl,
-                                      errorBuilder: (context,exception,stackTrace)=>Container(),
+                                      rssItem.imageUrl,
+                                      errorBuilder:
+                                          (context, exception, stackTrace) =>
+                                              Container(),
                                     ),
                                   ),
                                 ),
@@ -84,7 +85,8 @@ class _RSSDescSheetState extends State<RSSDescSheet> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: <Widget>[
                                         Flexible(
                                           child: Text(
@@ -95,9 +97,17 @@ class _RSSDescSheetState extends State<RSSDescSheet> {
                                           ),
                                         ),
                                         IconButton(
-                                          color: Provider.of<Mode>(context).isDarkMode?Colors.white:Colors.black,
-                                          icon: FaIcon(FontAwesomeIcons.plusSquare),
-                                          onPressed: ()=>ApiRequests.addTorrent(Provider.of<Api>(context,listen: false), rssItem.url),
+                                          color: Provider.of<Mode>(context)
+                                                  .isDarkMode
+                                              ? Colors.white
+                                              : Colors.black,
+                                          icon: FaIcon(
+                                              FontAwesomeIcons.plusSquare),
+                                          onPressed: () =>
+                                              ApiRequests.addTorrent(
+                                                  Provider.of<Api>(context,
+                                                      listen: false),
+                                                  rssItem.url),
                                         ),
                                       ],
                                     ),

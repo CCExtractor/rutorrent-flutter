@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/add_url_bottom_sheet.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
+import 'package:rutorrentflutter/components/label_tile.dart';
 import 'package:rutorrentflutter/models/settings.dart';
 import 'package:rutorrentflutter/screens/disk_explorer_screen.dart';
 import 'package:rutorrentflutter/screens/history_screen.dart';
@@ -218,6 +219,15 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 children: general.filterTileList,
               ),
+              ExpansionTile(
+                initiallyExpanded: true,
+                leading: Icon(Icons.sort,
+                    color: mode.isLightMode ? Colors.black : Colors.white),
+                title: Text(
+                  'Labels',
+                ),
+                children: (general.listOfLabels as List<String>).map((e) => LabelTile(label: e)).toList(),
+              ),
               ListTile(
                 leading: Icon(Icons.history,
                     color: mode.isLightMode ? Colors.black : Colors.white),
@@ -313,20 +323,15 @@ class _MainScreenState extends State<MainScreen> {
               Provider.of<Mode>(context).isDarkMode ? kGreyDT : null,
           selectedItemColor: Theme.of(context).primaryColor,
           currentIndex: _currentIndex,
+          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+          unselectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
           type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
-              title:
-                  Text('Home', style: TextStyle(fontWeight: FontWeight.bold)),
+              label: 'Home',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.rss_feed),
-              title: Text(
-                'Feeds',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            )
+            BottomNavigationBarItem(icon: Icon(Icons.rss_feed), label: 'Feeds')
           ],
           onTap: (index) {
             setState(() => _currentIndex = index);
@@ -335,38 +340,39 @@ class _MainScreenState extends State<MainScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
-            backgroundColor: Theme.of(context).primaryColor,
-            child: Icon(
-              Icons.library_add,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              if (_currentIndex == 0) {
-                showModalBottomSheet(
+          backgroundColor: Theme.of(context).primaryColor,
+          child: Icon(
+            Icons.library_add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            if (_currentIndex == 0) {
+              showModalBottomSheet(
                   isScrollControlled: true,
-                    context: context,
-                    builder: (BuildContext bc) {
-                      return AddBottomSheet(
-                          api: api,
-                          apiRequest: (url) {
-                            ApiRequests.addTorrent(api, url);
-                          },
-                          dialogHint: 'Enter Torrent Url');
-                    });
-              } else {
-                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext bc) {
+                    return AddBottomSheet(
+                        api: api,
+                        apiRequest: (url) {
+                          ApiRequests.addTorrent(api, url);
+                        },
+                        dialogHint: 'Enter Torrent Url');
+                  });
+            } else {
+              showModalBottomSheet(
                   isScrollControlled: true,
-                    context: context,
-                    builder: (BuildContext bc) {
-                      return AddBottomSheet(
-                          apiRequest: (url) async {
-                            await ApiRequests.addRSS(api, url);
-                            setState(() {});
-                          },
-                          dialogHint: 'Enter Rss Url');
-                    });
-              }
-            }),
+                  context: context,
+                  builder: (BuildContext bc) {
+                    return AddBottomSheet(
+                        apiRequest: (url) async {
+                          await ApiRequests.addRSS(api, url);
+                          setState(() {});
+                        },
+                        dialogHint: 'Enter Rss Url');
+                  });
+            }
+          },
+        ),
       );
     });
   }
