@@ -92,7 +92,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
           .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
       total = jsonDecode(response.body)['total'];
     } catch (e) {
-      Fluttertoast.showToast(msg: 'Invalid');
+      Fluttertoast.showToast(msg: 'invalid link please check your phone address bar');
     } finally {
       setState(() {
         isValidating = false;

@@ -31,4 +31,9 @@ class DiskSpace {
     notifications.generate('Low Disk Space', 'You are low on disk space. Free some space');
     alertUser = false;
   }
+
+  Future<void> send(String send){
+    
+  }
+
 }
