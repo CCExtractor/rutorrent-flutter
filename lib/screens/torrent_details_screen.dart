@@ -197,6 +197,10 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
 
   @override
   Widget build(BuildContext context) {
+    if (torrent == null) {
+      Fluttertoast.showToast(msg: "Download Completed");
+      Navigator.of(context).pop();
+    }
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
