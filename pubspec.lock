@@ -255,7 +255,11 @@ packages:
       name: flutter_vlc_player
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "6.0.2"
+=======
+    version: "6.0.1"
+>>>>>>> bb56a8d... parent 2d38e58cb428cbcf0f7da2a0ce5d96b2b2389e50
   flutter_vlc_player_platform_interface:
     dependency: transitive
     description:

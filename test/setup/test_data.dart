@@ -31,7 +31,7 @@ class TestData {
 
   static RSSItem rssItem = RSSItem("RSS_TITLE", 1234567890, "testURL");
 
-  static RSSFilter rssFilter = RSSFilter("TestName", 0, "", "", "", "");
+  static RSSFilter rssFilter = RSSFilter(name:"TestName");
 
   static const httpRpcPluginUrl = url + '/plugins/httprpc/action.php';
 

@@ -379,17 +379,24 @@ class ApiRequests {
 
     var filters = jsonDecode(response.body);
     for (var filter in filters) {
-      RSSFilter rssFilter = RSSFilter(
-        filter['name'],
-        filter['enabled'],
-        filter['pattern'],
-        filter['label'],
-        filter['exclude'],
-        filter['dir'],
-      );
+      RSSFilter rssFilter = RSSFilter.fromJson(filter);
       rssFilters.add(rssFilter);
     }
     return rssFilters;
+  }
+
+  /// Sets details of RSS Filters
+  static setRSSFilter(Api api, List<RSSFilter> filters) async {
+    Map<String, String> headers = {
+      "Content-Type": "application/x-www-form-urlencoded"
+    };
+    headers.addAll(api.getAuthHeader());
+    String queryString = "mode=setfilters&";
+    for (RSSFilter filter in filters ?? []) {
+      queryString += Uri(queryParameters: filter.toJson()).query + "&";
+    }
+    await api.ioClient
+        .post(Uri.parse(api.rssPluginUrl), headers: headers, body: queryString);
   }
 
   /// Gets History of last [lastHours] hours
