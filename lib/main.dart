@@ -41,9 +41,6 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: kBackgroundDT,
-        appBarTheme: AppBarTheme(
-          color: kPrimaryDT,
-        ),
         canvasColor: kBackgroundDT,
         textTheme: ThemeData.dark().textTheme.apply(
               fontFamily: 'SFUIDisplay',
