@@ -23,8 +23,7 @@ class LabelTile extends StatelessWidget {
                 ? Colors.black
                 : Colors.white,
           ),
-          title: Text(
-              label),
+          title: Text(label),
           onTap: () {
             print("ontapp label");
             general.changeLabel(label);

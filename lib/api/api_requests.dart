@@ -96,10 +96,9 @@ class ApiRequests {
 
       if (torrent.status == Status.downloading &&
           torrent.percentageDownload < 100) activeTorrents.add(torrent);
-      if(!labels.contains(torrent.label) && torrent.label != ""){
+      if (!labels.contains(torrent.label) && torrent.label != "") {
         labels.add(torrent.label);
       }
-
     }
     general.setActiveDownloads(activeTorrents);
     general.setListOfLabels(labels);
@@ -122,7 +121,6 @@ class ApiRequests {
                 });
             allTorrentList
                 .addAll(parseTorrentsData(response.body, general, api));
-
           } catch (e) {
             print(e);
           }
@@ -252,7 +250,6 @@ class ApiRequests {
         });
   }
 
-
   static addTorrentFile(Api api, String torrentPath) async {
     Fluttertoast.showToast(msg: 'Adding torrent');
     var request =
@@ -268,7 +265,6 @@ class ApiRequests {
     } catch (e) {
       print(e.toString());
     }
-
   }
 
   /// Gets list of trackers for a particular torrent
@@ -446,7 +442,7 @@ class ApiRequests {
     return diskFiles;
   }
 
-  static setTorrentLabel(Api api, String hashValue,{ String label}) async {
+  static setTorrentLabel(Api api, String hashValue, {String label}) async {
     try {
       await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
           headers: api.getAuthHeader(),
@@ -464,13 +460,9 @@ class ApiRequests {
     try {
       await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
           headers: api.getAuthHeader(),
-          body: {
-            'mode': 'setlabel',
-            'hash': hashValue,
-            'v': ''
-          });
+          body: {'mode': 'setlabel', 'hash': hashValue, 'v': ''});
     } on Exception catch (e) {
-      print(e.toString()+"errrrr");
+      print(e.toString() + "errrrr");
     }
   }
 }
