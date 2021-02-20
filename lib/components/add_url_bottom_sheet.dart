@@ -31,14 +31,15 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
   File torrentFile;
 
   void pickTorrentFile() async {
-    FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.custom,allowedExtensions: ["torrent"]);
+    FilePickerResult result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ["torrent"]);
     if (result == null) {
       Fluttertoast.showToast(msg: 'No file selected');
-    } else if(result.files.first.extension == "torrent")   {
+    } else if (result.files.first.extension == "torrent") {
       torrentPath = result.files.first.path;
       print("path: $torrentPath");
       ApiRequests.addTorrentFile(widget.api, torrentPath);
-    } else{
+    } else {
       Fluttertoast.showToast(msg: 'Invalid file selected');
     }
   }

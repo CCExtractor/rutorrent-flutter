@@ -226,7 +226,9 @@ class _MainScreenState extends State<MainScreen> {
                 title: Text(
                   'Labels',
                 ),
-                children: (general.listOfLabels as List<String>).map((e) => LabelTile(label: e)).toList(),
+                children: (general.listOfLabels as List<String>)
+                    .map((e) => LabelTile(label: e))
+                    .toList(),
               ),
               ListTile(
                 leading: Icon(Icons.history,
