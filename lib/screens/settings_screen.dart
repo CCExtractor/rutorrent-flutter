@@ -22,14 +22,26 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   _logoutAllAccounts(BuildContext context) {
-    Preferences.clearLogin();
+    showDialog(
+        context: context,
+        builder: (_) => CustomDialog(
+              title: 'Are you sure you want to logout from all saved accounts?',
+              optionLeftText: 'No',
+              optionRightText: 'Yes',
+              optionLeftOnPressed: () => Navigator.pop(context),
+              optionRightOnPressed: () {
+                // Closes dialog box.
+                Navigator.pop(context);
 
-    Navigator.pop(context);
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ConfigurationsScreen(),
-        ));
+                Preferences.clearLogin();
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ConfigurationsScreen(),
+                    ));
+              },
+            ));
   }
 
   _deleteAccount(BuildContext context, GeneralFeatures general, int index) {
