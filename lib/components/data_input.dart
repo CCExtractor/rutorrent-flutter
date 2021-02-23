@@ -43,7 +43,7 @@ class DataInput extends StatelessWidget {
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
             border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             hintText: hintText,
             hintStyle: TextStyle(color: hintTextColor ?? borderColor),
             suffixIcon: suffixIconButton,
