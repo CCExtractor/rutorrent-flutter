@@ -1,6 +1,7 @@
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
@@ -201,7 +202,7 @@ class TorrentTile extends StatelessWidget {
               },
               caption: 'Delete with Data',
               color: Colors.black45,
-              icon: Icons.archive_outlined,
+              icon: FontAwesomeIcons.folderMinus,
             ),
             IconSlideAction(
               onTap: () {
