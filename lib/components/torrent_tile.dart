@@ -1,5 +1,6 @@
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
@@ -47,143 +48,170 @@ class TorrentTile extends StatelessWidget {
     Color statusColor = getStatusColor(torrent.status, context);
     return Consumer<Api>(
       builder: (context, api, child) {
-        return GestureDetector(
-          onLongPress: () {
-            showDialog(
-                context: context,
-                builder: (context) => CustomDialog(
-                      title: 'Remove Torrent',
-                      optionRightText: 'Remove Torrent and Delete Data',
-                      optionLeftText: 'Remove Torrent',
-                      optionRightOnPressed: () {
-                        ApiRequests.removeTorrentWithData(
-                            torrent.api, torrent.hash);
-                        Navigator.pop(context);
-                      },
-                      optionLeftOnPressed: () {
-                        ApiRequests.removeTorrent(torrent.api, torrent.hash);
-                        Navigator.pop(context);
-                      },
-                    ));
-          },
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TorrentDetailSheet(torrent)));
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-            child: Container(
-              width: double.infinity,
-              height: 80,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    flex: 5,
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Flexible(
-                                  child: Text(
-                                torrent.name,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 16),
-                              )),
-                              Flexible(
-                                child: Text(
-                                  '${filesize(torrent.downloadedData)}${torrent.dlSpeed == 0 ? '' : ' | ' + torrent.getEta}',
+        return Slidable(
+          actionPane: SlidableDrawerActionPane(),
+          actionExtentRatio: 0.25,
+          child: GestureDetector(
+            onLongPress: () {
+              showDialog(
+                  context: context,
+                  builder: (context) => CustomDialog(
+                        title: 'Remove Torrent',
+                        optionRightText: 'Remove Torrent and Delete Data',
+                        optionLeftText: 'Remove Torrent',
+                        optionRightOnPressed: () {
+                          ApiRequests.removeTorrentWithData(
+                              torrent.api, torrent.hash);
+                          Navigator.pop(context);
+                        },
+                        optionLeftOnPressed: () {
+                          ApiRequests.removeTorrent(torrent.api, torrent.hash);
+                          Navigator.pop(context);
+                        },
+                      ));
+            },
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TorrentDetailSheet(torrent)));
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+              child: Container(
+                width: double.infinity,
+                height: 80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 5,
+                      child: Row(
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Flexible(
+                                    child: Text(
+                                  torrent.name,
                                   style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16),
+                                )),
+                                Flexible(
+                                  child: Text(
+                                    '${filesize(torrent.downloadedData)}${torrent.dlSpeed == 0 ? '' : ' | ' + torrent.getEta}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 10,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                          '↓ ${filesize(torrent.dlSpeed.toString()) + '/s'} | ↑ ${filesize(torrent.ulSpeed.toString()) + '/s'}',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 10,
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                            '↓ ${filesize(torrent.dlSpeed.toString()) + '/s'} | ↑ ${filesize(torrent.ulSpeed.toString()) + '/s'}',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 10,
+                                            ),
                                           ),
-                                        ),
-                                        Provider.of<GeneralFeatures>(context)
-                                                .allAccounts
-                                            ? Text(
-                                                '${Uri.parse(torrent.api.url).host}',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 10,
-                                                ),
-                                              )
-                                            : Container(),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 4,
-                                    ),
-                                    LinearProgressIndicator(
-                                      backgroundColor:
-                                          Provider.of<Mode>(context).isLightMode
-                                              ? kGreyLT
-                                              : kGreyDT,
-                                      value: torrent.percentageDownload / 100,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          statusColor),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+                                          Provider.of<GeneralFeatures>(context)
+                                                  .allAccounts
+                                              ? Text(
+                                                  '${Uri.parse(torrent.api.url).host}',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 10,
+                                                  ),
+                                                )
+                                              : Container(),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 4,
+                                      ),
+                                      LinearProgressIndicator(
+                                        backgroundColor:
+                                            Provider.of<Mode>(context)
+                                                    .isLightMode
+                                                ? kGreyLT
+                                                : kGreyDT,
+                                        value: torrent.percentageDownload / 100,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                statusColor),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          torrent.percentageDownload.toString() + '%',
-                          style: TextStyle(
-                              color: statusColor, fontWeight: FontWeight.w700),
-                        ),
-                        IconButton(
-                          color: statusColor,
-                          iconSize: 40,
-                          icon: Icon(_getTorrentIconData()),
-                          onPressed: () => ApiRequests.toggleTorrentStatus(
-                              torrent.api,
-                              torrent.hash,
-                              torrent.isOpen,
-                              torrent.getState),
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Text(
+                            torrent.percentageDownload.toString() + '%',
+                            style: TextStyle(
+                                color: statusColor,
+                                fontWeight: FontWeight.w700),
+                          ),
+                          IconButton(
+                            color: statusColor,
+                            iconSize: 40,
+                            icon: Icon(_getTorrentIconData()),
+                            onPressed: () => ApiRequests.toggleTorrentStatus(
+                                torrent.api,
+                                torrent.hash,
+                                torrent.isOpen,
+                                torrent.getState),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
+          secondaryActions: <Widget>[
+            IconSlideAction(
+              onTap: () {
+                ApiRequests.removeTorrentWithData(torrent.api, torrent.hash);
+              },
+              caption: 'Delete with Data',
+              color: Colors.black45,
+              icon: Icons.archive_outlined,
+            ),
+            IconSlideAction(
+              onTap: () {
+                ApiRequests.removeTorrent(torrent.api, torrent.hash);
+              },
+              caption: 'Delete',
+              color: Colors.red,
+              icon: Icons.delete,
+            ),
+          ],
         );
       },
     );
