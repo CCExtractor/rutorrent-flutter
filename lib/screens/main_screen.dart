@@ -281,7 +281,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     children: [
                       Text(
-                        'Build Number : 1',
+                        'Build Number : $BUILD_NUMBER',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600),
                       ),
@@ -289,7 +289,7 @@ class _MainScreenState extends State<MainScreen> {
                         height: 15,
                       ),
                       Text(
-                        'Release Date : 11.10.20',
+                        'Release Date : $RELEASE_DATE',
                         style: TextStyle(
                             fontSize: 14, fontWeight: FontWeight.w600),
                       ),
