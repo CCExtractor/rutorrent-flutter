@@ -420,26 +420,31 @@ class ApiRequests {
 
   /// Gets Disk Files
   static Future<List<DiskFile>> getDiskFiles(Api api, String path) async {
-    var response = await api.ioClient.post(Uri.parse(api.explorerPluginUrl),
-        headers: api.getAuthHeader(),
-        body: {
-          'cmd': 'get',
-          'src': path,
-        });
+    try {
+      var response = await api.ioClient.post(Uri.parse(api.explorerPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'cmd': 'get',
+            'src': path,
+          });
 
-    var files = jsonDecode(response.body)['files'];
+      var files = jsonDecode(response.body)['files'];
 
-    List<DiskFile> diskFiles = [];
+      List<DiskFile> diskFiles = [];
 
-    for (var file in files) {
-      DiskFile diskFile = DiskFile();
+      for (var file in files) {
+        DiskFile diskFile = DiskFile();
 
-      diskFile.isDirectory = file['is_dir'];
-      diskFile.name = file['data']['name'];
-      diskFiles.add(diskFile);
+        diskFile.isDirectory = file['is_dir'];
+        diskFile.name = file['data']['name'];
+        diskFiles.add(diskFile);
+      }
+
+      return diskFiles;
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
     }
-
-    return diskFiles;
   }
 
   static setTorrentLabel(Api api, String hashValue, {String label}) async {

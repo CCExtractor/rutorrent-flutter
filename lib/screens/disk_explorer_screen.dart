@@ -21,7 +21,8 @@ class _DiskExplorerState extends State<DiskExplorer> {
       isLoading = true;
     });
     diskFiles = await ApiRequests.getDiskFiles(
-        Provider.of<Api>(context, listen: false), path);
+            Provider.of<Api>(context, listen: false), path) ??
+        [];
     setState(() {
       isLoading = false;
     });
