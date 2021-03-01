@@ -1,5 +1,6 @@
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
@@ -95,40 +96,51 @@ class _HistoryScreenState extends State<HistoryScreen> {
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: isLoading
             ? LoadingShimmer().loadingEffect(context)
-            : ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: SizedBox(
-                        width: 40,
-                        child: Text(items[index].name,
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w600))),
-                    trailing: Container(
-                      padding: const EdgeInsets.all(4),
-                      width: 70,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                        color:
-                            getHistoryStatusColor(context, items[index].action),
-                      )),
-                      child:
-                          Text(HistoryItem.historyStatus[items[index].action],
+            : (items.length != 0)
+                ? ListView.builder(
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: SizedBox(
+                            width: 40,
+                            child: Text(items[index].name,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600))),
+                        trailing: Container(
+                          padding: const EdgeInsets.all(4),
+                          width: 70,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                            color: getHistoryStatusColor(
+                                context, items[index].action),
+                          )),
+                          child: Text(
+                              HistoryItem.historyStatus[items[index].action],
                               style: TextStyle(
                                 color: getHistoryStatusColor(
                                     context, items[index].action),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               )),
+                        ),
+                        subtitle: Text(
+                          '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w600),
+                        ),
+                      );
+                    },
+                  )
+                : Expanded(
+                    child: Center(
+                      child: SvgPicture.asset(
+                        'assets/logo/empty.svg',
+                        width: 120,
+                        height: 120,
+                      ),
                     ),
-                    subtitle: Text(
-                      '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                    ),
-                  );
-                },
-              ),
+                  ),
       ),
     );
   }
