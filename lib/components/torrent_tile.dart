@@ -50,7 +50,7 @@ class TorrentTile extends StatelessWidget {
     return Consumer<Api>(
       builder: (context, api, child) {
         return Slidable(
-          actionPane: SlidableDrawerActionPane(),
+          actionPane: SlidableStrechActionPane(),
           actionExtentRatio: 0.25,
           child: GestureDetector(
             onLongPress: () {
@@ -195,22 +195,22 @@ class TorrentTile extends StatelessWidget {
               ),
             ),
           ),
-          secondaryActions: <Widget>[
-            IconSlideAction(
-              onTap: () {
-                ApiRequests.removeTorrentWithData(torrent.api, torrent.hash);
-              },
-              caption: 'Delete with Data',
-              color: Colors.black45,
-              icon: FontAwesomeIcons.folderMinus,
-            ),
+          actions: <Widget>[
             IconSlideAction(
               onTap: () {
                 ApiRequests.removeTorrent(torrent.api, torrent.hash);
               },
               caption: 'Delete',
-              color: Colors.red,
               icon: Icons.delete,
+              color: kBluePrimaryLT,
+            ),
+            IconSlideAction(
+              onTap: () {
+                ApiRequests.removeTorrentWithData(torrent.api, torrent.hash);
+              },
+              caption: 'Delete with Data',
+              icon: FontAwesomeIcons.folderMinus,
+              color: kIndigoSecondaryLT,
             ),
           ],
         );
