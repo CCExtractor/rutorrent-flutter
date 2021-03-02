@@ -121,6 +121,9 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
           passwordFocus.unfocus();
         },
         child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+          ),
           body: SingleChildScrollView(
             child: Column(
               children: <Widget>[

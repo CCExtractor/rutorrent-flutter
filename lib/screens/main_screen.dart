@@ -127,7 +127,7 @@ class _MainScreenState extends State<MainScreen> {
         leading: Icon(Icons.add),
         title: Text('Add another account'),
         onTap: () {
-          Navigator.pushReplacement(
+          Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => ConfigurationsScreen(),
