@@ -94,11 +94,15 @@ class TorrentTile extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Flexible(
-                                  child: Text(
-                                torrent.name,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 16),
-                              )),
+                                child: Text(
+                                  torrent.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16),
+                                ),
+                              ),
                               Flexible(
                                 child: Text(
                                   '${filesize(torrent.downloadedData)}${torrent.dlSpeed == 0 ? '' : ' | ' + torrent.getEta}',
