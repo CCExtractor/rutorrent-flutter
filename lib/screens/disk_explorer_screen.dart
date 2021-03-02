@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
@@ -21,7 +22,8 @@ class _DiskExplorerState extends State<DiskExplorer> {
       isLoading = true;
     });
     diskFiles = await ApiRequests.getDiskFiles(
-        Provider.of<Api>(context, listen: false), path);
+            Provider.of<Api>(context, listen: false), path) ??
+        [];
     setState(() {
       isLoading = false;
     });
@@ -78,15 +80,25 @@ class _DiskExplorerState extends State<DiskExplorer> {
             ),
             isLoading
                 ? Expanded(child: LoadingShimmer().loadingEffect(context))
-                : Expanded(
-                    child: ListView.builder(
-                      itemCount: diskFiles.length,
-                      itemBuilder: (context, index) {
-                        return DiskFileTile(
-                            diskFiles[index], path, goBackwards, goForwards);
-                      },
-                    ),
-                  ),
+                : (diskFiles.length != 0)
+                    ? Expanded(
+                        child: ListView.builder(
+                          itemCount: diskFiles.length,
+                          itemBuilder: (context, index) {
+                            return DiskFileTile(diskFiles[index], path,
+                                goBackwards, goForwards);
+                          },
+                        ),
+                      )
+                    : Expanded(
+                        child: Center(
+                          child: SvgPicture.asset(
+                            'assets/logo/empty.svg',
+                            width: 120,
+                            height: 120,
+                          ),
+                        ),
+                      ),
           ],
         )),
       ),
