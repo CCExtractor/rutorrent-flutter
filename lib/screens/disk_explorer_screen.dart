@@ -93,7 +93,9 @@ class _DiskExplorerState extends State<DiskExplorer> {
                     : Expanded(
                         child: Center(
                           child: SvgPicture.asset(
-                            'assets/logo/empty.svg',
+                            Theme.of(context).brightness == Brightness.light
+                                ? 'assets/logo/empty.svg'
+                                : 'assets/logo/empty_dark.svg',
                             width: 120,
                             height: 120,
                           ),
