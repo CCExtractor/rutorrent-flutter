@@ -345,7 +345,7 @@ class ApiRequests {
             'href': rssItem.url,
             'rss': labelHash,
           });
-      var xmlResponse = xml.parse(response.body);
+      var xmlResponse = xml.XmlDocument.parse(response.body);
 
       var data =
           xmlResponse.lastChild.text; // extracting value stored in data tag

@@ -8,7 +8,6 @@ import 'package:rutorrentflutter/components/torrent_tile.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import '../components/loading_shimmer.dart';
-import '../utilities/constants.dart';
 
 class TorrentsListPage extends StatelessWidget {
   checkForActiveDownloads(Api api, GeneralFeatures general) async {
