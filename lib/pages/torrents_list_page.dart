@@ -65,53 +65,23 @@ class TorrentsListPage extends StatelessWidget {
                   : ApiRequests.getTorrentList(
                       Provider.of<Api>(context), general),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.data != null) {
-                  if (snapshot.connectionState == ConnectionState.waiting &&
-                      !snapshot.hasData) {
-                    checkForActiveDownloads(
-                        Provider.of<Api>(context, listen: false),
-                        Provider.of<GeneralFeatures>(context, listen: false));
+                if (snapshot.connectionState == ConnectionState.waiting &&
+                    !snapshot.hasData) {
+                  checkForActiveDownloads(
+                      Provider.of<Api>(context, listen: false),
+                      Provider.of<GeneralFeatures>(context, listen: false));
 
-                    // showing loading list of Shimmer
-                    return LoadingShimmer().loadingEffect(context, length: 5);
-                  }
-
-                  if (snapshot.hasData) {
-                    general.updateTorrentsList(
-                        _getDisplayList(snapshot.data, general));
-                  }
+                  // showing loading list of Shimmer
+                  return LoadingShimmer().loadingEffect(context, length: 5);
+                }
+                if (snapshot.data != null && snapshot.data.isNotEmpty) {
+                  general.updateTorrentsList(
+                      _getDisplayList(snapshot.data, general));
 
                   return ListView.builder(
                     itemCount: general.torrentsList.length,
-                    itemBuilder: (context, index) {
-                      return (snapshot.hasData &&
-                              general.torrentsList.length != 0)
-                          ? TorrentTile(general.torrentsList[index])
-                          : Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    Theme.of(context).brightness ==
-                                            Brightness.light
-                                        ? 'assets/logo/empty.svg'
-                                        : 'assets/logo/empty_dark.svg',
-                                    width: 120,
-                                    height: 120,
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Text(
-                                    'No Torrents to Show',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              ),
-                            );
-                    },
+                    itemBuilder: (context, index) =>
+                        TorrentTile(general.torrentsList[index]),
                   );
                 }
                 return Center(
