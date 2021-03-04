@@ -702,12 +702,14 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
 
   /// Action Button for set and remove label dialog
   Widget _actionButton({String text, Function onPressed}) {
-    return RaisedButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5.0),
-          side: BorderSide(color: Theme.of(context).primaryColor),
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5.0),
+            side: BorderSide(color: Theme.of(context).primaryColor),
+          ),
+          primary: Theme.of(context).primaryColor,
         ),
-        color: Theme.of(context).primaryColor,
         child: Text(
           text,
         ),
