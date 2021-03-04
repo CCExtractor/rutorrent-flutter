@@ -136,62 +136,65 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   showLabelDialog(BuildContext context) {
     showDialog(
       context: context,
-      child: AlertDialog(
-        content: Form(
-          key: _formKey,
-          child: TextFormField(
-            controller: _labelController,
-            validator: (_) {
-              if (_labelController.text != null &&
-                  _labelController.text.trim() != "") {
-                return null;
-              }
-              return "Enter a valid label";
-            },
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(5),
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Form(
+            key: _formKey,
+            child: TextFormField(
+              controller: _labelController,
+              validator: (_) {
+                if (_labelController.text != null &&
+                    _labelController.text.trim() != "") {
+                  return null;
+                }
+                return "Enter a valid label";
+              },
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5),
+                  ),
                 ),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                hintText: "Label",
               ),
-              contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-              hintText: "Label",
             ),
           ),
-        ),
-        actions: [
-          _actionButton(
-              text: "Set Label",
+          actions: [
+            _actionButton(
+                text: "Set Label",
+                onPressed: () async {
+                  if (_formKey.currentState.validate()) {
+                    await ApiRequests.setTorrentLabel(torrent.api, torrent.hash,
+                        label: _labelController.text);
+                    Provider.of<GeneralFeatures>(context, listen: false)
+                        .changeLabel(_labelController
+                            .text); // Doing this to ensure the filter is set to the label added
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    Fluttertoast.showToast(msg: "Label set");
+                  }
+                }),
+            _actionButton(
+              text: "Remove Label",
               onPressed: () async {
-                if (_formKey.currentState.validate()) {
-                  await ApiRequests.setTorrentLabel(torrent.api, torrent.hash,
-                      label: _labelController.text);
-                  Provider.of<GeneralFeatures>(context, listen: false)
-                      .changeLabel(_labelController
-                          .text); // Doing this to ensure the filter is set to the label added
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  Fluttertoast.showToast(msg: "Label set");
-                }
-              }),
-          _actionButton(
-            text: "Remove Label",
-            onPressed: () async {
-              await ApiRequests.removeTorrentLabel(
-                torrent.api,
-                torrent.hash,
-              );
-              _labelController.text = "";
-              Provider.of<GeneralFeatures>(context, listen: false).changeFilter(
-                  Filter
-                      .All); // Doing this to ensure that a empty torrent list page is not shown to the user
-              Navigator.pop(context);
-              Navigator.pop(context);
-              Fluttertoast.showToast(msg: "Label removed");
-            },
-          )
-        ],
-      ),
+                await ApiRequests.removeTorrentLabel(
+                  torrent.api,
+                  torrent.hash,
+                );
+                _labelController.text = "";
+                Provider.of<GeneralFeatures>(context, listen: false)
+                    .changeFilter(Filter
+                        .All); // Doing this to ensure that a empty torrent list page is not shown to the user
+                Navigator.pop(context);
+                Navigator.pop(context);
+                Fluttertoast.showToast(msg: "Label removed");
+              },
+            )
+          ],
+        );
+      },
     );
   }
 
