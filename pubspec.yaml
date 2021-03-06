@@ -13,7 +13,7 @@ dependencies:
 
   cupertino_icons: ^0.1.3
   font_awesome_flutter: ^8.8.1
-  fluttertoast: ^4.0.1
+  fluttertoast: ^7.1.8
   http: ^0.12.1
   filesize: ^1.0.4
   provider: ^4.1.3
@@ -21,7 +21,7 @@ dependencies:
   intl: ^0.16.1
   shimmer: ^1.1.1
   modal_progress_hud: ^0.1.3
-  modal_bottom_sheet: ^0.1.6+1
+  modal_bottom_sheet: ^1.0.0+1
   xml: ^4.2.0
   shared_preferences: ^0.5.8
   path_provider: ^1.6.11
@@ -33,7 +33,7 @@ dependencies:
   package_info: ^0.4.3
   wakelock: ^0.2.0+1
   flutter_slidable: ^0.5.7
-  flutter_svg: ^0.19.1
+  flutter_svg: ^0.19.3
 
 dev_dependencies:
   flutter_test:
