@@ -176,13 +176,15 @@ class _SettingsPageState extends State<SettingsPage> {
                         : Container(
                             height: 40,
                             width: double.infinity,
-                            child: RaisedButton(
-                              color: Provider.of<Mode>(context).isLightMode
-                                  ? Colors.white
-                                  : kGreyDT,
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: Theme.of(context).primaryColor),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Provider.of<Mode>(context).isLightMode
+                                    ? Colors.white
+                                    : kGreyDT,
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      color: Theme.of(context).primaryColor),
+                                ),
                               ),
                               child: Text(
                                 'VALIDATE',

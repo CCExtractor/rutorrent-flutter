@@ -22,14 +22,14 @@ class CustomDialog extends StatelessWidget {
         style: TextStyle(fontSize: 15),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(
             optionLeftText,
             style: TextStyle(color: Theme.of(context).accentColor),
           ),
           onPressed: optionLeftOnPressed,
         ),
-        FlatButton(
+        TextButton(
           child: Text(
             optionRightText,
             style: TextStyle(color: Theme.of(context).accentColor),
