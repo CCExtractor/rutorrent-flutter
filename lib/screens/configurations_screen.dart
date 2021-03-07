@@ -55,6 +55,10 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
       apis.insert(0, api);
       Preferences.saveLogin(apis);
     }
+    
+    if(apis.length > 1){
+      Navigator.pop(context);
+    }
 
     Navigator.pushReplacement(
         //Navigate to Home Screen
