@@ -98,12 +98,14 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 36),
               width: double.infinity,
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0),
-                  side: BorderSide(color: Theme.of(context).primaryColor),
-                ),
-                color: Theme.of(context).primaryColor,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: BorderSide(color: Theme.of(context).primaryColor),
+                    ),
+                    side: BorderSide(color: Theme.of(context).primaryColor),
+                    primary: Theme.of(context).primaryColor),
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
@@ -124,12 +126,16 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 16, horizontal: 36),
                     width: double.infinity,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        side: BorderSide(color: Theme.of(context).primaryColor),
-                      ),
-                      color: Theme.of(context).primaryColor,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
+                          side:
+                              BorderSide(color: Theme.of(context).primaryColor),
+                          primary: Theme.of(context).primaryColor),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 28, vertical: 16),

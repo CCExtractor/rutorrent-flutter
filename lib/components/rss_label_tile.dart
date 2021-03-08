@@ -76,7 +76,7 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
                             showBarModalBottomSheet(
                                 expand: false,
                                 context: context,
-                                builder: (context, scrollController) {
+                                builder: (context) {
                                   return RSSDescSheet(
                                       item, widget.rssLabel.hash);
                                 });
