@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:rutorrentflutter/models/disk_file.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
@@ -30,13 +31,18 @@ class ApiRequests {
           'mark': timestamp,
         });
 
-    var items = jsonDecode(response.body)['items'];
-    for (var item in items) {
-      HistoryItem historyItem = HistoryItem(
-          item['name'], item['action'], item['action_time'], item['size']);
-      historyItems.add(historyItem);
+    if (response.statusCode == 200) {
+      var items = jsonDecode(response.body)['items'];
+      for (var item in items) {
+        HistoryItem historyItem = HistoryItem(
+            item['name'], item['action'], item['action_time'], item['size']);
+        historyItems.add(historyItem);
+      }
+      general.updateHistoryItems(historyItems, context);
+    } else {
+      Fluttertoast.showToast(
+          msg: 'Unable to fetch history. Please check your network.');
     }
-    general.updateHistoryItems(historyItems, context);
   }
 
   /// Checks disk space asynchronously for low disk space alert
@@ -162,30 +168,45 @@ class ApiRequests {
   }
 
   static startTorrent(Api api, String hashValue) async {
-    await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+    var response = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': 'start',
           'hash': hashValue,
         });
+    if (response != 200) {
+      Fluttertoast.showToast(
+          msg: 'Unable to start torrent. Please check your network.');
+      debugPrint('Error in startTorrent method: ${response.body}');
+    }
   }
 
   static pauseTorrent(Api api, String hashValue) async {
-    await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+    var response = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': 'pause',
           'hash': hashValue,
         });
+    if (response != 200) {
+      Fluttertoast.showToast(
+          msg: 'Unable to pause torrent. Please check your network.');
+      debugPrint('Error in pauseTorrent method: ${response.body}');
+    }
   }
 
   static stopTorrent(Api api, String hashValue) async {
-    await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+    var response = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': 'stop',
           'hash': hashValue,
         });
+    if (response.statusCode != 200) {
+      Fluttertoast.showToast(
+          msg: 'Unable to stop torrent. Please check your network.');
+      debugPrint('Error in stopTorrent method: ${response.body}');
+    }
   }
 
   static removeTorrent(Api api, String hashValue) async {
@@ -196,8 +217,11 @@ class ApiRequests {
           'hash': hashValue,
         });
 
-    if (response.statusCode == 200)
-      Fluttertoast.showToast(msg: 'Removed Torrent Successfully');
+    if (response.statusCode != 200) {
+      Fluttertoast.showToast(
+          msg: 'Unable to remove torrent. Please check your network.');
+      debugPrint('Error in removeTorrent method: ${response.body}');
+    }
   }
 
   static removeTorrentWithData(Api api, String hashValue) async {
