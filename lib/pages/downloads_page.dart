@@ -22,7 +22,11 @@ class _DownloadsPageState extends State<DownloadsPage> {
   }
 
   _initFiles() async {
-    _homeDirectory = (await getExternalStorageDirectory()).path + '/';
+    if (Platform.isAndroid) {
+      _homeDirectory = (await getExternalStorageDirectory()).path + '/';
+    } else {
+      _homeDirectory = (await getApplicationDocumentsDirectory()).path + '/';
+    }
     _directory = _homeDirectory;
     _syncFiles();
   }
