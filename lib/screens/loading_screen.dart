@@ -53,7 +53,6 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Column(
         children: <Widget>[
           Expanded(
@@ -71,7 +70,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 32),
             child: Image(
               height: 40,
-              image: AssetImage('assets/logo/name_logo.png'),
+              image: AssetImage(Theme.of(context).brightness == Brightness.light
+                  ? 'assets/logo/name_logo.png'
+                  : 'assets/logo/dark_mode.png'),
             ),
           )
         ],
