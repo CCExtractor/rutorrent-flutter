@@ -74,7 +74,9 @@ class TorrentsListPage extends StatelessWidget {
                   // showing loading list of Shimmer
                   return LoadingShimmer().loadingEffect(context, length: 5);
                 }
-                if (snapshot.data != null && snapshot.data.isNotEmpty) {
+                if (snapshot.data != null &&
+                    snapshot.data.isNotEmpty &&
+                    snapshot.data[0] != null) {
                   general.updateTorrentsList(
                       _getDisplayList(snapshot.data, general));
 
@@ -84,27 +86,46 @@ class TorrentsListPage extends StatelessWidget {
                         TorrentTile(general.torrentsList[index]),
                   );
                 }
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        Theme.of(context).brightness == Brightness.light
-                            ? 'assets/logo/empty.svg'
-                            : 'assets/logo/empty_dark.svg',
-                        width: 120,
-                        height: 120,
+                return Column(
+                  children: [
+                    snapshot.data != null &&
+                            snapshot.data.isNotEmpty &&
+                            snapshot.data[0] == null
+                        ? Container(
+                            width: MediaQuery.of(context).size.width,
+                            padding: EdgeInsets.all(5),
+                            color: Colors.red,
+                            child: Center(
+                              child: Text(
+                                'Unable to connect to the rTorrent server.',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          )
+                        : Container(),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            Theme.of(context).brightness == Brightness.light
+                                ? 'assets/logo/empty.svg'
+                                : 'assets/logo/empty_dark.svg',
+                            width: 120,
+                            height: 120,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            'No Torrents to Show',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        'No Torrents to Show',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 );
               },
             ),

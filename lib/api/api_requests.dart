@@ -40,6 +40,8 @@ class ApiRequests {
       }
       general.updateHistoryItems(historyItems, context);
     } else {
+      debugPrint(
+          'Error in updateHistory api: [${response.statusCode}] ${response.body}');
       Fluttertoast.showToast(
           msg: 'Unable to fetch history. Please check your network.');
     }
@@ -50,8 +52,14 @@ class ApiRequests {
       Api api, GeneralFeatures general, BuildContext context) async {
     var diskSpaceResponse = await api.ioClient
         .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
-    var diskSpace = jsonDecode(diskSpaceResponse.body);
-    general.updateDiskSpace(diskSpace['total'], diskSpace['free'], context);
+    if (diskSpaceResponse.statusCode == 200) {
+      var diskSpace = jsonDecode(diskSpaceResponse.body);
+      general.updateDiskSpace(diskSpace['total'], diskSpace['free'], context);
+    } else {
+      debugPrint(
+          'Error in updateHistory api: [${diskSpaceResponse.statusCode}] ${diskSpaceResponse.body}');
+      Fluttertoast.showToast(msg: 'Unable to fetch history.');
+    }
   }
 
   static updatePlugins(Api api, GeneralFeatures general, BuildContext context) {
@@ -128,10 +136,17 @@ class ApiRequests {
                 body: {
                   'mode': 'list',
                 });
-            allTorrentList
-                .addAll(parseTorrentsData(response.body, general, api));
+            if (response.statusCode == 200) {
+              allTorrentList
+                  .addAll(parseTorrentsData(response.body, general, api));
+            } else {
+              debugPrint(
+                  'Error in getAllAccountsTorrentList: [${response.statusCode}] ${response.body}');
+              yield [null];
+            }
           } catch (e) {
-            print(e);
+            debugPrint('Error in getAllAccountsTorrentList: ${e.toString()}');
+            yield [null];
           }
         }
       } catch (e) {
@@ -152,16 +167,18 @@ class ApiRequests {
             body: {
               'mode': 'list',
             });
-
-        yield parseTorrentsData(response.body, general, api);
+        if (response.statusCode == 200) {
+          yield parseTorrentsData(response.body, general, api);
+        } else {
+          debugPrint(
+              'Error in getTorrentList api: [${response.statusCode}] ${response.body}');
+          yield [null];
+        }
       } catch (e) {
-        print('Exception caught in Api Request ' + e.toString());
-        /*returning null since the stream has to be active all the times to return something
-          this usually occurs when there is no torrent task available or when the connect
-          to rTorrent is not established
-        */
-        yield null;
+        debugPrint('Error in getTorrentList api: ${e.toString()}');
+        yield [null];
       }
+
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
     }
@@ -174,10 +191,11 @@ class ApiRequests {
           'mode': 'start',
           'hash': hashValue,
         });
-    if (response != 200) {
+    if (response.statusCode != 200) {
       Fluttertoast.showToast(
           msg: 'Unable to start torrent. Please check your network.');
-      debugPrint('Error in startTorrent method: ${response.body}');
+      debugPrint(
+          'Error in startTorrent api: [${response.statusCode}] ${response.body}');
     }
   }
 
@@ -188,10 +206,11 @@ class ApiRequests {
           'mode': 'pause',
           'hash': hashValue,
         });
-    if (response != 200) {
+    if (response.statusCode != 200) {
       Fluttertoast.showToast(
           msg: 'Unable to pause torrent. Please check your network.');
-      debugPrint('Error in pauseTorrent method: ${response.body}');
+      debugPrint(
+          'Error in pauseTorrent api: [${response.statusCode}] ${response.body}');
     }
   }
 
@@ -205,7 +224,8 @@ class ApiRequests {
     if (response.statusCode != 200) {
       Fluttertoast.showToast(
           msg: 'Unable to stop torrent. Please check your network.');
-      debugPrint('Error in stopTorrent method: ${response.body}');
+      debugPrint(
+          'Error in stopTorrent api: [${response.statusCode}] ${response.body}');
     }
   }
 
@@ -220,7 +240,8 @@ class ApiRequests {
     if (response.statusCode != 200) {
       Fluttertoast.showToast(
           msg: 'Unable to remove torrent. Please check your network.');
-      debugPrint('Error in removeTorrent method: ${response.body}');
+      debugPrint(
+          'Error in removeTorrent api: [${response.statusCode}] ${response.body}');
     }
   }
 
@@ -236,13 +257,20 @@ class ApiRequests {
     request.body = xml;
     var streamedResponse = await client.send(request);
 
-    if (streamedResponse.statusCode == 200)
+    if (streamedResponse.statusCode == 200) {
       Fluttertoast.showToast(
           msg: 'Removed Torrent and Deleted Data Successfully');
 
-    var responseBody =
-        await streamedResponse.stream.transform(utf8.decoder).join();
-    print(responseBody);
+      var responseBody =
+          await streamedResponse.stream.transform(utf8.decoder).join();
+      print(responseBody);
+    } else {
+      debugPrint(
+          'Error in removeTorrentWithData api: [${streamedResponse.statusCode}] ${streamedResponse.body}');
+      Fluttertoast.showToast(
+          msg:
+              'Unable to remove torrent with data. Please check your network.');
+    }
     client.close();
   }
 
@@ -260,21 +288,34 @@ class ApiRequests {
             ? (Status.downloading)
             : Status.paused;
 
-    await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+    var response = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'mode': statusMap[toggleStatus],
           'hash': hashValue,
         });
+    if (response.statusCode != 200) {
+      debugPrint(
+          'Error in toggleTorrentStatus api: [${response.statusCode}] ${response.body}');
+      Fluttertoast.showToast(
+          msg: 'Unable to toggle status. Please check your network.');
+    }
   }
 
   static addTorrent(Api api, String url) async {
     Fluttertoast.showToast(msg: 'Adding torrent');
-    await api.ioClient.post(Uri.parse(api.addTorrentPluginUrl),
+    var response = await api.ioClient.post(Uri.parse(api.addTorrentPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'url': url,
         });
+    print('sdkfsd l ${response.body}');
+    if (response.statusCode != 200) {
+      print(
+          'Error in addTorrent api: [${response.statusCode}] ${response.body}');
+      Fluttertoast.showToast(
+          msg: 'Unable to add torrent. Please check your network.');
+    }
   }
 
   static addTorrentFile(Api api, String torrentPath) async {
@@ -287,91 +328,149 @@ class ApiRequests {
         .add(await http.MultipartFile.fromPath('torrent_file', torrentPath));
     try {
       var response = await request.send();
-
       print(response.headers);
     } catch (e) {
-      print(e.toString());
+      debugPrint('Error in addTorrentFile api: ${e.toString()}');
+      Fluttertoast.showToast(
+          msg: 'Unable to add torrent file. Please check your network.');
     }
   }
 
   /// Gets list of trackers for a particular torrent
   static Future<List<String>> getTrackers(Api api, String hashValue) async {
     List<String> trackersList = [];
-
-    var trKResponse = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
-        headers: api.getAuthHeader(), body: {'mode': 'trk', 'hash': hashValue});
-
-    var trackers = jsonDecode(trKResponse.body);
-    for (var tracker in trackers) {
-      trackersList.add(tracker[0]);
+    try {
+      var trKResponse = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {'mode': 'trk', 'hash': hashValue});
+      if (trKResponse.statusCode == 200) {
+        var trackers = jsonDecode(trKResponse.body);
+        for (var tracker in trackers) {
+          trackersList.add(tracker[0]);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error in getTrackers api: ${e.toString()}');
     }
+
     return trackersList;
   }
 
   /// Gets list of files for a particular torrent
   static Future<List<TorrentFile>> getFiles(Api api, String hashValue) async {
     List<TorrentFile> filesList = [];
-
-    var flsResponse = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
-        headers: api.getAuthHeader(), body: {'mode': 'fls', 'hash': hashValue});
-
-    var files = jsonDecode(flsResponse.body);
-    for (var file in files) {
-      TorrentFile torrentFile = TorrentFile(file[0], file[1], file[2], file[3]);
-      filesList.add(torrentFile);
+    try {
+      var flsResponse = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {'mode': 'fls', 'hash': hashValue});
+      if (flsResponse.statusCode != 200) {
+        debugPrint(
+            'Error in getFiles api: [${flsResponse.statusCode}] ${flsResponse.body}');
+      } else {
+        var files = jsonDecode(flsResponse.body);
+        for (var file in files) {
+          TorrentFile torrentFile =
+              TorrentFile(file[0], file[1], file[2], file[3]);
+          filesList.add(torrentFile);
+        }
+      }
+    } catch (e) {
+      debugPrint('Error in getFiles api: ${e.toString()}');
     }
+
     return filesList;
   }
 
   /// Gets list of saved RSS Feeds
   static Future<List<RSSLabel>> loadRSS(Api api) async {
     List<RSSLabel> rssLabels = [];
-    var rssResponse = await api.ioClient
-        .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader());
-
-    var feeds = jsonDecode(rssResponse.body)['list'];
-    for (var label in feeds) {
-      RSSLabel rssLabel = RSSLabel(label['hash'], label['label']);
-      for (var item in label['items']) {
-        RSSItem rssItem = RSSItem(item['title'], item['time'], item['href']);
-        rssLabel.items.add(rssItem);
+    try {
+      var rssResponse = await api.ioClient
+          .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader());
+      if (rssResponse.statusCode != 200) {
+        debugPrint(
+            'Error in loadRSS api: [${rssResponse.statusCode}] ${rssResponse.body}');
+      } else {
+        var feeds = jsonDecode(rssResponse.body)['list'];
+        for (var label in feeds) {
+          RSSLabel rssLabel = RSSLabel(label['hash'], label['label']);
+          for (var item in label['items']) {
+            RSSItem rssItem =
+                RSSItem(item['title'], item['time'], item['href']);
+            rssLabel.items.add(rssItem);
+          }
+          rssLabels.add(rssLabel);
+        }
       }
-      rssLabels.add(rssLabel);
+    } catch (e) {
+      debugPrint('Error in loadRSS api: ${e.toString()}');
     }
+
     return rssLabels;
   }
 
   /// Removes RSS Feed
   static removeRSS(Api api, String hashValue) async {
-    await api.ioClient
-        .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(), body: {
-      'mode': 'remove',
-      'rss': hashValue,
-    });
+    try {
+      var response = await api.ioClient.post(Uri.parse(api.rssPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'mode': 'remove',
+            'rss': hashValue,
+          });
+      if (response.statusCode != 200) {
+        debugPrint(
+            'Error in removeRSS api: [${response.statusCode}] ${response.body}');
+        Fluttertoast.showToast(
+            msg: 'Unable to remove RSS. Please check your network.');
+      }
+    } catch (e) {
+      debugPrint('Error in removeRSS api: ${e.toString()}');
+      Fluttertoast.showToast(
+          msg: 'Unable to remove RSS. Please check your network.');
+    }
   }
 
   /// Adds new RSS Feed
   static addRSS(Api api, String rssUrl) async {
     Fluttertoast.showToast(msg: 'Adding RSS');
-    await api.ioClient
-        .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(), body: {
-      'mode': 'add',
-      'url': rssUrl,
-    });
+    try {
+      var response = await api.ioClient.post(Uri.parse(api.rssPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'mode': 'add',
+            'url': rssUrl,
+          });
+      if (response.statusCode != 200) {
+        debugPrint(
+            'Error in addRSS api: [${response.statusCode}] ${response.body}');
+        Fluttertoast.showToast(
+            msg: 'Unable to add RSS feed. Please check your network.');
+      }
+    } catch (e) {
+      debugPrint('Error in addRSS api: ${e.toString()}');
+      Fluttertoast.showToast(
+          msg: 'Unable to add RSS feed. Please check your network.');
+    }
   }
 
   /// Gets details of available torrent in RSS Feed
   static Future<bool> getRSSDetails(
       Api api, RSSItem rssItem, String labelHash) async {
     bool dataAvailable = true;
+    var response = await api.ioClient
+        .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(), body: {
+      'mode': 'getdesc',
+      'href': rssItem.url,
+      'rss': labelHash,
+    });
+    if (response.statusCode != 200) {
+      debugPrint(
+          'Error in getRSSDetails api: [${response.statusCode}] ${response.body}');
+      return false;
+    }
+
     try {
-      var response = await api.ioClient.post(Uri.parse(api.rssPluginUrl),
-          headers: api.getAuthHeader(),
-          body: {
-            'mode': 'getdesc',
-            'href': rssItem.url,
-            'rss': labelHash,
-          });
       var xmlResponse = xml.XmlDocument.parse(response.body);
 
       var data =
@@ -389,31 +488,44 @@ class ApiRequests {
       rssItem.description = list[6];
     } catch (e) {
       dataAvailable = false;
-      print(e);
+      debugPrint('Error in getRSSDetails: ${e.toString()}');
     }
+
     return dataAvailable;
   }
 
   /// Gets details of RSS Filters
   static Future<List<RSSFilter>> getRSSFilters(Api api) async {
     List<RSSFilter> rssFilters = [];
-    var response = await api.ioClient
-        .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(), body: {
-      'mode': 'getfilters',
-    });
+    try {
+      var response = await api.ioClient.post(Uri.parse(api.rssPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'mode': 'getfilters',
+          });
 
-    var filters = jsonDecode(response.body);
-    for (var filter in filters) {
-      RSSFilter rssFilter = RSSFilter(
-        filter['name'],
-        filter['enabled'],
-        filter['pattern'],
-        filter['label'],
-        filter['exclude'],
-        filter['dir'],
-      );
-      rssFilters.add(rssFilter);
+      if (response.statusCode != 200) {
+        debugPrint(
+            'Error in getRSSFilters api: [${response.statusCode}] ${response.body}');
+        return rssFilters;
+      }
+
+      var filters = jsonDecode(response.body);
+      for (var filter in filters) {
+        RSSFilter rssFilter = RSSFilter(
+          filter['name'],
+          filter['enabled'],
+          filter['pattern'],
+          filter['label'],
+          filter['exclude'],
+          filter['dir'],
+        );
+        rssFilters.add(rssFilter);
+      }
+    } catch (e) {
+      debugPrint('Error in getRSSFilters api: ${e.toString()}');
     }
+
     return rssFilters;
   }
 
@@ -427,74 +539,90 @@ class ApiRequests {
           .toString();
     }
 
-    var response = await api.ioClient.post(Uri.parse(api.historyPluginUrl),
-        headers: api.getAuthHeader(),
-        body: {
-          'cmd': 'get',
-          'mark': timestamp,
-        });
-
-    var items = jsonDecode(response.body)['items'];
-
     List<HistoryItem> historyItems = [];
-    for (var item in items) {
-      HistoryItem historyItem = HistoryItem(
-          item['name'], item['action'], item['action_time'], item['size']);
-      historyItems.add(historyItem);
+    try {
+      var response = await api.ioClient.post(Uri.parse(api.historyPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'cmd': 'get',
+            'mark': timestamp,
+          });
+      if (response.statusCode != 200) {
+        debugPrint(
+            'Error in getHistory api: [${response.statusCode}] ${response.body}');
+        Fluttertoast.showToast(
+            msg: 'Unable to get history. Please check your network.');
+        return historyItems;
+      }
+      var items = jsonDecode(response.body)['items'];
+
+      for (var item in items) {
+        HistoryItem historyItem = HistoryItem(
+            item['name'], item['action'], item['action_time'], item['size']);
+        historyItems.add(historyItem);
+      }
+    } catch (e) {
+      debugPrint('Error in getHistory api: ${e.toString()}');
+      Fluttertoast.showToast(
+          msg: 'Unable to get history. Please check your network.');
     }
+
     return historyItems;
   }
 
   /// Gets Disk Files
   static Future<List<DiskFile>> getDiskFiles(Api api, String path) async {
-    try {
-      var response = await api.ioClient.post(Uri.parse(api.explorerPluginUrl),
-          headers: api.getAuthHeader(),
-          body: {
-            'cmd': 'get',
-            'src': path,
-          });
-
-      var files = jsonDecode(response.body)['files'];
-
-      List<DiskFile> diskFiles = [];
-
-      for (var file in files) {
-        DiskFile diskFile = DiskFile();
-
-        diskFile.isDirectory = file['is_dir'];
-        diskFile.name = file['data']['name'];
-        diskFiles.add(diskFile);
-      }
-
-      return diskFiles;
-    } on Exception catch (e) {
-      print(e.toString());
+    var response = await api.ioClient.post(Uri.parse(api.explorerPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {
+          'cmd': 'get',
+          'src': path,
+        });
+    if (response.statusCode != 200) {
+      debugPrint(
+          'Error in getDiskFiles api: [${response.statusCode}] ${response.body}');
       return null;
     }
+    var files = jsonDecode(response.body)['files'];
+
+    List<DiskFile> diskFiles = [];
+
+    for (var file in files) {
+      DiskFile diskFile = DiskFile();
+
+      diskFile.isDirectory = file['is_dir'];
+      diskFile.name = file['data']['name'];
+      diskFiles.add(diskFile);
+    }
+
+    return diskFiles;
   }
 
   static setTorrentLabel(Api api, String hashValue, {String label}) async {
-    try {
-      await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
-          headers: api.getAuthHeader(),
-          body: {
-            'mode': 'setlabel',
-            'hash': hashValue,
-            'v': label.replaceAll(" ", "%20")
-          });
-    } on Exception catch (e) {
-      print(e);
+    var response = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {
+          'mode': 'setlabel',
+          'hash': hashValue,
+          'v': label.replaceAll(" ", "%20")
+        });
+    if (response.statusCode != 200) {
+      debugPrint(
+          'Error in setTorrentLabel api: [${response.statusCode}] ${response.body}');
+      Fluttertoast.showToast(
+          msg: 'Unable to set label. Please check your network.');
     }
   }
 
   static removeTorrentLabel(Api api, String hashValue) async {
-    try {
-      await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
-          headers: api.getAuthHeader(),
-          body: {'mode': 'setlabel', 'hash': hashValue, 'v': ''});
-    } on Exception catch (e) {
-      print(e.toString() + "errrrr");
+    var response = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {'mode': 'setlabel', 'hash': hashValue, 'v': ''});
+    if (response.statusCode != 200) {
+      debugPrint(
+          'Error in removeTorrentLabel api: [${response.statusCode}] ${response.body}');
+      Fluttertoast.showToast(
+          msg: 'Unable to remove torrent label. Please check your network.');
     }
   }
 }
