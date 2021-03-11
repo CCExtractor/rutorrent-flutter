@@ -120,18 +120,17 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
           (widget.dialogHint == "Enter Rss Url")
               ? Container()
               : Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 16, horizontal: 36),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 36),
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
-                          side: BorderSide(
-                              color: Theme.of(context).primaryColor),
+                          side:
+                              BorderSide(color: Theme.of(context).primaryColor),
                         ),
-                        side:
-                            BorderSide(color: Theme.of(context).primaryColor),
+                        side: BorderSide(color: Theme.of(context).primaryColor),
                         primary: Theme.of(context).primaryColor),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
