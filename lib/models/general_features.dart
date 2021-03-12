@@ -17,6 +17,7 @@ enum Sort {
   ratio,
   size_ascending,
   size_descending,
+  none,
 }
 
 enum Filter {
@@ -26,6 +27,12 @@ enum Filter {
   Active,
   Inactive,
   Error,
+}
+
+enum NotificationChannelID {
+  NewTorrentAdded,
+  DownloadCompleted,
+  LowDiskSpace,
 }
 
 class GeneralFeatures extends ChangeNotifier {
@@ -92,6 +99,10 @@ class GeneralFeatures extends ChangeNotifier {
 
       case Sort.size_descending:
         torrentsList.sort((a, b) => a.size.compareTo(b.size));
+        return torrentsList.reversed.toList();
+
+      case Sort.none:
+        torrentsList.sort((a, b) => a.torrentAdded.compareTo(b.torrentAdded));
         return torrentsList.reversed.toList();
 
       default:
@@ -227,7 +238,11 @@ class GeneralFeatures extends ChangeNotifier {
   }
 
   setListOfLabels(List<String> listOfLabels) {
-    _listOfLabels = listOfLabels;
+    if (_allAccounts) {
+      _listOfLabels = (_listOfLabels + listOfLabels).toSet().toList();
+    } else {
+      _torrentsList.isEmpty ? _listOfLabels = [] : _listOfLabels = listOfLabels;
+    }
     notifyListeners();
   }
 
@@ -270,7 +285,8 @@ class GeneralFeatures extends ChangeNotifier {
             // Generate Notification
             if (Provider.of<Settings>(context, listen: false)
                 .addTorrentNotification) {
-              notifications.generate('New Torrent Added', item.name);
+              notifications.generate('New Torrent Added', item.name,
+                  NotificationChannelID.NewTorrentAdded);
             }
           }
           break;
@@ -280,7 +296,8 @@ class GeneralFeatures extends ChangeNotifier {
             // Generate Notification
             if (Provider.of<Settings>(context, listen: false)
                 .downloadCompleteNotification) {
-              notifications.generate('Download Completed', item.name);
+              notifications.generate('Download Completed', item.name,
+                  NotificationChannelID.DownloadCompleted);
             }
           }
           break;
@@ -292,5 +309,16 @@ class GeneralFeatures extends ChangeNotifier {
           break;
       }
     }
+  }
+}
+
+extension CustomizableDateTime on DateTime {
+  static DateTime _customTime;
+  static DateTime get current {
+    return _customTime ?? DateTime.now();
+  }
+
+  static set customTime(DateTime customTime) {
+    _customTime = customTime;
   }
 }
