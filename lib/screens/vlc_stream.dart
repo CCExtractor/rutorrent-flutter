@@ -14,7 +14,7 @@ class VlcStream extends StatefulWidget {
   _VlcStreamState createState() => _VlcStreamState();
 }
 
-class _VlcStreamState extends State<VlcStream> {
+class _VlcStreamState extends State<VlcStream> with WidgetsBindingObserver {
   // state of media player while playing
   bool isPlaying = true;
 
@@ -73,8 +73,30 @@ class _VlcStreamState extends State<VlcStream> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.detached ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
+      //The app is either in bg or the phone has been turned off
+      _videoViewController.pause();
+      setState(() {
+        isPlaying = false;
+      });
+    }
+    if (state == AppLifecycleState.resumed) {
+      //The app is bought back into the view of the display is turned back on
+      _videoViewController.play();
+      setState(() {
+        isPlaying = true;
+      });
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initVlcPlayer();
     SystemChrome.setEnabledSystemUIOverlays([]);
     Wakelock.enable();
@@ -196,6 +218,7 @@ class _VlcStreamState extends State<VlcStream> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     Wakelock.disable();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     super.dispose();
