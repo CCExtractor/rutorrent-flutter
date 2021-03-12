@@ -27,6 +27,8 @@ class _VlcStreamState extends State<VlcStream> with WidgetsBindingObserver {
   // hide control buttons {play/pause and seek slider} while playing media
   bool showControls = true;
 
+  bool isPausedDueToLifecycle = false;
+
   _initVlcPlayer() async {
     _videoViewController = new VlcPlayerController(onInit: () {
       _videoViewController.play();
@@ -62,6 +64,7 @@ class _VlcStreamState extends State<VlcStream> with WidgetsBindingObserver {
     if (state == PlayingState.PLAYING) {
       _videoViewController.pause();
       setState(() {
+        isPausedDueToLifecycle = false;
         isPlaying = false;
       });
     } else {
@@ -78,13 +81,20 @@ class _VlcStreamState extends State<VlcStream> with WidgetsBindingObserver {
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.paused) {
       //The app is either in bg or the phone has been turned off
-      _videoViewController.pause();
-      setState(() {
-        isPlaying = false;
-      });
+      PlayingState state = _videoViewController.playingState;
+      if (state == PlayingState.PLAYING) {
+        //Check if the video is playing and only then execute pause operation
+        _videoViewController.pause();
+        setState(() {
+          //Keeping track if the video is paused due to lifecycle change
+          isPausedDueToLifecycle = true;
+          isPlaying = false;
+        });
+      }
     }
-    if (state == AppLifecycleState.resumed) {
-      //The app is bought back into the view of the display is turned back on
+    //Only is the video was paused due to lifecycle changes
+    if (state == AppLifecycleState.resumed && isPausedDueToLifecycle) {
+      //The app is bought back into the view or the display is turned back on
       _videoViewController.play();
       setState(() {
         isPlaying = true;
