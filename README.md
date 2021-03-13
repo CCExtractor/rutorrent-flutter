@@ -28,7 +28,7 @@ ruTorrent ⇒ A web interface for rtorrent that uses that API. It also does othe
 
 Thus, our Flutter application talks with ruTorrent's backend service to provide a native interface.
 
-![Diagram](https://github.com/AbdulMalikDev/rutorrent-flutter/blob/master/assets/docs/ruTorrent%20Flutter%20Application%20Diagram.png)
+![Diagram](./assets/docs/ruTorrent%20Flutter%20Application%20Diagram.png)
 
 ## Usage
 
