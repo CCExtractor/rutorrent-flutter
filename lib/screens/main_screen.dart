@@ -26,7 +26,8 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0; // HomePage
-  PackageInfo packageInfo = PackageInfo();
+  PackageInfo packageInfo = new PackageInfo(
+      packageName: '', appName: '', buildNumber: '', version: '');
 
   _initPlugins() async {
     /// Setting application version
@@ -127,7 +128,7 @@ class _MainScreenState extends State<MainScreen> {
         leading: Icon(Icons.add),
         title: Text('Add another account'),
         onTap: () {
-          Navigator.pushReplacement(
+          Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => ConfigurationsScreen(),
