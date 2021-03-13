@@ -12,6 +12,7 @@ class DataInput extends StatelessWidget {
   final onFieldSubmittedCallback;
   final textInputAction;
   final Color borderColor;
+  final String Function(String) validator;
 
   DataInput({
     this.hintText,
@@ -22,6 +23,7 @@ class DataInput extends StatelessWidget {
     this.textInputAction,
     this.suffixIconButton,
     this.borderColor,
+    this.validator,
   });
 
   @override
@@ -41,12 +43,16 @@ class DataInput extends StatelessWidget {
                   ? Colors.black
                   : Colors.white,
           keyboardType: TextInputType.text,
+          validator: validator,
           decoration: InputDecoration(
             border: InputBorder.none,
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             hintText: hintText,
             hintStyle: TextStyle(color: hintTextColor ?? borderColor),
             suffixIcon: suffixIconButton,
+            errorStyle: TextStyle(
+              fontSize: 16,
+            ),
           ),
         ),
         decoration: BoxDecoration(

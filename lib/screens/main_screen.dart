@@ -129,10 +129,11 @@ class _MainScreenState extends State<MainScreen> {
         title: Text('Add another account'),
         onTap: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ConfigurationsScreen(),
-              ));
+            context,
+            MaterialPageRoute(
+              builder: (context) => ConfigurationsScreen(),
+            ),
+          );
         },
       ),
     ));
@@ -147,9 +148,11 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<Mode, Api, GeneralFeatures>(
-        builder: (context, mode, api, general, child) {
+    var modeTheme = Provider.of<Mode>(context, listen: false);
+    return Consumer2<Api, GeneralFeatures>(
+        builder: (context, api, general, child) {
       return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text(
             'Hey, ${api.username}',
@@ -158,40 +161,47 @@ class _MainScreenState extends State<MainScreen> {
           elevation: 0.0,
           leading: Builder(builder: (context) {
             return IconButton(
-                icon: Icon(
-                  Icons.subject,
-                  size: 34,
-                ),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                });
+              icon: Icon(
+                Icons.subject,
+                size: 34,
+              ),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
           }),
           actions: <Widget>[
-            IconButton(
-                icon: FaIcon(
-                  mode.isLightMode
-                      ? FontAwesomeIcons.solidMoon
-                      : FontAwesomeIcons.solidSun,
-                ),
-                onPressed: () async {
-                  mode.toggleMode();
-                  Provider.of<Settings>(context, listen: false)
-                      .setShowDarkMode(mode.isDarkMode);
-                  await Preferences.saveSettings(
-                      Provider.of<Settings>(context, listen: false));
-                }),
+            Consumer<Mode>(
+              builder: (context, mode, child) {
+                return IconButton(
+                  icon: FaIcon(
+                    mode.isLightMode
+                        ? FontAwesomeIcons.solidMoon
+                        : FontAwesomeIcons.solidSun,
+                  ),
+                  onPressed: () async {
+                    mode.toggleMode();
+                    Provider.of<Settings>(context, listen: false)
+                        .setShowDarkMode(mode.isDarkMode);
+                    await Preferences.saveSettings(
+                        Provider.of<Settings>(context, listen: false));
+                  },
+                );
+              },
+            ),
           ],
         ),
         drawer: Drawer(
-          child: ListView(
-            children: <Widget>[
+          child: Column(
+            children: [
               DrawerHeader(
+                margin: EdgeInsets.all(0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Image(
-                      image: mode.isLightMode
+                      image: modeTheme.isLightMode
                           ? AssetImage('assets/logo/light_mode.png')
                           : AssetImage('assets/logo/dark_mode.png'),
                     ),
@@ -204,108 +214,130 @@ class _MainScreenState extends State<MainScreen> {
                   ],
                 ),
               ),
-              ShowDiskSpace(),
-              ExpansionTile(
-                leading: Icon(Icons.supervisor_account,
-                    color: mode.isLightMode ? Colors.black : Colors.white),
-                title: Text('Accounts'),
-                children: _getAccountsList(api, mode, general),
-              ),
-              ExpansionTile(
-                initiallyExpanded: true,
-                leading: Icon(Icons.sort,
-                    color: mode.isLightMode ? Colors.black : Colors.white),
-                title: Text(
-                  'Filters',
-                ),
-                children: general.filterTileList,
-              ),
-              ExpansionTile(
-                initiallyExpanded: true,
-                leading: Icon(Icons.sort,
-                    color: mode.isLightMode ? Colors.black : Colors.white),
-                title: Text(
-                  'Labels',
-                ),
-                children: (general.listOfLabels as List<String>)
-                    .map((e) => LabelTile(label: e))
-                    .toList(),
-              ),
-              ListTile(
-                leading: Icon(Icons.history,
-                    color: mode.isLightMode ? Colors.black : Colors.white),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HistoryScreen()));
-                },
-                title: Text('History'),
-              ),
-              ListTile(
-                leading: Icon(Icons.folder_open,
-                    color: mode.isLightMode ? Colors.black : Colors.white),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DiskExplorer(),
-                      ));
-                },
-                title: Text('Explorer'),
-              ),
-              ListTile(
-                leading: Icon(Icons.settings,
-                    color: mode.isLightMode ? Colors.black : Colors.white),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SettingsPage(),
-                      ));
-                },
-                title: Text('Settings'),
-              ),
-              ListTile(
-                leading: Icon(Icons.info_outline,
-                    color: mode.isLightMode ? Colors.black : Colors.white),
-                onTap: () {
-                  showAboutDialog(
-                    context: context,
-                    applicationVersion: packageInfo.version,
-                    applicationIcon: Image(
-                      height: 75,
-                      image: mode.isLightMode
-                          ? AssetImage('assets/logo/light_mode_icon.png')
-                          : AssetImage('assets/logo/dark_mode_icon.png'),
-                    ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
                     children: [
-                      Text(
-                        'Build Number : $BUILD_NUMBER',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600),
+                      ShowDiskSpace(),
+                      ExpansionTile(
+                        leading: Icon(Icons.supervisor_account,
+                            color: modeTheme.isLightMode
+                                ? Colors.black
+                                : Colors.white),
+                        title: Text('Accounts'),
+                        children: _getAccountsList(api, modeTheme, general),
                       ),
-                      SizedBox(
-                        height: 15,
+                      ExpansionTile(
+                        initiallyExpanded: true,
+                        leading: Icon(Icons.sort,
+                            color: modeTheme.isLightMode
+                                ? Colors.black
+                                : Colors.white),
+                        title: Text('Filters'),
+                        children: general.filterTileList,
                       ),
-                      Text(
-                        'Release Date : $RELEASE_DATE',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600),
+                      ExpansionTile(
+                        initiallyExpanded: true,
+                        leading: Icon(Icons.sort,
+                            color: modeTheme.isLightMode
+                                ? Colors.black
+                                : Colors.white),
+                        title: Text('Labels'),
+                        children: (general.listOfLabels as List<String>)
+                            .map((e) => LabelTile(label: e))
+                            .toList(),
                       ),
-                      SizedBox(
-                        height: 15,
+                      ListTile(
+                        leading: Icon(Icons.history,
+                            color: modeTheme.isLightMode
+                                ? Colors.black
+                                : Colors.white),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HistoryScreen()));
+                        },
+                        title: Text('History'),
                       ),
-                      Text(
-                        'Package Name : ${packageInfo.packageName}',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600),
+                      ListTile(
+                        leading: Icon(Icons.folder_open,
+                            color: modeTheme.isLightMode
+                                ? Colors.black
+                                : Colors.white),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DiskExplorer(),
+                              ));
+                        },
+                        title: Text('Explorer'),
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.settings,
+                            color: modeTheme.isLightMode
+                                ? Colors.black
+                                : Colors.white),
+                        onTap: () {
+                          Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SettingsPage(),
+                              ));
+                        },
+                        title: Text('Settings'),
+                      ),
+                      ListTile(
+                        leading: Icon(Icons.info_outline,
+                            color: modeTheme.isLightMode
+                                ? Colors.black
+                                : Colors.white),
+                        onTap: () {
+                          showAboutDialog(
+                            context: context,
+                            applicationVersion: packageInfo.version,
+                            applicationIcon: Image(
+                              height: 75,
+                              image: modeTheme.isLightMode
+                                  ? AssetImage(
+                                      'assets/logo/light_mode_icon.png')
+                                  : AssetImage(
+                                      'assets/logo/dark_mode_icon.png'),
+                            ),
+                            children: [
+                              Text(
+                                'Build Number : $BUILD_NUMBER',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w600),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Text(
+                                'Release Date : $RELEASE_DATE',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w600),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Text(
+                                'Package Name : ${packageInfo.packageName}',
+                                style: TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          );
+                        },
+                        title: Text('About'),
                       ),
                     ],
-                  );
-                },
-                title: Text('About'),
+                  ),
+                ),
               ),
             ],
           ),
@@ -322,8 +354,7 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor:
-              Provider.of<Mode>(context).isDarkMode ? kGreyDT : null,
+          backgroundColor: modeTheme.isDarkMode ? kGreyDT : null,
           selectedItemColor: Theme.of(context).primaryColor,
           currentIndex: _currentIndex,
           selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -334,7 +365,10 @@ class _MainScreenState extends State<MainScreen> {
               icon: Icon(Icons.home),
               label: 'Home',
             ),
-            BottomNavigationBarItem(icon: Icon(Icons.rss_feed), label: 'Feeds')
+            BottomNavigationBarItem(
+              icon: Icon(Icons.rss_feed),
+              label: 'Feeds',
+            )
           ],
           onTap: (index) {
             setState(() => _currentIndex = index);
@@ -351,28 +385,32 @@ class _MainScreenState extends State<MainScreen> {
           onPressed: () {
             if (_currentIndex == 0) {
               showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (BuildContext bc) {
-                    return AddBottomSheet(
-                        api: api,
-                        apiRequest: (url) {
-                          ApiRequests.addTorrent(api, url);
-                        },
-                        dialogHint: 'Enter Torrent Url');
-                  });
+                isScrollControlled: true,
+                context: context,
+                builder: (BuildContext bc) {
+                  return AddBottomSheet(
+                    api: api,
+                    apiRequest: (url) {
+                      ApiRequests.addTorrent(api, url);
+                    },
+                    dialogHint: 'Enter Torrent Url',
+                  );
+                },
+              );
             } else {
               showModalBottomSheet(
-                  isScrollControlled: true,
-                  context: context,
-                  builder: (BuildContext bc) {
-                    return AddBottomSheet(
-                        apiRequest: (url) async {
-                          await ApiRequests.addRSS(api, url);
-                          setState(() {});
-                        },
-                        dialogHint: 'Enter Rss Url');
-                  });
+                isScrollControlled: true,
+                context: context,
+                builder: (BuildContext bc) {
+                  return AddBottomSheet(
+                    apiRequest: (url) async {
+                      await ApiRequests.addRSS(api, url);
+                      setState(() {});
+                    },
+                    dialogHint: 'Enter Rss Url',
+                  );
+                },
+              );
             }
           },
         ),
