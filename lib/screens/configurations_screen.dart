@@ -56,6 +56,10 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
       Preferences.saveLogin(apis);
     }
 
+    if (apis.length > 1) {
+      Navigator.pop(context);
+    }
+
     Navigator.pushReplacement(
         //Navigate to Home Screen
         context,
@@ -121,6 +125,9 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
           passwordFocus.unfocus();
         },
         child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+          ),
           body: SingleChildScrollView(
             child: Column(
               children: <Widget>[
