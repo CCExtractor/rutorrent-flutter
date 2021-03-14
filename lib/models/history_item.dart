@@ -18,6 +18,7 @@ class HistoryItem {
   int action;
   int actionTime;
   int size;
+  String hash;
 
-  HistoryItem(this.name, this.action, this.actionTime, this.size);
+  HistoryItem(this.name, this.action, this.actionTime, this.size, this.hash);
 }

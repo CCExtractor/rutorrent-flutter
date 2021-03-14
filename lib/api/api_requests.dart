@@ -32,8 +32,8 @@ class ApiRequests {
 
     var items = jsonDecode(response.body)['items'];
     for (var item in items) {
-      HistoryItem historyItem = HistoryItem(
-          item['name'], item['action'], item['action_time'], item['size']);
+      HistoryItem historyItem = HistoryItem(item['name'], item['action'],
+          item['action_time'], item['size'], item['hash']);
       historyItems.add(historyItem);
     }
     general.updateHistoryItems(historyItems, context);
@@ -411,8 +411,8 @@ class ApiRequests {
 
     List<HistoryItem> historyItems = [];
     for (var item in items) {
-      HistoryItem historyItem = HistoryItem(
-          item['name'], item['action'], item['action_time'], item['size']);
+      HistoryItem historyItem = HistoryItem(item['name'], item['action'],
+          item['action_time'], item['size'], item['hash']);
       historyItems.add(historyItem);
     }
     return historyItems;
@@ -468,6 +468,22 @@ class ApiRequests {
           body: {'mode': 'setlabel', 'hash': hashValue, 'v': ''});
     } on Exception catch (e) {
       print(e.toString() + "errrrr");
+    }
+  }
+
+  static removeHistoryItem(Api api, String hashValue) async {
+    print(hashValue);
+    Fluttertoast.showToast(msg: 'Removing Torrent from History');
+    try {
+      await api.ioClient.post(Uri.parse(api.historyPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'cmd': 'delete',
+            'mode': 'hstdelete',
+            'hash': hashValue,
+          });
+    } on Exception catch (e) {
+      print('err: ${e.toString()}');
     }
   }
 }

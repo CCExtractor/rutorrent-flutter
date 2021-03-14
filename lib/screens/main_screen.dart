@@ -236,8 +236,10 @@ class _MainScreenState extends State<MainScreen> {
                     color: mode.isLightMode ? Colors.black : Colors.white),
                 onTap: () {
                   Navigator.pop(context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => HistoryScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => HistoryScreen(api)));
                 },
                 title: Text('History'),
               ),

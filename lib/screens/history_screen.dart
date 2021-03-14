@@ -11,6 +11,8 @@ import 'package:rutorrentflutter/models/mode.dart';
 import '../components/loading_shimmer.dart';
 
 class HistoryScreen extends StatefulWidget {
+  final Api api;
+  HistoryScreen(this.api);
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
 }
@@ -101,6 +103,41 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     itemCount: items.length,
                     itemBuilder: (context, index) {
                       return ListTile(
+                        onLongPress: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: Text(
+                                      'Remove torrent from history',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text(
+                                          'Yes!',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .accentColor),
+                                        ),
+                                        onPressed: () {
+                                          ApiRequests.removeHistoryItem(
+                                              widget.api, items[index].hash);
+                                          loadHistoryItems();
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text(
+                                          'Cancel',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .accentColor),
+                                        ),
+                                        onPressed: () => Navigator.pop(context),
+                                      ),
+                                    ],
+                                  ));
+                        },
                         title: SizedBox(
                             width: 40,
                             child: Text(items[index].name,
@@ -132,15 +169,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       );
                     },
                   )
-                : Expanded(
-                    child: Center(
-                      child: SvgPicture.asset(
-                        Theme.of(context).brightness == Brightness.light
-                            ? 'assets/logo/empty.svg'
-                            : 'assets/logo/empty_dark.svg',
-                        width: 120,
-                        height: 120,
-                      ),
+                : Center(
+                    child: SvgPicture.asset(
+                      Theme.of(context).brightness == Brightness.light
+                          ? 'assets/logo/empty.svg'
+                          : 'assets/logo/empty_dark.svg',
+                      width: 120,
+                      height: 120,
                     ),
                   ),
       ),
