@@ -11,8 +11,6 @@ import 'package:rutorrentflutter/models/mode.dart';
 import '../components/loading_shimmer.dart';
 
 class HistoryScreen extends StatefulWidget {
-  final Api api;
-  HistoryScreen(this.api);
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
 }
@@ -64,6 +62,38 @@ class _HistoryScreenState extends State<HistoryScreen> {
     'Show Last 48 Hours'
   ];
 
+  _showRemoveDialog(String hashValue) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(
+                'Remove torrent from history',
+                style: TextStyle(fontSize: 15),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'Yes!',
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
+                  onPressed: () {
+                    ApiRequests.removeHistoryItem(
+                        Provider.of<Api>(context, listen: false), hashValue);
+                    loadHistoryItems();
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ));
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -104,39 +134,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     itemBuilder: (context, index) {
                       return ListTile(
                         onLongPress: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    title: Text(
-                                      'Remove torrent from history',
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: Text(
-                                          'Yes!',
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .accentColor),
-                                        ),
-                                        onPressed: () {
-                                          ApiRequests.removeHistoryItem(
-                                              widget.api, items[index].hash);
-                                          loadHistoryItems();
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                      TextButton(
-                                        child: Text(
-                                          'Cancel',
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .accentColor),
-                                        ),
-                                        onPressed: () => Navigator.pop(context),
-                                      ),
-                                    ],
-                                  ));
+                          _showRemoveDialog(items[index].hash);
                         },
                         title: SizedBox(
                             width: 40,

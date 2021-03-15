@@ -472,7 +472,6 @@ class ApiRequests {
   }
 
   static removeHistoryItem(Api api, String hashValue) async {
-    print(hashValue);
     Fluttertoast.showToast(msg: 'Removing Torrent from History');
     try {
       await api.ioClient.post(Uri.parse(api.historyPluginUrl),
