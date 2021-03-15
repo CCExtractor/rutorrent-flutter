@@ -62,6 +62,38 @@ class _HistoryScreenState extends State<HistoryScreen> {
     'Show Last 48 Hours'
   ];
 
+  _showRemoveDialog(String hashValue) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(
+                'Remove torrent from history',
+                style: TextStyle(fontSize: 15),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'Yes!',
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
+                  onPressed: () {
+                    ApiRequests.removeHistoryItem(
+                        Provider.of<Api>(context, listen: false), hashValue);
+                    loadHistoryItems();
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ));
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -101,6 +133,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     itemCount: items.length,
                     itemBuilder: (context, index) {
                       return ListTile(
+                        onLongPress: () {
+                          _showRemoveDialog(items[index].hash);
+                        },
                         title: SizedBox(
                             width: 40,
                             child: Text(items[index].name,
@@ -132,15 +167,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       );
                     },
                   )
-                : Expanded(
-                    child: Center(
-                      child: SvgPicture.asset(
-                        Theme.of(context).brightness == Brightness.light
-                            ? 'assets/logo/empty.svg'
-                            : 'assets/logo/empty_dark.svg',
-                        width: 120,
-                        height: 120,
-                      ),
+                : Center(
+                    child: SvgPicture.asset(
+                      Theme.of(context).brightness == Brightness.light
+                          ? 'assets/logo/empty.svg'
+                          : 'assets/logo/empty_dark.svg',
+                      width: 120,
+                      height: 120,
                     ),
                   ),
       ),
