@@ -91,24 +91,28 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: DataInput(
-              borderColor: Provider.of<Mode>(context).isLightMode
-                  ? Theme.of(context).primaryColor
-                  : Colors.white,
-              textEditingController: urlTextController,
-              hintText: widget.dialogHint,
-              focus: urlFocus,
-              suffixIconButton: IconButton(
-                color: Provider.of<Mode>(context).isLightMode
+            child: Form(
+              key: _formKey,
+              child: DataInput(
+                borderColor: Provider.of<Mode>(context).isLightMode
                     ? Theme.of(context).primaryColor
                     : Colors.white,
-                onPressed: () async {
-                  ClipboardData data = await Clipboard.getData('text/plain');
-                  if (data != null)
-                    urlTextController.text = data.text.toString();
-                  if (urlFocus.hasFocus) urlFocus.unfocus();
-                },
-                icon: Icon(Icons.content_paste),
+                textEditingController: urlTextController,
+                hintText: widget.dialogHint,
+                focus: urlFocus,
+                validator: urlValidator,
+                suffixIconButton: IconButton(
+                  color: Provider.of<Mode>(context).isLightMode
+                      ? Theme.of(context).primaryColor
+                      : Colors.white,
+                  onPressed: () async {
+                    ClipboardData data = await Clipboard.getData('text/plain');
+                    if (data != null)
+                      urlTextController.text = data.text.toString();
+                    if (urlFocus.hasFocus) urlFocus.unfocus();
+                  },
+                  icon: Icon(Icons.content_paste),
+                ),
               ),
             ),
           ),
