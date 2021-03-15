@@ -19,7 +19,7 @@ class _VlcStreamState extends State<VlcStream> with WidgetsBindingObserver {
   bool isPlaying = true;
 
   // controller of vlc player
-  VlcPlayerController _videoViewController;
+  VlcPlayerController _videoViewController = new VlcPlayerController();
 
   // slider value for media player seek slider
   double sliderValue = 0.0;
@@ -121,14 +121,17 @@ class _VlcStreamState extends State<VlcStream> with WidgetsBindingObserver {
           Align(
             alignment: Alignment.center,
             child: VlcPlayer(
+              hwAcc: HwAcc.FULL,
               aspectRatio: 16 / 9,
               url: widget.streamUrl,
               controller: _videoViewController,
-              placeholder: Container(
-                height: 250.0,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).accentColor),
+              placeholder: Center(
+                child: Container(
+                  height: 100.0,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).accentColor),
+                  ),
                 ),
               ),
             ),
@@ -227,10 +230,12 @@ class _VlcStreamState extends State<VlcStream> with WidgetsBindingObserver {
   }
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
     WidgetsBinding.instance.removeObserver(this);
     Wakelock.disable();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    await _videoViewController.stop();
+    _videoViewController.dispose();
     super.dispose();
   }
 }
