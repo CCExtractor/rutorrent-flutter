@@ -131,7 +131,9 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
                 child: Text(
-                  'Start Download',
+                  (widget.dialogHint == "Enter Rss Url")
+                      ? 'Add RSS Feed'
+                      : 'Start Download',
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
