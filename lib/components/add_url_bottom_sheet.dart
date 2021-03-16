@@ -68,111 +68,115 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
   Widget build(BuildContext context) {
     double wp = MediaQuery.of(context).size.width;
     return Container(
-      height: 300,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: wp * 0.35,
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: wp * 0.35,
+              ),
+              height: 5,
+              color: Theme.of(context).primaryColor,
             ),
-            height: 5,
-            color: Theme.of(context).primaryColor,
-          ),
-          Text(
-            'Add link',
-            style: TextStyle(
-                fontSize: 14,
-                color: Provider.of<Mode>(context).isLightMode
-                    ? Colors.black54
-                    : Colors.white),
-          ),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Form(
-              key: _formKey,
-              child: DataInput(
-                borderColor: Provider.of<Mode>(context).isLightMode
-                    ? Theme.of(context).primaryColor
-                    : Colors.white,
-                textEditingController: urlTextController,
-                hintText: widget.dialogHint,
-                focus: urlFocus,
-                validator: urlValidator,
-                suffixIconButton: IconButton(
+            Text(
+              'Add link',
+              style: TextStyle(
+                  fontSize: 14,
                   color: Provider.of<Mode>(context).isLightMode
+                      ? Colors.black54
+                      : Colors.white),
+            ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Form(
+                key: _formKey,
+                child: DataInput(
+                  borderColor: Provider.of<Mode>(context).isLightMode
                       ? Theme.of(context).primaryColor
                       : Colors.white,
-                  onPressed: () async {
-                    ClipboardData data = await Clipboard.getData('text/plain');
-                    if (data != null)
-                      urlTextController.text = data.text.toString();
-                    if (urlFocus.hasFocus) urlFocus.unfocus();
-                  },
-                  icon: Icon(Icons.content_paste),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 36),
-            width: double.infinity,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    side: BorderSide(color: Theme.of(context).primaryColor),
+                  textEditingController: urlTextController,
+                  hintText: widget.dialogHint,
+                  focus: urlFocus,
+                  validator: urlValidator,
+                  suffixIconButton: IconButton(
+                    color: Provider.of<Mode>(context).isLightMode
+                        ? Theme.of(context).primaryColor
+                        : Colors.white,
+                    onPressed: () async {
+                      ClipboardData data =
+                          await Clipboard.getData('text/plain');
+                      if (data != null)
+                        urlTextController.text = data.text.toString();
+                      if (urlFocus.hasFocus) urlFocus.unfocus();
+                    },
+                    icon: Icon(Icons.content_paste),
                   ),
-                  side: BorderSide(color: Theme.of(context).primaryColor),
-                  primary: Theme.of(context).primaryColor),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
-                child: Text(
-                  'Start Download',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  widget.apiRequest(urlTextController.text);
-                  Navigator.pop(context);
-                }
-              },
             ),
-          ),
-          (widget.dialogHint == "Enter Rss Url")
-              ? Container()
-              : Container(
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 36),
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      side: BorderSide(color: Theme.of(context).primaryColor),
+                    ),
+                    side: BorderSide(color: Theme.of(context).primaryColor),
+                    primary: Theme.of(context).primaryColor),
+                child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 36),
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
+                      const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+                  child: Text(
+                    'Start Download',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    widget.apiRequest(urlTextController.text);
+                    Navigator.pop(context);
+                  }
+                },
+              ),
+            ),
+            (widget.dialogHint == "Enter Rss Url")
+                ? Container()
+                : Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16, horizontal: 36),
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor),
+                          ),
                           side:
                               BorderSide(color: Theme.of(context).primaryColor),
+                          primary: Theme.of(context).primaryColor),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 28, vertical: 16),
+                        child: Text(
+                          'Browse Torrent File',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
-                        side: BorderSide(color: Theme.of(context).primaryColor),
-                        primary: Theme.of(context).primaryColor),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 28, vertical: 16),
-                      child: Text(
-                        'Browse Torrent File',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
+                      onPressed: () {
+                        pickTorrentFile();
+                        Navigator.pop(context);
+                      },
                     ),
-                    onPressed: () {
-                      pickTorrentFile();
-                      Navigator.pop(context);
-                    },
                   ),
-                ),
-        ],
+          ],
+        ),
       ),
     );
   }
