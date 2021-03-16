@@ -34,8 +34,8 @@ class ApiRequests {
     if (response.statusCode == 200) {
       var items = jsonDecode(response.body)['items'];
       for (var item in items) {
-        HistoryItem historyItem = HistoryItem(
-            item['name'], item['action'], item['action_time'], item['size']);
+        HistoryItem historyItem = HistoryItem(item['name'], item['action'],
+            item['action_time'], item['size'], item['hash']);
         historyItems.add(historyItem);
       }
       general.updateHistoryItems(historyItems, context);
@@ -557,8 +557,8 @@ class ApiRequests {
       var items = jsonDecode(response.body)['items'];
 
       for (var item in items) {
-        HistoryItem historyItem = HistoryItem(
-            item['name'], item['action'], item['action_time'], item['size']);
+        HistoryItem historyItem = HistoryItem(item['name'], item['action'],
+            item['action_time'], item['size'], item['hash']);
         historyItems.add(historyItem);
       }
     } catch (e) {
@@ -623,6 +623,21 @@ class ApiRequests {
           'Error in removeTorrentLabel api: [${response.statusCode}] ${response.body}');
       Fluttertoast.showToast(
           msg: 'Unable to remove torrent label. Please check your network.');
+    }
+  }
+
+  static removeHistoryItem(Api api, String hashValue) async {
+    Fluttertoast.showToast(msg: 'Removing Torrent from History');
+    try {
+      await api.ioClient.post(Uri.parse(api.historyPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'cmd': 'delete',
+            'mode': 'hstdelete',
+            'hash': hashValue,
+          });
+    } on Exception catch (e) {
+      print('err: ${e.toString()}');
     }
   }
 }
