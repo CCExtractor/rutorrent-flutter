@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rutorrentflutter/components/file_tile.dart';
@@ -21,7 +22,11 @@ class _DownloadsPageState extends State<DownloadsPage> {
   }
 
   _initFiles() async {
-    _homeDirectory = (await getExternalStorageDirectory()).path + '/';
+    if (Platform.isAndroid) {
+      _homeDirectory = (await getExternalStorageDirectory()).path + '/';
+    } else {
+      _homeDirectory = (await getApplicationDocumentsDirectory()).path + '/';
+    }
     _directory = _homeDirectory;
     _syncFiles();
   }
@@ -56,36 +61,48 @@ class _DownloadsPageState extends State<DownloadsPage> {
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filesList.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    onTap: () {
-                      if (filesList[index] is Directory) {
-                        _directory = filesList[index].path + '/';
-                        _syncFiles();
-                      } else if (filesList[index] is File) {
-                        OpenFile.open(filesList[index].path);
-                      }
-                    },
-                    leading: Icon(
-                        filesList[index] is Directory
-                            ? Icons.folder
-                            : FileTile.getFileIcon(filesList[index].path),
-                        color: filesList[index] is Directory
-                            ? Colors.yellow[600]
-                            : null),
-                    title: Text(
-                      filesList[index].path.substring(
-                          filesList[index].path.lastIndexOf('/') + 1),
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            (filesList.length != 0)
+                ? Expanded(
+                    child: ListView.builder(
+                      itemCount: filesList.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          onTap: () {
+                            if (filesList[index] is Directory) {
+                              _directory = filesList[index].path + '/';
+                              _syncFiles();
+                            } else if (filesList[index] is File) {
+                              OpenFile.open(filesList[index].path);
+                            }
+                          },
+                          leading: Icon(
+                              filesList[index] is Directory
+                                  ? Icons.folder
+                                  : FileTile.getFileIcon(filesList[index].path),
+                              color: filesList[index] is Directory
+                                  ? Colors.yellow[600]
+                                  : null),
+                          title: Text(
+                            filesList[index].path.substring(
+                                filesList[index].path.lastIndexOf('/') + 1),
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w600),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ),
+                  )
+                : Expanded(
+                    child: Center(
+                      child: SvgPicture.asset(
+                        Theme.of(context).brightness == Brightness.light
+                            ? 'assets/logo/empty.svg'
+                            : 'assets/logo/empty_dark.svg',
+                        width: 120,
+                        height: 120,
+                      ),
+                    ),
+                  ),
           ],
         )),
       ),

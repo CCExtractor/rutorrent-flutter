@@ -9,6 +9,8 @@ import 'package:rutorrentflutter/models/torrent.dart';
 import '../api/api_conf.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 
+import 'custom_dialog.dart';
+
 class TorrentTile extends StatelessWidget {
   final Torrent torrent;
   TorrentTile(this.torrent);
@@ -46,6 +48,24 @@ class TorrentTile extends StatelessWidget {
     return Consumer<Api>(
       builder: (context, api, child) {
         return GestureDetector(
+          onLongPress: () {
+            showDialog(
+                context: context,
+                builder: (context) => CustomDialog(
+                      title: 'Remove Torrent',
+                      optionRightText: 'Remove Torrent and Delete Data',
+                      optionLeftText: 'Remove Torrent',
+                      optionRightOnPressed: () {
+                        ApiRequests.removeTorrentWithData(
+                            torrent.api, torrent.hash);
+                        Navigator.pop(context);
+                      },
+                      optionLeftOnPressed: () {
+                        ApiRequests.removeTorrent(torrent.api, torrent.hash);
+                        Navigator.pop(context);
+                      },
+                    ));
+          },
           behavior: HitTestBehavior.opaque,
           onTap: () {
             Navigator.push(
@@ -74,11 +94,15 @@ class TorrentTile extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Flexible(
-                                  child: Text(
-                                torrent.name,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600, fontSize: 16),
-                              )),
+                                child: Text(
+                                  torrent.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16),
+                                ),
+                              ),
                               Flexible(
                                 child: Text(
                                   '${filesize(torrent.downloadedData)}${torrent.dlSpeed == 0 ? '' : ' | ' + torrent.getEta}',

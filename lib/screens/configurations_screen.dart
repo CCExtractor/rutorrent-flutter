@@ -56,6 +56,10 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
       Preferences.saveLogin(apis);
     }
 
+    if (apis.length > 1) {
+      Navigator.pop(context);
+    }
+
     Navigator.pushReplacement(
         //Navigate to Home Screen
         context,
@@ -121,7 +125,9 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
           passwordFocus.unfocus();
         },
         child: Scaffold(
-          backgroundColor: Colors.white,
+          appBar: AppBar(
+            elevation: 0,
+          ),
           body: SingleChildScrollView(
             child: Column(
               children: <Widget>[
@@ -221,14 +227,17 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                       const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                   child: Container(
                     width: double.infinity,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        side: BorderSide(color: Theme.of(context).primaryColor),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          side:
+                              BorderSide(color: Theme.of(context).primaryColor),
+                        ),
+                        primary: Provider.of<Mode>(context).isLightMode
+                            ? Colors.white
+                            : Colors.black,
                       ),
-                      color: Provider.of<Mode>(context).isLightMode
-                          ? Colors.white
-                          : Colors.black,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 28, vertical: 16),

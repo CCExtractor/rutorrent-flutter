@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
@@ -51,15 +52,27 @@ class _RSSFeedsState extends State<RSSFeeds> {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: rssLabelsList.length,
-                      itemBuilder: (context, index) {
-                        return RSSLabelTile(
-                            rssLabelsList[index], _refreshState);
-                      },
-                    ),
-                  ),
+                  (rssLabelsList.length != 0)
+                      ? Expanded(
+                          child: ListView.builder(
+                            itemCount: rssLabelsList.length,
+                            itemBuilder: (context, index) {
+                              return RSSLabelTile(
+                                  rssLabelsList[index], _refreshState);
+                            },
+                          ),
+                        )
+                      : Expanded(
+                          child: Center(
+                            child: SvgPicture.asset(
+                              Theme.of(context).brightness == Brightness.light
+                                  ? 'assets/logo/empty.svg'
+                                  : 'assets/logo/empty_dark.svg',
+                              width: 120,
+                              height: 120,
+                            ),
+                          ),
+                        ),
                 ],
               );
             },

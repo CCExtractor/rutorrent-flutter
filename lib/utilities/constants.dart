@@ -18,3 +18,7 @@ const Color kSecondaryDT = Color(0xFF987BEE);
 const Color kRedErrorDT = Color(0xFFEF5350);
 const Color kGreenActiveDT = Color(0xFF1ED760);
 const Color kBackgroundDT = Color(0xFF121212);
+
+/// APP RELEASE INFO
+const String BUILD_NUMBER = '2';
+const String RELEASE_DATE = '28.02.20';

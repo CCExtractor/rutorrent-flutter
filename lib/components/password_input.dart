@@ -32,7 +32,7 @@ class _PasswordInputState extends State<PasswordInput> {
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
             border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             hintText: 'Password',
             suffixIcon: IconButton(
               color: Colors.grey,

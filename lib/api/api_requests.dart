@@ -32,8 +32,8 @@ class ApiRequests {
 
     var items = jsonDecode(response.body)['items'];
     for (var item in items) {
-      HistoryItem historyItem = HistoryItem(
-          item['name'], item['action'], item['action_time'], item['size']);
+      HistoryItem historyItem = HistoryItem(item['name'], item['action'],
+          item['action_time'], item['size'], item['hash']);
       historyItems.add(historyItem);
     }
     general.updateHistoryItems(historyItems, context);
@@ -345,7 +345,7 @@ class ApiRequests {
             'href': rssItem.url,
             'rss': labelHash,
           });
-      var xmlResponse = xml.parse(response.body);
+      var xmlResponse = xml.XmlDocument.parse(response.body);
 
       var data =
           xmlResponse.lastChild.text; // extracting value stored in data tag
@@ -411,8 +411,8 @@ class ApiRequests {
 
     List<HistoryItem> historyItems = [];
     for (var item in items) {
-      HistoryItem historyItem = HistoryItem(
-          item['name'], item['action'], item['action_time'], item['size']);
+      HistoryItem historyItem = HistoryItem(item['name'], item['action'],
+          item['action_time'], item['size'], item['hash']);
       historyItems.add(historyItem);
     }
     return historyItems;
@@ -420,26 +420,31 @@ class ApiRequests {
 
   /// Gets Disk Files
   static Future<List<DiskFile>> getDiskFiles(Api api, String path) async {
-    var response = await api.ioClient.post(Uri.parse(api.explorerPluginUrl),
-        headers: api.getAuthHeader(),
-        body: {
-          'cmd': 'get',
-          'src': path,
-        });
+    try {
+      var response = await api.ioClient.post(Uri.parse(api.explorerPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'cmd': 'get',
+            'src': path,
+          });
 
-    var files = jsonDecode(response.body)['files'];
+      var files = jsonDecode(response.body)['files'];
 
-    List<DiskFile> diskFiles = [];
+      List<DiskFile> diskFiles = [];
 
-    for (var file in files) {
-      DiskFile diskFile = DiskFile();
+      for (var file in files) {
+        DiskFile diskFile = DiskFile();
 
-      diskFile.isDirectory = file['is_dir'];
-      diskFile.name = file['data']['name'];
-      diskFiles.add(diskFile);
+        diskFile.isDirectory = file['is_dir'];
+        diskFile.name = file['data']['name'];
+        diskFiles.add(diskFile);
+      }
+
+      return diskFiles;
+    } on Exception catch (e) {
+      print(e.toString());
+      return null;
     }
-
-    return diskFiles;
   }
 
   static setTorrentLabel(Api api, String hashValue, {String label}) async {
@@ -463,6 +468,21 @@ class ApiRequests {
           body: {'mode': 'setlabel', 'hash': hashValue, 'v': ''});
     } on Exception catch (e) {
       print(e.toString() + "errrrr");
+    }
+  }
+
+  static removeHistoryItem(Api api, String hashValue) async {
+    Fluttertoast.showToast(msg: 'Removing Torrent from History');
+    try {
+      await api.ioClient.post(Uri.parse(api.historyPluginUrl),
+          headers: api.getAuthHeader(),
+          body: {
+            'cmd': 'delete',
+            'mode': 'hstdelete',
+            'hash': hashValue,
+          });
+    } on Exception catch (e) {
+      print('err: ${e.toString()}');
     }
   }
 }

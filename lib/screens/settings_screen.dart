@@ -22,14 +22,26 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   _logoutAllAccounts(BuildContext context) {
-    Preferences.clearLogin();
+    showDialog(
+        context: context,
+        builder: (_) => CustomDialog(
+              title: 'Are you sure you want to logout from all saved accounts?',
+              optionLeftText: 'No',
+              optionRightText: 'Yes',
+              optionLeftOnPressed: () => Navigator.pop(context),
+              optionRightOnPressed: () {
+                // Closes dialog box.
+                Navigator.pop(context);
 
-    Navigator.pop(context);
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ConfigurationsScreen(),
-        ));
+                Preferences.clearLogin();
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ConfigurationsScreen(),
+                    ));
+              },
+            ));
   }
 
   _deleteAccount(BuildContext context, GeneralFeatures general, int index) {
@@ -164,13 +176,15 @@ class _SettingsPageState extends State<SettingsPage> {
                         : Container(
                             height: 40,
                             width: double.infinity,
-                            child: RaisedButton(
-                              color: Provider.of<Mode>(context).isLightMode
-                                  ? Colors.white
-                                  : kGreyDT,
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: Theme.of(context).primaryColor),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Provider.of<Mode>(context).isLightMode
+                                    ? Colors.white
+                                    : kGreyDT,
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      color: Theme.of(context).primaryColor),
+                                ),
                               ),
                               child: Text(
                                 'VALIDATE',

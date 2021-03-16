@@ -1,5 +1,6 @@
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
@@ -61,6 +62,38 @@ class _HistoryScreenState extends State<HistoryScreen> {
     'Show Last 48 Hours'
   ];
 
+  _showRemoveDialog(String hashValue) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(
+                'Remove torrent from history',
+                style: TextStyle(fontSize: 15),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text(
+                    'Yes!',
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
+                  onPressed: () {
+                    ApiRequests.removeHistoryItem(
+                        Provider.of<Api>(context, listen: false), hashValue);
+                    loadHistoryItems();
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ));
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -95,40 +128,54 @@ class _HistoryScreenState extends State<HistoryScreen> {
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: isLoading
             ? LoadingShimmer().loadingEffect(context)
-            : ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: SizedBox(
-                        width: 40,
-                        child: Text(items[index].name,
-                            style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w600))),
-                    trailing: Container(
-                      padding: const EdgeInsets.all(4),
-                      width: 70,
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                        color:
-                            getHistoryStatusColor(context, items[index].action),
-                      )),
-                      child:
-                          Text(HistoryItem.historyStatus[items[index].action],
+            : (items.length != 0)
+                ? ListView.builder(
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        onLongPress: () {
+                          _showRemoveDialog(items[index].hash);
+                        },
+                        title: SizedBox(
+                            width: 40,
+                            child: Text(items[index].name,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600))),
+                        trailing: Container(
+                          padding: const EdgeInsets.all(4),
+                          width: 70,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                            color: getHistoryStatusColor(
+                                context, items[index].action),
+                          )),
+                          child: Text(
+                              HistoryItem.historyStatus[items[index].action],
                               style: TextStyle(
                                 color: getHistoryStatusColor(
                                     context, items[index].action),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                               )),
+                        ),
+                        subtitle: Text(
+                          '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w600),
+                        ),
+                      );
+                    },
+                  )
+                : Center(
+                    child: SvgPicture.asset(
+                      Theme.of(context).brightness == Brightness.light
+                          ? 'assets/logo/empty.svg'
+                          : 'assets/logo/empty_dark.svg',
+                      width: 120,
+                      height: 120,
                     ),
-                    subtitle: Text(
-                      '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                    ),
-                  );
-                },
-              ),
+                  ),
       ),
     );
   }
