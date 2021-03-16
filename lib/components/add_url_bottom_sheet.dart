@@ -142,36 +142,6 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
                 }
               },
             ),
-<<<<<<< HEAD
-            (widget.dialogHint == "Enter Rss Url")
-                ? Container()
-                : Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 36),
-                    width: double.infinity,
-                    child: RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0),
-                        side: BorderSide(color: Theme.of(context).primaryColor),
-                      ),
-                      color: Theme.of(context).primaryColor,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 28, vertical: 16),
-                        child: Text(
-                          'Browse Torrent File',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ),
-                      onPressed: () {
-                        pickTorrentFile();
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-          ],
-        ),
-=======
           ),
           (widget.dialogHint == "Enter Rss Url")
               ? Container()
@@ -203,7 +173,6 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
                   ),
                 ),
         ],
->>>>>>> upstream/master
       ),
     );
   }
