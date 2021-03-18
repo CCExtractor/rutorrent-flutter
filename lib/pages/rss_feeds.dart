@@ -63,13 +63,21 @@ class _RSSFeedsState extends State<RSSFeeds> {
                           ),
                         )
                       : Expanded(
-                          child: Center(
-                            child: SvgPicture.asset(
-                              Theme.of(context).brightness == Brightness.light
-                                  ? 'assets/logo/empty.svg'
-                                  : 'assets/logo/empty_dark.svg',
-                              width: 120,
-                              height: 120,
+                          child: SingleChildScrollView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            child: Container(
+                              height: MediaQuery.of(context).size.height / 1.75,
+                              alignment: Alignment.center,
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? 'assets/logo/empty.svg'
+                                      : 'assets/logo/empty_dark.svg',
+                                  width: 120,
+                                  height: 120,
+                                ),
+                              ),
                             ),
                           ),
                         ),

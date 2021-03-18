@@ -26,9 +26,29 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
 
   final FocusNode urlFocus = FocusNode();
 
+  final _formKey = GlobalKey<FormState>();
+
   String torrentPath;
 
   File torrentFile;
+
+  // validating url through regex
+  bool isValidUrl(String input) {
+    var urlRegex = r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+';
+    if (RegExp(urlRegex).hasMatch(input)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // output a invalid error message if url is invalid
+  String urlValidator(String input) {
+    if (!isValidUrl(input)) {
+      return 'Please enter a valid url';
+    }
+    return null;
+  }
 
   void pickTorrentFile() async {
     FilePickerResult result = await FilePicker.platform
@@ -71,24 +91,28 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: DataInput(
-              borderColor: Provider.of<Mode>(context).isLightMode
-                  ? Theme.of(context).primaryColor
-                  : Colors.white,
-              textEditingController: urlTextController,
-              hintText: widget.dialogHint,
-              focus: urlFocus,
-              suffixIconButton: IconButton(
-                color: Provider.of<Mode>(context).isLightMode
+            child: Form(
+              key: _formKey,
+              child: DataInput(
+                borderColor: Provider.of<Mode>(context).isLightMode
                     ? Theme.of(context).primaryColor
                     : Colors.white,
-                onPressed: () async {
-                  ClipboardData data = await Clipboard.getData('text/plain');
-                  if (data != null)
-                    urlTextController.text = data.text.toString();
-                  if (urlFocus.hasFocus) urlFocus.unfocus();
-                },
-                icon: Icon(Icons.content_paste),
+                textEditingController: urlTextController,
+                hintText: widget.dialogHint,
+                focus: urlFocus,
+                validator: urlValidator,
+                suffixIconButton: IconButton(
+                  color: Provider.of<Mode>(context).isLightMode
+                      ? Theme.of(context).primaryColor
+                      : Colors.white,
+                  onPressed: () async {
+                    ClipboardData data = await Clipboard.getData('text/plain');
+                    if (data != null)
+                      urlTextController.text = data.text.toString();
+                    if (urlFocus.hasFocus) urlFocus.unfocus();
+                  },
+                  icon: Icon(Icons.content_paste),
+                ),
               ),
             ),
           ),
@@ -107,13 +131,17 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
                 child: Text(
-                  'Start Download',
+                  (widget.dialogHint == "Enter Rss Url")
+                      ? 'Add RSS Feed'
+                      : 'Start Download',
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
               ),
               onPressed: () {
-                widget.apiRequest(urlTextController.text);
-                Navigator.pop(context);
+                if (_formKey.currentState.validate()) {
+                  widget.apiRequest(urlTextController.text);
+                  Navigator.pop(context);
+                }
               },
             ),
           ),
