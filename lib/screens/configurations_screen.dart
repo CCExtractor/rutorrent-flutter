@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/data_input.dart';
 import 'package:rutorrentflutter/components/password_input.dart';
 import 'package:rutorrentflutter/models/mode.dart';
+import 'package:rutorrentflutter/pages/discover_page.dart';
 import 'package:rutorrentflutter/screens/main_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rutorrentflutter/utilities/preferences.dart';
@@ -220,6 +221,47 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                   child: PasswordInput(
                     textEditingController: passwordController,
                     passwordFocus: passwordFocus,
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                  child: Container(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          side:
+                              BorderSide(color: Theme.of(context).primaryColor),
+                        ),
+                        primary: Provider.of<Mode>(context).isLightMode
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 28, vertical: 16),
+                        child: Text(
+                          'Discover ruTorrent servers in LAN',
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 18),
+                        ),
+                      ),
+                      onPressed: () async {
+                        var received = await showDialog<Api>(
+                            context: context, builder: (ctx) => DiscoverPage());
+                        if (received != null) {
+                          Api api = Provider.of<Api>(context,
+                              listen: false); // One call to provider
+                          api.setUrl(api.url);
+                          api.setUsername(api.username);
+                          api.setPassword(api.password);
+                          _validateConfigurationDetails(api);
+                        }
+                      },
+                    ),
                   ),
                 ),
                 Padding(
