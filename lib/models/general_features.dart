@@ -255,7 +255,8 @@ class GeneralFeatures extends ChangeNotifier {
   List<HistoryItem> _historyItems = [];
   get historyItems => _historyItems;
 
-  updateHistoryItems(List<HistoryItem> updatedList, BuildContext context) {
+  updateHistoryItems(
+      List<HistoryItem> updatedList, BuildContext context) async {
     bool happenedNow(HistoryItem item) {
       if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1)
         return true;
@@ -280,7 +281,17 @@ class GeneralFeatures extends ChangeNotifier {
             // Generate Notification
             if (Provider.of<Settings>(context, listen: false)
                 .downloadCompleteNotification) {
-              notifications.generate('Download Completed', item.name);
+              List<Torrent> updatedtorrentsList = [];
+              await updateTorrentsList(torrentsList).then((list) {
+                updatedtorrentsList = list;
+              });
+              print(
+                  '${updatedtorrentsList.singleWhere((element) => (element?.name == item?.name), orElse: null)?.hash}');
+              notifications.generate('Download Completed', item.name,
+                  payload: updatedtorrentsList
+                      .singleWhere((element) => (element.name == item.name &&
+                          element.size == item.size))
+                      .hash);
             }
           }
           break;

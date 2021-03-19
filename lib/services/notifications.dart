@@ -31,13 +31,13 @@ class Notifications {
   }
 
   /// Public Method to generate Notification
-  generate(String header, String body) async {
+  generate(String header, String body, {String payload}) async {
     await flutterLocalNotificationsPlugin.show(
       0,
       header,
       body,
       platformChannelSpecifics,
-      payload: null,
+      payload: payload,
     );
   }
 }
