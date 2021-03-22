@@ -28,6 +28,13 @@ class Api {
   get username => _username;
   get password => _password;
 
+  bool _isSeedboxAccount;
+
+  bool get isSeedboxAccount {
+    _isSeedboxAccount = _username.isNotEmpty && _password.isNotEmpty;
+    return _isSeedboxAccount;
+  }
+
   /// Plugins url
   get httpRpcPluginUrl => url + '/plugins/httprpc/action.php';
 
