@@ -24,7 +24,8 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen>
+    with AutomaticKeepAliveClientMixin {
   int _currentIndex = 0; // HomePage
   PackageInfo packageInfo = new PackageInfo(
       packageName: '', appName: '', buildNumber: '', version: '');
@@ -380,4 +381,8 @@ class _MainScreenState extends State<MainScreen> {
       );
     });
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
