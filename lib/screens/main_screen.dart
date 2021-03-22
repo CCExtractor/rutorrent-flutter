@@ -148,6 +148,7 @@ class _MainScreenState extends State<MainScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Consumer3<Mode, Api, GeneralFeatures>(
         builder: (context, mode, api, general, child) {
       return Scaffold(
@@ -383,6 +384,5 @@ class _MainScreenState extends State<MainScreen>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }
