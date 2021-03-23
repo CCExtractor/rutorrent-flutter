@@ -150,6 +150,7 @@ class _MainScreenState extends State<MainScreen> {
     return Consumer3<Mode, Api, GeneralFeatures>(
         builder: (context, mode, api, general, child) {
       return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text(
             'Hey, ${api.username}',
