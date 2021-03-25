@@ -227,7 +227,11 @@ class GeneralFeatures extends ChangeNotifier {
   }
 
   setListOfLabels(List<String> listOfLabels) {
-    _listOfLabels = listOfLabels;
+    if (_allAccounts) {
+      _listOfLabels = (_listOfLabels + listOfLabels).toSet().toList();
+    } else {
+      _torrentsList.isEmpty ? _listOfLabels = [] : _listOfLabels = listOfLabels;
+    }
     notifyListeners();
   }
 
