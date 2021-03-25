@@ -17,6 +17,7 @@ enum Sort {
   ratio,
   size_ascending,
   size_descending,
+  none,
 }
 
 enum Filter {
@@ -92,6 +93,10 @@ class GeneralFeatures extends ChangeNotifier {
 
       case Sort.size_descending:
         torrentsList.sort((a, b) => a.size.compareTo(b.size));
+        return torrentsList.reversed.toList();
+
+      case Sort.none:
+        torrentsList.sort((a, b) => a.torrentAdded.compareTo(b.torrentAdded));
         return torrentsList.reversed.toList();
 
       default:
