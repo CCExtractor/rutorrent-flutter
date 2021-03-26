@@ -28,20 +28,17 @@ class Notifications {
 
   /// Public Method to generate Notification
   generate(String header, String body, NotificationChannelID id) async {
-
     //Setting Notification Channel ID, Name and Description
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-        id.index.toString(), 
+        id.index.toString(),
         notificationInfo[id.index][0],
         notificationInfo[id.index][0],
-        importance: Importance.max, 
-        priority: Priority.high
-    );
+        importance: Importance.max,
+        priority: Priority.high);
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
     platformChannelSpecifics = new NotificationDetails(
         android: androidPlatformChannelSpecifics,
-        iOS: iOSPlatformChannelSpecifics
-    );
+        iOS: iOSPlatformChannelSpecifics);
 
     //Notification ID
     Random random = new Random();

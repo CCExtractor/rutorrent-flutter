@@ -29,7 +29,9 @@ class DiskSpace {
   /// Generates Notification when percentage free on disk is less than [criticalPercentage]
   generateLowDiskSpaceAlert(Notifications notifications) async {
     notifications.generate(
-        'Low Disk Space', 'You are low on disk space. Free some space', NotificationChannelID.LowDiskSpace);
+        'Low Disk Space',
+        'You are low on disk space. Free some space',
+        NotificationChannelID.LowDiskSpace);
     alertUser = false;
   }
 }
