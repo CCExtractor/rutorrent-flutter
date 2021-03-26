@@ -176,22 +176,24 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                     Fluttertoast.showToast(msg: "Label set");
                   }
                 }),
-            _actionButton(
-              text: "Remove Label",
-              onPressed: () async {
-                await ApiRequests.removeTorrentLabel(
-                  torrent.api,
-                  torrent.hash,
-                );
-                _labelController.text = "";
-                Provider.of<GeneralFeatures>(context, listen: false)
-                    .changeFilter(Filter
-                        .All); // Doing this to ensure that a empty torrent list page is not shown to the user
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Fluttertoast.showToast(msg: "Label removed");
-              },
-            )
+            widget.torrent.label.isNotEmpty
+                ? _actionButton(
+                    text: "Remove Label",
+                    onPressed: () async {
+                      await ApiRequests.removeTorrentLabel(
+                        torrent.api,
+                        torrent.hash,
+                      );
+                      _labelController.text = "";
+                      Provider.of<GeneralFeatures>(context, listen: false)
+                          .changeFilter(Filter
+                              .All); // Doing this to ensure that a empty torrent list page is not shown to the user
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      Fluttertoast.showToast(msg: "Label removed");
+                    },
+                  )
+                : Container(),
           ],
         );
       },
