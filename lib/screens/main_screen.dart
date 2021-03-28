@@ -24,7 +24,8 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen>
+    with AutomaticKeepAliveClientMixin {
   int _currentIndex = 0; // HomePage
   PackageInfo packageInfo = new PackageInfo(
       packageName: '', appName: '', buildNumber: '', version: '');
@@ -147,6 +148,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Consumer3<Mode, Api, GeneralFeatures>(
         builder: (context, mode, api, general, child) {
       return Scaffold(
@@ -400,4 +402,7 @@ class _MainScreenState extends State<MainScreen> {
       );
     });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
