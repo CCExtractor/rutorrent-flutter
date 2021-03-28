@@ -29,6 +29,12 @@ enum Filter {
   Error,
 }
 
+enum NotificationChannelID {
+  NewTorrentAdded,
+  DownloadCompleted,
+  LowDiskSpace,
+}
+
 class GeneralFeatures extends ChangeNotifier {
   /// List of all saved accounts [Apis]
   List<Api> apis = [];
@@ -279,7 +285,8 @@ class GeneralFeatures extends ChangeNotifier {
             // Generate Notification
             if (Provider.of<Settings>(context, listen: false)
                 .addTorrentNotification) {
-              notifications.generate('New Torrent Added', item.name);
+              notifications.generate('New Torrent Added', item.name,
+                  NotificationChannelID.NewTorrentAdded);
             }
           }
           break;
@@ -289,7 +296,8 @@ class GeneralFeatures extends ChangeNotifier {
             // Generate Notification
             if (Provider.of<Settings>(context, listen: false)
                 .downloadCompleteNotification) {
-              notifications.generate('Download Completed', item.name);
+              notifications.generate('Download Completed', item.name,
+                  NotificationChannelID.DownloadCompleted);
             }
           }
           break;
