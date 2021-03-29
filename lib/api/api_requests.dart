@@ -18,7 +18,7 @@ class ApiRequests {
   /// Checks Added and Finished Torrents asynchronously by fetching History of last ten seconds
   static updateHistory(
       Api api, GeneralFeatures general, BuildContext context) async {
-    String timestamp = ((DateTime.now().millisecondsSinceEpoch -
+    String timestamp = ((CustomizableDateTime.current.millisecondsSinceEpoch -
                 Duration(seconds: 10).inMilliseconds) ~/
             1000)
         .toString();

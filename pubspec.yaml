@@ -34,6 +34,7 @@ dependencies:
   wakelock: ^0.5.0+2
   flutter_slidable: ^0.6.0-nullsafety.0
   flutter_svg: ^0.21.0-nullsafety.0
+  mockito: ^5.0.3
 
 dev_dependencies:
   flutter_test:
