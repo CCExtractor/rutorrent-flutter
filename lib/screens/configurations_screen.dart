@@ -251,10 +251,16 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                       onPressed: () {
                         Api api = Provider.of<Api>(context,
                             listen: false); // One call to provider
-                        api.setUrl(urlController.text);
-                        api.setUsername(usernameController.text);
-                        api.setPassword(passwordController.text);
-                        _validateConfigurationDetails(api);
+                        if (usernameController.text.trim().contains(' ') ||
+                            passwordController.text.trim().contains(' ')) {
+                          Fluttertoast.showToast(
+                              msg: 'Invalid username or password');
+                        } else {
+                          api.setUrl(urlController.text);
+                          api.setUsername(usernameController.text);
+                          api.setPassword(passwordController.text);
+                          _validateConfigurationDetails(api);
+                        }
                       },
                     ),
                   ),
