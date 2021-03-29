@@ -3,8 +3,6 @@ import 'package:http/http.dart';
 import 'package:http/io_client.dart' as http;
 import 'package:mockito/mockito.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
-import 'package:rutorrentflutter/api/api_requests.dart';
-import 'package:rutorrentflutter/models/general_features.dart';
 import 'test_data.dart';
 
 /// This file contains setup functions that are created to remove duplicate
