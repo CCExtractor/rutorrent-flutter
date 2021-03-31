@@ -18,18 +18,36 @@ IOClientMock getAndRegisterIOClientMock() {
   ApiServiceMock api = getAndRegisterApiServiceMock();
   IOClientMock client = IOClientMock();
   final timestamp = TestData.getConstantTimeStamp();
+
+  when(client.post(
+    Uri.parse(TestData.httpRpcPluginUrl),
+    headers: api.getAuthHeader(),
+    body: {'mode': 'list'},
+  )).thenAnswer((_) async => Response(TestData.httpRpcPluginJSONResponse, 200));
+
   when(client.post(Uri.parse(TestData.historyPluginUrl),
           headers: api.getAuthHeader(),
           body: {'cmd': 'get', 'mark': timestamp}))
       .thenAnswer(
           (_) async => Response(TestData.updateHistoryJSONReponse, 200));
+
+  when(client.get(Uri.parse(TestData.diskSpacePluginUrl),
+          headers: api.getAuthHeader()))
+      .thenAnswer(
+          (_) async => Response(TestData.updateDiskSpaceJSONResponse, 200));
+
   return client;
 }
 
 ApiServiceMock getAndRegisterApiServiceMock() {
   ApiServiceMock apiMock = ApiServiceMock();
+  when(apiMock.httpRpcPluginUrl)
+      .thenAnswer((realInvocation) => TestData.httpRpcPluginUrl);
   when(apiMock.historyPluginUrl)
       .thenAnswer((realInvocation) => TestData.historyPluginUrl);
+  when(apiMock.diskSpacePluginUrl)
+      .thenAnswer((realInvocation) => TestData.diskSpacePluginUrl);
+
   when(apiMock.ioClient)
       .thenAnswer((realInvocation) => getAndRegisterIOClientMock());
   return apiMock;
