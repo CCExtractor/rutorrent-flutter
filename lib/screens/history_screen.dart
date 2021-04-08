@@ -152,6 +152,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           )),
                           child: Text(
                               HistoryItem.historyStatus[items[index].action],
+                              textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: getHistoryStatusColor(
                                     context, items[index].action),
