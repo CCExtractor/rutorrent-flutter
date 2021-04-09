@@ -11,6 +11,8 @@ import 'package:rutorrentflutter/models/mode.dart';
 import '../components/loading_shimmer.dart';
 
 class HistoryScreen extends StatefulWidget {
+  List<HistoryItem> items;
+  HistoryScreen({this.items});
   @override
   _HistoryScreenState createState() => _HistoryScreenState();
 }
@@ -23,9 +25,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
     setState(() {
       isLoading = true;
     });
-    items = await ApiRequests.getHistory(
-        Provider.of<Api>(context, listen: false),
-        lastHours: lastHrs);
+    items = widget.items;
+    items = await ApiRequests?.getHistory(
+            Provider.of<Api>(context, listen: false),
+            lastHours: lastHrs) ??
+        widget.items;
     setState(() {
       isLoading = false;
     });

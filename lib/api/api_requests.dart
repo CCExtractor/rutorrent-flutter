@@ -402,14 +402,14 @@ class ApiRequests {
           .toString();
     }
 
-    var response = await api.ioClient.post(Uri.parse(api.historyPluginUrl),
+    var response = await api?.ioClient?.post(Uri?.parse(api.historyPluginUrl),
         headers: api.getAuthHeader(),
         body: {
           'cmd': 'get',
           'mark': timestamp,
         });
 
-    var items = jsonDecode(response.body)['items'];
+    var items = (response != null) ? jsonDecode(response?.body)['items'] : [];
 
     List<HistoryItem> historyItems = [];
     for (var item in items) {

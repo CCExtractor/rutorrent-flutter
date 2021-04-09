@@ -3,10 +3,15 @@ import 'package:http/http.dart';
 import 'package:http/io_client.dart' as http;
 import 'package:mockito/mockito.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
+import 'package:rutorrentflutter/models/mode.dart';
 import 'test_data.dart';
 
 /// This file contains setup functions that are created to remove duplicate
 /// code from tests and make them more readable
+///
+class NavigatorObserverMock extends Mock implements NavigatorObserver {}
+
+class MockModeModel extends Mock implements Mode {}
 
 class ApiServiceMock extends Mock implements Api {}
 
