@@ -11,7 +11,7 @@ import 'package:rutorrentflutter/models/mode.dart';
 import '../components/loading_shimmer.dart';
 
 class HistoryScreen extends StatefulWidget {
-  List<HistoryItem> items;
+  final List<HistoryItem> items;
   HistoryScreen({this.items});
   @override
   _HistoryScreenState createState() => _HistoryScreenState();

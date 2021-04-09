@@ -5,7 +5,6 @@ import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/history_screen.dart';
-import 'package:rutorrentflutter/components/loading_shimmer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../setup/test_helpers.dart';
