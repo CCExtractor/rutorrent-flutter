@@ -7,7 +7,7 @@
 # ruTorrent Mobile [Stacked Architecture](https://pub.dev/packages/stacked) Migration
 
 ## Completion
-<img src="https://progress-bar.dev/20" alt="drawing" width="200"/>
+<img src="https://progress-bar.dev/44" alt="drawing" width="200"/>
 
 ## **A ruTorrent-based client build in Flutter**
 

@@ -22,3 +22,8 @@ enum NotificationChannelID {
   DownloadCompleted,
   LowDiskSpace,
 }
+
+enum HomeViewBottomSheetMode {
+  Torrent,
+  RSS,
+}

@@ -36,20 +36,17 @@ dependencies:
   flutter_svg: ^0.21.0-nullsafety.0
 
   #Architecture Packages
-  logger:
-  auto_route:
-  get_it: null
-  injectable: null
-  stacked:
+  logger: ^0.6.0
+  get_it: ^6.0.0
+  injectable: ^1.2.2
+  stacked: ^1.9.0
   stacked_services:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  auto_route_generator:
+  stacked_generator:
   build_runner:
-  injectable_generator:
-  # mockito: null
 
 flutter:
   uses-material-design: true
