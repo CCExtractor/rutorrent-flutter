@@ -20,7 +20,7 @@ class SharedPreferencesService {
   }
 
   saveLogin(List<Account> accounts) async {
-    final String data = encodeApis(accounts);
+    final String data = encodeAccounts(accounts);
     SharedPreferences prefs = await store();
     prefs.setString(accountsData, data);
   }
@@ -28,7 +28,7 @@ class SharedPreferencesService {
   Future<List<Account>> fetchSavedLogin() async {
     SharedPreferences prefs = await store();
     if (prefs.containsKey(accountsData))
-      return decodeApis(prefs.getString(accountsData));
+      return decodeAccounts(prefs.getString(accountsData));
     else
       return [];
   }
@@ -38,13 +38,13 @@ class SharedPreferencesService {
     prefs.remove(accountsData);
   }
 
-  String encodeApis(List<Account> accounts) => json.encode(
+  String encodeAccounts(List<Account> accounts) => json.encode(
         accounts
             .map<Map<String, dynamic>>((account) => account.toJson())
             .toList(),
       );
 
-  List<Account> decodeApis(String data) {
+  List<Account> decodeAccounts(String data) {
     return (json.decode(data) as List<dynamic>)
         .map<Account>((item) => Account.fromJson(item))
         .toList();

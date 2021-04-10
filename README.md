@@ -7,7 +7,10 @@
 # ruTorrent Mobile [Stacked Architecture](https://pub.dev/packages/stacked) Migration
 
 ## Completion
-<img src="https://progress-bar.dev/44" alt="drawing" width="200"/>
+<img src="https://progress-bar.dev/45" alt="drawing" width="200"/>
+
+## Kanban Board
+[The Kanban Board contains the detail of the implementation](https://github.com/AbdulMalikDev/rutorrent-flutter/projects/1)
 
 ## **A ruTorrent-based client build in Flutter**
 

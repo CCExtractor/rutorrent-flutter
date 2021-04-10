@@ -1,8 +1,6 @@
 
 import 'dart:io';
 
-import 'package:injectable/injectable.dart';
-
 class InternetService{
 
   Future<bool> isUserConnectedToInternet() async {
