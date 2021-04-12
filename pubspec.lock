@@ -100,23 +100,6 @@ packages:
     source: hosted
     version: "1.15.0"
   convert:
-<<<<<<< HEAD
-=======
-    dependency: transitive
-    description:
-      name: convert
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.0"
-  crypto:
-    dependency: transitive
-    description:
-      name: crypto
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.0"
-  cryptoutils:
->>>>>>> upstream/master
     dependency: transitive
     description:
       name: convert
