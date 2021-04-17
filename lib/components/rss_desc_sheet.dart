@@ -24,7 +24,7 @@ class _RSSDescSheetState extends State<RSSDescSheet> {
   bool isFetching = true;
   bool dataAvailable;
 
-  fetchRSSDetails() async {
+  Future<void> fetchRSSDetails() async {
     dataAvailable = await ApiRequests.getRSSDetails(
         Provider.of<Api>(context, listen: false), rssItem, widget.labelHash);
     setState(() {

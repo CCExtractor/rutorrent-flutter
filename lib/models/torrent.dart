@@ -43,8 +43,9 @@ class Torrent {
         : getState == 0
             ? (Status.paused)
             : Status.downloading;
-    if (msg.length > 0 && msg != 'Tracker: [Tried all trackers.]')
+    if (msg.isNotEmpty && msg != 'Tracker: [Tried all trackers.]') {
       status = Status.errors;
+    }
     if (getPercentageDownload == 100) status = Status.completed;
     return status;
   }
@@ -55,13 +56,14 @@ class Torrent {
 
   /// returns expected time remaining of downloading torrent in hrs and min
   String get getEta {
-    if (dlSpeed == 0) //check download speed to prevent "Infinity or div by 0"
+    if (dlSpeed == 0) {
       return '';
-    Duration duration = Duration(
+    }
+    var duration = Duration(
         seconds: ((totalChunks - completedChunks) * sizeOfChunk / dlSpeed)
             .round()); // in seconds
-    int hrs = duration.inHours;
-    int min = duration.inMinutes % 60;
+    var hrs = duration.inHours;
+    var min = duration.inMinutes % 60;
     String eta;
     eta = hrs > 0 ? '$hrs hrs ' : '';
     eta = eta + '$min min';

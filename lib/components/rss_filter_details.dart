@@ -16,7 +16,7 @@ class _RSSFilterDetailsState extends State<RSSFilterDetails> {
   bool isLoading = true;
   List<RSSFilter> rssFilters = [];
 
-  fetchRSSFilters() async {
+  Future<void> fetchRSSFilters() async {
     rssFilters = await ApiRequests.getRSSFilters(
         Provider.of<Api>(context, listen: false));
     setState(() {
@@ -38,7 +38,7 @@ class _RSSFilterDetailsState extends State<RSSFilterDetails> {
           ? LoadingShimmer().loadingEffect(context)
           : Column(
               children: <Widget>[
-                (rssFilters.length != 0)
+                (rssFilters.isNotEmpty)
                     ? Expanded(
                         child: ListView.builder(
                             itemCount: rssFilters.length,

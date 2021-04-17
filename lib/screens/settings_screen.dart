@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/components/custom_dialog.dart';
@@ -21,8 +22,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  _logoutAllAccounts(BuildContext context) {
-    showDialog(
+  void _logoutAllAccounts(BuildContext context) {
+    showDialog<CustomDialog>(
         context: context,
         builder: (dialogContext) => CustomDialog(
               title: 'Are you sure you want to logout from all saved accounts?',
@@ -37,18 +38,19 @@ class _SettingsPageState extends State<SettingsPage> {
                 Navigator.pop(dialogContext);
                 Navigator.pushReplacement(
                     dialogContext,
-                    MaterialPageRoute(
+                    MaterialPageRoute<ConfigurationsScreen>(
                       builder: (dialogContext) => ConfigurationsScreen(),
                     ));
               },
             ));
   }
 
-  _deleteAccount(BuildContext context, GeneralFeatures general, int index) {
-    showDialog(
+  void _deleteAccount(
+      BuildContext context, GeneralFeatures general, int index) {
+    showDialog<CustomDialog>(
         context: context,
         builder: (context) => CustomDialog(
-              title: 'Are you sure you want to delete this account?' +
+              title: 'Are you sure you want to delete this account?'
                   '${general.apis.length == 1 ? '\n\nYou will be logged out!' : ''}',
               optionLeftText: 'No',
               optionRightText: 'Yes',
@@ -69,7 +71,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Preferences.saveLogin(general.apis);
 
                     // Change the active account
-                    Api api = Provider.of<Api>(context, listen: false);
+                    var api = Provider.of<Api>(context, listen: false);
                     api.setUrl(general.apis[0].url);
                     api.setUsername(general.apis[0].username);
                     api.setPassword(general.apis[0].password);
@@ -81,22 +83,25 @@ class _SettingsPageState extends State<SettingsPage> {
                   //closes SettingsScreen
                   Navigator.pop(context);
                   // Refresh to MainScreen
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => MainScreen()));
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute<MainScreen>(
+                          builder: (context) => MainScreen()));
                 }
               },
             ));
   }
 
-  _changePassword(BuildContext context, GeneralFeatures general, int index) {
+  void _changePassword(
+      BuildContext context, GeneralFeatures general, int index) {
     StateSetter _setState;
 
-    TextEditingController fieldController = TextEditingController();
-    bool isValidating = false;
+    var fieldController = TextEditingController();
+    var isValidating = false;
 
-    _validatePassword(String newPassword) async {
+    Future<void> _validatePassword(String newPassword) async {
       if (newPassword == general.apis[index].password) {
-        Fluttertoast.showToast(
+        await Fluttertoast.showToast(
             msg: 'New password cannot be same as old password');
         return;
       }
@@ -105,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
         isValidating = true;
       });
 
-      var response;
+      Response response;
       int total;
       try {
         response = await general.apis[index].ioClient
@@ -114,9 +119,9 @@ class _SettingsPageState extends State<SettingsPage> {
               base64Encode(
                   utf8.encode('${general.apis[index].username}:$newPassword')),
         });
-        total = jsonDecode(response.body)['total'];
+        total = (jsonDecode(response.body)['total'] as int);
       } catch (e) {
-        Fluttertoast.showToast(msg: 'Invalid Password');
+        await Fluttertoast.showToast(msg: 'Invalid Password');
       }
       _setState(() {
         isValidating = false;
@@ -124,9 +129,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
       if (response != null && total != null && response.statusCode == 200) {
         general.apis[index].setPassword(newPassword);
-        Preferences.saveLogin(general.apis);
+        await Preferences.saveLogin(general.apis);
 
-        Fluttertoast.showToast(msg: 'Password Changed Successfully');
+        await Fluttertoast.showToast(msg: 'Password Changed Successfully');
         Navigator.pop(context);
 
         if (index == 0) {
@@ -139,18 +144,19 @@ class _SettingsPageState extends State<SettingsPage> {
           Provider.of<Api>(context, listen: false).setPassword(newPassword);
 
           // refresh main screen
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => MainScreen()));
+          await Navigator.pushReplacement(
+              context,
+              MaterialPageRoute<MainScreen>(
+                  builder: (context) => MainScreen()));
         }
       }
     }
 
-    showDialog(
+    showDialog<AlertDialog>(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
+            title: StatefulBuilder(builder: (context, setState) {
               _setState = setState;
               return Column(
                 children: <Widget>[
@@ -186,14 +192,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                       color: Theme.of(context).primaryColor),
                                 ),
                               ),
+                              onPressed: () {
+                                _validatePassword(fieldController.text);
+                              },
                               child: Text(
                                 'VALIDATE',
                                 style: TextStyle(
                                     color: Theme.of(context).primaryColor),
                               ),
-                              onPressed: () {
-                                _validatePassword(fieldController.text);
-                              },
                             ),
                           ),
                   )

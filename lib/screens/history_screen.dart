@@ -19,7 +19,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   List<HistoryItem> items = [];
   bool isLoading;
 
-  loadHistoryItems({int lastHrs}) async {
+  Future<void> loadHistoryItems({int lastHrs}) async {
     setState(() {
       isLoading = true;
     });
@@ -62,8 +62,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     'Show Last 48 Hours'
   ];
 
-  _showRemoveDialog(String hashValue) {
-    return showDialog(
+  Future<AlertDialog> _showRemoveDialog(String hashValue) {
+    return showDialog<AlertDialog>(
         context: context,
         builder: (context) => AlertDialog(
               title: Text(
@@ -72,28 +72,29 @@ class _HistoryScreenState extends State<HistoryScreen> {
               ),
               actions: <Widget>[
                 TextButton(
-                  child: Text(
-                    'Yes!',
-                    style: TextStyle(color: Theme.of(context).accentColor),
-                  ),
                   onPressed: () {
                     ApiRequests.removeHistoryItem(
                         Provider.of<Api>(context, listen: false), hashValue);
                     loadHistoryItems();
                     Navigator.pop(context);
                   },
+                  child: Text(
+                    'Yes!',
+                    style: TextStyle(color: Theme.of(context).accentColor),
+                  ),
                 ),
                 TextButton(
+                  onPressed: () => Navigator.pop(context),
                   child: Text(
                     'Cancel',
                     style: TextStyle(color: Theme.of(context).accentColor),
                   ),
-                  onPressed: () => Navigator.pop(context),
                 ),
               ],
             ));
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -103,10 +104,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
         actions: <Widget>[
           PopupMenuButton<String>(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.filter_list),
-            ),
             itemBuilder: (context) {
               return choices
                   .map((e) => PopupMenuItem<String>(
@@ -121,6 +118,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
             onSelected: (e) {
               loadHistoryItems(lastHrs: int.parse(e.split(' ')[2]));
             },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.filter_list),
+            ),
           )
         ],
       ),
@@ -128,7 +129,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: isLoading
             ? LoadingShimmer().loadingEffect(context)
-            : (items.length != 0)
+            : (items.isNotEmpty)
                 ? ListView.builder(
                     itemCount: items.length,
                     itemBuilder: (context, index) {

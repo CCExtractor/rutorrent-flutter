@@ -12,7 +12,7 @@ class DiskSpace {
   /// [alertUser] ensures user is notified only once and also alert can be switched off from the Settings
   bool alertUser = true;
 
-  update(int total, int free) {
+  void update(int total, int free) {
     this.total = total;
     this.free = free;
   }
@@ -27,11 +27,11 @@ class DiskSpace {
   bool isLow() => 100 - getPercentage() < criticalPercentage;
 
   /// Generates Notification when percentage free on disk is less than [criticalPercentage]
-  generateLowDiskSpaceAlert(Notifications notifications) async {
-    notifications.generate(
+  Future<void> generateLowDiskSpaceAlert(Notifications notifications) async {
+    await notifications.generate(
         'Low Disk Space',
         'You are low on disk space. Free some space',
-        NotificationChannelID.LowDiskSpace);
+        NotificationChannelID.lowDiskSpace);
     alertUser = false;
   }
 }

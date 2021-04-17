@@ -12,9 +12,11 @@ class RSSFeeds extends StatefulWidget {
 }
 
 class _RSSFeedsState extends State<RSSFeeds> {
-  _getTotalFeeds(List<RSSLabel> rssLabelsList) {
-    int feeds = 0;
-    for (var rss in rssLabelsList) feeds += rss.items.length;
+  int _getTotalFeeds(List<RSSLabel> rssLabelsList) {
+    var feeds = 0;
+    for (var rss in rssLabelsList) {
+      feeds += rss.items.length;
+    }
     return feeds;
   }
 
@@ -42,7 +44,7 @@ class _RSSFeedsState extends State<RSSFeeds> {
                   ),
                 );
               }
-              List<RSSLabel> rssLabelsList = snapshot.data ?? [];
+              var rssLabelsList = (snapshot.data as List<RSSLabel>) ?? [];
               return Column(
                 children: <Widget>[
                   ListTile(
@@ -52,7 +54,7 @@ class _RSSFeedsState extends State<RSSFeeds> {
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                   ),
-                  (rssLabelsList.length != 0)
+                  (rssLabelsList.isNotEmpty)
                       ? Expanded(
                           child: ListView.builder(
                             itemCount: rssLabelsList.length,

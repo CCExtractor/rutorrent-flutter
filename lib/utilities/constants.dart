@@ -28,19 +28,19 @@ const Color kBackgroundDT = Color(0xFF121212);
 ///        Second element being Notification Channel Description
 Map<int, List<String>> notificationInfo = {
   0: [
-    "Torrent Added Channel",
-    "This Channel is for notifying when a new Torrent is added"
+    'Torrent Added Channel',
+    'This Channel is for notifying when a new Torrent is added'
   ],
   1: [
-    "Download Completed Channel",
-    "This Channel is for notifying when a download is completed"
+    'Download Completed Channel',
+    'This Channel is for notifying when a download is completed'
   ],
   2: [
-    "Low Disk Space Channel",
-    "This Channel is for notifying when there is Low Disk Space"
+    'Low Disk Space Channel',
+    'This Channel is for notifying when there is Low Disk Space'
   ],
 };
 
 /// APP RELEASE INFO
-const String BUILD_NUMBER = '2';
-const String RELEASE_DATE = '28.02.20';
+const buildNumber = '2';
+const releaseDate = '28.02.20';

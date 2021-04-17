@@ -53,7 +53,7 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
                         Icons.delete,
                       ),
                       onPressed: () async {
-                        Fluttertoast.showToast(msg: 'Removing');
+                        await Fluttertoast.showToast(msg: 'Removing');
                         await ApiRequests.removeRSS(api, widget.rssLabel.hash);
                         widget.refreshCallback();
                       }),
@@ -73,7 +73,7 @@ class _RSSLabelTileState extends State<RSSLabelTile> {
                         (item) => ListTile(
                           onTap: () {
                             // Bottom Sheet Here
-                            showBarModalBottomSheet(
+                            showBarModalBottomSheet<RSSDescSheet>(
                                 expand: false,
                                 context: context,
                                 builder: (context) {

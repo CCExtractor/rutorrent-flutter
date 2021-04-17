@@ -12,10 +12,10 @@ void main() {
           'When update history network call made, should populate history items',
           () async {
         final api = getAndRegisterApiServiceMock();
-        GeneralFeatures general = GeneralFeatures();
+        var general = GeneralFeatures();
 
         //Set static DateTime for test
-        CustomizableDateTime.customTime = DateTime.parse("1969-07-20 20:18:04");
+        CustomizableDateTime.customTime = DateTime.parse('1969-07-20 20:18:04');
 
         //Mock Api Call
         await ApiRequests.updateHistory(api, general, MockBuildContext());

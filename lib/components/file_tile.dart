@@ -16,19 +16,19 @@ class FileTile extends StatefulWidget {
   }
 
   static bool isImage(String filename) {
-    String ext = getFileExtension(filename);
+    var ext = getFileExtension(filename);
     if (ext == '.jpg' || ext == '.jpeg' || ext == 'png') return true;
     return false;
   }
 
   static bool isAudio(String filename) {
-    String ext = getFileExtension(filename);
+    var ext = getFileExtension(filename);
     if (ext == '.mp3' || ext == '.wav') return true;
     return false;
   }
 
   static bool isVideo(String filename) {
-    String ext = getFileExtension(filename);
+    var ext = getFileExtension(filename);
     if (ext == '.mp4' || ext == '.mkv') return true;
     return false;
   }

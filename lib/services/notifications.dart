@@ -11,7 +11,7 @@ class Notifications {
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  var platformChannelSpecifics;
+  NotificationDetails platformChannelSpecifics;
 
   Notifications() {
     var initializationSettingsAndroid =
@@ -21,28 +21,29 @@ class Notifications {
         android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
 
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String payload) {
+        onSelectNotification: (payload) {
       return;
     });
   }
 
   /// Public Method to generate Notification
-  generate(String header, String body, NotificationChannelID id) async {
+  Future<void> generate(
+      String header, String body, NotificationChannelID id) async {
     //Setting Notification Channel ID, Name and Description
-    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         id.index.toString(),
         notificationInfo[id.index][0],
         notificationInfo[id.index][0],
         importance: Importance.max,
         priority: Priority.high);
-    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    platformChannelSpecifics = new NotificationDetails(
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    platformChannelSpecifics = NotificationDetails(
         android: androidPlatformChannelSpecifics,
         iOS: iOSPlatformChannelSpecifics);
 
     //Notification ID
-    Random random = new Random();
-    int notificationId = random.nextInt(100);
+    var random = Random();
+    var notificationId = random.nextInt(100);
 
     //Show notification to user
     await flutterLocalNotificationsPlugin.show(

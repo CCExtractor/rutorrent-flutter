@@ -11,28 +11,28 @@ import 'package:rutorrentflutter/services/notifications.dart';
 import 'disk_space.dart';
 
 enum Sort {
-  name_ascending,
-  name_descending,
+  nameAscending,
+  nameDescending,
   dateAdded,
   ratio,
-  size_ascending,
-  size_descending,
+  sizeAscending,
+  sizeDescending,
   none,
 }
 
 enum Filter {
-  All,
-  Downloading,
-  Completed,
-  Active,
-  Inactive,
-  Error,
+  all,
+  downloading,
+  completed,
+  active,
+  inactive,
+  error,
 }
 
 enum NotificationChannelID {
-  NewTorrentAdded,
-  DownloadCompleted,
-  LowDiskSpace,
+  newTorrentAdded,
+  downloadCompleted,
+  lowDiskSpace,
 }
 
 class GeneralFeatures extends ChangeNotifier {
@@ -40,16 +40,16 @@ class GeneralFeatures extends ChangeNotifier {
   List<Api> apis = [];
   bool _allAccounts = false;
 
-  get allAccounts => _allAccounts;
+  bool get allAccounts => _allAccounts;
 
   /// show torrents from all saved accounts
-  showAllAccounts() {
+  void showAllAccounts() {
     _allAccounts = !_allAccounts;
     notifyListeners();
   }
 
   /// show torrents from only selected account
-  doNotShowAllAccounts() {
+  void doNotShowAllAccounts() {
     _allAccounts = false;
     notifyListeners();
   }
@@ -59,29 +59,30 @@ class GeneralFeatures extends ChangeNotifier {
 
   /// Page Controller for Home Page
   final PageController _pageController = PageController();
-  get pageController => _pageController;
+  PageController get pageController => _pageController;
 
   /// Torrent List
   List<Torrent> _torrentsList = [];
-  get torrentsList => _torrentsList;
-  updateTorrentsList(List<Torrent> newList) => _torrentsList = newList;
+  List<Torrent> get torrentsList => _torrentsList;
+  List<Torrent> updateTorrentsList(List<Torrent> newList) =>
+      _torrentsList = newList;
 
   /// Torrent Sorting
   Sort _sortPreference;
-  get sortPreference => _sortPreference;
+  Sort get sortPreference => _sortPreference;
 
-  setSortPreference(Sort newPreference) {
+  void setSortPreference(Sort newPreference) {
     _sortPreference = newPreference;
     notifyListeners();
   }
 
   List<Torrent> sortList(List<Torrent> torrentsList, Sort sort) {
     switch (sort) {
-      case Sort.name_ascending:
+      case Sort.nameAscending:
         torrentsList.sort((a, b) => a.name.compareTo(b.name));
         return torrentsList;
 
-      case Sort.name_descending:
+      case Sort.nameDescending:
         torrentsList.sort((a, b) => a.name.compareTo(b.name));
         return torrentsList.reversed.toList();
 
@@ -93,11 +94,11 @@ class GeneralFeatures extends ChangeNotifier {
         torrentsList.sort((a, b) => a.ratio.compareTo(b.ratio));
         return torrentsList;
 
-      case Sort.size_ascending:
+      case Sort.sizeAscending:
         torrentsList.sort((a, b) => a.size.compareTo(b.size));
         return torrentsList;
 
-      case Sort.size_descending:
+      case Sort.sizeDescending:
         torrentsList.sort((a, b) => a.size.compareTo(b.size));
         return torrentsList.reversed.toList();
 
@@ -111,70 +112,72 @@ class GeneralFeatures extends ChangeNotifier {
   }
 
   /// Torrent Searching
-  TextEditingController _searchTextController = TextEditingController();
+  final TextEditingController _searchTextController = TextEditingController();
   bool _isSearching = false;
-  FocusNode _searchBarFocus = FocusNode();
+  final FocusNode _searchBarFocus = FocusNode();
 
-  get searchTextController => _searchTextController;
-  get isSearching => _isSearching;
-  get searchBarFocus => _searchBarFocus;
+  TextEditingController get searchTextController => _searchTextController;
+  bool get isSearching => _isSearching;
+  FocusNode get searchBarFocus => _searchBarFocus;
 
-  setSearchingState(bool newState) {
+  void setSearchingState(bool newState) {
     _isSearching = newState;
     notifyListeners();
   }
 
   /// Disk Space
-  DiskSpace _diskSpace = DiskSpace();
-  get diskSpace => _diskSpace;
+  final DiskSpace _diskSpace = DiskSpace();
+  DiskSpace get diskSpace => _diskSpace;
 
-  updateDiskSpace(int total, int free, BuildContext context) {
+  void updateDiskSpace(int total, int free, BuildContext context) {
     //check if there is any change in freeSpace of disk
-    if (free == _diskSpace.free)
-      return; // returning since there is no change and UI does not need to update
+    if (free == _diskSpace.free) {
+      return;
+    } // returning since there is no change and UI does not need to update
 
     _diskSpace.update(total, free);
     notifyListeners();
 
     if (_diskSpace.isLow() &&
         _diskSpace.alertUser &&
-        Provider.of<Settings>(context, listen: false).diskSpaceNotification)
+        Provider.of<Settings>(context, listen: false).diskSpaceNotification) {
       _diskSpace.generateLowDiskSpaceAlert(notifications);
+    }
   }
 
   /// Torrent Filtering
-  Filter _selectedFilter = Filter.All;
-  List<FilterTile> _filterTileList = [
+  Filter _selectedFilter = Filter.all;
+  final List<FilterTile> _filterTileList = [
     FilterTile(
       icon: Icons.filter_tilt_shift,
-      filter: Filter.All,
+      filter: Filter.all,
     ),
     FilterTile(
       icon: FontAwesomeIcons.arrowAltCircleDown,
-      filter: Filter.Downloading,
+      filter: Filter.downloading,
     ),
     FilterTile(
       icon: Icons.done_outline,
-      filter: Filter.Completed,
+      filter: Filter.completed,
     ),
     FilterTile(
       icon: Icons.open_with,
-      filter: Filter.Active,
+      filter: Filter.active,
     ),
     FilterTile(
       icon: Icons.not_interested,
-      filter: Filter.Inactive,
+      filter: Filter.inactive,
     ),
     FilterTile(
       icon: Icons.error,
-      filter: Filter.Error,
+      filter: Filter.error,
     ),
   ];
 
-  get selectedFilter => _selectedFilter;
-  get filterTileList => _filterTileList;
+  Filter get selectedFilter => _selectedFilter;
+  List<FilterTile> get filterTileList => _filterTileList;
 
-  changeFilter(Filter newFilter) {
+  void changeFilter(Filter newFilter) {
     _isLabelSelected = false;
     _selectedFilter = newFilter;
     _pageController.jumpToPage(0); // Show the torrents listing page
@@ -183,10 +186,10 @@ class GeneralFeatures extends ChangeNotifier {
 
   List<Torrent> filterList(List<Torrent> torrentsList, Filter filter) {
     switch (filter) {
-      case Filter.All:
+      case Filter.all:
         return torrentsList;
 
-      case Filter.Downloading:
+      case Filter.downloading:
         return torrentsList
             .where((torrent) =>
                 torrent.status == Status.downloading ||
@@ -194,25 +197,25 @@ class GeneralFeatures extends ChangeNotifier {
                     torrent.status != Status.completed))
             .toList();
 
-      case Filter.Completed:
+      case Filter.completed:
         return torrentsList
             .where((torrent) => torrent.status == Status.completed)
             .toList();
 
-      case Filter.Active:
+      case Filter.active:
         return torrentsList
             .where((torrent) => torrent.ulSpeed > 0 || torrent.dlSpeed > 0)
             .toList();
 
-      case Filter.Inactive:
+      case Filter.inactive:
         return torrentsList
             .where((torrent) => torrent.ulSpeed == 0 && torrent.dlSpeed == 0)
             .toList();
 
-      case Filter.Error:
+      case Filter.error:
         return torrentsList
             .where((torrent) =>
-                torrent.msg.length > 0 &&
+                torrent.msg.isNotEmpty &&
                 torrent.msg != 'Tracker: [Tried all trackers.]')
             .toList();
 
@@ -224,20 +227,21 @@ class GeneralFeatures extends ChangeNotifier {
   /// Active Torrents
   // Those torrents which are currently active and not fully downloaded
   List<Torrent> _activeDownloads = [];
-  get activeDownloads {
+  List<Torrent> get activeDownloads {
     return _activeDownloads;
   }
 
-  setActiveDownloads(List<Torrent> list) => _activeDownloads = list;
+  List<Torrent> setActiveDownloads(List<Torrent> list) =>
+      _activeDownloads = list;
 
   /// Active Labels
   // List of names of all the labels
   List<String> _listOfLabels = [];
-  get listOfLabels {
+  List<String> get listOfLabels {
     return _listOfLabels;
   }
 
-  setListOfLabels(List<String> listOfLabels) {
+  void setListOfLabels(List<String> listOfLabels) {
     if (_allAccounts) {
       _listOfLabels = (_listOfLabels + listOfLabels).toSet().toList();
     } else {
@@ -252,10 +256,10 @@ class GeneralFeatures extends ChangeNotifier {
   //Flag, used to know if a label is selected or not
   bool _isLabelSelected = false;
 
-  get isLabelSelected => _isLabelSelected;
-  get selectedLabel => _selectedLabel;
-  changeLabel(String label) {
-    _selectedFilter = Filter.All;
+  bool get isLabelSelected => _isLabelSelected;
+  String get selectedLabel => _selectedLabel;
+  void changeLabel(String label) {
+    _selectedFilter = Filter.all;
     _isLabelSelected = true;
     _selectedLabel = label;
     _pageController.jumpToPage(0); // Show the torrents listing page
@@ -268,12 +272,14 @@ class GeneralFeatures extends ChangeNotifier {
 
   /// History Check
   List<HistoryItem> _historyItems = [];
-  get historyItems => _historyItems;
+  List<HistoryItem> get historyItems => _historyItems;
 
-  updateHistoryItems(List<HistoryItem> updatedList, BuildContext context) {
+  void updateHistoryItems(List<HistoryItem> updatedList, BuildContext context) {
     bool happenedNow(HistoryItem item) {
-      if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1)
+      if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime ==
+          1) {
         return true;
+      }
       return false;
     }
 
@@ -286,7 +292,7 @@ class GeneralFeatures extends ChangeNotifier {
             if (Provider.of<Settings>(context, listen: false)
                 .addTorrentNotification) {
               notifications.generate('New Torrent Added', item.name,
-                  NotificationChannelID.NewTorrentAdded);
+                  NotificationChannelID.newTorrentAdded);
             }
           }
           break;
@@ -297,7 +303,7 @@ class GeneralFeatures extends ChangeNotifier {
             if (Provider.of<Settings>(context, listen: false)
                 .downloadCompleteNotification) {
               notifications.generate('Download Completed', item.name,
-                  NotificationChannelID.DownloadCompleted);
+                  NotificationChannelID.downloadCompleted);
             }
           }
           break;

@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../models/general_features.dart';
 import '../models/mode.dart';
 import '../utilities/constants.dart';
-import '../models/general_features.dart';
 import 'search_bar.dart';
 
 class SortBottomSheet extends StatefulWidget {
@@ -79,7 +80,7 @@ class _SortBottomSheetState extends State<SortBottomSheet> {
                         groupValue: Provider.of<GeneralFeatures>(context)
                             .sortPreference,
                         value: Sort.values[index],
-                        onChanged: (selected) {
+                        onChanged: (dynamic selected) {
                           Provider.of<GeneralFeatures>(context, listen: false)
                               .setSortPreference(Sort.values[index]);
                           Navigator.of(context).pop();
