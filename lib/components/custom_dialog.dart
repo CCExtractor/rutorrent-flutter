@@ -23,18 +23,18 @@ class CustomDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         TextButton(
+          onPressed: () => optionLeftOnPressed(),
           child: Text(
             optionLeftText,
             style: TextStyle(color: Theme.of(context).accentColor),
           ),
-          onPressed: optionLeftOnPressed,
         ),
         TextButton(
+          onPressed: () => optionRightOnPressed(),
           child: Text(
             optionRightText,
             style: TextStyle(color: Theme.of(context).accentColor),
           ),
-          onPressed: optionRightOnPressed,
         ),
       ],
     );

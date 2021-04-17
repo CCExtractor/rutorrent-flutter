@@ -21,7 +21,7 @@ class _DownloadsPageState extends State<DownloadsPage> {
     _initFiles();
   }
 
-  _initFiles() async {
+  Future<void> _initFiles() async {
     if (Platform.isAndroid) {
       _homeDirectory = (await getExternalStorageDirectory()).path + '/';
     } else {
@@ -31,7 +31,7 @@ class _DownloadsPageState extends State<DownloadsPage> {
     _syncFiles();
   }
 
-  _syncFiles() {
+  void _syncFiles() {
     setState(() {
       filesList = Directory(_directory).listSync();
     });
@@ -39,7 +39,7 @@ class _DownloadsPageState extends State<DownloadsPage> {
 
   Future<bool> _onBackPress() async {
     if (_directory != _homeDirectory) {
-      String temp = _directory.substring(0, _directory.lastIndexOf('/'));
+      var temp = _directory.substring(0, _directory.lastIndexOf('/'));
       _directory = temp.substring(0, temp.lastIndexOf('/') + 1);
       _syncFiles();
       return false;
@@ -61,7 +61,7 @@ class _DownloadsPageState extends State<DownloadsPage> {
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
-            (filesList.length != 0)
+            (filesList.isNotEmpty)
                 ? Expanded(
                     child: ListView.builder(
                       itemCount: filesList.length,

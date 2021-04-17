@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -30,10 +28,10 @@ class _DiskFileTileState extends State<DiskFileTile> {
   CancelToken cancelToken = CancelToken();
   bool isDownloading = false;
 
-  getDiskFileUrl(String filename) {
-    Api api = Provider.of<Api>(context, listen: false);
-    Uri uri = Uri.parse(api.url);
-    String fileUrl = uri.scheme +
+  String getDiskFileUrl(String filename) {
+    var api = Provider.of<Api>(context, listen: false);
+    var uri = Uri.parse(api.url);
+    var fileUrl = uri.scheme +
         '://' +
         api.username +
         ':' +
@@ -47,31 +45,31 @@ class _DiskFileTileState extends State<DiskFileTile> {
     return fileUrl;
   }
 
-  _streamFile(String filename) {
-    String fileUrl = getDiskFileUrl(filename);
+  void _streamFile(String filename) {
+    var fileUrl = getDiskFileUrl(filename);
     Navigator.push(
         context,
-        MaterialPageRoute(
+        MaterialPageRoute<VlcStream>(
           builder: (context) => VlcStream(fileUrl, filename),
         ));
   }
 
-  downloadFile(Api api, String fileUrl) async {
+  Future<void> downloadFile(Api api, String fileUrl) async {
     // finding torrent or folder name
-    String path = widget.path.substring(0, widget.path.length - 1);
+    var path = widget.path.substring(0, widget.path.length - 1);
     path = path.substring(path.lastIndexOf('/'));
 
     // finding directory in local to save the file
-    Directory dir = await getExternalStorageDirectory();
-    String savePath = '${dir.path}/$path/${widget.diskFile.name}';
+    var dir = await getExternalStorageDirectory();
+    var savePath = '${dir.path}/$path/${widget.diskFile.name}';
 
-    Dio dio = Dio();
+    var dio = Dio();
 
     setState(() {
       isDownloading = true;
     });
 
-    dio.download(
+    await dio.download(
       fileUrl,
       savePath,
       onReceiveProgress: (rcv, total) {
@@ -88,7 +86,7 @@ class _DiskFileTileState extends State<DiskFileTile> {
       setState(() {
         isDownloading = false;
       });
-    }).catchError((e) {
+    }).catchError((dynamic e) {
       print(e);
       Fluttertoast.showToast(msg: 'Error in downloading file');
       setState(() {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/data_input.dart';
 import 'package:rutorrentflutter/components/password_input.dart';
@@ -29,23 +30,23 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   bool matchApi(Api api1, Api api2) {
     if (api1.url == api2.url &&
         api1.username == api2.username &&
-        api1.password == api2.password)
+        api1.password == api2.password) {
       return true;
-    else
-      return false;
+    }
+    return false;
   }
 
-  saveLogin(Api api) async {
-    bool alreadyLoggedIn = false;
-    List<Api> apis = await Preferences.fetchSavedLogin();
+  Future<void> saveLogin(Api api) async {
+    var alreadyLoggedIn = false;
+    var apis = await Preferences.fetchSavedLogin();
 
-    for (int index = 0; index < apis.length; index++) {
+    for (var index = 0; index < apis.length; index++) {
       if (matchApi(apis[index], api)) {
-        Fluttertoast.showToast(msg: 'Account already saved');
+        await Fluttertoast.showToast(msg: 'Account already saved');
         alreadyLoggedIn = true;
 
         // Swap to put active one on first position which will be active by default
-        Api swapApi = apis[0];
+        var swapApi = apis[0];
         apis[0] = apis[index];
         apis[index] = swapApi;
       }
@@ -53,22 +54,22 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
 
     if (!alreadyLoggedIn) {
       apis.insert(0, api);
-      Preferences.saveLogin(apis);
+      await Preferences.saveLogin(apis);
     }
 
     if (apis.length > 1) {
       Navigator.pop(context);
     }
 
-    Navigator.pushReplacement(
-        //Navigate to Home Screen
+    //Navigate to Home Screen
+    await Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
+        MaterialPageRoute<Scaffold>(
           builder: (context) => MainScreen(),
         ));
   }
 
-  _validateConfigurationDetails(Api api) async {
+  Future<void> _validateConfigurationDetails(Api api) async {
     setState(() {
       isValidating = true;
     });
@@ -84,19 +85,19 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
         setState(() {
           isValidating = false;
         });
-        Fluttertoast.showToast(msg: 'Network Connection Error');
+        await Fluttertoast.showToast(msg: 'Network Connection Error');
         return;
       }
     }
 
-    var response;
+    Response response;
     int total;
     try {
       response = await api.ioClient
           .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
-      total = jsonDecode(response.body)['total'];
+      total = (jsonDecode(response.body)['total'] as int);
     } catch (e) {
-      Fluttertoast.showToast(msg: 'Invalid');
+      await Fluttertoast.showToast(msg: 'Invalid');
     } finally {
       setState(() {
         isValidating = false;
@@ -104,7 +105,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
       if (response != null && total != null) {
         response.statusCode == 200
             ? // SUCCESS
-            saveLogin(api)
+            await saveLogin(api)
             : Fluttertoast.showToast(msg: 'Something\'s Wrong');
       }
     }
@@ -165,10 +166,10 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                           suffixIconButton: IconButton(
                             color: Colors.white,
                             onPressed: () async {
-                              ClipboardData data =
-                                  await Clipboard.getData('text/plain');
-                              if (data != null)
+                              var data = await Clipboard.getData('text/plain');
+                              if (data != null) {
                                 urlController.text = data.text.toString();
+                              }
                               if (urlFocus.hasFocus) urlFocus.unfocus();
                             },
                             icon: Icon(Icons.content_paste),
@@ -206,7 +207,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: DataInput(
-                    onFieldSubmittedCallback: (v) {
+                    onFieldSubmittedCallback: (dynamic v) {
                       FocusScope.of(context).requestFocus(passwordFocus);
                     },
                     focus: usernameFocus,
@@ -238,18 +239,8 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                             ? Colors.white
                             : Colors.black,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 28, vertical: 16),
-                        child: Text(
-                          'Let\'s get started',
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColor,
-                              fontSize: 18),
-                        ),
-                      ),
                       onPressed: () {
-                        Api api = Provider.of<Api>(context,
+                        var api = Provider.of<Api>(context,
                             listen: false); // One call to provider
                         if (usernameController.text.trim().contains(' ') ||
                             passwordController.text.trim().contains(' ')) {
@@ -262,6 +253,16 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                           _validateConfigurationDetails(api);
                         }
                       },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 28, vertical: 16),
+                        child: Text(
+                          'Let\'s get started',
+                          style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 18),
+                        ),
+                      ),
                     ),
                   ),
                 )

@@ -18,7 +18,7 @@ class _DiskExplorerState extends State<DiskExplorer> {
   bool isLoading = true;
   bool isFeatureAvailable = false;
 
-  _getDiskFiles() async {
+  Future<void> _getDiskFiles() async {
     setState(() {
       isLoading = true;
     });
@@ -30,13 +30,13 @@ class _DiskExplorerState extends State<DiskExplorer> {
     });
   }
 
-  goBackwards() {
+  void goBackwards() {
     path = path.substring(0, path.length - 1);
     path = path.substring(0, path.lastIndexOf('/') + 1);
     _getDiskFiles();
   }
 
-  goForwards(String fileName) {
+  void goForwards(String fileName) {
     path += fileName + '/';
     _getDiskFiles();
   }
@@ -52,7 +52,7 @@ class _DiskExplorerState extends State<DiskExplorer> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration.zero)
+    Future<void>.delayed(Duration.zero)
         .then((_) => isFeatureAvailable =
             Provider.of<Api>(context, listen: false).isSeedboxAccount)
         .then((_) => isFeatureAvailable ? _getDiskFiles() : isLoading = false);
@@ -86,7 +86,7 @@ class _DiskExplorerState extends State<DiskExplorer> {
                     isLoading
                         ? Expanded(
                             child: LoadingShimmer().loadingEffect(context))
-                        : (diskFiles.length != 0)
+                        : (diskFiles.isNotEmpty)
                             ? Expanded(
                                 child: ListView.builder(
                                   itemCount: diskFiles.length,

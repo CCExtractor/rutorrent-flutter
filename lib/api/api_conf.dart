@@ -5,14 +5,13 @@ import 'package:http/io_client.dart';
 /// This class deals with storing API endpoints (and credentials) of deployed ruTorrent server
 
 class Api {
-  get ioClient {
+  IOClient get ioClient {
     /// Url with some issue with their SSL certificates can be trusted explicitly with this
-    bool trustSelfSigned = true;
-    HttpClient httpClient = HttpClient()
-      ..badCertificateCallback =
-          ((X509Certificate cert, String host, int port) => trustSelfSigned);
+    var trustSelfSigned = true;
+    var httpClient = HttpClient()
+      ..badCertificateCallback = ((cert, host, port) => trustSelfSigned);
 
-    IOClient _ioClient = new IOClient(httpClient);
+    var _ioClient = IOClient(httpClient);
     return _ioClient;
   }
 
@@ -20,13 +19,13 @@ class Api {
   String _username;
   String _password;
 
-  setUrl(String url) => _url = url;
-  setPassword(String password) => _password = password;
-  setUsername(String username) => _username = username;
+  String setUrl(String url) => _url = url;
+  String setPassword(String password) => _password = password;
+  String setUsername(String username) => _username = username;
 
-  get url => _url;
-  get username => _username;
-  get password => _password;
+  String get url => _url;
+  String get username => _username;
+  String get password => _password;
 
   bool _isSeedboxAccount;
 
@@ -36,17 +35,17 @@ class Api {
   }
 
   /// Plugins url
-  get httpRpcPluginUrl => url + '/plugins/httprpc/action.php';
+  String get httpRpcPluginUrl => url + '/plugins/httprpc/action.php';
 
-  get addTorrentPluginUrl => url + '/php/addtorrent.php';
+  String get addTorrentPluginUrl => url + '/php/addtorrent.php';
 
-  get diskSpacePluginUrl => url + '/plugins/diskspace/action.php';
+  String get diskSpacePluginUrl => url + '/plugins/diskspace/action.php';
 
-  get rssPluginUrl => url + '/plugins/rss/action.php';
+  String get rssPluginUrl => url + '/plugins/rss/action.php';
 
-  get historyPluginUrl => url + '/plugins/history/action.php';
+  String get historyPluginUrl => url + '/plugins/history/action.php';
 
-  get explorerPluginUrl => url + '/plugins/explorer/action.php';
+  String get explorerPluginUrl => url + '/plugins/explorer/action.php';
 
   /// Authentication header
   Map<String, String> getAuthHeader() => {

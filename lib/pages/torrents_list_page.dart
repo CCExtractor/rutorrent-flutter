@@ -10,24 +10,24 @@ import 'package:rutorrentflutter/models/torrent.dart';
 import '../components/loading_shimmer.dart';
 
 class TorrentsListPage extends StatelessWidget {
-  checkForActiveDownloads(Api api, GeneralFeatures general) async {
+  Future<void> checkForActiveDownloads(Api api, GeneralFeatures general) async {
     /* this method is responsible for changing the connection state from waiting to active by
     temporary pausing the active downloads and then resuming them again
      */
-    List<Torrent> tempPausedDownloads = [];
-    for (Torrent torrent in general.activeDownloads) {
+    var tempPausedDownloads = <Torrent>[];
+    for (var torrent in general.activeDownloads) {
       await ApiRequests.pauseTorrent(api, torrent.hash);
       tempPausedDownloads.add(torrent);
     }
 
     // Resuming the temporary paused active downloads
-    for (Torrent torrent in tempPausedDownloads) {
+    for (var torrent in tempPausedDownloads) {
       await ApiRequests.startTorrent(api, torrent.hash);
     }
   }
 
   List<Torrent> _getDisplayList(List<Torrent> list, GeneralFeatures general) {
-    List<Torrent> displayList = list;
+    var displayList = list;
 
     //Sorting: sorting data on basis of sortPreference
     displayList = general.sortList(displayList, general.sortPreference);
@@ -64,7 +64,7 @@ class TorrentsListPage extends StatelessWidget {
                   ? ApiRequests.getAllAccountsTorrentList(general.apis, general)
                   : ApiRequests.getTorrentList(
                       Provider.of<Api>(context), general),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
+              builder: (context, snapshot) {
                 if (snapshot.data != null) {
                   if (snapshot.connectionState == ConnectionState.waiting &&
                       !snapshot.hasData) {
@@ -77,42 +77,39 @@ class TorrentsListPage extends StatelessWidget {
                   }
 
                   if (snapshot.hasData) {
-                    general.updateTorrentsList(
-                        _getDisplayList(snapshot.data, general));
+                    general.updateTorrentsList(_getDisplayList(
+                        snapshot.data as List<Torrent>, general));
                   }
 
-                  return ListView.builder(
-                    itemCount: general.torrentsList.length,
-                    itemBuilder: (context, index) {
-                      return (snapshot.hasData &&
-                              general.torrentsList.length != 0)
-                          ? TorrentTile(general.torrentsList[index])
-                          : Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    Theme.of(context).brightness ==
-                                            Brightness.light
-                                        ? 'assets/logo/empty.svg'
-                                        : 'assets/logo/empty_dark.svg',
-                                    width: 120,
-                                    height: 120,
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Text(
-                                    'No Torrents to Show',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
+                  return (snapshot.hasData && general.torrentsList.isNotEmpty)
+                      ? ListView.builder(
+                          itemCount: general.torrentsList.length,
+                          itemBuilder: (context, index) {
+                            return TorrentTile(general.torrentsList[index]);
+                          },
+                        )
+                      : Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                Theme.of(context).brightness == Brightness.light
+                                    ? 'assets/logo/empty.svg'
+                                    : 'assets/logo/empty_dark.svg',
+                                width: 120,
+                                height: 120,
                               ),
-                            );
-                    },
-                  );
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Text(
+                                'No Torrents to Show',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        );
                 }
                 return Center(
                   child: Column(

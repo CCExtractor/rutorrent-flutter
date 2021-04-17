@@ -20,9 +20,12 @@ class _PasswordInputState extends State<PasswordInput> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey, width: 1.5),
+            borderRadius: BorderRadius.all(Radius.circular(5))),
         child: TextFormField(
           style: TextStyle(fontWeight: FontWeight.w600),
-          autofocus: widget.autoFocus != null ? widget.autoFocus : false,
+          autofocus: widget.autoFocus ?? false,
           obscureText: !passwordVisible,
           focusNode: widget.passwordFocus,
           controller: widget.textEditingController,
@@ -48,9 +51,6 @@ class _PasswordInputState extends State<PasswordInput> {
             ),
           ),
         ),
-        decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey, width: 1.5),
-            borderRadius: BorderRadius.all(Radius.circular(5))),
       ),
     );
   }

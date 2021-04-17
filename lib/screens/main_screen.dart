@@ -1,22 +1,25 @@
 import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/add_url_bottom_sheet.dart';
 import 'package:rutorrentflutter/components/disk_space_block.dart';
 import 'package:rutorrentflutter/components/label_tile.dart';
-import 'package:rutorrentflutter/models/settings.dart';
-import 'package:rutorrentflutter/screens/disk_explorer_screen.dart';
-import 'package:rutorrentflutter/screens/history_screen.dart';
-import 'package:rutorrentflutter/pages/home_page.dart';
-import 'package:rutorrentflutter/screens/settings_screen.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
+import 'package:rutorrentflutter/models/settings.dart';
+import 'package:rutorrentflutter/pages/home_page.dart';
 import 'package:rutorrentflutter/screens/configurations_screen.dart';
+import 'package:rutorrentflutter/screens/disk_explorer_screen.dart';
+import 'package:rutorrentflutter/screens/history_screen.dart';
+import 'package:rutorrentflutter/screens/settings_screen.dart';
 import 'package:rutorrentflutter/utilities/preferences.dart';
+
 import '../api/api_conf.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../utilities/constants.dart';
 
 class MainScreen extends StatefulWidget {
@@ -27,10 +30,10 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen>
     with AutomaticKeepAliveClientMixin {
   int _currentIndex = 0; // HomePage
-  PackageInfo packageInfo = new PackageInfo(
-      packageName: '', appName: '', buildNumber: '', version: '');
+  PackageInfo packageInfo =
+      PackageInfo(packageName: '', appName: '', buildNumber: '', version: '');
 
-  _initPlugins() async {
+  Future<void> _initPlugins() async {
     /// Setting application version
     packageInfo = await PackageInfo.fromPlatform();
 
@@ -39,12 +42,14 @@ class _MainScreenState extends State<MainScreen>
         await Preferences.fetchSavedLogin();
     setState(() {});
 
-    while (this.mounted) {
+    while (mounted) {
       try {
         await Future.delayed(Duration(seconds: 1), () {});
         ApiRequests.updatePlugins(Provider.of(context, listen: false),
             Provider.of<GeneralFeatures>(context, listen: false), context);
-      } catch (e) {}
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
@@ -77,15 +82,17 @@ class _MainScreenState extends State<MainScreen>
                     api.setPassword(e.password);
 
                     // Swapping Apis to make selected api as default
-                    int index = general.apis.indexOf(e);
-                    Api swapApi = general.apis[0];
+                    var index = general.apis.indexOf(e);
+                    var swapApi = general.apis[0];
                     general.apis[0] = general.apis[index];
                     general.apis[index] = swapApi;
 
                     Preferences.saveLogin(general.apis);
 
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => MainScreen()));
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute<Scaffold>(
+                            builder: (context) => MainScreen()));
                   } else {
                     Navigator.pop(context);
                     setState(() => general.doNotShowAllAccounts());
@@ -131,7 +138,7 @@ class _MainScreenState extends State<MainScreen>
         onTap: () {
           Navigator.push(
               context,
-              MaterialPageRoute(
+              MaterialPageRoute<ModalProgressHUD>(
                 builder: (context) => ConfigurationsScreen(),
               ));
         },
@@ -238,7 +245,7 @@ class _MainScreenState extends State<MainScreen>
                         title: Text(
                           'Labels',
                         ),
-                        children: (general.listOfLabels as List<String>)
+                        children: (general.listOfLabels)
                             .map((e) => LabelTile(label: e))
                             .toList(),
                       ),
@@ -250,7 +257,7 @@ class _MainScreenState extends State<MainScreen>
                           Navigator.pop(context);
                           Navigator.push(
                               context,
-                              MaterialPageRoute(
+                              MaterialPageRoute<Scaffold>(
                                   builder: (context) => HistoryScreen()));
                         },
                         title: Text('History'),
@@ -263,7 +270,7 @@ class _MainScreenState extends State<MainScreen>
                           Navigator.pop(context);
                           Navigator.push(
                               context,
-                              MaterialPageRoute(
+                              MaterialPageRoute<Scaffold>(
                                 builder: (context) => DiskExplorer(),
                               ));
                         },
@@ -277,7 +284,7 @@ class _MainScreenState extends State<MainScreen>
                           Navigator.pop(context);
                           Navigator.push(
                               context,
-                              MaterialPageRoute(
+                              MaterialPageRoute<Scaffold>(
                                 builder: (context) => SettingsPage(),
                               ));
                         },
@@ -301,7 +308,7 @@ class _MainScreenState extends State<MainScreen>
                             ),
                             children: [
                               Text(
-                                'Build Number : $BUILD_NUMBER',
+                                'Build Number : $buildNumber',
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w600),
                               ),
@@ -309,7 +316,7 @@ class _MainScreenState extends State<MainScreen>
                                 height: 15,
                               ),
                               Text(
-                                'Release Date : $RELEASE_DATE',
+                                'Release Date : $releaseDate',
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w600),
                               ),
@@ -367,37 +374,37 @@ class _MainScreenState extends State<MainScreen>
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
-          child: Icon(
-            Icons.library_add,
-            color: Colors.white,
-          ),
           onPressed: () {
             if (_currentIndex == 0) {
-              showModalBottomSheet(
+              showModalBottomSheet<AddBottomSheet>(
                   isScrollControlled: true,
                   context: context,
-                  builder: (BuildContext bc) {
+                  builder: (bc) {
                     return AddBottomSheet(
                         api: api,
-                        apiRequest: (url) {
-                          ApiRequests.addTorrent(api, url);
+                        apiRequest: (dynamic url) {
+                          ApiRequests.addTorrent(api, (url as String));
                         },
                         dialogHint: 'Enter Torrent Url');
                   });
             } else {
-              showModalBottomSheet(
+              showModalBottomSheet<AddBottomSheet>(
                   isScrollControlled: true,
                   context: context,
-                  builder: (BuildContext bc) {
+                  builder: (bc) {
                     return AddBottomSheet(
-                        apiRequest: (url) async {
-                          await ApiRequests.addRSS(api, url);
+                        apiRequest: (dynamic url) async {
+                          await ApiRequests.addRSS(api, (url as String));
                           setState(() {});
                         },
                         dialogHint: 'Enter Rss Url');
                   });
             }
           },
+          child: Icon(
+            Icons.library_add,
+            color: Colors.white,
+          ),
         ),
       );
     });

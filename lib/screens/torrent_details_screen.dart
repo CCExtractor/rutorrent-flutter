@@ -1,6 +1,7 @@
 import 'dart:async';
-import "dart:ui";
 import 'dart:io';
+import 'dart:ui';
+
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -11,8 +12,8 @@ import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/custom_dialog.dart';
 import 'package:rutorrentflutter/components/file_tile.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
-import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
+import 'package:rutorrentflutter/models/torrent_file.dart';
 
 class TorrentDetailSheet extends StatefulWidget {
   final Torrent torrent;
@@ -57,9 +58,9 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   }
 
   /// Updates torrent in real time
-  _updateTorrent() async {
-    while (this.mounted) {
-      List<Torrent> torrentsList =
+  Future<void> _updateTorrent() async {
+    while (mounted) {
+      var torrentsList =
           Provider.of<GeneralFeatures>(context, listen: false).torrentsList;
 
       Torrent updatedTorrent;
@@ -76,11 +77,11 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   }
 
   /// Syncs torrent files with locally downloaded files
-  syncFiles() async {
-    String localFilesPath = (await getExternalStorageDirectory()).path + '/';
+  Future<void> syncFiles() async {
+    var localFilesPath = (await getExternalStorageDirectory()).path + '/';
     var localItems = Directory(localFilesPath).listSync(recursive: true);
 
-    List<String> localFiles = [];
+    var localFiles = <String>[];
     for (dynamic localItem in localItems) {
       if (localItem is File) {
         localFiles.add(localItem.path);
@@ -89,7 +90,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
 
     /// Checking whether a file is downloaded locally
     for (var file in files) {
-      String folderPath = torrent.name + '/' + file.name;
+      var folderPath = torrent.name + '/' + file.name;
       for (var localFile in localFiles) {
         if (localFile.endsWith(folderPath)) {
           file.isPresentLocally = true;
@@ -102,14 +103,14 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   }
 
   /// Gets files for this torrent and syncs it with locally downloaded files
-  _getFiles() async {
+  Future<void> _getFiles() async {
     files = await ApiRequests.getFiles(torrent.api, torrent.hash);
-    syncFiles();
+    await syncFiles();
     setState(() {});
   }
 
   /// Gets trackers for this torrent
-  _getTrackers() async {
+  Future<void> _getTrackers() async {
     trackers = await ApiRequests.getTrackers(torrent.api, torrent.hash);
     setState(() {});
   }
@@ -117,7 +118,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   /// Checks for image in files to display it as a background image
 
   String getFileUrl(String fileName) {
-    String fileUrl = torrentUrl + '/' + fileName;
+    var fileUrl = torrentUrl + '/' + fileName;
     fileUrl = Uri.encodeFull(fileUrl);
     return fileUrl;
   }
@@ -133,10 +134,10 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   }
 
   /// Shows the set and remove label dialog
-  showLabelDialog(BuildContext context) {
-    showDialog(
+  void showLabelDialog(BuildContext context) {
+    showDialog<AlertDialog>(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return AlertDialog(
           content: Form(
             key: _formKey,
@@ -144,10 +145,10 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
               controller: _labelController,
               validator: (_) {
                 if (_labelController.text != null &&
-                    _labelController.text.trim() != "") {
+                    _labelController.text.trim() != '') {
                   return null;
                 }
-                return "Enter a valid label";
+                return 'Enter a valid label';
               },
               decoration: InputDecoration(
                 border: OutlineInputBorder(
@@ -157,13 +158,13 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                 ),
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                hintText: "Label",
+                hintText: 'Label',
               ),
             ),
           ),
           actions: [
             _actionButton(
-                text: "Set Label",
+                text: 'Set Label',
                 onPressed: () async {
                   if (_formKey.currentState.validate()) {
                     await ApiRequests.setTorrentLabel(torrent.api, torrent.hash,
@@ -173,24 +174,24 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                             .text); // Doing this to ensure the filter is set to the label added
                     Navigator.pop(context);
                     Navigator.pop(context);
-                    Fluttertoast.showToast(msg: "Label set");
+                    await Fluttertoast.showToast(msg: 'Label set');
                   }
                 }),
             widget.torrent.label.isNotEmpty
                 ? _actionButton(
-                    text: "Remove Label",
+                    text: 'Remove Label',
                     onPressed: () async {
                       await ApiRequests.removeTorrentLabel(
                         torrent.api,
                         torrent.hash,
                       );
-                      _labelController.text = "";
+                      _labelController.text = '';
                       Provider.of<GeneralFeatures>(context, listen: false)
                           .changeFilter(Filter
-                              .All); // Doing this to ensure that a empty torrent list page is not shown to the user
+                              .all); // Doing this to ensure that a empty torrent list page is not shown to the user
                       Navigator.pop(context);
                       Navigator.pop(context);
-                      Fluttertoast.showToast(msg: "Label removed");
+                      await Fluttertoast.showToast(msg: 'Label removed');
                     },
                   )
                 : Container(),
@@ -203,7 +204,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   @override
   Widget build(BuildContext context) {
     if (torrent == null) {
-      Fluttertoast.showToast(msg: "Download Completed");
+      Fluttertoast.showToast(msg: 'Download Completed');
       Navigator.of(context).pop();
     }
     return Scaffold(
@@ -215,8 +216,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                   height: 430,
                   color: Colors.black,
                   child:
-
-                      /// Torrent Downloading Stack
+                      // Torrent Downloading Stack
                       Stack(
                     children: <Widget>[
                       Image(
@@ -242,7 +242,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                             SizedBox(
                               height: 100,
                             ),
-                            Text((torrent != null) ? torrent.name : "",
+                            Text((torrent != null) ? torrent.name : '',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -261,7 +261,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                           ? torrent.percentageDownload < 100
                                               ? '${filesize(torrent.size - torrent.downloadedData)} left of ${filesize(torrent.size)}'
                                               : 'Size: ${filesize(torrent.size)}'
-                                          : "",
+                                          : '',
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -281,6 +281,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                             ),
                             SizedBox(height: 40),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Container(
                                   decoration: BoxDecoration(
@@ -291,7 +292,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                       iconSize: 20,
                                       icon: Icon(Icons.close),
                                       onPressed: () {
-                                        showDialog(
+                                        showDialog<CustomDialog>(
                                             context: context,
                                             builder: (context) => CustomDialog(
                                                   title: 'Remove Torrent',
@@ -365,7 +366,6 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
                                           showLabelDialog(context)),
                                 )
                               ],
-                              mainAxisAlignment: MainAxisAlignment.center,
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -705,16 +705,17 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
   /// Action Button for set and remove label dialog
   Widget _actionButton({String text, Function onPressed}) {
     return ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5.0),
-            side: BorderSide(color: Theme.of(context).primaryColor),
-          ),
-          primary: Theme.of(context).primaryColor,
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5.0),
+          side: BorderSide(color: Theme.of(context).primaryColor),
         ),
-        child: Text(
-          text,
-        ),
-        onPressed: onPressed);
+        primary: Theme.of(context).primaryColor,
+      ),
+      onPressed: () => onPressed(),
+      child: Text(
+        text,
+      ),
+    );
   }
 }

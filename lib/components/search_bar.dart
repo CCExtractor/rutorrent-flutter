@@ -8,12 +8,12 @@ import 'package:rutorrentflutter/utilities/constants.dart';
 
 class SearchBar extends StatelessWidget {
   static const Map<Sort, String> sortMap = {
-    Sort.name_ascending: 'Name - A to Z',
-    Sort.name_descending: 'Name - Z to A',
+    Sort.nameAscending: 'Name - A to Z',
+    Sort.nameDescending: 'Name - Z to A',
     Sort.dateAdded: 'Date Added',
     Sort.ratio: 'Ratio',
-    Sort.size_ascending: 'Size - Small to Large',
-    Sort.size_descending: 'Size - Large to Small',
+    Sort.sizeAscending: 'Size - Small to Large',
+    Sort.sizeDescending: 'Size - Large to Small',
   };
 
   @override
@@ -32,6 +32,8 @@ class SearchBar extends StatelessWidget {
                       ? Colors.grey[100]
                       : kGreyDT,
                 ),
+                width: double.infinity,
+                height: 45,
                 child: Row(
                   children: <Widget>[
                     Padding(
@@ -72,8 +74,6 @@ class SearchBar extends StatelessWidget {
                         : Container(),
                   ],
                 ),
-                width: double.infinity,
-                height: 45,
               ),
             ),
             SizedBox(
@@ -81,7 +81,7 @@ class SearchBar extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                showModalBottomSheet(
+                showModalBottomSheet<SortBottomSheet>(
                     context: context,
                     isScrollControlled: true,
                     builder: (context) {

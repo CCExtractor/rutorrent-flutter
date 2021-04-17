@@ -1,28 +1,30 @@
 import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:rutorrentflutter/models/disk_file.dart';
-import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
+import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
-import 'api_conf.dart';
-import 'package:http/http.dart' as http;
-import '../models/torrent.dart';
 import 'package:xml/xml.dart' as xml;
+
+import '../models/torrent.dart';
+import 'api_conf.dart';
 
 class ApiRequests {
   /// This class will be responsible for making all API Calls to the ruTorrent server
 
   /// Checks Added and Finished Torrents asynchronously by fetching History of last ten seconds
-  static updateHistory(
+  static Future<void> updateHistory(
       Api api, GeneralFeatures general, BuildContext context) async {
-    String timestamp = ((CustomizableDateTime.current.millisecondsSinceEpoch -
+    var timestamp = ((CustomizableDateTime.current.millisecondsSinceEpoch -
                 Duration(seconds: 10).inMilliseconds) ~/
             1000)
         .toString();
-    List<HistoryItem> historyItems = [];
+    var historyItems = <HistoryItem>[];
     var response = await api.ioClient.post(Uri.parse(api.historyPluginUrl),
         headers: api.getAuthHeader(),
         body: {
@@ -30,25 +32,31 @@ class ApiRequests {
           'mark': timestamp,
         });
 
-    var items = jsonDecode(response.body)['items'];
+    var items = jsonDecode(response.body)['items'] as List;
     for (var item in items) {
-      HistoryItem historyItem = HistoryItem(item['name'], item['action'],
-          item['action_time'], item['size'], item['hash']);
+      var historyItem = HistoryItem(
+          item['name'].toString(),
+          item['action'] as int,
+          item['action_time'] as int,
+          item['size'] as int,
+          item['hash'].toString());
       historyItems.add(historyItem);
     }
     general.updateHistoryItems(historyItems, context);
   }
 
   /// Checks disk space asynchronously for low disk space alert
-  static updateDiskSpace(
+  static Future<void> updateDiskSpace(
       Api api, GeneralFeatures general, BuildContext context) async {
     var diskSpaceResponse = await api.ioClient
         .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
-    var diskSpace = jsonDecode(diskSpaceResponse.body);
-    general.updateDiskSpace(diskSpace['total'], diskSpace['free'], context);
+    var diskSpace = jsonDecode(diskSpaceResponse.body) as Map<String, dynamic>;
+    general.updateDiskSpace(
+        diskSpace['total'] as int, diskSpace['free'] as int, context);
   }
 
-  static updatePlugins(Api api, GeneralFeatures general, BuildContext context) {
+  static void updatePlugins(
+      Api api, GeneralFeatures general, BuildContext context) {
     /// Updating DiskSpace
     updateDiskSpace(api, general, context);
 
@@ -60,46 +68,46 @@ class ApiRequests {
   static List<Torrent> parseTorrentsData(
       String responseBody, GeneralFeatures general, Api api) {
     // takes response and parse and return the torrents data
-    List<Torrent> torrentsList = [];
+    var torrentsList = <Torrent>[];
     // A list of active torrents is required for changing the connection state from waiting to active
-    List<Torrent> activeTorrents = [];
-    List<String> labels = [];
-    var torrentsPath = jsonDecode(responseBody)['t'];
-    if (torrentsPath.length > 0) {
-      for (var hashKey in torrentsPath.keys) {
-        var torrentObject = torrentsPath[hashKey];
-        Torrent torrent = Torrent(hashKey); // new torrent created
-        torrent.name = torrentObject[4];
-        torrent.size = int.parse(torrentObject[5]);
-        torrent.savePath = torrentObject[25];
-        torrent.label = torrentObject[14].toString().replaceAll("%20", " ");
-        torrent.completedChunks = int.parse(torrentObject[6]);
-        torrent.totalChunks = int.parse(torrentObject[7]);
-        torrent.sizeOfChunk = int.parse(torrentObject[13]);
-        torrent.torrentAdded = int.parse(torrentObject[21]);
-        torrent.torrentCreated = int.parse(torrentObject[26]);
-        torrent.seedsActual = int.parse(torrentObject[18]);
-        torrent.peersActual = int.parse(torrentObject[15]);
-        torrent.ulSpeed = int.parse(torrentObject[11]);
-        torrent.dlSpeed = int.parse(torrentObject[12]);
-        torrent.isOpen = int.parse(torrentObject[0]);
-        torrent.getState = int.parse(torrentObject[3]);
-        torrent.msg = torrentObject[29];
-        torrent.downloadedData = int.parse(torrentObject[8]);
-        torrent.uploadedData = int.parse(torrentObject[9]);
-        torrent.ratio = int.parse(torrentObject[10]);
+    var activeTorrents = <Torrent>[];
+    var labels = <String>[];
+    var torrentsPath = jsonDecode(responseBody)['t'] is List
+        ? <String, dynamic>{}
+        : jsonDecode(responseBody)['t'] as Map<String, dynamic>;
+    for (var hashKey in torrentsPath.keys) {
+      var torrentObject = torrentsPath[hashKey] as List;
+      var torrent = Torrent(hashKey); // new torrent created
+      torrent.name = torrentObject[4].toString();
+      torrent.size = int.parse(torrentObject[5].toString());
+      torrent.savePath = torrentObject[25].toString();
+      torrent.label = torrentObject[14].toString().replaceAll('%20', ' ');
+      torrent.completedChunks = int.parse(torrentObject[6].toString());
+      torrent.totalChunks = int.parse(torrentObject[7].toString());
+      torrent.sizeOfChunk = int.parse(torrentObject[13].toString());
+      torrent.torrentAdded = int.parse(torrentObject[21].toString());
+      torrent.torrentCreated = int.parse(torrentObject[26].toString());
+      torrent.seedsActual = int.parse(torrentObject[18].toString());
+      torrent.peersActual = int.parse(torrentObject[15].toString());
+      torrent.ulSpeed = int.parse(torrentObject[11].toString());
+      torrent.dlSpeed = int.parse(torrentObject[12].toString());
+      torrent.isOpen = int.parse(torrentObject[0].toString());
+      torrent.getState = int.parse(torrentObject[3].toString());
+      torrent.msg = torrentObject[29].toString();
+      torrent.downloadedData = int.parse(torrentObject[8].toString());
+      torrent.uploadedData = int.parse(torrentObject[9].toString());
+      torrent.ratio = int.parse(torrentObject[10].toString());
 
-        torrent.api = api;
-        torrent.eta = torrent.getEta;
-        torrent.percentageDownload = torrent.getPercentageDownload;
-        torrent.status = torrent.getTorrentStatus;
-        torrentsList.add(torrent);
+      torrent.api = api;
+      torrent.eta = torrent.getEta;
+      torrent.percentageDownload = torrent.getPercentageDownload;
+      torrent.status = torrent.getTorrentStatus;
+      torrentsList.add(torrent);
 
-        if (torrent.status == Status.downloading &&
-            torrent.percentageDownload < 100) activeTorrents.add(torrent);
-        if (!labels.contains(torrent.label) && torrent.label != "") {
-          labels.add(torrent.label);
-        }
+      if (torrent.status == Status.downloading &&
+          torrent.percentageDownload < 100) activeTorrents.add(torrent);
+      if (!labels.contains(torrent.label) && torrent.label != '') {
+        labels.add(torrent.label);
       }
     }
     general.setActiveDownloads(activeTorrents);
@@ -111,9 +119,9 @@ class ApiRequests {
   static Stream<List<Torrent>> getAllAccountsTorrentList(
       List<Api> apis, GeneralFeatures general) async* {
     while (true) {
-      List<Torrent> allTorrentList = [];
+      var allTorrentList = <Torrent>[];
       try {
-        for (Api api in apis) {
+        for (var api in apis) {
           try {
             var response = await api.ioClient.post(
                 Uri.parse(api.httpRpcPluginUrl),
@@ -160,7 +168,7 @@ class ApiRequests {
     }
   }
 
-  static startTorrent(Api api, String hashValue) async {
+  static Future<void> startTorrent(Api api, String hashValue) async {
     await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
@@ -169,7 +177,7 @@ class ApiRequests {
         });
   }
 
-  static pauseTorrent(Api api, String hashValue) async {
+  static Future<void> pauseTorrent(Api api, String hashValue) async {
     await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
@@ -178,7 +186,7 @@ class ApiRequests {
         });
   }
 
-  static stopTorrent(Api api, String hashValue) async {
+  static Future<void> stopTorrent(Api api, String hashValue) async {
     await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
@@ -187,7 +195,7 @@ class ApiRequests {
         });
   }
 
-  static removeTorrent(Api api, String hashValue) async {
+  static Future<void> removeTorrent(Api api, String hashValue) async {
     var response = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(),
         body: {
@@ -195,11 +203,12 @@ class ApiRequests {
           'hash': hashValue,
         });
 
-    if (response.statusCode == 200)
-      Fluttertoast.showToast(msg: 'Removed Torrent Successfully');
+    if (response.statusCode == 200) {
+      await Fluttertoast.showToast(msg: 'Removed Torrent Successfully');
+    }
   }
 
-  static removeTorrentWithData(Api api, String hashValue) async {
+  static Future<void> removeTorrentWithData(Api api, String hashValue) async {
     var client = api.ioClient;
     var request = http.Request(
       'POST',
@@ -207,13 +216,14 @@ class ApiRequests {
     );
     request.headers.addAll(api.getAuthHeader());
     var xml =
-        "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>system.multicall</methodName><params><param><value><array><data><value><struct><member><name>methodName</name><value><string>d.custom5.set</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value><value><string>1</string></value></data></array></value></member></struct></value><value><struct><member><name>methodName</name><value><string>d.delete_tied</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value></data></array></value></member></struct></value><value><struct><member><name>methodName</name><value><string>d.erase</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value></data></array></value></member></struct></value></data></array></value></param></params></methodCall>";
+        '<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>system.multicall</methodName><params><param><value><array><data><value><struct><member><name>methodName</name><value><string>d.custom5.set</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value><value><string>1</string></value></data></array></value></member></struct></value><value><struct><member><name>methodName</name><value><string>d.delete_tied</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value></data></array></value></member></struct></value><value><struct><member><name>methodName</name><value><string>d.erase</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value></data></array></value></member></struct></value></data></array></value></param></params></methodCall>';
     request.body = xml;
     var streamedResponse = await client.send(request);
 
-    if (streamedResponse.statusCode == 200)
-      Fluttertoast.showToast(
+    if (streamedResponse.statusCode == 200) {
+      await Fluttertoast.showToast(
           msg: 'Removed Torrent and Deleted Data Successfully');
+    }
 
     var responseBody =
         await streamedResponse.stream.transform(utf8.decoder).join();
@@ -221,15 +231,15 @@ class ApiRequests {
     client.close();
   }
 
-  static toggleTorrentStatus(
+  static Future<void> toggleTorrentStatus(
       Api api, String hashValue, int isOpen, int getState) async {
-    const Map<Status, String> statusMap = {
+    const statusMap = <Status, String>{
       Status.downloading: 'start',
       Status.paused: 'pause',
       Status.stopped: 'stop',
     };
 
-    Status toggleStatus = isOpen == 0
+    var toggleStatus = isOpen == 0
         ? Status.downloading
         : getState == 0
             ? (Status.downloading)
@@ -243,8 +253,8 @@ class ApiRequests {
         });
   }
 
-  static addTorrent(Api api, String url) async {
-    Fluttertoast.showToast(msg: 'Adding torrent');
+  static Future<void> addTorrent(Api api, String url) async {
+    await Fluttertoast.showToast(msg: 'Adding torrent');
     await api.ioClient.post(Uri.parse(api.addTorrentPluginUrl),
         headers: api.getAuthHeader(),
         body: {
@@ -252,8 +262,8 @@ class ApiRequests {
         });
   }
 
-  static addTorrentFile(Api api, String torrentPath) async {
-    Fluttertoast.showToast(msg: 'Adding torrent');
+  static Future<void> addTorrentFile(Api api, String torrentPath) async {
+    await Fluttertoast.showToast(msg: 'Adding torrent');
     var request =
         http.MultipartRequest('POST', Uri.parse(api.addTorrentPluginUrl));
     // request.fields['label'] = "hell";
@@ -271,28 +281,29 @@ class ApiRequests {
 
   /// Gets list of trackers for a particular torrent
   static Future<List<String>> getTrackers(Api api, String hashValue) async {
-    List<String> trackersList = [];
+    var trackersList = <String>[];
 
     var trKResponse = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(), body: {'mode': 'trk', 'hash': hashValue});
 
-    var trackers = jsonDecode(trKResponse.body);
+    var trackers = jsonDecode(trKResponse.body) as List;
     for (var tracker in trackers) {
-      trackersList.add(tracker[0]);
+      trackersList.add(tracker[0].toString());
     }
     return trackersList;
   }
 
   /// Gets list of files for a particular torrent
   static Future<List<TorrentFile>> getFiles(Api api, String hashValue) async {
-    List<TorrentFile> filesList = [];
+    var filesList = <TorrentFile>[];
 
     var flsResponse = await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
         headers: api.getAuthHeader(), body: {'mode': 'fls', 'hash': hashValue});
 
-    var files = jsonDecode(flsResponse.body);
+    var files = jsonDecode(flsResponse.body) as List;
     for (var file in files) {
-      TorrentFile torrentFile = TorrentFile(file[0], file[1], file[2], file[3]);
+      var torrentFile = TorrentFile(file[0] as String, file[1] as String,
+          file[2] as String, file[3] as String);
       filesList.add(torrentFile);
     }
     return filesList;
@@ -300,15 +311,17 @@ class ApiRequests {
 
   /// Gets list of saved RSS Feeds
   static Future<List<RSSLabel>> loadRSS(Api api) async {
-    List<RSSLabel> rssLabels = [];
+    var rssLabels = <RSSLabel>[];
     var rssResponse = await api.ioClient
         .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader());
 
-    var feeds = jsonDecode(rssResponse.body)['list'];
+    var feeds = jsonDecode(rssResponse.body)['list'] as List<dynamic>;
     for (var label in feeds) {
-      RSSLabel rssLabel = RSSLabel(label['hash'], label['label']);
+      var rssLabel =
+          RSSLabel(label['hash'].toString(), label['label'].toString());
       for (var item in label['items']) {
-        RSSItem rssItem = RSSItem(item['title'], item['time'], item['href']);
+        var rssItem = RSSItem(item['title'].toString(), item['time'] as int,
+            item['href'].toString());
         rssLabel.items.add(rssItem);
       }
       rssLabels.add(rssLabel);
@@ -317,7 +330,7 @@ class ApiRequests {
   }
 
   /// Removes RSS Feed
-  static removeRSS(Api api, String hashValue) async {
+  static Future<void> removeRSS(Api api, String hashValue) async {
     await api.ioClient
         .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(), body: {
       'mode': 'remove',
@@ -326,8 +339,8 @@ class ApiRequests {
   }
 
   /// Adds new RSS Feed
-  static addRSS(Api api, String rssUrl) async {
-    Fluttertoast.showToast(msg: 'Adding RSS');
+  static Future<void> addRSS(Api api, String rssUrl) async {
+    await Fluttertoast.showToast(msg: 'Adding RSS');
     await api.ioClient
         .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(), body: {
       'mode': 'add',
@@ -338,7 +351,7 @@ class ApiRequests {
   /// Gets details of available torrent in RSS Feed
   static Future<bool> getRSSDetails(
       Api api, RSSItem rssItem, String labelHash) async {
-    bool dataAvailable = true;
+    var dataAvailable = true;
     try {
       var response = await api.ioClient.post(Uri.parse(api.rssPluginUrl),
           headers: api.getAuthHeader(),
@@ -371,21 +384,21 @@ class ApiRequests {
 
   /// Gets details of RSS Filters
   static Future<List<RSSFilter>> getRSSFilters(Api api) async {
-    List<RSSFilter> rssFilters = [];
+    var rssFilters = <RSSFilter>[];
     var response = await api.ioClient
         .post(Uri.parse(api.rssPluginUrl), headers: api.getAuthHeader(), body: {
       'mode': 'getfilters',
     });
 
-    var filters = jsonDecode(response.body);
+    var filters = jsonDecode(response.body) as List<dynamic>;
     for (var filter in filters) {
-      RSSFilter rssFilter = RSSFilter(
-        filter['name'],
-        filter['enabled'],
-        filter['pattern'],
-        filter['label'],
-        filter['exclude'],
-        filter['dir'],
+      var rssFilter = RSSFilter(
+        filter['name'].toString(),
+        filter['enabled'] as int,
+        filter['pattern'].toString(),
+        filter['label'].toString(),
+        filter['exclude'].toString(),
+        filter['dir'].toString(),
       );
       rssFilters.add(rssFilter);
     }
@@ -394,7 +407,7 @@ class ApiRequests {
 
   /// Gets History of last [lastHours] hours
   static Future<List<HistoryItem>> getHistory(Api api, {int lastHours}) async {
-    String timestamp = '0';
+    var timestamp = '0';
     if (lastHours != null) {
       timestamp = ((DateTime.now().millisecondsSinceEpoch -
                   Duration(hours: lastHours).inMilliseconds) ~/
@@ -409,12 +422,16 @@ class ApiRequests {
           'mark': timestamp,
         });
 
-    var items = jsonDecode(response.body)['items'];
+    var items = jsonDecode(response.body)['items'] as List;
 
-    List<HistoryItem> historyItems = [];
+    var historyItems = <HistoryItem>[];
     for (var item in items) {
-      HistoryItem historyItem = HistoryItem(item['name'], item['action'],
-          item['action_time'], item['size'], item['hash']);
+      var historyItem = HistoryItem(
+          item['name'].toString(),
+          item['action'] as int,
+          item['action_time'] as int,
+          item['size'] as int,
+          item['hash'].toString());
       historyItems.add(historyItem);
     }
     return historyItems;
@@ -430,15 +447,15 @@ class ApiRequests {
             'src': path,
           });
 
-      var files = jsonDecode(response.body)['files'];
+      var files = jsonDecode(response.body)['files'] as List<Map>;
 
-      List<DiskFile> diskFiles = [];
+      var diskFiles = <DiskFile>[];
 
       for (var file in files) {
-        DiskFile diskFile = DiskFile();
+        var diskFile = DiskFile();
 
-        diskFile.isDirectory = file['is_dir'];
-        diskFile.name = file['data']['name'];
+        diskFile.isDirectory = file['is_dir'] as bool;
+        diskFile.name = file['data']['name'].toString();
         diskFiles.add(diskFile);
       }
 
@@ -449,32 +466,33 @@ class ApiRequests {
     }
   }
 
-  static setTorrentLabel(Api api, String hashValue, {String label}) async {
+  static Future<void> setTorrentLabel(Api api, String hashValue,
+      {String label}) async {
     try {
       await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
           headers: api.getAuthHeader(),
           body: {
             'mode': 'setlabel',
             'hash': hashValue,
-            'v': label.replaceAll(" ", "%20")
+            'v': label.replaceAll(' ', '%20')
           });
     } on Exception catch (e) {
       print(e);
     }
   }
 
-  static removeTorrentLabel(Api api, String hashValue) async {
+  static Future<void> removeTorrentLabel(Api api, String hashValue) async {
     try {
       await api.ioClient.post(Uri.parse(api.httpRpcPluginUrl),
           headers: api.getAuthHeader(),
           body: {'mode': 'setlabel', 'hash': hashValue, 'v': ''});
     } on Exception catch (e) {
-      print(e.toString() + "errrrr");
+      print(e.toString() + 'errrrr');
     }
   }
 
-  static removeHistoryItem(Api api, String hashValue) async {
-    Fluttertoast.showToast(msg: 'Removing Torrent from History');
+  static Future<void> removeHistoryItem(Api api, String hashValue) async {
+    await Fluttertoast.showToast(msg: 'Removing Torrent from History');
     try {
       await api.ioClient.post(Uri.parse(api.historyPluginUrl),
           headers: api.getAuthHeader(),

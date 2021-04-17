@@ -15,8 +15,8 @@ class IOClientMock extends Mock implements http.IOClient {}
 class MockBuildContext extends Mock implements BuildContext {}
 
 IOClientMock getAndRegisterIOClientMock() {
-  ApiServiceMock api = getAndRegisterApiServiceMock();
-  IOClientMock client = IOClientMock();
+  var api = getAndRegisterApiServiceMock();
+  var client = IOClientMock();
   final timestamp = TestData.getConstantTimeStamp();
   when(client.post(Uri.parse(TestData.historyPluginUrl),
           headers: api.getAuthHeader(),
@@ -27,7 +27,7 @@ IOClientMock getAndRegisterIOClientMock() {
 }
 
 ApiServiceMock getAndRegisterApiServiceMock() {
-  ApiServiceMock apiMock = ApiServiceMock();
+  var apiMock = ApiServiceMock();
   when(apiMock.historyPluginUrl)
       .thenAnswer((realInvocation) => TestData.historyPluginUrl);
   when(apiMock.ioClient)

@@ -17,26 +17,26 @@ class _LoadingScreenState extends State<LoadingScreen> {
   bool isLoading = true;
   bool isUserLoggedIn = false;
 
-  _fetchPreferences() async {
-    List<Api> apis = await Preferences.fetchSavedLogin();
+  Future<void> _fetchPreferences() async {
+    var apis = await Preferences.fetchSavedLogin();
     if (apis.isEmpty) {
       isUserLoggedIn = false;
     } else {
-      Api api = Provider.of<Api>(context, listen: false);
+      var api = Provider.of<Api>(context, listen: false);
       api.setUrl(apis[0].url);
       api.setUsername(apis[0].username);
       api.setPassword(apis[0].password);
       isUserLoggedIn = true;
     }
 
-    _fetchSettings();
+    await _fetchSettings();
   }
 
-  _fetchSettings() async {
-    Settings settings = await Preferences.fetchSettings();
+  Future<void> _fetchSettings() async {
+    var settings = await Preferences.fetchSettings();
     Provider.of<Settings>(context, listen: false).setSettings(settings);
 
-    Mode mode = Provider.of<Mode>(context, listen: false);
+    var mode = Provider.of<Mode>(context, listen: false);
     if (mode.isDarkMode != settings.showDarkMode) mode.toggleMode();
 
     setState(() {

@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
-import 'package:rutorrentflutter/screens/torrent_details_screen.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
-import '../api/api_conf.dart';
+import 'package:rutorrentflutter/screens/torrent_details_screen.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 
+import '../api/api_conf.dart';
 import 'custom_dialog.dart';
 
 class TorrentTile extends StatelessWidget {
   final Torrent torrent;
   TorrentTile(this.torrent);
 
-  static getStatusColor(Status status, BuildContext context) {
+  static Color getStatusColor(Status status, BuildContext context) {
     switch (status) {
       case Status.downloading:
         return Theme.of(context).primaryColor;
@@ -28,6 +28,10 @@ class TorrentTile extends StatelessWidget {
             ? kGreenActiveLT
             : kGreenActiveDT;
       case Status.errors:
+        return Provider.of<Mode>(context).isLightMode
+            ? kGreenActiveLT
+            : kRedErrorDT;
+      default:
         return Provider.of<Mode>(context).isLightMode
             ? kGreenActiveLT
             : kRedErrorDT;
@@ -44,12 +48,12 @@ class TorrentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color statusColor = getStatusColor(torrent.status, context);
+    var statusColor = getStatusColor(torrent.status, context);
     return Consumer<Api>(
       builder: (context, api, child) {
         return GestureDetector(
           onLongPress: () {
-            showDialog(
+            showDialog<CustomDialog>(
                 context: context,
                 builder: (context) => CustomDialog(
                       title: 'Remove Torrent',
@@ -70,7 +74,7 @@ class TorrentTile extends StatelessWidget {
           onTap: () {
             Navigator.push(
                 context,
-                MaterialPageRoute(
+                MaterialPageRoute<TorrentDetailSheet>(
                     builder: (context) => TorrentDetailSheet(torrent)));
           },
           child: Padding(

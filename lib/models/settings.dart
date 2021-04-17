@@ -14,16 +14,16 @@ class Settings extends ChangeNotifier {
   bool _downloadCompleteNotification = true;
   bool _showDarkMode = false;
 
-  get allNotificationEnabled => _allNotificationEnabled;
-  get diskSpaceNotification =>
+  bool get allNotificationEnabled => _allNotificationEnabled;
+  bool get diskSpaceNotification =>
       _diskSpaceNotification && _allNotificationEnabled;
-  get addTorrentNotification =>
+  bool get addTorrentNotification =>
       _addTorrentNotification && _allNotificationEnabled;
-  get downloadCompleteNotification =>
+  bool get downloadCompleteNotification =>
       _downloadCompleteNotification & _allNotificationEnabled;
-  get showDarkMode => _showDarkMode;
+  bool get showDarkMode => _showDarkMode;
 
-  setSettings(Settings newSettings) {
+  void setSettings(Settings newSettings) {
     _allNotificationEnabled = newSettings.allNotificationEnabled;
     _diskSpaceNotification = newSettings.diskSpaceNotification;
     _addTorrentNotification = newSettings.addTorrentNotification;
@@ -31,47 +31,47 @@ class Settings extends ChangeNotifier {
     _showDarkMode = newSettings.showDarkMode;
   }
 
-  toggleAllNotificationsEnabled() {
+  void toggleAllNotificationsEnabled() {
     _allNotificationEnabled = !allNotificationEnabled;
     notifyListeners();
   }
 
-  toggleDiskSpaceNotification() {
+  void toggleDiskSpaceNotification() {
     _diskSpaceNotification = !diskSpaceNotification;
     notifyListeners();
   }
 
-  toggleAddTorrentNotification() {
+  void toggleAddTorrentNotification() {
     _addTorrentNotification = !addTorrentNotification;
     notifyListeners();
   }
 
-  toggleDownloadCompleteNotification() {
+  void toggleDownloadCompleteNotification() {
     _downloadCompleteNotification = !downloadCompleteNotification;
     notifyListeners();
   }
 
-  setAllNotification(bool newVal) {
+  void setAllNotification(bool newVal) {
     _allNotificationEnabled = newVal;
     notifyListeners();
   }
 
-  setDiskSpaceNotification(bool newVal) {
+  void setDiskSpaceNotification(bool newVal) {
     _diskSpaceNotification = newVal;
     notifyListeners();
   }
 
-  setAddTorrentNotification(bool newVal) {
+  void setAddTorrentNotification(bool newVal) {
     _addTorrentNotification = newVal;
     notifyListeners();
   }
 
-  setDownloadCompleteNotification(bool newVal) {
+  void setDownloadCompleteNotification(bool newVal) {
     _downloadCompleteNotification = newVal;
     notifyListeners();
   }
 
-  setShowDarkMode(bool isDarkMode) {
+  void setShowDarkMode(bool isDarkMode) {
     _showDarkMode = isDarkMode;
     notifyListeners();
   }
