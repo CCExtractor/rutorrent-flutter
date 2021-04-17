@@ -11,6 +11,8 @@ class FilterTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var filterString =
+        filter.toString().substring(filter.toString().indexOf('.') + 1);
     return Consumer<GeneralFeatures>(builder: (context, general, child) {
       return Container(
         color: (general.selectedFilter == filter && !general.isLabelSelected)
@@ -25,7 +27,8 @@ class FilterTile extends StatelessWidget {
                 : Colors.white,
           ),
           title: Text(
-              filter.toString().substring(filter.toString().indexOf('.') + 1)),
+            (filterString[0].toUpperCase() + filterString.substring(1)),
+          ),
           onTap: () {
             general.changeFilter(filter);
             Navigator.pop(context);
