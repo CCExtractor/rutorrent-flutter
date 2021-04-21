@@ -14,7 +14,7 @@ class VlcStream extends StatefulWidget {
   _VlcStreamState createState() => _VlcStreamState();
 }
 
-class _VlcStreamState extends State<VlcStream> {
+class _VlcStreamState extends State<VlcStream> with WidgetsBindingObserver {
   // state of media player while playing
   bool isPlaying = true;
 
@@ -27,8 +27,13 @@ class _VlcStreamState extends State<VlcStream> {
   // hide control buttons {play/pause and seek slider} while playing media
   bool showControls = true;
 
+  bool isPausedDueToLifecycle = false;
+
   _initVlcPlayer() async {
-    _videoViewController = new VlcPlayerController(onInit: () {
+    _videoViewController = VlcPlayerController.network(widget.streamUrl,
+        hwAcc: HwAcc.FULL,
+        autoPlay: false,
+        options: VlcPlayerOptions(), onInit: () {
       _videoViewController.play();
     });
     _videoViewController.addListener(() {
@@ -39,12 +44,12 @@ class _VlcStreamState extends State<VlcStream> {
     bool checkForError = true;
 
     while (this.mounted) {
-      PlayingState state = _videoViewController.playingState;
-      if (state == PlayingState.PLAYING &&
-          sliderValue < _videoViewController.duration.inSeconds) {
+      PlayingState state = _videoViewController.value.playingState;
+      if (state == PlayingState.playing &&
+          sliderValue < _videoViewController.value.duration.inSeconds) {
         checkForError = false;
-        sliderValue = _videoViewController.position.inSeconds.toDouble();
-      } else if (state == PlayingState.STOPPED) {
+        sliderValue = _videoViewController.value.position.inSeconds.toDouble();
+      } else if (state == PlayingState.stopped) {
         stopCounter++;
         if (checkForError && stopCounter > 2) {
           Fluttertoast.showToast(msg: 'Error in playing file');
@@ -57,11 +62,12 @@ class _VlcStreamState extends State<VlcStream> {
   }
 
   playOrPauseVideo() {
-    PlayingState state = _videoViewController.playingState;
+    PlayingState state = _videoViewController.value.playingState;
 
-    if (state == PlayingState.PLAYING) {
+    if (state == PlayingState.playing) {
       _videoViewController.pause();
       setState(() {
+        isPausedDueToLifecycle = false;
         isPlaying = false;
       });
     } else {
@@ -73,8 +79,37 @@ class _VlcStreamState extends State<VlcStream> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.detached ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
+      //The app is either in bg or the phone has been turned off
+      PlayingState state = _videoViewController.value.playingState;
+      if (state == PlayingState.playing) {
+        //Check if the video is playing and only then execute pause operation
+        _videoViewController.pause();
+        setState(() {
+          //Keeping track if the video is paused due to lifecycle change
+          isPausedDueToLifecycle = true;
+          isPlaying = false;
+        });
+      }
+    }
+    //Only is the video was paused due to lifecycle changes
+    if (state == AppLifecycleState.resumed && isPausedDueToLifecycle) {
+      //The app is bought back into the view or the display is turned back on
+      _videoViewController.play();
+      setState(() {
+        isPlaying = true;
+      });
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initVlcPlayer();
     SystemChrome.setEnabledSystemUIOverlays([]);
     Wakelock.enable();
@@ -90,13 +125,13 @@ class _VlcStreamState extends State<VlcStream> {
             alignment: Alignment.center,
             child: VlcPlayer(
               aspectRatio: 16 / 9,
-              url: widget.streamUrl,
               controller: _videoViewController,
-              placeholder: Container(
-                height: 250.0,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).accentColor),
+              placeholder: Center(
+                child: Container(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        Theme.of(context).accentColor),
+                  ),
                 ),
               ),
             ),
@@ -160,9 +195,9 @@ class _VlcStreamState extends State<VlcStream> {
                             activeColor: Colors.white,
                             value: sliderValue,
                             min: 0.0,
-                            max: _videoViewController.duration == null
+                            max: _videoViewController.value.duration == null
                                 ? 1.0
-                                : _videoViewController.duration.inSeconds
+                                : _videoViewController.value.duration.inSeconds
                                     .toDouble(),
                             onChanged: (progress) {
                               if (this.mounted) {
@@ -195,9 +230,13 @@ class _VlcStreamState extends State<VlcStream> {
   }
 
   @override
-  void dispose() {
+  Future<void> dispose() async {
+    WidgetsBinding.instance.removeObserver(this);
     Wakelock.disable();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    await _videoViewController.stop();
+    await _videoViewController.stopRendererScanning();
+    await _videoViewController.dispose();
     super.dispose();
   }
 }

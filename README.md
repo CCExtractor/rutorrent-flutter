@@ -28,6 +28,8 @@ ruTorrent ⇒ A web interface for rtorrent that uses that API. It also does othe
 
 Thus, our Flutter application talks with ruTorrent's backend service to provide a native interface.
 
+![Diagram](./assets/docs/ruTorrent%20Flutter%20Application%20Diagram.png)
+
 ## Usage
 
 In order to use this flutter application you should have ruTorrent configured on your system, after which you can connect your mobile on the same network as your system and use the app by entering the configuration (IP address).
@@ -66,11 +68,9 @@ flutter doctor
 ```
 
 4. For IOS
-- Delete ios folder from the root directory ```/ios```
-- From the root directory```flutter create -i swift --project-name rutorrent . ```
 - Uncomment ```platform :ios, '9.0'``` from ios/Podfile
 - Cd into the new ios directory```cd ios```
-- From the ios directory ```pod install ```
+- From the ios directory ```pod install --verbose```
 
 5. Run the app:
 

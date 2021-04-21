@@ -56,6 +56,10 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
       Preferences.saveLogin(apis);
     }
 
+    if (apis.length > 1) {
+      Navigator.pop(context);
+    }
+
     Navigator.pushReplacement(
         //Navigate to Home Screen
         context,
@@ -121,6 +125,9 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
           passwordFocus.unfocus();
         },
         child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+          ),
           body: SingleChildScrollView(
             child: Column(
               children: <Widget>[
@@ -244,10 +251,16 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                       onPressed: () {
                         Api api = Provider.of<Api>(context,
                             listen: false); // One call to provider
-                        api.setUrl(urlController.text);
-                        api.setUsername(usernameController.text);
-                        api.setPassword(passwordController.text);
-                        _validateConfigurationDetails(api);
+                        if (usernameController.text.trim().contains(' ') ||
+                            passwordController.text.trim().contains(' ')) {
+                          Fluttertoast.showToast(
+                              msg: 'Invalid username or password');
+                        } else {
+                          api.setUrl(urlController.text);
+                          api.setUsername(usernameController.text);
+                          api.setPassword(passwordController.text);
+                          _validateConfigurationDetails(api);
+                        }
                       },
                     ),
                   ),
