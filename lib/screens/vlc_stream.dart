@@ -31,9 +31,8 @@ class _VlcStreamState extends State<VlcStream> with WidgetsBindingObserver {
 
   _initVlcPlayer() async {
     _videoViewController = VlcPlayerController.network(widget.streamUrl,
-        hwAcc: HwAcc.FULL,
-        autoPlay: false,
-        options: VlcPlayerOptions(), onInit: () {
+        hwAcc: HwAcc.FULL, autoPlay: false, options: VlcPlayerOptions());
+    _videoViewController.addOnInitListener(() {
       _videoViewController.play();
     });
     _videoViewController.addListener(() {
