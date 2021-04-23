@@ -109,9 +109,16 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
       }
     }
   }
-
+  _changeStatusBarColor(){
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.white
+    ));
+  }
   @override
   Widget build(BuildContext context) {
+    //change status bar color to white for better visibility of status bar 
+    _changeStatusBarColor();
+    
     return ModalProgressHUD(
       progressIndicator: CircularProgressIndicator(
         valueColor:
