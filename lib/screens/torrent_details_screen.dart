@@ -1,7 +1,6 @@
 import 'dart:async';
 import "dart:ui";
 import 'dart:io';
-import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -13,6 +12,7 @@ import 'package:rutorrentflutter/components/file_tile.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
+import 'package:rutorrentflutter/services/file_size.dart';
 
 class TorrentDetailSheet extends StatefulWidget {
   final Torrent torrent;
