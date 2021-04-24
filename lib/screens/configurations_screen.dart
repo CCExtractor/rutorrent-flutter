@@ -113,6 +113,8 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
   @override
   Widget build(BuildContext context) {
     return LoadingOverlay(
+      color: Colors.grey,
+      opacity: 0.3,
       progressIndicator: CircularProgressIndicator(
         valueColor:
             AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
