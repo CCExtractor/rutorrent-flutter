@@ -1,8 +1,8 @@
-import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
+import 'package:rutorrentflutter/services/file_size.dart';
 
 class FileTile extends StatefulWidget {
   final TorrentFile file;
