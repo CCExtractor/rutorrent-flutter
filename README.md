@@ -30,6 +30,20 @@ Thus, our Flutter application talks with ruTorrent's backend service to provide 
 
 ![Diagram](./assets/docs/ruTorrent%20Flutter%20Application%20Diagram.png)
 
+## Screenshots
+
+Login Screen            |  All Torrents Screen       | Downloaded Torrents Screen      |  Drawer Screen
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![Login_screen](https://user-images.githubusercontent.com/47276307/113502426-e6aa3e00-9549-11eb-84d1-ef206be8c81d.jpeg)|![All_Torrents_screen](https://user-images.githubusercontent.com/47276307/113502413-de520300-9549-11eb-874c-75df7fdc9bb9.png)|![Downloaded_Torrents_screen](https://user-images.githubusercontent.com/47276307/113501966-be6d1000-9546-11eb-8e25-8712453db047.jpeg)|![Drawer_screen](https://user-images.githubusercontent.com/47276307/113501974-c6c54b00-9546-11eb-8293-348a66e19e30.jpeg)|
+
+Rss-Feed Screen         |  RSS-filters Screen        |   Settings Screen               |  Splash Screen
+:-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
+![RSS_feed_screen](https://user-images.githubusercontent.com/47276307/113501981-cfb61c80-9546-11eb-8b96-74c959cf6bb2.jpeg)|![RSS_filters_screen](https://user-images.githubusercontent.com/47276307/113501983-d2b10d00-9546-11eb-853f-aeff84964462.jpeg)|![Settings_screen](https://user-images.githubusercontent.com/47276307/113501986-d6dd2a80-9546-11eb-8cfb-c85493c474fc.jpeg)|![Splash_screen](https://user-images.githubusercontent.com/47276307/113501988-d93f8480-9546-11eb-885d-85801fc71b3e.jpeg)|
+
+Disk Explorer Screen (seedbox)         | History Screen       |   
+:-------------------------:|:---------------------:|
+![Disk_Explore_screen](https://user-images.githubusercontent.com/47276307/113501965-bb721f80-9546-11eb-84d9-ea450462296e.jpeg)|![History_screen](https://user-images.githubusercontent.com/47276307/113501977-c927a500-9546-11eb-9bae-f13fb384828a.jpeg)|
+
 ## Usage
 
 In order to use this flutter application you should have ruTorrent configured on your system, after which you can connect your mobile on the same network as your system and use the app by entering the configuration (IP address).
