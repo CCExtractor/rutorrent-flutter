@@ -24,21 +24,21 @@ class _SettingsPageState extends State<SettingsPage> {
   _logoutAllAccounts(BuildContext context) {
     showDialog(
         context: context,
-        builder: (_) => CustomDialog(
+        builder: (dialogContext) => CustomDialog(
               title: 'Are you sure you want to logout from all saved accounts?',
               optionLeftText: 'No',
               optionRightText: 'Yes',
-              optionLeftOnPressed: () => Navigator.pop(context),
+              optionLeftOnPressed: () => Navigator.pop(dialogContext),
               optionRightOnPressed: () {
                 // Closes dialog box.
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
 
                 Preferences.clearLogin();
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
                 Navigator.pushReplacement(
-                    context,
+                    dialogContext,
                     MaterialPageRoute(
-                      builder: (context) => ConfigurationsScreen(),
+                      builder: (dialogContext) => ConfigurationsScreen(),
                     ));
               },
             ));

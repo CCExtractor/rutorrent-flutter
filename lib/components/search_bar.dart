@@ -83,6 +83,7 @@ class SearchBar extends StatelessWidget {
               onTap: () {
                 showModalBottomSheet(
                     context: context,
+                    isScrollControlled: true,
                     builder: (context) {
                       return SortBottomSheet();
                     });

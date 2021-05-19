@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/data_input.dart';
 import 'package:rutorrentflutter/components/password_input.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/screens/main_screen.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:rutorrentflutter/utilities/preferences.dart';
 import '../api/api_conf.dart';
 
@@ -112,12 +112,14 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ModalProgressHUD(
+    return LoadingOverlay(
+      color: Colors.grey,
+      opacity: 0.3,
       progressIndicator: CircularProgressIndicator(
         valueColor:
             AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
       ),
-      inAsyncCall: isValidating,
+      isLoading: isValidating,
       child: GestureDetector(
         onTap: () {
           urlFocus.unfocus();
@@ -251,10 +253,16 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
                       onPressed: () {
                         Api api = Provider.of<Api>(context,
                             listen: false); // One call to provider
-                        api.setUrl(urlController.text);
-                        api.setUsername(usernameController.text);
-                        api.setPassword(passwordController.text);
-                        _validateConfigurationDetails(api);
+                        if (usernameController.text.trim().contains(' ') ||
+                            passwordController.text.trim().contains(' ')) {
+                          Fluttertoast.showToast(
+                              msg: 'Invalid username or password');
+                        } else {
+                          api.setUrl(urlController.text);
+                          api.setUsername(usernameController.text);
+                          api.setPassword(passwordController.text);
+                          _validateConfigurationDetails(api);
+                        }
                       },
                     ),
                   ),
