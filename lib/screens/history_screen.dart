@@ -1,4 +1,3 @@
-import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
+import 'package:rutorrentflutter/services/file_size.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 import '../components/loading_shimmer.dart';

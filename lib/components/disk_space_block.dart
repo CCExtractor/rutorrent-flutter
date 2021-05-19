@@ -1,8 +1,8 @@
-import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
 import 'package:rutorrentflutter/models/mode.dart';
+import 'package:rutorrentflutter/services/file_size.dart';
 import 'package:rutorrentflutter/utilities/constants.dart';
 
 class ShowDiskSpace extends StatelessWidget {
