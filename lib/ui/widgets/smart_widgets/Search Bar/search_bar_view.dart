@@ -60,6 +60,7 @@ class SearchBarWidget extends StatelessWidget {
                             onPressed: () {
                               model.searchTextController.clear();
                               model.searchBarFocus.unfocus();
+                              model.onTyping("");
                               model.setSearchingState(false);
                             },
                           )

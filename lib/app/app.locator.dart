@@ -16,6 +16,7 @@ import '../services/functional_services/authentication_service.dart';
 import '../services/functional_services/disk_space_service.dart';
 import '../services/functional_services/internet_service.dart';
 import '../services/functional_services/shared_preferences_service.dart';
+import '../services/state_services/file_service.dart';
 import '../services/state_services/torrent_service.dart';
 import '../services/state_services/user_preferences_service.dart';
 import '../utils/file_picker_service.dart';
@@ -41,4 +42,5 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => FilePickerService());
   locator.registerLazySingleton(() => UserPreferencesService());
   locator.registerLazySingleton(() => TorrentService());
+  locator.registerLazySingleton(() => FileService());
 }

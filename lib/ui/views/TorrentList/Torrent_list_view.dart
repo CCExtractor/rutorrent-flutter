@@ -11,8 +11,14 @@ import 'package:stacked/stacked.dart';
 
 final log = getLogger("TorrentListView");
 
-class TorrentListView extends StatelessWidget {
+class TorrentListView extends StatefulWidget  {
   const TorrentListView({Key? key}) : super(key: key);
+
+  @override
+  _TorrentListViewState createState() => _TorrentListViewState();
+}
+
+class _TorrentListViewState extends State<TorrentListView> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<TorrentListViewModel>.reactive(
@@ -28,11 +34,6 @@ class TorrentListView extends StatelessWidget {
                 bool waitingState =
                     snapshot.connectionState == ConnectionState.waiting;
 
-                // Condition for No Data
-                if (snapshot.data == null) {
-                  return NoTorrentWidget();
-                }
-
                 // Condition for loading state
                 if (waitingState && !snapshot.hasData) {
                   model.checkForActiveDownloads();
@@ -40,6 +41,13 @@ class TorrentListView extends StatelessWidget {
                   // showing loading list of Shimmer
                   return LoadingShimmer().loadingEffect(context, length: 5);
                 }
+
+                
+                // Condition for No Data
+                if (snapshot.data == null) {
+                  return NoTorrentWidget();
+                }
+
 
                 // Updating torrent list
                 if (snapshot.hasData) {
@@ -50,7 +58,7 @@ class TorrentListView extends StatelessWidget {
                 return ValueListenableBuilder(
                     valueListenable: model.displayTorrentList,
                     builder: (context, List<Torrent> torrents, child) {
-                      log.i("Value Notifier result " + torrents.toString());
+                      // log.i("Value Notifier result " + torrents.toString());
                       return ListView.builder(
                         itemCount: torrents.length,
                         itemBuilder: (context, index) {
@@ -91,4 +99,7 @@ class TorrentListView extends StatelessWidget {
       viewModelBuilder: () => TorrentListViewModel(),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

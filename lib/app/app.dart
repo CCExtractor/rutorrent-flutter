@@ -5,6 +5,7 @@ import 'package:rutorrentflutter/services/functional_services/authentication_ser
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/functional_services/internet_service.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
+import 'package:rutorrentflutter/services/state_services/file_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 import 'package:rutorrentflutter/utils/file_picker_service.dart';
@@ -35,6 +36,7 @@ import '../ui/views/splash/splash_view.dart';
     LazySingleton(classType:FilePickerService),
     LazySingleton(classType:UserPreferencesService),
     LazySingleton(classType:TorrentService),
+    LazySingleton(classType:FileService),
   ],
   logger: StackedLogger(),
 )

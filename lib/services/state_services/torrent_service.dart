@@ -5,6 +5,7 @@ import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
+import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 
 Logger log = getLogger("TorrentService");
@@ -15,6 +16,8 @@ class TorrentService {
       locator<AuthenticationService>();
   UserPreferencesService? _userPreferencesService =
       locator<UserPreferencesService>();
+  SharedPreferencesService? _sharedPreferencesService =
+      locator<SharedPreferencesService>();
 
   ValueNotifier<List<String>> _listOfLabels =
       new ValueNotifier(new List<String>.empty());
@@ -28,7 +31,7 @@ class TorrentService {
   String? _selectedLabel;
   bool _isLabelSelected = false;
   Filter _selectedFilter = Filter.All;
-  Sort? _sortPreference;
+  Sort _sortPreference = Sort.none;
 
   get isLabelSelected => _isLabelSelected;
   get selectedLabel => _selectedLabel;
@@ -52,6 +55,10 @@ class TorrentService {
 
   setActiveDownloads(List<Torrent> list) => _activeDownloads.value = list;
   setTorrentList(List<Torrent> list) {_torrentsList.value = list;_torrentsDisplayList.value = list;}
+  setSortPreference(Sort newPreference) {
+    _sortPreference = newPreference;
+    _sharedPreferencesService!.DB.put("sortPreference",newPreference.index);
+  }
 
   updateTorrentDisplayList({String? searchText}) {
     List<Torrent> displayList = torrentsList.value;

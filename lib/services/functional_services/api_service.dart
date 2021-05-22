@@ -7,10 +7,13 @@ import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/models/account.dart';
+import 'package:rutorrentflutter/models/rss.dart';
+import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
+import 'package:xml/xml.dart';
 
 Logger log = getLogger("ApiService");
 
@@ -208,6 +211,31 @@ class ApiService {
     client.close();
   }
 
+  addTorrent(String url) async {
+    Fluttertoast.showToast(msg: 'Adding torrent');
+    await ioClient.post(Uri.parse(addTorrentPluginUrl),
+        headers: getAuthHeader(),
+        body: {
+          'url': url,
+        });
+  }
+
+  addTorrentFile(String torrentPath) async {
+    Fluttertoast.showToast(msg: 'Adding torrent');
+    var request =
+        MultipartRequest('POST', Uri.parse(addTorrentPluginUrl));
+    // request.fields['label'] = "hell";
+
+    request.files.add(await MultipartFile.fromPath('torrent_file', torrentPath));
+    try {
+      var response = await request.send();
+
+      print(response.headers);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
   toggleTorrentStatus(Torrent torrent) async {
     log.v("Toggling torrent status");
     const Map<Status, String> statusMap = {
@@ -228,6 +256,110 @@ class ApiService {
           'mode': statusMap[toggleStatus],
           'hash': torrent.hash,
         });
+  }
+
+
+                                   /*      RSS Functions      */
+
+
+
+  /// Gets list of saved RSS Feeds
+  Future<List<RSSLabel>> loadRSS() async {
+    log.v("Loading RSS");
+    List<RSSLabel> rssLabels = [];
+    var rssResponse = await ioClient
+        .post(Uri.parse(rssPluginUrl), headers: getAuthHeader());
+
+    var feeds = jsonDecode(rssResponse.body)['list'];
+    for (var label in feeds) {
+      RSSLabel rssLabel = RSSLabel(label['hash'], label['label']);
+      for (var item in label['items']) {
+        RSSItem rssItem = RSSItem(item['title'], item['time'], item['href']);
+        rssLabel.items.add(rssItem);
+      }
+      rssLabels.add(rssLabel);
+    }
+    return rssLabels;
+  }
+
+  /// Removes RSS Feed
+  removeRSS(String hashValue) async {
+    log.v("Removing RSS");
+    await ioClient
+        .post(Uri.parse(rssPluginUrl), headers: getAuthHeader(), body: {
+      'mode': 'remove',
+      'rss': hashValue,
+    });
+  }
+
+  /// Adds new RSS Feed
+  addRSS(String rssUrl) async {
+    log.v("Adding RSS");
+    Fluttertoast.showToast(msg: 'Adding RSS');
+    await ioClient
+        .post(Uri.parse(rssPluginUrl), headers: getAuthHeader(), body: {
+      'mode': 'add',
+      'url': rssUrl,
+    });
+  }
+
+  /// Gets details of available torrent in RSS Feed
+  Future<bool> getRSSDetails(RSSItem rssItem, String labelHash) async {
+    log.v("Fetching RSS Details");
+    bool dataAvailable = true;
+    try {
+      var response = await ioClient.post(Uri.parse(rssPluginUrl),
+          headers: getAuthHeader(),
+          body: {
+            'mode': 'getdesc',
+            'href': rssItem.url,
+            'rss': labelHash,
+          });
+      var xmlResponse = XmlDocument.parse(response.body);
+
+      var data =
+          xmlResponse.lastChild?.text; // extracting value stored in data tag
+      var list = data?.split('<br />');
+      var secondList = list?[0].split('\"');
+
+      rssItem.imageUrl = secondList?[3];
+      rssItem.name = secondList?[5];
+
+      rssItem.rating = list?[1];
+      rssItem.genre = list?[2];
+      rssItem.size = list?[3];
+      rssItem.runtime = list?[4];
+      rssItem.description = list?[6];
+    } catch (e) {
+      log.e("Error " + e.toString());
+      dataAvailable = false;
+      print(e);
+    }
+    return dataAvailable;
+  }
+
+  /// Gets details of RSS Filters
+  Future<List<RSSFilter>> getRSSFilters() async {
+    log.v("Fetching RSS Filters");
+    List<RSSFilter> rssFilters = [];
+    var response = await ioClient
+        .post(Uri.parse(rssPluginUrl), headers: getAuthHeader(), body: {
+      'mode': 'getfilters',
+    });
+
+    var filters = jsonDecode(response.body);
+    for (var filter in filters) {
+      RSSFilter rssFilter = RSSFilter(
+        filter['name'],
+        filter['enabled'],
+        filter['pattern'],
+        filter['label'],
+        filter['exclude'],
+        filter['dir'],
+      );
+      rssFilters.add(rssFilter);
+    }
+    return rssFilters;
   }
 
   List<Torrent>? _parseTorrentData(String responseBody, Account? currAccount) {

@@ -23,12 +23,6 @@ class SearchBarWidgetViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void showSortBottomSheet() {
-    _bottomSheetService.showCustomSheet(
-      variant: BottomSheetType.sortBottomSheet
-    );
-  }
-
   onTyping(String searchKey) {
     _torrentService.updateTorrentDisplayList(searchText: searchKey);
   }
