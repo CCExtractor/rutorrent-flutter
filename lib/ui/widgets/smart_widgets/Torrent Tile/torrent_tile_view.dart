@@ -108,7 +108,7 @@ class TorrentTileView extends StatelessWidget {
                                             : kGreyDT,
                                     value: torrent!.percentageDownload / 100,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        model.statusColor),
+                                        _getStatusColor(torrent!.status, context)),
                                   ),
                                 ],
                               ),
@@ -127,10 +127,10 @@ class TorrentTileView extends StatelessWidget {
                       Text(
                         torrent!.percentageDownload.toString() + '%',
                         style: TextStyle(
-                            color: model.statusColor, fontWeight: FontWeight.w700),
+                            color: _getStatusColor(torrent!.status, context), fontWeight: FontWeight.w700),
                       ),
                       IconButton(
-                        color: model.statusColor,
+                        color: _getStatusColor(torrent!.status, context),
                         iconSize: 40,
                         icon: Icon(_getTorrentIconData()),
                         onPressed: () => model.toggleTorrentStatus(torrent!),
@@ -153,5 +153,26 @@ class TorrentTileView extends StatelessWidget {
         : torrent!.getState == 0
             ? (Icons.play_circle_filled)
             : Icons.pause_circle_filled;
+  }
+
+  _getStatusColor(Status? status, BuildContext context) {
+    switch (status) {
+      case Status.downloading:
+        return Theme.of(context).primaryColor;
+      case Status.paused:
+        return !AppStateNotifier.isDarkModeOn ? kGreyDT : kGreyLT;
+      case Status.stopped:
+        return !AppStateNotifier.isDarkModeOn ? kGreyDT : kGreyLT;
+      case Status.completed:
+        return !AppStateNotifier.isDarkModeOn
+            ? kGreenActiveLT
+            : kGreenActiveDT;
+      case Status.errors:
+        return !AppStateNotifier.isDarkModeOn
+            ? kGreenActiveLT
+            : kRedErrorDT;
+      default:
+        break;
+    }
   }
 }

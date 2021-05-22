@@ -64,6 +64,8 @@ class TorrentTileViewModel extends BaseViewModel {
         return !AppStateNotifier.isDarkModeOn
             ? kGreenActiveLT
             : kRedErrorDT;
+      default:
+        break;
     }
   }
 }

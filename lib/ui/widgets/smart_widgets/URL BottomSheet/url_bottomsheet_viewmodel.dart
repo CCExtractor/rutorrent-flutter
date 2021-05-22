@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
+import 'package:rutorrentflutter/services/functional_services/api_service.dart';
 import 'package:rutorrentflutter/utils/file_picker_service.dart';
 import 'package:stacked/stacked.dart';
 
 class URLBottomSheetViewModel extends BaseViewModel {
   FilePickerService? _filePickerService = locator<FilePickerService>();
+  ApiService _apiService = locator<ApiService>();
 
   final TextEditingController urlTextController = TextEditingController();
   final FocusNode urlFocus = FocusNode();
@@ -35,17 +37,15 @@ class URLBottomSheetViewModel extends BaseViewModel {
         await (_filePickerService!.selectFile() as Future<String?>);
 
     if (torrentPath != null) {
-      //TODO call api service to add torrent
+      _apiService.addTorrentFile(torrentPath);
     }
   }
 
   void submit(HomeViewBottomSheetMode? mode) {
     if (mode == HomeViewBottomSheetMode.Torrent) {
-      //TODO connect to service
-      //  ApiRequests.addTorrent(api, url);
+       _apiService.addTorrent(urlTextController.text);
     } else if (mode == HomeViewBottomSheetMode.RSS) {
-      //TODO connect to service
-      // await ApiRequests.addRSS(api, url);
+      _apiService.addRSS(urlTextController.text);
     }
   }
 }
