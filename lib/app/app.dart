@@ -5,6 +5,8 @@ import 'package:rutorrentflutter/services/functional_services/authentication_ser
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/functional_services/internet_service.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
+import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
+import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 import 'package:rutorrentflutter/ui/views/Home/home_view.dart';
 import 'package:rutorrentflutter/ui/views/Login/login_view.dart';
 import 'package:rutorrentflutter/ui/views/Splash/splash_view.dart';
@@ -14,9 +16,9 @@ import 'package:stacked_services/stacked_services.dart';
 
 @StackedApp(
   routes: [
-    MaterialRoute(page: SplashView,initial:true),
-    MaterialRoute(page: LoginView),
-    MaterialRoute(page: HomeView),
+    // MaterialRoute(page: SplashView,initial:true),
+    // MaterialRoute(page: LoginView),
+    // MaterialRoute(page: HomeView),
   ],
   dependencies: [
     LazySingleton(classType:NavigationService),
@@ -30,7 +32,10 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType:InternetService),
     LazySingleton(classType:AppStateNotifier),
     LazySingleton(classType:FilePickerService),
-  ]
+    LazySingleton(classType:UserPreferencesService),
+    LazySingleton(classType:TorrentService),
+  ],
+  logger: StackedLogger(),
 )
 class AppSetup{
 

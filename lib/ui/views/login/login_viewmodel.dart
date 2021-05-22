@@ -1,8 +1,8 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
+import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
-import 'package:rutorrentflutter/app/logger.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/services/functional_services/api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
@@ -31,7 +31,7 @@ class LoginViewModel extends BaseViewModel {
       _authenticationService.tempAccount = _account;
       await _validateConfigurationDetails(_account);
     }
-    _navigationService.replaceWith(Routes.splashView);
+    // _navigationService.replaceWith(Routes.splashView);
     setBusy(false);
 
   }

@@ -54,8 +54,6 @@ class _HomeViewState extends State<HomeView>
           ],
           onTap: (index) {
             model.updateIndex(index);
-            print("index");
-            print(index);
             model.pageController.jumpToPage(index);
           },
         ),

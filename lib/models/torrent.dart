@@ -68,4 +68,32 @@ class Torrent {
     eta = eta + '$min min';
     return eta;
   }
+
+  Torrent.fromObject({List torrentObject, Account account, String hashKey}){
+    hash = hashKey;
+    name = torrentObject[4];
+    size = int.parse(torrentObject[5]);
+    savePath = torrentObject[25];
+    label = torrentObject[14].toString().replaceAll("%20", " ");
+    completedChunks = int.parse(torrentObject[6]);
+    totalChunks = int.parse(torrentObject[7]);
+    sizeOfChunk = int.parse(torrentObject[13]);
+    torrentAdded = int.parse(torrentObject[21]);
+    torrentCreated = int.parse(torrentObject[26]);
+    seedsActual = int.parse(torrentObject[18]);
+    peersActual = int.parse(torrentObject[15]);
+    ulSpeed = int.parse(torrentObject[11]);
+    dlSpeed = int.parse(torrentObject[12]);
+    isOpen = int.parse(torrentObject[0]);
+    getState = int.parse(torrentObject[3]);
+    msg = torrentObject[29];
+    downloadedData = int.parse(torrentObject[8]);
+    uploadedData = int.parse(torrentObject[9]);
+    ratio = int.parse(torrentObject[10]);
+
+    account = account;
+    eta = getEta;
+    percentageDownload = getPercentageDownload;
+    status = getTorrentStatus;
+  }
 }

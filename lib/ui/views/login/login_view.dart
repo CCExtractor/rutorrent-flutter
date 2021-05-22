@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/ui/views/login/login_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/data_input_widget.dart';
-import 'package:rutorrentflutter/ui/widgets/dumb_widgets/password_input_widget.dart't.dart';
+import 'package:rutorrentflutter/ui/widgets/dumb_widgets/password_input_widget.dart';
 import 'package:stacked/stacked.dart';
 
 class LoginView extends StatelessWidget {

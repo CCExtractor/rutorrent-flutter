@@ -2,16 +2,16 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
-import 'package:rutorrentflutter/app/logger.dart';
+import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
 
 Logger log = getLogger("AuthenticationService");
 
 ///[Service] used for all functionalities related to authentication and its state
-class AuthenticationService{
-
-  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
+class AuthenticationService {
+  SharedPreferencesService _sharedPreferencesService =
+      locator<SharedPreferencesService>();
 
   ///List of user accounts
   List<Account> _accounts;
@@ -26,7 +26,7 @@ class AuthenticationService{
   //Setters
   set accounts(accounts) => _accounts = accounts;
   set tempAccount(account) => _tempAccount = account;
-  
+
   Future<List<Account>> getAccount() async {
     if (_accounts == null) {
       _accounts = await _sharedPreferencesService.fetchSavedLogin();
@@ -58,7 +58,6 @@ class AuthenticationService{
     }
 
     return accounts;
-
   }
 
   bool _matchApi(Account api1, Account api2) {

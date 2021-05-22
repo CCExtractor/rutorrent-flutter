@@ -12,8 +12,6 @@ class FrontPageView extends StatelessWidget {
      onModelReady: (model) => model.homeViewPageIndex = index,
      builder: (context, model, child) 
      {
-       print("model.homeViewPageIndex");
-       print(model.homeViewPageIndex);
        return Column(
       children: <Widget>[
         Container(
