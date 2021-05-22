@@ -6,8 +6,8 @@ class FilePickerService{
 
   Future selectFile() async {
 
-      String torrentPath;
-      FilePickerResult result = await FilePicker.platform
+      String? torrentPath;
+      FilePickerResult? result = await FilePicker.platform
         .pickFiles(type: FileType.custom, allowedExtensions: ["torrent"]);
       if (result == null) {
       Fluttertoast.showToast(msg: 'No file selected');

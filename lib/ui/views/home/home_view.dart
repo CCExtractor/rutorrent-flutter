@@ -9,7 +9,7 @@ import 'package:stacked/stacked.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({Key key}) : super(key: key);
+  const HomeView({Key? key}) : super(key: key);
 
   @override
   _HomeViewState createState() => _HomeViewState();
@@ -24,7 +24,7 @@ class _HomeViewState extends State<HomeView>
     return ViewModelBuilder<HomeViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: HomeViewAppBar(model.account,model),
+        appBar: HomeViewAppBar(model.account!,model),
         drawer: DrawerView(),
         body: PageView(
           physics: NeverScrollableScrollPhysics(),

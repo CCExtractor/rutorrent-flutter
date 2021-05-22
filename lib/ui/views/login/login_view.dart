@@ -71,7 +71,7 @@ class LoginView extends StatelessWidget {
                           suffixIconButton: IconButton(
                             color: Colors.white,
                             onPressed: () async {
-                              ClipboardData data =
+                              ClipboardData? data =
                                   await Clipboard.getData('text/plain');
                               if (data != null)
                                 urlController.text = data.text.toString();

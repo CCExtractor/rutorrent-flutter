@@ -15,7 +15,7 @@ class SimpleLogPrinter extends LogPrinter {
   final bool printCallingFunctionName;
   final bool printCallStack;
   final List<String> exludeLogsFromClasses;
-  final String showOnlyClass;
+  final String? showOnlyClass;
 
   SimpleLogPrinter(
     this.className, {
@@ -47,9 +47,9 @@ class SimpleLogPrinter extends LogPrinter {
     for (var line in output.split('\n')) {
       result.addAll(pattern.allMatches(line).map((match) {
         if (kReleaseMode) {
-          return match.group(0);
+          return match.group(0)!;
         } else {
-          return color(match.group(0));
+          return color!(match.group(0)!);
         }
       }));
     }
@@ -57,7 +57,7 @@ class SimpleLogPrinter extends LogPrinter {
     return result;
   }
 
-  String _getMethodName() {
+  String? _getMethodName() {
     try {
       var currentStack = StackTrace.current;
       var formattedStacktrace = _formatStackTrace(currentStack, 3);
@@ -76,7 +76,7 @@ class SimpleLogPrinter extends LogPrinter {
 
 final stackTraceRegex = RegExp(r'#[0-9]+[\s]+(.+) \(([^\s]+)\)');
 
-List<String> _formatStackTrace(StackTrace stackTrace, int methodCount) {
+List<String>? _formatStackTrace(StackTrace stackTrace, int methodCount) {
   var lines = stackTrace.toString().split('\n');
 
   var formatted = <String>[];
@@ -84,7 +84,7 @@ List<String> _formatStackTrace(StackTrace stackTrace, int methodCount) {
   for (var line in lines) {
     var match = stackTraceRegex.matchAsPrefix(line);
     if (match != null) {
-      if (match.group(2).startsWith('package:logger')) {
+      if (match.group(2)!.startsWith('package:logger')) {
         continue;
       }
       var newLine = ("${match.group(1)}");
@@ -132,7 +132,7 @@ Logger getLogger(
   bool printCallingFunctionName = true,
   bool printCallstack = false,
   List<String> exludeLogsFromClasses = const [],
-  String showOnlyClass,
+  String? showOnlyClass,
 }) {
   return Logger(
     filter: LogAllTheTimeFilter(),

@@ -1,8 +1,8 @@
 class Account {
-  String url;
-  String username;
-  String password;
-  bool _isSeedboxAccount;
+  String? url;
+  String? username;
+  String? password;
+  bool? _isSeedboxAccount;
 
   Account({this.url, this.username, this.password});
 
@@ -21,8 +21,8 @@ class Account {
     return data;
   }
 
-  bool get isSeedboxAccount {
-    _isSeedboxAccount = username.isNotEmpty && password.isNotEmpty;
+  bool? get isSeedboxAccount {
+    _isSeedboxAccount = username!.isNotEmpty && password!.isNotEmpty;
     return _isSeedboxAccount;
   }
 }

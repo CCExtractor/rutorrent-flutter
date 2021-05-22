@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class NoTorrentWidget extends StatelessWidget {
-  const NoTorrentWidget({Key key}) : super(key: key);
+  const NoTorrentWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

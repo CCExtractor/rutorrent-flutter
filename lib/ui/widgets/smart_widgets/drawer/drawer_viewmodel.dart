@@ -4,7 +4,7 @@ import 'package:stacked/stacked.dart';
 
 class DrawerViewModel extends BaseViewModel {
 
-  DiskSpaceService _diskSpaceService = locator<DiskSpaceService>();
+  DiskSpaceService? _diskSpaceService = locator<DiskSpaceService>();
 
-  get diskSpace => _diskSpaceService.diskSpace;
+  get diskSpace => _diskSpaceService!.diskSpace;
 }

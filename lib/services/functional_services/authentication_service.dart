@@ -10,43 +10,43 @@ Logger log = getLogger("AuthenticationService");
 
 ///[Service] used for all functionalities related to authentication and its state
 class AuthenticationService {
-  SharedPreferencesService _sharedPreferencesService =
+  SharedPreferencesService? _sharedPreferencesService =
       locator<SharedPreferencesService>();
 
   ///List of user accounts
-  List<Account> _accounts;
+  List<Account?>? _accounts;
 
   ///Temp account used to verify login credentials
-  Account _tempAccount;
+  Account? _tempAccount;
 
   //Getters
-  List<Account> get accounts => _accounts;
-  Account get tempAccount => _tempAccount;
+  List<Account?>? get accounts => _accounts;
+  Account? get tempAccount => _tempAccount;
 
   //Setters
   set accounts(accounts) => _accounts = accounts;
   set tempAccount(account) => _tempAccount = account;
 
-  Future<List<Account>> getAccount() async {
+  Future<List<Account?>?> getAccount() async {
     if (_accounts == null) {
-      _accounts = await _sharedPreferencesService.fetchSavedLogin();
+      _accounts = await _sharedPreferencesService!.fetchSavedLogin();
       return _accounts;
     } else {
       return _accounts;
     }
   }
 
-  Future<List<Account>> saveLogin(Account account) async {
-    List<Account> accounts = await _sharedPreferencesService.fetchSavedLogin();
+  Future<List<Account?>> saveLogin(Account? account) async {
+    List<Account?> accounts = await _sharedPreferencesService!.fetchSavedLogin();
     bool alreadyLoggedIn = false;
 
     for (int index = 0; index < accounts.length; index++) {
-      if (_matchApi(accounts[index], account)) {
+      if (_matchApi(accounts[index]!, account!)) {
         Fluttertoast.showToast(msg: 'Account already saved');
         alreadyLoggedIn = true;
 
         // Swap to put active one on first position which will be active by default
-        Account account = accounts[0];
+        Account? account = accounts[0];
         accounts[0] = accounts[index];
         accounts[index] = account;
       }
@@ -54,7 +54,7 @@ class AuthenticationService {
 
     if (!alreadyLoggedIn) {
       accounts.insert(0, account);
-      _sharedPreferencesService.saveLogin(accounts);
+      _sharedPreferencesService!.saveLogin(accounts);
     }
 
     return accounts;

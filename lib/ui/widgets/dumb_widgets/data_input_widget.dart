@@ -6,15 +6,15 @@ import 'package:rutorrentflutter/app/app.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 
 class DataInput extends StatelessWidget {
-  final String hintText;
-  final Color hintTextColor;
-  final TextEditingController textEditingController;
-  final FocusNode focus;
-  final IconButton suffixIconButton;
+  final String? hintText;
+  final Color? hintTextColor;
+  final TextEditingController? textEditingController;
+  final FocusNode? focus;
+  final IconButton? suffixIconButton;
   final onFieldSubmittedCallback;
   final textInputAction;
-  final Color borderColor;
-  final String Function(String) validator;
+  final Color? borderColor;
+  final String? Function(String?)? validator;
 
   DataInput({
     this.hintText,
@@ -59,7 +59,7 @@ class DataInput extends StatelessWidget {
         ),
         decoration: BoxDecoration(
             border: Border.all(
-                color: borderColor != null ? borderColor : Colors.grey,
+                color: borderColor != null ? borderColor! : Colors.grey,
                 width: 1.5),
             borderRadius: BorderRadius.all(Radius.circular(5))),
       ),

@@ -11,23 +11,23 @@ import 'package:stacked_services/stacked_services.dart';
 Logger log = getLogger("SplashViewModel");
 
 class SplashViewModel extends FutureViewModel {
-  SharedPreferencesService _sharedPreferencesService =
+  SharedPreferencesService? _sharedPreferencesService =
       locator<SharedPreferencesService>();
-  NavigationService _navigationService = locator<NavigationService>();
-  AuthenticationService _authenticationService =
+  NavigationService? _navigationService = locator<NavigationService>();
+  AuthenticationService? _authenticationService =
       locator<AuthenticationService>();
 
   handleStartUpLogic() async {
-    _authenticationService.accounts =
-        await _sharedPreferencesService.fetchSavedLogin();
-    List<Account> accounts = _authenticationService.accounts;
+    _authenticationService!.accounts =
+        await _sharedPreferencesService!.fetchSavedLogin();
+    List<Account?>? accounts = _authenticationService!.accounts;
 
-    if (accounts != null && accounts.isNotEmpty) {
-      log.v("handleStartUpLogic - User is logged in");
-      // _navigationService.replaceWith(Routes.homeView);
+    if (accounts?.isNotEmpty ?? false) {
+      log.v("User is logged in");
+      _navigationService?.replaceWith(Routes.homeView);
     } else {
-      log.v("handleStartUpLogic - User not logged in");
-      // _navigationService.replaceWith(Routes.loginView);
+      log.v("User not logged in");
+      _navigationService?.replaceWith(Routes.loginView);
     }
   }
 

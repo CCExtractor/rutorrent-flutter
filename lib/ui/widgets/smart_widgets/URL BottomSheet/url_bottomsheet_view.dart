@@ -7,8 +7,8 @@ import 'package:rutorrentflutter/ui/widgets/smart_widgets/URL%20BottomSheet/url_
 import 'package:stacked/stacked.dart';
 
 class URLBottomSheetView extends StatelessWidget {
-  final HomeViewBottomSheetMode mode;
-  final String dialogHint;
+  final HomeViewBottomSheetMode? mode;
+  final String? dialogHint;
   URLBottomSheetView({this.dialogHint,this.mode});
 
  @override
@@ -52,7 +52,7 @@ class URLBottomSheetView extends StatelessWidget {
                     ? Theme.of(context).primaryColor
                     : Colors.white,
                 onPressed: () async {
-                  ClipboardData data = await Clipboard.getData('text/plain');
+                  ClipboardData? data = await Clipboard.getData('text/plain');
                   if (data != null)
                     model.urlTextController.text = data.text.toString();
                   if (model.urlFocus.hasFocus) model.urlFocus.unfocus();

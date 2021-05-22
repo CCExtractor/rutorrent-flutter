@@ -17,10 +17,10 @@ Logger log = getLogger("ApiService");
 ///[Service] for communicating with the [RuTorrent] APIs
 class ApiService {
 
-  AuthenticationService _authenticationService =
+  AuthenticationService? _authenticationService =
       locator<AuthenticationService>();
-  DiskSpaceService _diskSpaceService = locator<DiskSpaceService>();
-  TorrentService _torrentService = locator<TorrentService>();
+  DiskSpaceService? _diskSpaceService = locator<DiskSpaceService>();
+  TorrentService? _torrentService = locator<TorrentService>();
 
   IOClient get ioClient {
     /// Url with some issue with their SSL certificates can be trusted explicitly with this
@@ -33,11 +33,11 @@ class ApiService {
     return _ioClient;
   }
 
-  Account get account => _authenticationService.accounts.isEmpty
-      ? _authenticationService.tempAccount
-      : _authenticationService.accounts[0];
+  Account? get account => _authenticationService!.accounts!.isEmpty
+      ? _authenticationService!.tempAccount
+      : _authenticationService!.accounts![0];
 
-  get url => account.url;
+  get url => account!.url;
 
   /// Plugin urls
   get httpRpcPluginUrl => url + '/plugins/httprpc/action.php';
@@ -56,12 +56,13 @@ class ApiService {
   Map<String, String> getAuthHeader() {
     return {
       'authorization': 'Basic ' +
-          base64Encode(utf8.encode('${account.username}:${account.password}')),
+          base64Encode(utf8.encode('${account!.username}:${account!.password}')),
     };
   }
 
-  testConnectionAndLogin(Account account) async {
-    Response response;
+  testConnectionAndLogin(Account? account) async {
+    log.v("Testing connection with server");
+    Response? response;
     var total;
     try {
       response = await ioClient.get(Uri.parse(diskSpacePluginUrl),
@@ -76,24 +77,25 @@ class ApiService {
       Fluttertoast.showToast(msg: 'Something\'s Wrong');
       return;
     }
-    await _authenticationService.saveLogin(account);
+    await _authenticationService!.saveLogin(account);
   }
 
   updateDiskSpace() async {
+    log.v("updating disk space");
     var diskSpaceResponse = await ioClient.get(Uri.parse(diskSpacePluginUrl),
         headers: getAuthHeader());
     var diskSpace = jsonDecode(diskSpaceResponse.body);
-    _diskSpaceService.updateDiskSpace(diskSpace['total'], diskSpace['free']);
+    _diskSpaceService!.updateDiskSpace(diskSpace['total'], diskSpace['free']);
   }
 
   /// Gets list of torrents for all saved accounts [Apis]
   Stream<List<Torrent>> getAllAccountsTorrentList() async* {
     log.v("Fetching torrent lists from all accounts");
-    List<Account> accounts = _authenticationService.accounts;
+    List<Account?>? accounts = _authenticationService!.accounts;
     while (true) {
       List<Torrent> allTorrentList = [];
       try {
-        for (Account account in accounts) {
+        for (Account? account in accounts!) {
           try {
             var response = await ioClient.post(
                 Uri.parse(httpRpcPluginUrl),
@@ -102,7 +104,7 @@ class ApiService {
                   'mode': 'list',
                 });
             allTorrentList
-                .addAll(_parseTorrentData(response.body,account));
+                .addAll(_parseTorrentData(response.body,account)!);
           } catch (e) {
             print(e);
           }
@@ -116,9 +118,9 @@ class ApiService {
   }
 
   /// Gets list of torrents for a particular account
-  Stream<List<Torrent>> getTorrentList() async* {
+  Stream<List<Torrent?>?> getTorrentList() async* {
     log.v("Fetching torrent lists from all accounts");
-    while (true) {
+    // while (true) {
       try {
         var response = await ioClient.post(Uri.parse(httpRpcPluginUrl),
             headers: getAuthHeader(),
@@ -126,9 +128,9 @@ class ApiService {
               'mode': 'list',
             });
 
-        yield _parseTorrentData(response.body, account);
+        yield _parseTorrentData(response.body, account)!;
       } catch (e) {
-        print('Exception caught in Api Request ' + e.toString());
+        print('Exception caught in getTorrentList Api Request ' + e.toString());
         /*returning null since the stream has to be active all the times to return something
           this usually occurs when there is no torrent task available or when the connect
           to rTorrent is not established
@@ -137,10 +139,10 @@ class ApiService {
       }
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
-    }
+    // }
   }
 
-  startTorrent(String hashValue) async {
+  startTorrent(String? hashValue) async {
     log.v("Starting Torrent");
     await ioClient.post(Uri.parse(httpRpcPluginUrl),
         headers: getAuthHeader(),
@@ -150,7 +152,7 @@ class ApiService {
         });
   }
 
-  pauseTorrent(String hashValue) async {
+  pauseTorrent(String? hashValue) async {
     log.v("Pausing Torrent");
     await ioClient.post(Uri.parse(httpRpcPluginUrl),
         headers: getAuthHeader(),
@@ -184,6 +186,7 @@ class ApiService {
   }
 
   removeTorrentWithData(String hashValue) async {
+    log.v("removing torrent");
     var client = ioClient;
     var request = Request(
       'POST',
@@ -206,6 +209,7 @@ class ApiService {
   }
 
   toggleTorrentStatus(Torrent torrent) async {
+    log.v("Toggling torrent status");
     const Map<Status, String> statusMap = {
       Status.downloading: 'start',
       Status.paused: 'pause',
@@ -226,7 +230,7 @@ class ApiService {
         });
   }
 
-  List<Torrent> _parseTorrentData(String responseBody, Account currAccount) {
+  List<Torrent>? _parseTorrentData(String responseBody, Account? currAccount) {
     log.v("List of Torrents being parsed");
     // takes response and parse and return the torrents data
     List<Torrent> torrentsList = [];
@@ -235,7 +239,10 @@ class ApiService {
     List<String> labels = [];
     var torrentsPath = jsonDecode(responseBody)['t'];
 
-    if(torrentsPath.length == 0) return null;
+    if(torrentsPath.length == 0){
+      log.i("No torrent to parse");
+      return [];
+    }
 
     for (var hashKey in torrentsPath.keys) {
       var torrentObject = torrentsPath[hashKey];
@@ -249,13 +256,14 @@ class ApiService {
       }
 
       if (!labels.contains(torrent.label) && torrent.label != "") {
-        labels.add(torrent.label);
+        labels.add(torrent.label!);
       }
 
       torrentsList.add(torrent);
     }
-    _torrentService.activeDownloads = activeTorrents;
-    _torrentService.listOfLabels = labels;
+    _torrentService!.setActiveDownloads(activeTorrents);
+    _torrentService!.setListOfLabels(labels);
+    _torrentService!.setTorrentList(torrentsList);
     return torrentsList;
   }
 }

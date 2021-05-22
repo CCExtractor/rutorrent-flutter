@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:rutorrentflutter/app/app.logger.dart';
+import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/ui/views/TorrentList/Torrent_list_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/loading_shimmer.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/no_torrent_widget.dart';
@@ -7,13 +9,14 @@ import 'package:rutorrentflutter/ui/widgets/smart_widgets/Search%20Bar/search_ba
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/Torrent%20Tile/torrent_tile_view.dart';
 import 'package:stacked/stacked.dart';
 
-class TorrentListView extends StatelessWidget {
- const TorrentListView({Key key}) : super(key: key);
+final log = getLogger("TorrentListView");
 
- @override
- Widget build(BuildContext context) {
-   return ViewModelBuilder<TorrentListViewModel>.reactive(
-     builder: (context, model, child) => Column(
+class TorrentListView extends StatelessWidget {
+  const TorrentListView({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<TorrentListViewModel>.reactive(
+      builder: (context, model, child) => Column(
         children: <Widget>[
           SearchBarWidget(),
           Expanded(
@@ -22,74 +25,70 @@ class TorrentListView extends StatelessWidget {
                   ? model.getAllAccountsTorrentList()
                   : model.getTorrentList(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
-
-                bool waitingState = snapshot.connectionState == ConnectionState.waiting;
+                bool waitingState =
+                    snapshot.connectionState == ConnectionState.waiting;
 
                 // Condition for No Data
-                if(snapshot.data == null){
+                if (snapshot.data == null) {
                   return NoTorrentWidget();
                 }
 
                 // Condition for loading state
-                if(waitingState && !snapshot.hasData){
+                if (waitingState && !snapshot.hasData) {
                   model.checkForActiveDownloads();
 
-                    // showing loading list of Shimmer
-                    return LoadingShimmer().loadingEffect(context, length: 5);
+                  // showing loading list of Shimmer
+                  return LoadingShimmer().loadingEffect(context, length: 5);
                 }
 
                 // Updating torrent list
-                if(snapshot.hasData){
+                if (snapshot.hasData) {
                   model.updateTorrentsList();
                 }
 
                 //Displaying List
                 return ValueListenableBuilder(
-                  valueListenable: model.torrentList,
-                  builder: (context, torrents , child) {
-                    return ListView.builder(
-                      itemCount: torrents.length,
-                      itemBuilder: (context, index) {
-                        return (snapshot.hasData &&
-                                torrents.length != 0)
-
-                            ? TorrentTileView(torrents[index])
-
-                            : Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset(
-                                      Theme.of(context).brightness ==
-                                              Brightness.light
-                                          ? 'assets/logo/empty.svg'
-                                          : 'assets/logo/empty_dark.svg',
-                                      width: 120,
-                                      height: 120,
-                                    ),
-                                    SizedBox(
-                                      height: 15,
-                                    ),
-                                    Text(
-                                      'No Torrents to Show',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                ),
-                              );
-                      },
-                    );
-                  }
-                );
-                
+                    valueListenable: model.displayTorrentList,
+                    builder: (context, List<Torrent> torrents, child) {
+                      log.i("Value Notifier result " + torrents.toString());
+                      return ListView.builder(
+                        itemCount: torrents.length,
+                        itemBuilder: (context, index) {
+                          return (snapshot.hasData && torrents.length != 0)
+                              ? TorrentTileView(torrents[index])
+                              : Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(
+                                        Theme.of(context).brightness ==
+                                                Brightness.light
+                                            ? 'assets/logo/empty.svg'
+                                            : 'assets/logo/empty_dark.svg',
+                                        width: 120,
+                                        height: 120,
+                                      ),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                      Text(
+                                        'No Torrents to Show',
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                        },
+                      );
+                    });
               },
             ),
           ),
         ],
       ),
-     viewModelBuilder: () => TorrentListViewModel(),
-   );
- }
+      viewModelBuilder: () => TorrentListViewModel(),
+    );
+  }
 }

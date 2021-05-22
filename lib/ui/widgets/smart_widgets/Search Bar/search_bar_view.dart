@@ -3,10 +3,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/Search%20Bar/search_bar_viewmodel.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/sort_bottom_sheet/sort_bottom_sheet_view.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class SearchBarWidget extends StatelessWidget {
- const SearchBarWidget({Key key}) : super(key: key);
+ const SearchBarWidget({Key? key}) : super(key: key);
 
  @override
  Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class SearchBarWidget extends StatelessWidget {
                             contentPadding:
                                 EdgeInsets.symmetric(horizontal: 16),
                             hintText: 'Search torrent by name'),
+                        onChanged: (value) => model.onTyping(value),
                       ),
                     ),
                     model.isSearching
@@ -76,8 +79,7 @@ class SearchBarWidget extends StatelessWidget {
                     context: context,
                     isScrollControlled: true,
                     builder: (context) {
-                      //TODO sort bottom sheet
-                      // return SortBottomSheet();
+                      return SortBottomSheetView(completer: (s)=>{},request: SheetRequest(),);
                     });
               },
               child: Container(

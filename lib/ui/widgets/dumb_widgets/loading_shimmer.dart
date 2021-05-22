@@ -4,12 +4,12 @@ import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LoadingShimmer extends StatelessWidget {
-  Widget loadingEffect(BuildContext context, {int length}) {
+  Widget loadingEffect(BuildContext context, {int? length}) {
     return Shimmer.fromColors(
       baseColor:
-          !AppStateNotifier.isDarkModeOn ? Colors.grey[300] : kGreyLT,
+          !AppStateNotifier.isDarkModeOn ? Colors.grey[300]! : kGreyLT,
       highlightColor:
-          !AppStateNotifier.isDarkModeOn ? Colors.grey[100] : kGreyDT,
+          !AppStateNotifier.isDarkModeOn ? Colors.grey[100]! : kGreyDT,
       child: ListView.builder(
           itemCount: length ?? 1,
           itemBuilder: (context, index) {

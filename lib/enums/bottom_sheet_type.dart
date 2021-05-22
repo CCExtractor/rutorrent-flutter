@@ -1,0 +1,4 @@
+enum BottomSheetType{
+  floating,
+  sortBottomSheet,
+}

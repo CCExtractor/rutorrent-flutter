@@ -9,18 +9,18 @@ import 'package:stacked/stacked.dart';
 
 class HomeViewModel extends BaseViewModel {
 
-  AuthenticationService _authenticationService = locator<AuthenticationService>();
-  AppStateNotifier _appStateNotifier = locator<AppStateNotifier>();
+  AuthenticationService? _authenticationService = locator<AuthenticationService>();
+  AppStateNotifier? _appStateNotifier = locator<AppStateNotifier>();
 
   int index = 0;
   PageController _pageController = PageController();
 
-  Account get account => _authenticationService.accounts[0];
+  Account? get account => _authenticationService!.accounts![0];
   PageController get pageController => _pageController;
 
 
   toggleTheme(bool boolVal) async {
-    _appStateNotifier.updateTheme(boolVal);
+    _appStateNotifier!.updateTheme(boolVal);
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setBool('isdarkmodeon', boolVal);
     notifyListeners();

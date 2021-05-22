@@ -6,6 +6,7 @@ import 'package:rutorrentflutter/AppTheme/AppTheme.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/bottom_sheet_setup.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 
@@ -15,7 +16,9 @@ void main() async {
   final appDir = await getApplicationDocumentsDirectory();
   Hive.init(appDir.path);
   await Hive.openBox('DB');
+  //Setting custom Bottom Sheet
   setupLocator();
+  setUpBottomSheetUi();
   locator<UserPreferencesService>().init();
   runApp(MyApp());
 }

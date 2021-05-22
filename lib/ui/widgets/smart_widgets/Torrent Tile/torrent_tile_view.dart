@@ -8,7 +8,7 @@ import 'package:rutorrentflutter/ui/widgets/smart_widgets/Torrent%20Tile/torrent
 import 'package:stacked/stacked.dart';
 
 class TorrentTileView extends StatelessWidget {
-  final Torrent torrent;
+  final Torrent? torrent;
   TorrentTileView(this.torrent);
 
   @override
@@ -55,7 +55,7 @@ class TorrentTileView extends StatelessWidget {
                           children: <Widget>[
                             Flexible(
                               child: Text(
-                                torrent.name,
+                                torrent!.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -64,7 +64,7 @@ class TorrentTileView extends StatelessWidget {
                             ),
                             Flexible(
                               child: Text(
-                                '${filesize(torrent.downloadedData)}${torrent.dlSpeed == 0 ? '' : ' | ' + torrent.getEta}',
+                                '${filesize(torrent!.downloadedData)}${torrent!.dlSpeed == 0 ? '' : ' | ' + torrent!.getEta}',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 10,
@@ -81,7 +81,7 @@ class TorrentTileView extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
-                                        '↓ ${filesize(torrent.dlSpeed.toString()) + '/s'} | ↑ ${filesize(torrent.ulSpeed.toString()) + '/s'}',
+                                        '↓ ${filesize(torrent!.dlSpeed.toString()) + '/s'} | ↑ ${filesize(torrent!.ulSpeed.toString()) + '/s'}',
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 10,
@@ -89,7 +89,7 @@ class TorrentTileView extends StatelessWidget {
                                       ),
                                       model.showAllAccounts
                                           ? Text(
-                                              '${Uri.parse(torrent.account.url).host}',
+                                              '${Uri.parse(torrent!.account.url!).host}',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 10,
@@ -106,7 +106,7 @@ class TorrentTileView extends StatelessWidget {
                                         !AppStateNotifier.isDarkModeOn
                                             ? kGreyLT
                                             : kGreyDT,
-                                    value: torrent.percentageDownload / 100,
+                                    value: torrent!.percentageDownload / 100,
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                         model.statusColor),
                                   ),
@@ -125,15 +125,15 @@ class TorrentTileView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       Text(
-                        torrent.percentageDownload.toString() + '%',
+                        torrent!.percentageDownload.toString() + '%',
                         style: TextStyle(
                             color: model.statusColor, fontWeight: FontWeight.w700),
                       ),
                       IconButton(
                         color: model.statusColor,
                         iconSize: 40,
-                        icon: Icon(model.getTorrentIconData()),
-                        onPressed: () => model.toggleTorrentStatus(torrent),
+                        icon: Icon(_getTorrentIconData()),
+                        onPressed: () => model.toggleTorrentStatus(torrent!),
                       ),
                     ],
                   ),
@@ -145,5 +145,13 @@ class TorrentTileView extends StatelessWidget {
       ),
       viewModelBuilder: () => TorrentTileViewModel(),
     );
+  }
+
+  IconData _getTorrentIconData() {
+    return torrent!.isOpen == 0
+        ? Icons.play_circle_filled
+        : torrent!.getState == 0
+            ? (Icons.play_circle_filled)
+            : Icons.pause_circle_filled;
   }
 }

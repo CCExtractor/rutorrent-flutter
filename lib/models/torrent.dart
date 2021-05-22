@@ -12,30 +12,30 @@ enum Status {
 class Torrent {
   Torrent(this.hash);
 
-  Account account;
-  String hash; // hash value is a unique value for a torrent
-  String name;
-  Status status;
-  int size; // size in bytes
-  String savePath; // directory where torrent is saved
-  String eta;
-  String label; // label of torrent
-  int percentageDownload;
-  int totalChunks;
-  int completedChunks;
-  int sizeOfChunk; // in bytes
-  int torrentAdded; // timestamp of torrent added
-  int torrentCreated; // timestamp of torrent created
-  int seedsActual;
-  int peersActual;
-  int dlSpeed; // bytes per second
-  int ulSpeed; // bytes per second
-  int isOpen;
-  int getState;
-  String msg;
-  int downloadedData; // in bytes
-  int uploadedData; // in bytes
-  int ratio;
+  late Account account;
+  String? hash; // hash value is a unique value for a torrent
+  late String name;
+  Status? status;
+  late int size; // size in bytes
+  String? savePath; // directory where torrent is saved
+  String? eta;
+  String? label; // label of torrent
+  late int percentageDownload;
+  late int totalChunks;
+  late int completedChunks;
+  late int sizeOfChunk; // in bytes
+  late int torrentAdded; // timestamp of torrent added
+  int? torrentCreated; // timestamp of torrent created
+  int? seedsActual;
+  int? peersActual;
+  int? dlSpeed; // bytes per second
+  int? ulSpeed; // bytes per second
+  int? isOpen;
+  int? getState;
+  String? msg;
+  int? downloadedData; // in bytes
+  int? uploadedData; // in bytes
+  late int ratio;
 
   Status get getTorrentStatus {
     Status status;
@@ -44,7 +44,7 @@ class Torrent {
         : getState == 0
             ? (Status.paused)
             : Status.downloading;
-    if (msg.length > 0 && msg != 'Tracker: [Tried all trackers.]')
+    if (msg!.length > 0 && msg != 'Tracker: [Tried all trackers.]')
       status = Status.errors;
     if (getPercentageDownload == 100) status = Status.completed;
     return status;
@@ -59,7 +59,7 @@ class Torrent {
     if (dlSpeed == 0) //check download speed to prevent "Infinity or div by 0"
       return '';
     Duration duration = Duration(
-        seconds: ((totalChunks - completedChunks) * sizeOfChunk / dlSpeed)
+        seconds: ((totalChunks - completedChunks) * sizeOfChunk / dlSpeed!)
             .round()); // in seconds
     int hrs = duration.inHours;
     int min = duration.inMinutes % 60;
@@ -69,7 +69,7 @@ class Torrent {
     return eta;
   }
 
-  Torrent.fromObject({List torrentObject, Account account, String hashKey}){
+  Torrent.fromObject({required List torrentObject, Account? account, String? hashKey}){
     hash = hashKey;
     name = torrentObject[4];
     size = int.parse(torrentObject[5]);

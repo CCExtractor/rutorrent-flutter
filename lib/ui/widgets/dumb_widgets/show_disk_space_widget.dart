@@ -6,7 +6,7 @@ import 'package:rutorrentflutter/models/disk_space.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 
 class ShowDiskSpace extends StatelessWidget {
-  DiskSpace diskSpace;
+  DiskSpace? diskSpace;
   ShowDiskSpace(this.diskSpace);
 
   @override
@@ -17,7 +17,7 @@ class ShowDiskSpace extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              'Disk Space (${diskSpace.getPercentage()}%)',
+              'Disk Space (${diskSpace!.getPercentage()}%)',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
@@ -27,7 +27,7 @@ class ShowDiskSpace extends StatelessWidget {
               height: 8,
             ),
             Text(
-                '${filesize(diskSpace.free)} left of ${filesize(diskSpace.total)}',
+                '${filesize(diskSpace!.free)} left of ${filesize(diskSpace!.total)}',
                 style: TextStyle(
                     fontSize: 12,
                     fontFamily: 'SFUIDisplay/sf-ui-display-medium.otf')),
@@ -37,10 +37,10 @@ class ShowDiskSpace extends StatelessWidget {
             Container(
               height: 8,
               child: LinearProgressIndicator(
-                value: diskSpace.getPercentage() / 100,
+                value: diskSpace!.getPercentage() / 100,
                 backgroundColor: Theme.of(context).disabledColor,
                 valueColor:
-                    AlwaysStoppedAnimation<Color>(diskSpace.isLow()
+                    AlwaysStoppedAnimation<Color>(diskSpace!.isLow()
                         ? AppStateNotifier.isDarkModeOn
                             ? kRedErrorLT
                             : kRedErrorDT

@@ -7,7 +7,7 @@ import 'package:rutorrentflutter/ui/widgets/smart_widgets/drawer/drawer_viewmode
 import 'package:stacked/stacked.dart';
 
 class DrawerView extends StatelessWidget {
- PackageInfo packageInfo;
+ PackageInfo? packageInfo;
  DrawerView({this.packageInfo});
 
  @override
@@ -118,7 +118,7 @@ class DrawerView extends StatelessWidget {
                         onTap: () {
                           showAboutDialog(
                             context: context,
-                            applicationVersion: packageInfo.version,
+                            applicationVersion: packageInfo!.version,
                             applicationIcon: Image(
                               height: 75,
                               image: !AppStateNotifier.isDarkModeOn
@@ -137,7 +137,7 @@ class DrawerView extends StatelessWidget {
                                 height: 15,
                               ),
                               Text(
-                                'Release Date : ${RELEASE_DATE ?? ""}',
+                                'Release Date : $RELEASE_DATE',
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w600),
                               ),

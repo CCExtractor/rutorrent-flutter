@@ -7,7 +7,7 @@ class DiskSpaceService{
 
   DiskSpace get diskSpace => _diskSpace;
 
-  updateDiskSpace(int total, int free) {
+  updateDiskSpace(int? total, int? free) {
 
     _diskSpace.update(total, free);
 

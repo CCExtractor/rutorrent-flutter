@@ -4,9 +4,9 @@ import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/models/mode.dart';
 
 class PasswordInput extends StatefulWidget {
-  final TextEditingController textEditingController;
-  final FocusNode passwordFocus;
-  final bool autoFocus;
+  final TextEditingController? textEditingController;
+  final FocusNode? passwordFocus;
+  final bool? autoFocus;
   PasswordInput(
       {this.textEditingController, this.passwordFocus, this.autoFocus});
   @override
@@ -23,7 +23,7 @@ class _PasswordInputState extends State<PasswordInput> {
       child: Container(
         child: TextFormField(
           style: TextStyle(fontWeight: FontWeight.w600),
-          autofocus: widget.autoFocus != null ? widget.autoFocus : false,
+          autofocus: widget.autoFocus != null ? widget.autoFocus! : false,
           obscureText: !passwordVisible,
           focusNode: widget.passwordFocus,
           controller: widget.textEditingController,

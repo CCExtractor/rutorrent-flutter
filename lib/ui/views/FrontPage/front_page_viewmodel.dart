@@ -10,7 +10,7 @@ class FrontPageViewModel extends BaseViewModel {
 
   PageController _pageController = PageController();
   PageController get pageController => _pageController;
-  int homeViewPageIndex = 0 ;
+  int? homeViewPageIndex = 0 ;
   int currentIndex = 0;
 
   List<String> kTorrentTitle = [

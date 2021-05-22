@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class CustomDialog extends StatelessWidget {
-  final String title;
-  final String optionRightText;
-  final Function optionRightOnPressed;
-  final String optionLeftText;
-  final Function optionLeftOnPressed;
+  final String? title;
+  final String? optionRightText;
+  final Function? optionRightOnPressed;
+  final String? optionLeftText;
+  final Function? optionLeftOnPressed;
 
   CustomDialog(
       {this.title,
@@ -18,23 +18,23 @@ class CustomDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        title,
+        title!,
         style: TextStyle(fontSize: 15),
       ),
       actions: <Widget>[
         TextButton(
           child: Text(
-            optionLeftText,
+            optionLeftText!,
             style: TextStyle(color: Theme.of(context).accentColor),
           ),
-          onPressed: optionLeftOnPressed,
+          onPressed: optionLeftOnPressed as void Function()?,
         ),
         TextButton(
           child: Text(
-            optionRightText,
+            optionRightText!,
             style: TextStyle(color: Theme.of(context).accentColor),
           ),
-          onPressed: optionRightOnPressed,
+          onPressed: optionRightOnPressed as void Function()?,
         ),
       ],
     );
