@@ -24,6 +24,10 @@ class UserPreferencesService {
     int sortPreferenceIdx = DB.get("sortPreference",defaultValue: 6);
     TorrentService _torrentService = locator<TorrentService>();
     _torrentService.setSortPreference(Sort.values[sortPreferenceIdx]);
+  }
 
+  setShowAllAccounts(bool showAccounts){
+    showAllAccounts = showAccounts;
+    _sharedPreferencesService!.DB.put("showAllAccounts", showAccounts);
   }
 }

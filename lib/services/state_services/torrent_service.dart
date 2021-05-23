@@ -4,6 +4,7 @@ import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
+import 'package:rutorrentflutter/services/functional_services/api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
@@ -18,6 +19,7 @@ class TorrentService {
       locator<UserPreferencesService>();
   SharedPreferencesService? _sharedPreferencesService =
       locator<SharedPreferencesService>();
+  
 
   ValueNotifier<List<String>> _listOfLabels =
       new ValueNotifier(new List<String>.empty());
@@ -51,6 +53,19 @@ class TorrentService {
           ? _listOfLabels.value = []
           : _listOfLabels.value = labels;
     }
+  }
+
+  changeLabel(String label) {
+    _selectedFilter = Filter.All;
+    _isLabelSelected = true;
+    _selectedLabel = label;
+    _listOfLabels.notifyListeners();
+  }
+
+  changeFilter(Filter filter) {
+    _isLabelSelected = false;
+    _selectedFilter = filter;
+    updateTorrentDisplayList();
   }
 
   setActiveDownloads(List<Torrent> list) => _activeDownloads.value = list;
@@ -162,5 +177,15 @@ class TorrentService {
   List<Torrent> _filterListUsingLabel(
       List<Torrent> torrentsList, String? label) {
     return torrentsList.where((torrent) => torrent.label == label).toList();
+  }
+
+  refreshTorrentList() async {
+    log.v("Torrent refresh function called");
+    ApiService? _apiService =
+      locator<ApiService>();
+    _userPreferencesService!.showAllAccounts
+    ? await _apiService.getAllAccountsTorrentList().listen((event) { }).cancel()
+    : await _apiService.getTorrentList().listen((event) { }).cancel();
+    await updateTorrentDisplayList(searchText: _userPreferencesService?.searchTextController.text);
   }
 }

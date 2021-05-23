@@ -12,7 +12,7 @@ enum Status {
 class Torrent {
   Torrent(this.hash);
 
-  late Account account;
+  Account account = Account(url: "",password: "",username: "");
   String? hash; // hash value is a unique value for a torrent
   late String name;
   Status? status;

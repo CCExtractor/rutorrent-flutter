@@ -25,4 +25,10 @@ class Account {
     _isSeedboxAccount = username!.isNotEmpty && password!.isNotEmpty;
     return _isSeedboxAccount;
   }
+
+  void setUrl(String? url) {}
+
+  void setUsername(String? username) {}
+
+  void setPassword(String? password) {}
 }

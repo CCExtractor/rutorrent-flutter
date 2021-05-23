@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/app/constants.dart';
+import 'package:rutorrentflutter/ui/widgets/dumb_widgets/label_tile_widget.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/show_disk_space_widget.dart';
-import 'package:rutorrentflutter/ui/widgets/smart_widgets/drawer/drawer_viewmodel.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/Drawer/drawer_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 class DrawerView extends StatelessWidget {
@@ -46,69 +47,49 @@ class DrawerView extends StatelessWidget {
                             color:
                                 !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white),
                         title: Text('Accounts'),
-                        // children: _getAccountsList(api, mode, general),
+                        children: model.getAccountsList(context),
                       ),
-                      // ExpansionTile(
-                      //   initiallyExpanded: true,
-                      //   leading: Icon(Icons.sort,
-                      //       color:
-                      //           !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white),
-                      //   title: Text(
-                      //     'Filters',
-                      //   ),
-                      //   children: general.filterTileList,
-                      // ),
-                      // ExpansionTile(
-                      //   initiallyExpanded: true,
-                      //   leading: Icon(Icons.sort,
-                      //       color:
-                      //           !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white),
-                      //   title: Text(
-                      //     'Labels',
-                      //   ),
-                      //   children: (general.listOfLabels as List<String>)
-                      //       .map((e) => LabelTile(label: e))
-                      //       .toList(),
-                      // ),
+                      ExpansionTile(
+                        initiallyExpanded: true,
+                        leading: Icon(Icons.sort,
+                            color:
+                                !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white),
+                        title: Text(
+                          'Filters',
+                        ),
+                        children: model.filterTileList,
+                      ),
+                      ExpansionTile(
+                        initiallyExpanded: true,
+                        leading: Icon(Icons.sort,
+                            color:
+                                !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white),
+                        title: Text(
+                          'Labels',
+                        ),
+                        children: ((model.listOfLabels.value as List<String>)
+                            .map((e) => LabelTile(label: e,model: model,))
+                            .toList()),
+                      ),
                       ListTile(
                         leading: Icon(Icons.history,
                             color:
                                 !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white),
-                        onTap: () {
-                          // Navigator.pop(context);
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => HistoryScreen()));
-                        },
+                        onTap: () => model.navigateToHistoryScreen(),
                         title: Text('History'),
                       ),
                       ListTile(
                         leading: Icon(Icons.folder_open,
                             color:
                                 !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white),
-                        onTap: () {
-                          // Navigator.pop(context);
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       builder: (context) => DiskExplorer(),
-                          //     ));
-                        },
+                        onTap: () => model.navigateToDiskExplorerScreen(),
                         title: Text('Explorer'),
                       ),
                       ListTile(
                         leading: Icon(Icons.settings,
                             color:
                                 !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white),
-                        onTap: () {
-                          // Navigator.pop(context);
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       builder: (context) => SettingsPage(),
-                          //     ));
-                        },
+                        onTap: () => model.navigateToSettingsScreen(),
                         title: Text('Settings'),
                       ),
                       ListTile(
@@ -118,7 +99,7 @@ class DrawerView extends StatelessWidget {
                         onTap: () {
                           showAboutDialog(
                             context: context,
-                            applicationVersion: packageInfo!.version,
+                            applicationVersion: packageInfo?.version ?? "",
                             applicationIcon: Image(
                               height: 75,
                               image: !AppStateNotifier.isDarkModeOn

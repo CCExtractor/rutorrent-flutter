@@ -29,13 +29,13 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
       environment: environment, environmentFilter: environmentFilter);
 
 // Register dependencies
+  locator.registerLazySingleton(() => SharedPreferencesService());
+  locator.registerLazySingleton(() => AuthenticationService());
+  locator.registerLazySingleton(() => ApiService());
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => SnackbarService());
   locator.registerLazySingleton(() => BottomSheetService());
-  locator.registerLazySingleton(() => ApiService());
-  locator.registerLazySingleton(() => AuthenticationService());
-  locator.registerLazySingleton(() => SharedPreferencesService());
   locator.registerLazySingleton(() => DiskSpaceService());
   locator.registerLazySingleton(() => InternetService());
   locator.registerLazySingleton(() => AppStateNotifier());

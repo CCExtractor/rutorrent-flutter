@@ -24,7 +24,7 @@ class TorrentTileViewModel extends BaseViewModel {
   Color statusColor = kGreyDT;
 
   init(Torrent? torrentReceived,context){
-    log.v("rebuild");
+    // log.v("rebuild");
     torrent = torrentReceived;
     statusColor = getStatusColor(torrent!.status, context);
   }

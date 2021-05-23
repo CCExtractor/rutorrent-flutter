@@ -7,6 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/models/account.dart';
+import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
@@ -95,7 +96,7 @@ class ApiService {
   Stream<List<Torrent>> getAllAccountsTorrentList() async* {
     log.v("Fetching torrent lists from all accounts");
     List<Account?>? accounts = _authenticationService!.accounts;
-    while (true) {
+    // while (true) {
       List<Torrent> allTorrentList = [];
       try {
         for (Account? account in accounts!) {
@@ -117,7 +118,7 @@ class ApiService {
       }
       yield allTorrentList;
       await Future.delayed(Duration(seconds: 1), () {});
-    }
+    // }
   }
 
   /// Gets list of torrents for a particular account
@@ -258,6 +259,52 @@ class ApiService {
         });
   }
 
+  /// Gets History of last [lastHours] hours
+  Future<List<HistoryItem>> getHistory({int? lastHours}) async {
+    log.v("Fetching history items from server");
+    String timestamp = '0';
+    if (lastHours != null) {
+      timestamp = ((DateTime.now().millisecondsSinceEpoch -
+                  Duration(hours: lastHours).inMilliseconds) ~/
+              1000)
+          .toString();
+    }
+
+    var response = await ioClient.post(Uri.parse(historyPluginUrl),
+        headers: getAuthHeader(),
+        body: {
+          'cmd': 'get',
+          'mark': timestamp,
+        });
+
+    var items = jsonDecode(response.body)['items'];
+
+    List<HistoryItem> historyItems = [];
+    for (var item in items) {
+      HistoryItem historyItem = HistoryItem(item['name'], item['action'],
+          item['action_time'], item['size'], item['hash']);
+      historyItems.add(historyItem);
+    }
+    return historyItems;
+  }
+
+  removeHistoryItem(String hashValue) async {
+    log.v("Removing history item from server");
+    Fluttertoast.showToast(msg: 'Removing Torrent from History');
+    try {
+      await ioClient.post(Uri.parse(historyPluginUrl),
+          headers: getAuthHeader(),
+          body: {
+            'cmd': 'delete',
+            'mode': 'hstdelete',
+            'hash': hashValue,
+          });
+    } on Exception catch (e) {
+      print('err: ${e.toString()}');
+    }
+  }
+
+
 
                                    /*      RSS Functions      */
 
@@ -390,7 +437,7 @@ class ApiService {
       if (!labels.contains(torrent.label) && torrent.label != "") {
         labels.add(torrent.label!);
       }
-
+      // log.e(torrent.account);
       torrentsList.add(torrent);
     }
     _torrentService!.setActiveDownloads(activeTorrents);

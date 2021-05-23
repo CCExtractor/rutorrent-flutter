@@ -41,7 +41,7 @@ class AuthenticationService {
     bool alreadyLoggedIn = false;
 
     for (int index = 0; index < accounts.length; index++) {
-      if (_matchApi(accounts[index]!, account!)) {
+      if (matchAccount(accounts[index]!, account!)) {
         Fluttertoast.showToast(msg: 'Account already saved');
         alreadyLoggedIn = true;
 
@@ -60,7 +60,7 @@ class AuthenticationService {
     return accounts;
   }
 
-  bool _matchApi(Account api1, Account api2) {
+  bool matchAccount(Account api1, Account api2) {
     if (api1.url == api2.url &&
         api1.username == api2.username &&
         api1.password == api2.password)
