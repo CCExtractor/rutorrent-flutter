@@ -3,8 +3,11 @@ import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
+import 'package:rutorrentflutter/enums/bottom_sheet_type.dart';
 import 'package:rutorrentflutter/models/account.dart';
+import 'package:rutorrentflutter/services/functional_services/api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 Logger log = getLogger("AuthenticationService");
 
@@ -12,6 +15,7 @@ Logger log = getLogger("AuthenticationService");
 class AuthenticationService {
   SharedPreferencesService? _sharedPreferencesService =
       locator<SharedPreferencesService>();
+  
 
   ///List of user accounts
   List<Account?>? _accounts;
@@ -37,11 +41,12 @@ class AuthenticationService {
   }
 
   Future<List<Account?>> saveLogin(Account? account) async {
+    if (account == null) return [];
     List<Account?> accounts = await _sharedPreferencesService!.fetchSavedLogin();
     bool alreadyLoggedIn = false;
 
     for (int index = 0; index < accounts.length; index++) {
-      if (matchAccount(accounts[index]!, account!)) {
+      if (matchAccount(accounts[index]!, account)) {
         Fluttertoast.showToast(msg: 'Account already saved');
         alreadyLoggedIn = true;
 
@@ -67,5 +72,45 @@ class AuthenticationService {
       return true;
     else
       return false;
+  }
+
+  Future<bool> changePassword(int index, String password) async {
+    ApiService _apiService = locator<ApiService>();
+    
+    if(password == accounts?[index]?.password){
+      Fluttertoast.showToast(msg: 'New password cannot be same as old password');
+      return false;
+    }
+
+    bool isValidPassword = await _apiService.changePassword(index, password);
+
+    if(!isValidPassword) {
+      Fluttertoast.showToast(msg: 'Invalid Password');
+      return false;
+    }
+
+    accounts?[index]?.setPassword(password);
+    saveLogin(accounts?[index]);
+    Fluttertoast.showToast(msg: 'Password Changed Successfully');
+
+    return true;
+    
+  }
+
+  void deleteAccount(int index) { 
+    if(accounts?.length==1){
+      logoutAllAccounts();
+    }else{
+      removeAccount(index);
+    }
+  }
+
+  void logoutAllAccounts() async {
+
+  }
+
+  void removeAccount(int index) {
+    _accounts?.removeAt(index);
+    saveLogin(_accounts?[0]);
   }
 }

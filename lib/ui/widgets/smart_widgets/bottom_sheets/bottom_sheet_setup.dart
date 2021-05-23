@@ -1,6 +1,7 @@
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/bottom_sheet_type.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/text_field_view.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/confirm_bottom_sheet/confirm_bottom_sheet_view.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/sort_bottom_sheet/sort_bottom_sheet_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -14,6 +15,8 @@ void setUpBottomSheetUi() {
         _FloatingBoxBottomSheet(request: sheetRequest, completer: completer),
     BottomSheetType.sortBottomSheet: (context, sheetRequest, completer) =>
         SortBottomSheetView(request: sheetRequest, completer: completer),
+    BottomSheetType.confirmBottomSheet: (context, sheetRequest, completer) =>
+        ConfirmBottomSheetView(request: sheetRequest, completer: completer),
     
   };
 

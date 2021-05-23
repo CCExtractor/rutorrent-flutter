@@ -41,6 +41,8 @@ class ApiService {
       ? _authenticationService!.tempAccount
       : _authenticationService!.accounts![0];
 
+  get accounts => _authenticationService?.accounts;
+
   get url => account!.url;
 
   /// Plugin urls
@@ -302,6 +304,30 @@ class ApiService {
     } on Exception catch (e) {
       print('err: ${e.toString()}');
     }
+  }
+
+  Future<bool> changePassword(int index, String newPassword) async {
+    log.v("Changing password");
+    Account account = accounts[index];
+    var response;
+    int total = -100;
+    try {
+      response = await ioClient
+          .get(Uri.parse(diskSpacePluginUrl), headers: {
+        'authorization': 'Basic ' +
+            base64Encode(
+                utf8.encode('${account.username}:$newPassword')),
+      });
+      total = jsonDecode(response.body)['total'];
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Invalid Password');
+    }
+    
+    if (response != null && total > -100 && response.statusCode == 200) {
+      return true;
+    }
+
+    return false;
   }
 
 

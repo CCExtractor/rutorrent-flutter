@@ -31,7 +31,7 @@ class SettingsView extends StatelessWidget {
                         return GestureDetector(
                           onTap: () {
                             // CHANGE PASSWORD
-                            model.changePassword(context, index);
+                            model.showPasswordChangeDialog(context,index);
                           },
                           child: ListTile(
                             dense: true,
@@ -57,7 +57,7 @@ class SettingsView extends StatelessWidget {
                                 ),
                                 onPressed: () {
                                   // DELETE ACCOUNT
-                                  model.deleteAccount(context,index);
+                                  model.showDeleteAccountDialog(context,index);
                                 }),
                           ),
                         );
@@ -69,11 +69,9 @@ class SettingsView extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 trailing: Checkbox(
                   activeColor: Theme.of(context).primaryColor,
-                  onChanged: (val) {
-                    //TODO implement logic
+                  onChanged: (val) => model.toggleAllNotificationsEnabled(),
                     // settings.toggleAllNotificationsEnabled();
-                    // Preferences.saveSettings(settings);
-                  },
+                    // Preferences.saveSettings(settings);,
                   value: model.allNotificationEnabled,
                 ),
               ),
@@ -95,13 +93,12 @@ class SettingsView extends StatelessWidget {
                 trailing: Checkbox(
                   activeColor: Theme.of(context).primaryColor,
                   value: model.diskSpaceNotification,
-                  onChanged: (val) {
-                    //TODO implement logic
+                  onChanged: (val) => model.toggleDiskSpaceNotification(), 
                     // if (settings.allNotificationEnabled) {
                     //   settings.toggleDiskSpaceNotification();
                     //   Preferences.saveSettings(settings);
                     // }
-                  },
+                  
                 ),
               ),
               ListTile(
@@ -122,13 +119,11 @@ class SettingsView extends StatelessWidget {
                 trailing: Checkbox(
                   activeColor: Theme.of(context).primaryColor,
                   value: model.addTorrentNotification,
-                  onChanged: (val) {
-                    //TODO implement logic
+                  onChanged: (val) => model.toggleAddTorrentNotification(),
                     // if (settings.allNotificationEnabled) {
                     //   settings.toggleAddTorrentNotification();
                     //   Preferences.saveSettings(settings);
                     // }
-                  },
                 ),
               ),
               ListTile(
@@ -149,13 +144,11 @@ class SettingsView extends StatelessWidget {
                 trailing: Checkbox(
                   activeColor: Theme.of(context).primaryColor,
                   value: model.downloadCompleteNotification,
-                  onChanged: (val) {
-                    //TODO implement logic
+                  onChanged: (val) => model.toggleDownloadCompleteNotification(),
                     // if (settings.allNotificationEnabled) {
                     //   settings.toggleDownloadCompleteNotification();
                     //   Preferences.saveSettings(settings);
                     // }
-                  },
                 ),
               ),
               Divider(),
@@ -174,7 +167,7 @@ class SettingsView extends StatelessWidget {
                   'Logout from all saved accounts',
                   style: TextStyle(fontSize: 12),
                 ),
-                onTap: () => model.logoutAllAccounts(context),
+                onTap: () => model.logoutAllAccounts(),
               )
             ],
           ),
