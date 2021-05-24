@@ -24,7 +24,7 @@ class DrawerViewModel extends BaseViewModel {
 
   List<Account?> get accounts => (_authenticationService.accounts)!;
 
-  List<Widget> get filterTileList => _getFilterTileList();
+  List<Widget> filterTileList(model) {return _getFilterTileList(model);}
 
   get listOfLabels => _torrentService?.listOfLabels;
 
@@ -113,12 +113,12 @@ class DrawerViewModel extends BaseViewModel {
     _torrentService?.refreshTorrentList();
   }
 
-  List<Widget> _getFilterTileList() {
-    return filterTileIcons.asMap().map((index, icon) => MapEntry(index, _getFilterTile(index,icon))).values.toList() as List<Widget>;
+  List<Widget> _getFilterTileList(model) {
+    return filterTileIcons.asMap().map((index, icon) => MapEntry(index, _getFilterTile(index,icon,model))).values.toList() as List<Widget>;
   }
 
-  FilterTile _getFilterTile(int index, icon) {
-    return FilterTile(model: this, filter: Filter.values[index] , icon: icon);
+  FilterTile _getFilterTile(int index, icon,model) {
+    return FilterTile(model: model, filter: Filter.values[index] , icon: icon);
   }
 
   navigateToHistoryScreen() {
@@ -126,7 +126,10 @@ class DrawerViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.historyView);
   }
 
-  navigateToDiskExplorerScreen() {}
+  navigateToDiskExplorerScreen() {
+    _navigationService.popRepeated(1);
+    _navigationService.navigateTo(Routes.diskExplorerView);
+  }
 
   navigateToSettingsScreen() {
     _navigationService.popRepeated(1);

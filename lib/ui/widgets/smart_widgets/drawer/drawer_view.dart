@@ -57,7 +57,7 @@ class DrawerView extends StatelessWidget {
                         title: Text(
                           'Filters',
                         ),
-                        children: model.filterTileList,
+                        children: model.filterTileList(model),
                       ),
                       ExpansionTile(
                         initiallyExpanded: true,

@@ -7,6 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/models/account.dart';
+import 'package:rutorrentflutter/models/disk_file.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/models/rss_filter.dart';
@@ -329,6 +330,37 @@ class ApiService {
 
     return false;
   }
+
+  /// Gets Disk Files
+  Future<List<DiskFile>> getDiskFiles(String path) async {
+    log.v("Fetching Disk Files");
+    try {
+      var response = await ioClient.post(Uri.parse(explorerPluginUrl),
+          headers: getAuthHeader(),
+          body: {
+            'cmd': 'get',
+            'src': path,
+          });
+
+      var files = jsonDecode(response.body)['files'];
+
+      List<DiskFile> diskFiles = [];
+
+      for (var file in files) {
+        DiskFile diskFile = DiskFile();
+
+        diskFile.isDirectory = file['is_dir'];
+        diskFile.name = file['data']['name'];
+        diskFiles.add(diskFile);
+      }
+
+      return diskFiles;
+    } on Exception catch (e) {
+      print(e.toString());
+      return [];
+    }
+  }
+
 
 
 
