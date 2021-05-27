@@ -53,11 +53,15 @@ class SearchBar extends StatelessWidget {
                             mode.isLightMode ? Colors.black : Colors.white,
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
-                            isDense: true,
-                            border: InputBorder.none,
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 16),
-                            hintText: 'Search torrent by name'),
+                          isDense: true,
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                          hintText: 'Search torrent by name',
+                          hintStyle: TextStyle(
+                              color: Provider.of<Mode>(context).isLightMode
+                                  ? Colors.black54
+                                  : Colors.white54),
+                        ),
                       ),
                     ),
                     general.isSearching
@@ -82,6 +86,7 @@ class SearchBar extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 showModalBottomSheet(
+                    backgroundColor: Theme.of(context).backgroundColor,
                     context: context,
                     isScrollControlled: true,
                     builder: (context) {

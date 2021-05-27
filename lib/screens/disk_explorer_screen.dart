@@ -63,6 +63,7 @@ class _DiskExplorerState extends State<DiskExplorer> {
     return WillPopScope(
       onWillPop: _onBackPress,
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back),

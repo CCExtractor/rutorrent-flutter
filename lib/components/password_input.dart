@@ -34,6 +34,11 @@ class _PasswordInputState extends State<PasswordInput> {
             border: InputBorder.none,
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             hintText: 'Password',
+            hintStyle: TextStyle(
+              color: Provider.of<Mode>(context).isLightMode
+                  ? Colors.black54
+                  : Colors.white54,
+            ),
             suffixIcon: IconButton(
               color: Colors.grey,
               icon: Icon(

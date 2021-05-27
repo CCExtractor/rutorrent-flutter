@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/api/api_conf.dart';
 import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/rss_label_tile.dart';
+import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/rss.dart';
+import 'package:rutorrentflutter/utilities/constants.dart';
 
 class RSSFeeds extends StatefulWidget {
   @override
@@ -27,8 +29,14 @@ class _RSSFeedsState extends State<RSSFeeds> {
   Widget build(BuildContext context) {
     return Consumer<Api>(builder: (context, api, child) {
       return Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         body: RefreshIndicator(
-          color: Theme.of(context).primaryColorLight,
+          backgroundColor: Provider.of<Mode>(context).isLightMode
+              ? Colors.white
+              : kBackgroundDT,
+          color: Provider.of<Mode>(context).isLightMode
+              ? kGreyDT
+              : Colors.white,
           onRefresh: _refreshState,
           child: FutureBuilder(
             future: ApiRequests.loadRSS(Provider.of<Api>(context)),

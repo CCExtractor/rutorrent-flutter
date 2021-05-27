@@ -6,6 +6,7 @@ import 'package:rutorrentflutter/api/api_requests.dart';
 import 'package:rutorrentflutter/components/search_bar.dart';
 import 'package:rutorrentflutter/components/torrent_tile.dart';
 import 'package:rutorrentflutter/models/general_features.dart';
+import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import '../components/loading_shimmer.dart';
 
@@ -92,8 +93,7 @@ class TorrentsListPage extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SvgPicture.asset(
-                                    Theme.of(context).brightness ==
-                                            Brightness.light
+                                    Provider.of<Mode>(context).isLightMode
                                         ? 'assets/logo/empty.svg'
                                         : 'assets/logo/empty_dark.svg',
                                     width: 120,
@@ -105,6 +105,10 @@ class TorrentsListPage extends StatelessWidget {
                                   Text(
                                     'No Torrents to Show',
                                     style: TextStyle(
+                                        color: Provider.of<Mode>(context)
+                                                .isLightMode
+                                            ? Colors.black
+                                            : Colors.white,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600),
                                   ),
@@ -131,7 +135,11 @@ class TorrentsListPage extends StatelessWidget {
                       Text(
                         'No Torrents to Show',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
+                            color: Provider.of<Mode>(context).isLightMode
+                                ? Colors.black
+                                : Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),

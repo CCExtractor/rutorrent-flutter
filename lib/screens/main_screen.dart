@@ -152,6 +152,7 @@ class _MainScreenState extends State<MainScreen>
     return Consumer3<Mode, Api, GeneralFeatures>(
         builder: (context, mode, api, general, child) {
       return Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text(
@@ -186,151 +187,166 @@ class _MainScreenState extends State<MainScreen>
           ],
         ),
         drawer: Drawer(
-          child: Column(
-            children: [
-              DrawerHeader(
-                margin: EdgeInsets.all(0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Image(
-                      image: mode.isLightMode
-                          ? AssetImage('assets/logo/light_mode.png')
-                          : AssetImage('assets/logo/dark_mode.png'),
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      'Application version: ${packageInfo.version}',
-                      style:
-                          TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: SingleChildScrollView(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).backgroundColor,
+            ),
+            child: Column(
+              children: [
+                DrawerHeader(
+                  margin: EdgeInsets.all(0),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      ShowDiskSpace(),
-                      ExpansionTile(
-                        leading: Icon(Icons.supervisor_account,
-                            color:
-                                mode.isLightMode ? Colors.black : Colors.white),
-                        title: Text('Accounts'),
-                        children: _getAccountsList(api, mode, general),
+                      Image(
+                        image: mode.isLightMode
+                            ? AssetImage('assets/logo/light_mode.png')
+                            : AssetImage('assets/logo/dark_mode.png'),
                       ),
-                      ExpansionTile(
-                        initiallyExpanded: true,
-                        leading: Icon(Icons.sort,
-                            color:
-                                mode.isLightMode ? Colors.black : Colors.white),
-                        title: Text(
-                          'Filters',
-                        ),
-                        children: general.filterTileList,
-                      ),
-                      ExpansionTile(
-                        initiallyExpanded: true,
-                        leading: Icon(Icons.sort,
-                            color:
-                                mode.isLightMode ? Colors.black : Colors.white),
-                        title: Text(
-                          'Labels',
-                        ),
-                        children: (general.listOfLabels as List<String>)
-                            .map((e) => LabelTile(label: e))
-                            .toList(),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.history,
-                            color:
-                                mode.isLightMode ? Colors.black : Colors.white),
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HistoryScreen()));
-                        },
-                        title: Text('History'),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.folder_open,
-                            color:
-                                mode.isLightMode ? Colors.black : Colors.white),
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => DiskExplorer(),
-                              ));
-                        },
-                        title: Text('Explorer'),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.settings,
-                            color:
-                                mode.isLightMode ? Colors.black : Colors.white),
-                        onTap: () {
-                          Navigator.pop(context);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SettingsPage(),
-                              ));
-                        },
-                        title: Text('Settings'),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.info_outline,
-                            color:
-                                mode.isLightMode ? Colors.black : Colors.white),
-                        onTap: () {
-                          showAboutDialog(
-                            context: context,
-                            applicationVersion: packageInfo.version,
-                            applicationIcon: Image(
-                              height: 75,
-                              image: mode.isLightMode
-                                  ? AssetImage(
-                                      'assets/logo/light_mode_icon.png')
-                                  : AssetImage(
-                                      'assets/logo/dark_mode_icon.png'),
-                            ),
-                            children: [
-                              Text(
-                                'Build Number : $BUILD_NUMBER',
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w600),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Text(
-                                'Release Date : $RELEASE_DATE',
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w600),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Text(
-                                'Package Name : ${packageInfo.packageName}',
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          );
-                        },
-                        title: Text('About'),
+                      SizedBox(height: 20),
+                      Text(
+                        'Application version: ${packageInfo.version}',
+                        style: TextStyle(
+                            fontSize: 12, fontStyle: FontStyle.italic),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        ShowDiskSpace(),
+                        ExpansionTile(
+                          leading: Icon(Icons.supervisor_account,
+                              color: mode.isLightMode
+                                  ? Colors.black
+                                  : Colors.white),
+                          title: Text('Accounts'),
+                          children: _getAccountsList(api, mode, general),
+                        ),
+                        ExpansionTile(
+                          initiallyExpanded: true,
+                          leading: Icon(Icons.sort,
+                              color: mode.isLightMode
+                                  ? Colors.black
+                                  : Colors.white),
+                          title: Text(
+                            'Filters',
+                          ),
+                          children: general.filterTileList,
+                        ),
+                        ExpansionTile(
+                          initiallyExpanded: true,
+                          leading: Icon(Icons.sort,
+                              color: mode.isLightMode
+                                  ? Colors.black
+                                  : Colors.white),
+                          title: Text(
+                            'Labels',
+                          ),
+                          children: (general.listOfLabels as List<String>)
+                              .map((e) => LabelTile(label: e))
+                              .toList(),
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.history,
+                              color: mode.isLightMode
+                                  ? Colors.black
+                                  : Colors.white),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HistoryScreen()));
+                          },
+                          title: Text('History'),
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.folder_open,
+                              color: mode.isLightMode
+                                  ? Colors.black
+                                  : Colors.white),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DiskExplorer(),
+                                ));
+                          },
+                          title: Text('Explorer'),
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.settings,
+                              color: mode.isLightMode
+                                  ? Colors.black
+                                  : Colors.white),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SettingsPage(),
+                                ));
+                          },
+                          title: Text('Settings'),
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.info_outline,
+                              color: mode.isLightMode
+                                  ? Colors.black
+                                  : Colors.white),
+                          onTap: () {
+                            showAboutDialog(
+                              context: context,
+                              applicationVersion: packageInfo.version,
+                              applicationIcon: Image(
+                                height: 75,
+                                image: mode.isLightMode
+                                    ? AssetImage(
+                                        'assets/logo/light_mode_icon.png')
+                                    : AssetImage(
+                                        'assets/logo/dark_mode_icon.png'),
+                              ),
+                              children: [
+                                Text(
+                                  'Build Number : $BUILD_NUMBER',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                  'Release Date : $RELEASE_DATE',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Text(
+                                  'Package Name : ${packageInfo.packageName}',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            );
+                          },
+                          title: Text('About'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         body: PageView(
@@ -346,11 +362,12 @@ class _MainScreenState extends State<MainScreen>
         ),
         bottomNavigationBar: BottomNavigationBar(
           backgroundColor:
-              Provider.of<Mode>(context).isDarkMode ? kGreyDT : null,
+              Provider.of<Mode>(context).isDarkMode ? kGreyDT : Colors.white,
           selectedItemColor: Theme.of(context).primaryColor,
           currentIndex: _currentIndex,
           selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
           unselectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+          unselectedItemColor: Colors.grey,
           type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
@@ -374,6 +391,7 @@ class _MainScreenState extends State<MainScreen>
           onPressed: () {
             if (_currentIndex == 0) {
               showModalBottomSheet(
+                  backgroundColor: Theme.of(context).backgroundColor,
                   isScrollControlled: true,
                   context: context,
                   builder: (BuildContext bc) {
@@ -386,6 +404,7 @@ class _MainScreenState extends State<MainScreen>
                   });
             } else {
               showModalBottomSheet(
+                  backgroundColor: Theme.of(context).backgroundColor,
                   isScrollControlled: true,
                   context: context,
                   builder: (BuildContext bc) {
