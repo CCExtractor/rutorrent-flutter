@@ -48,7 +48,12 @@ class DataInput extends StatelessWidget {
             border: InputBorder.none,
             contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             hintText: hintText,
-            hintStyle: TextStyle(color: hintTextColor ?? borderColor),
+            hintStyle: TextStyle(
+                color: hintTextColor == null
+                    ? Provider.of<Mode>(context).isLightMode
+                        ? Colors.black54
+                        : Colors.white54
+                    : hintTextColor),
             suffixIcon: suffixIconButton,
             errorStyle: TextStyle(
               fontSize: 16,

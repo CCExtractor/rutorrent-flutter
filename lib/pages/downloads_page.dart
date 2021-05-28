@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/components/file_tile.dart';
+import 'package:rutorrentflutter/models/mode.dart';
 
 class DownloadsPage extends StatefulWidget {
   @override
@@ -52,6 +54,7 @@ class _DownloadsPageState extends State<DownloadsPage> {
     return WillPopScope(
       onWillPop: _onBackPress,
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Container(
             child: Column(
           children: <Widget>[
@@ -95,7 +98,7 @@ class _DownloadsPageState extends State<DownloadsPage> {
                 : Expanded(
                     child: Center(
                       child: SvgPicture.asset(
-                        Theme.of(context).brightness == Brightness.light
+                        Provider.of<Mode>(context).isLightMode
                             ? 'assets/logo/empty.svg'
                             : 'assets/logo/empty_dark.svg',
                         width: 120,

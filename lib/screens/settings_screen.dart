@@ -209,6 +209,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Consumer2<Settings, GeneralFeatures>(
         builder: (context, settings, general, child) {
       return Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         appBar: AppBar(
           title: Text(
             'Settings',

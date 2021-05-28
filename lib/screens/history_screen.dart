@@ -96,6 +96,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         title: Text(
           'History',
@@ -103,6 +104,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
         actions: <Widget>[
           PopupMenuButton<String>(
+            color: Theme.of(context).backgroundColor,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Icon(Icons.filter_list),
