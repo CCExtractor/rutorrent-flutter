@@ -34,9 +34,8 @@ class _RSSFeedsState extends State<RSSFeeds> {
           backgroundColor: Provider.of<Mode>(context).isLightMode
               ? Colors.white
               : kBackgroundDT,
-          color: Provider.of<Mode>(context).isLightMode
-              ? kGreyDT
-              : Colors.white,
+          color:
+              Provider.of<Mode>(context).isLightMode ? kGreyDT : Colors.white,
           onRefresh: _refreshState,
           child: FutureBuilder(
             future: ApiRequests.loadRSS(Provider.of<Api>(context)),
