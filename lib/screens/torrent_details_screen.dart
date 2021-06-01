@@ -207,6 +207,7 @@ class _TorrentDetailSheetState extends State<TorrentDetailSheet> {
       Navigator.of(context).pop();
     }
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
         child: Container(
           child: Column(

@@ -127,6 +127,7 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
           passwordFocus.unfocus();
         },
         child: Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
           appBar: AppBar(
             elevation: 0,
           ),
