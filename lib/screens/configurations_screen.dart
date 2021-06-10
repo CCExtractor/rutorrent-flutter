@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -90,18 +89,21 @@ class _ConfigurationsScreenState extends State<ConfigurationsScreen> {
     }
 
     var response;
-    int total;
     try {
-      response = await api.ioClient
-          .get(Uri.parse(api.diskSpacePluginUrl), headers: api.getAuthHeader());
-      total = jsonDecode(response.body)['total'];
+      response = await api.ioClient.post(
+        Uri.parse(api.httpRpcPluginUrl),
+        headers: api.getAuthHeader(),
+        body: {
+          'mode': 'list',
+        },
+      );
     } catch (e) {
       Fluttertoast.showToast(msg: 'Invalid');
     } finally {
       setState(() {
         isValidating = false;
       });
-      if (response != null && total != null) {
+      if (response != null) {
         response.statusCode == 200
             ? // SUCCESS
             saveLogin(api)
