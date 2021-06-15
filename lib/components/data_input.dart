@@ -10,6 +10,7 @@ class DataInput extends StatelessWidget {
   final FocusNode focus;
   final IconButton suffixIconButton;
   final onFieldSubmittedCallback;
+  final onChangedCallback;
   final textInputAction;
   final Color borderColor;
   final String Function(String) validator;
@@ -19,6 +20,7 @@ class DataInput extends StatelessWidget {
     this.hintTextColor,
     this.textEditingController,
     this.onFieldSubmittedCallback,
+    this.onChangedCallback,
     this.focus,
     this.textInputAction,
     this.suffixIconButton,
@@ -36,6 +38,7 @@ class DataInput extends StatelessWidget {
           textInputAction: textInputAction,
           focusNode: focus,
           onFieldSubmitted: onFieldSubmittedCallback,
+          onChanged: onChangedCallback,
           controller: textEditingController,
           cursorColor: borderColor != null
               ? borderColor
