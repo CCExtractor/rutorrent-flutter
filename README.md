@@ -9,7 +9,7 @@
 ## Completion
 <img src="https://progress-bar.dev/50" alt="drawing" width="200"/>
 
-## **A ruTorrent-based client build in Flutter**
+## **A ruTorrent-based client built with Flutter**
 
 The project is a flutter application for ruTorrent web interface. The app communicates with ruTorrent's backend via REST APIs to display the information about the torrents and the functionality to control its basic features. It also supports some plugin functionalities as provided in the ruTorrent web.
 
