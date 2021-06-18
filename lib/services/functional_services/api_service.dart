@@ -12,6 +12,7 @@ import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
+import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
@@ -359,6 +360,37 @@ class ApiService {
       print(e.toString());
       return [];
     }
+  }
+
+  /// Gets list of files for a particular torrent
+  Future<List<TorrentFile>> getFiles(String hashValue) async {
+    log.v("Fetching filles for torrent with hash $hashValue");
+    List<TorrentFile> filesList = [];
+
+    var flsResponse = await ioClient.post(Uri.parse(httpRpcPluginUrl),
+        headers: getAuthHeader(), body: {'mode': 'fls', 'hash': hashValue});
+
+    var files = jsonDecode(flsResponse.body);
+    for (var file in files) {
+      TorrentFile torrentFile = TorrentFile(file[0], file[1], file[2], file[3]);
+      filesList.add(torrentFile);
+    }
+    return filesList;
+  }
+
+  /// Gets list of trackers for a particular torrent
+  Future<List<String>> getTrackers(String hashValue) async {
+    log.v("Fetching trackers for torrent with hash $hashValue");
+    List<String> trackersList = [];
+
+    var trKResponse = await ioClient.post(Uri.parse(httpRpcPluginUrl),
+        headers: getAuthHeader(), body: {'mode': 'trk', 'hash': hashValue});
+
+    var trackers = jsonDecode(trKResponse.body);
+    for (var tracker in trackers) {
+      trackersList.add(tracker[0]);
+    }
+    return trackersList;
   }
 
 

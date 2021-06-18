@@ -5,18 +5,21 @@ import 'package:flutter/src/widgets/icon_data.dart';
 import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
+import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/services/functional_services/api_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 final log = getLogger("TorrentTileViewModel");
 class TorrentTileViewModel extends BaseViewModel {  
   
   ApiService? _apiService = locator<ApiService>();
   UserPreferencesService? _userPreferencesService = locator<UserPreferencesService>();
   TorrentService? _torrentService = locator<TorrentService>();
+  NavigationService _navigationService = locator<NavigationService>();
 
   Torrent? torrent = Torrent("dummy");
 
@@ -67,5 +70,9 @@ class TorrentTileViewModel extends BaseViewModel {
       default:
         break;
     }
+  }
+
+  navigateToTorrentDetail(Torrent torrent) {
+    _navigationService.navigateTo(Routes.torrentDetailView,arguments: TorrentDetailViewArguments(torrent: torrent));
   }
 }

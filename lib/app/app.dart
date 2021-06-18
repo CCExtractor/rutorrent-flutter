@@ -11,6 +11,7 @@ import 'package:rutorrentflutter/services/state_services/user_preferences_servic
 import 'package:rutorrentflutter/ui/views/Disk%20Explorer/disk_explorer_view.dart';
 import 'package:rutorrentflutter/ui/views/History/history_view.dart';
 import 'package:rutorrentflutter/ui/views/Settings/settings_view.dart';
+import 'package:rutorrentflutter/ui/views/TorrentDetail/torrent_detail_view.dart';
 import 'package:rutorrentflutter/ui/views/Video%20Stream/video_stream_view.dart';
 import 'package:rutorrentflutter/utils/file_picker_service.dart';
 import 'package:stacked/stacked_annotations.dart';
@@ -29,6 +30,7 @@ import '../ui/views/splash/splash_view.dart';
     MaterialRoute(page: SettingsView),
     MaterialRoute(page: DiskExplorerView), 
     MaterialRoute(page: VideoStreamView), 
+    MaterialRoute(page: TorrentDetailView), 
   ],
   dependencies: [
     LazySingleton(classType:SharedPreferencesService),

@@ -8,7 +8,7 @@ import 'package:rutorrentflutter/ui/widgets/smart_widgets/Torrent%20Tile/torrent
 import 'package:stacked/stacked.dart';
 
 class TorrentTileView extends StatelessWidget {
-  final Torrent? torrent;
+  final Torrent torrent;
   TorrentTileView(this.torrent);
 
   @override
@@ -27,11 +27,7 @@ class TorrentTileView extends StatelessWidget {
         },
         behavior: HitTestBehavior.opaque,
         onTap: () {
-          //TODO torrent detail sheet
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => TorrentDetailSheet(torrent)));
+          model.navigateToTorrentDetail(torrent);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),

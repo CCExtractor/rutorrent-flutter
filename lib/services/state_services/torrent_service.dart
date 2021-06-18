@@ -42,8 +42,8 @@ class TorrentService {
 
   ValueNotifier<List<String?>> get listOfLabels => _listOfLabels;
   ValueNotifier<List<Torrent>> get activeDownloads => _activeDownloads;
-  get torrentsList => _torrentsList;
-  get displayTorrentList => _torrentsDisplayList;
+  ValueNotifier<List<Torrent>> get torrentsList => _torrentsList;
+  ValueNotifier<List<Torrent>> get displayTorrentList => _torrentsDisplayList;
 
   setListOfLabels(List<String> labels) {
     if (_userPreferencesService!.showAllAccounts) {
