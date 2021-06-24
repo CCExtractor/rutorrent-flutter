@@ -15,7 +15,7 @@ class TorrentDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<TorrentDetailViewModel>.reactive(
-      onModelReady: (model)=>model.init(torrent),
+      onModelReady: (model)=>model.init(torrent,_scrollController),
       builder: (context, model, child) => Scaffold(
         body: SingleChildScrollView(
           child: Container(

@@ -6,7 +6,7 @@ class TorrentLabelDialog extends StatelessWidget {
   final GlobalKey<FormState> formKey;
   final TextEditingController labelController;
   final Torrent torrent;
-  final Function setLabelFunc;
+  final Function(String) setLabelFunc;
   final Function removeLabelFunc;
   TorrentLabelDialog
   ({
@@ -18,7 +18,7 @@ class TorrentLabelDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  AlertDialog build(BuildContext context) {
     return AlertDialog(
       content: Form(
         key: formKey,
@@ -47,15 +47,9 @@ class TorrentLabelDialog extends StatelessWidget {
             text: "Set Label",
             onPressed: () async {
               if (formKey.currentState!.validate()) {
-                // TODO Pass this function
-                setLabelFunc();
-                // await ApiRequests.setTorrentLabel(torrent.api, torrent.hash,
-                //     label: _labelController.text);
-                // Provider.of<GeneralFeatures>(context, listen: false)
-                //     .changeLabel(_labelController
-                //         .text); // Doing this to ensure the filter is set to the label added
-                // Navigator.pop(context);
-                // Navigator.pop(context);
+                setLabelFunc(labelController.text);
+                Navigator.pop(context);
+                Navigator.pop(context);
                 Fluttertoast.showToast(msg: "Label set");
               }
             }),
@@ -64,18 +58,10 @@ class TorrentLabelDialog extends StatelessWidget {
                 context,
                 text: "Remove Label",
                 onPressed: () async {
-                  // TODO Pass this function
-                  // await ApiRequests.removeTorrentLabel(
-                  //   torrent.api,
-                  //   torrent.hash,
-                  // );
                   labelController.text = "";
                   removeLabelFunc();
-                  // Provider.of<GeneralFeatures>(context, listen: false)
-                  //     .changeFilter(Filter
-                  //         .All); // Doing this to ensure that a empty torrent list page is not shown to the user
-                  // Navigator.pop(context);
-                  // Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
                   Fluttertoast.showToast(msg: "Label removed");
                 },
               )

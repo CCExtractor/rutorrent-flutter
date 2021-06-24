@@ -308,6 +308,32 @@ class ApiService {
     }
   }
 
+  setTorrentLabel({required String hashValue, required String label}) async {
+    log.v("Setting torrent label with $label for torrent with hashValue $hashValue");
+    try {
+      await ioClient.post(Uri.parse(httpRpcPluginUrl),
+          headers: getAuthHeader(),
+          body: {
+            'mode': 'setlabel',
+            'hash': hashValue,
+            'v': label.replaceAll(" ", "%20")
+          });
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  removeTorrentLabel({required String hashValue}) async {
+    log.v("Remove torrent label for torrent with hashValue $hashValue");
+    try {
+      await ioClient.post(Uri.parse(httpRpcPluginUrl),
+          headers: getAuthHeader(),
+          body: {'mode': 'setlabel', 'hash': hashValue, 'v': ''});
+    } on Exception catch (e) {
+      print(e.toString() + "error");
+    }
+  }
+
   Future<bool> changePassword(int index, String newPassword) async {
     log.v("Changing password");
     Account account = accounts[index];
