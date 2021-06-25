@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/ui/views/login/login_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/data_input_widget.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/password_input_widget.dart';

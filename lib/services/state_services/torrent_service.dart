@@ -5,16 +5,13 @@ import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/services/functional_services/api_service.dart';
-import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 
 Logger log = getLogger("TorrentService");
 
 ///[Service] for persisting torrent state
-class TorrentService {
-  AuthenticationService? _authenticationService =
-      locator<AuthenticationService>();
+class TorrentService extends ChangeNotifier {
   UserPreferencesService? _userPreferencesService =
       locator<UserPreferencesService>();
   SharedPreferencesService? _sharedPreferencesService =
@@ -29,6 +26,7 @@ class TorrentService {
       new ValueNotifier(new List<Torrent>.empty());
   ValueNotifier<List<Torrent>> _torrentsDisplayList =
       new ValueNotifier(new List<Torrent>.empty());
+  
 
   String? _selectedLabel;
   bool _isLabelSelected = false;
@@ -44,6 +42,7 @@ class TorrentService {
   ValueNotifier<List<Torrent>> get activeDownloads => _activeDownloads;
   ValueNotifier<List<Torrent>> get torrentsList => _torrentsList;
   ValueNotifier<List<Torrent>> get displayTorrentList => _torrentsDisplayList;
+  
 
   setListOfLabels(List<String> labels) {
     if (_userPreferencesService!.showAllAccounts) {
@@ -70,6 +69,7 @@ class TorrentService {
 
   setActiveDownloads(List<Torrent> list) => _activeDownloads.value = list;
   setTorrentList(List<Torrent> list) {_torrentsList.value = list;_torrentsDisplayList.value = list;}
+  
   setSortPreference(Sort newPreference) {
     _sortPreference = newPreference;
     _sharedPreferencesService!.DB.put("sortPreference",newPreference.index);
@@ -96,6 +96,8 @@ class TorrentService {
           .toList();
     }
     _torrentsDisplayList.value = displayList;
+    // ignore: invalid_use_of_visible_for_testing_member
+    // ignore: invalid_use_of_protected_member
     _torrentsDisplayList.notifyListeners();
   }
 
@@ -186,6 +188,7 @@ class TorrentService {
     _userPreferencesService!.showAllAccounts
     ? await _apiService.getAllAccountsTorrentList().listen((event) { }).cancel()
     : await _apiService.getTorrentList().listen((event) { }).cancel();
+    await _apiService.getHistory();
     await updateTorrentDisplayList(searchText: _userPreferencesService?.searchTextController.text);
   }
 }

@@ -21,6 +21,7 @@ class TorrentListView extends StatefulWidget  {
 class _TorrentListViewState extends State<TorrentListView> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ViewModelBuilder<TorrentListViewModel>.reactive(
       builder: (context, model, child) => Column(
         children: <Widget>[

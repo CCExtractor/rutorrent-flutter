@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/icon_data.dart';
 import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';

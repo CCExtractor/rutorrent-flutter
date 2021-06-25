@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
@@ -8,10 +7,10 @@ Logger log = getLogger("NotificationsService");
 
 class NotificationService {
 
-  static const new_torrent_downloaded_notify = "NewTorrentDownload";
+  static const new_torrent_added_notify = "NewTorrentAdded";
   static const download_completed_notify = "DownloadCompleted";
   static const low_disk_space_notify = "LowDiskSpace";
-  static const new_torrent_downloaded_notify_id = 1;
+  static const new_torrent_added_notify_id = 1;
   static const download_completed_notify_id = 2;
   static const low_disk_space_notify_id = 3;
 
@@ -23,7 +22,7 @@ class NotificationService {
         [
             NotificationChannel(
                 enableVibration: true,
-                channelKey: new_torrent_downloaded_notify,
+                channelKey: new_torrent_added_notify,
                 channelName: 'New Torrent Download Notifications',
                 channelDescription: 'Notification channel for New Torrent Downloads',
                 defaultColor: Colors.green,
@@ -56,11 +55,11 @@ class NotificationService {
   }
 
   handleLocalNotification(ReceivedAction receivedNotification) {
-    final payload = receivedNotification.payload;
+    // final payload = receivedNotification.payload;
 
     switch(receivedNotification.id){
 
-      case new_torrent_downloaded_notify_id:
+      case new_torrent_added_notify_id:
         //Add logic to execute when this notification is pressed by user
         break;
 
@@ -105,17 +104,17 @@ class NotificationService {
   dispatchLocalNotification({required String key,required Map customData}) async {
     // If two notifications happen to have same IDs 
     // One will be replaced by the other, so to avoid
-    // this scenario we generate a Random ID for a notification
+    // this scenario we generate a Random ID for any notification
     // that might be sent out several times
-    int id = new Random().nextInt(500);
+    // int id = new Random().nextInt(500);
 
     switch(key){
 
-      case new_torrent_downloaded_notify:
+      case new_torrent_added_notify:
         await AwesomeNotifications().createNotification(
           content: NotificationContent(
-              id: new_torrent_downloaded_notify_id,
-              channelKey: new_torrent_downloaded_notify,
+              id: new_torrent_added_notify_id,
+              channelKey: new_torrent_added_notify,
               title: customData["title"],
               body: customData["body"],
           )

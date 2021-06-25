@@ -4,8 +4,10 @@ import 'package:rutorrentflutter/services/functional_services/api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/functional_services/internet_service.dart';
+import 'package:rutorrentflutter/services/functional_services/notification_service.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
 import 'package:rutorrentflutter/services/state_services/file_service.dart';
+import 'package:rutorrentflutter/services/state_services/history_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 import 'package:rutorrentflutter/ui/views/Disk%20Explorer/disk_explorer_view.dart';
@@ -37,16 +39,18 @@ import '../ui/views/splash/splash_view.dart';
     LazySingleton(classType:AuthenticationService),
     LazySingleton(classType:ApiService),
     LazySingleton(classType:NavigationService),
+    LazySingleton(classType:DiskSpaceService),
+    LazySingleton(classType:NotificationService),
+    LazySingleton(classType:UserPreferencesService),
+    LazySingleton(classType:InternetService),
+    LazySingleton(classType:TorrentService),
+    LazySingleton(classType:HistoryService),
+    LazySingleton(classType:AppStateNotifier),
+    LazySingleton(classType:FileService),
     LazySingleton(classType:DialogService),
     LazySingleton(classType:SnackbarService),
     LazySingleton(classType:BottomSheetService),
-    LazySingleton(classType:DiskSpaceService),
-    LazySingleton(classType:InternetService),
-    LazySingleton(classType:AppStateNotifier),
     LazySingleton(classType:FilePickerService),
-    LazySingleton(classType:UserPreferencesService),
-    LazySingleton(classType:TorrentService),
-    LazySingleton(classType:FileService),
   ],
   logger: StackedLogger(),
 )

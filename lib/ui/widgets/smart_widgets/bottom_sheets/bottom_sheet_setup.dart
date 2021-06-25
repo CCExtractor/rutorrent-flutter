@@ -76,6 +76,7 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
+                  // ignore: deprecated_member_use
                   FlatButton(
                     onPressed: () =>
                         model.response(completer, textFieldController1.text),

@@ -7,7 +7,6 @@ import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/services/functional_services/api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/internet_service.dart';
-import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 Logger log = getLogger("LoginViewModel");
@@ -15,7 +14,6 @@ Logger log = getLogger("LoginViewModel");
 class LoginViewModel extends BaseViewModel {
   NavigationService? _navigationService = locator<NavigationService>();
   AuthenticationService? _authenticationService = locator<AuthenticationService>();
-  SharedPreferencesService? _sharedPreferencesService = locator<SharedPreferencesService>();
   InternetService? _internetService = locator<InternetService>();
   ApiService? _apiService = locator<ApiService>();
 

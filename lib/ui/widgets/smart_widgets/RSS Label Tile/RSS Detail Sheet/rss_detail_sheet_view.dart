@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class RSSDetailSheetView extends StatelessWidget {
-  RSSItem rssItem;
-  String hash;
+  final RSSItem rssItem;
+  final String hash;
   RSSDetailSheetView(this.rssItem,this.hash);
 
  @override

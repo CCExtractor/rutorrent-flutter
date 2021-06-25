@@ -114,6 +114,7 @@ class DrawerViewModel extends BaseViewModel {
   }
 
   List<Widget> _getFilterTileList(model) {
+    // ignore: unnecessary_cast
     return filterTileIcons.asMap().map((index, icon) => MapEntry(index, _getFilterTile(index,icon,model))).values.toList() as List<Widget>;
   }
 

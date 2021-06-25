@@ -1,13 +1,10 @@
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
-import 'package:rutorrentflutter/enums/bottom_sheet_type.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/services/functional_services/api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 Logger log = getLogger("AuthenticationService");
 

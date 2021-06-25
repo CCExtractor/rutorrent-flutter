@@ -15,6 +15,8 @@ import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
+import 'package:rutorrentflutter/services/services_info.dart';
+import 'package:rutorrentflutter/services/state_services/history_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:xml/xml.dart';
 
@@ -27,6 +29,7 @@ class ApiService {
       locator<AuthenticationService>();
   DiskSpaceService? _diskSpaceService = locator<DiskSpaceService>();
   TorrentService? _torrentService = locator<TorrentService>();
+  HistoryService? _historyService = locator<HistoryService>();
 
   IOClient get ioClient {
     /// Url with some issue with their SSL certificates can be trusted explicitly with this
@@ -265,7 +268,7 @@ class ApiService {
 
   /// Gets History of last [lastHours] hours
   Future<List<HistoryItem>> getHistory({int? lastHours}) async {
-    log.v("Fetching history items from server");
+    log.v("Fetching history items from server for ${lastHours ?? 'infinite'} hours ago");
     String timestamp = '0';
     if (lastHours != null) {
       timestamp = ((DateTime.now().millisecondsSinceEpoch -
@@ -289,6 +292,7 @@ class ApiService {
           item['action_time'], item['size'], item['hash']);
       historyItems.add(historyItem);
     }
+    _historyService?.setTorrentHistoryList(historyItems);
     return historyItems;
   }
 
@@ -306,6 +310,30 @@ class ApiService {
     } on Exception catch (e) {
       print('err: ${e.toString()}');
     }
+  }
+
+  updateHistory() async {
+    log.v("Updating history items from server");
+    String timestamp = ((CustomizableDateTime.current.millisecondsSinceEpoch -
+                Duration(seconds: 10).inMilliseconds) ~/
+            1000)
+        .toString();
+    List<HistoryItem> historyItems = [];
+    var response = await ioClient.post(Uri.parse(historyPluginUrl),
+        headers: getAuthHeader(),
+        body: {
+          'cmd': 'get',
+          'mark': timestamp,
+        });
+
+    var items = jsonDecode(response.body)['items'];
+    for (var item in items) {
+      HistoryItem historyItem = HistoryItem(item['name'], item['action'],
+          item['action_time'], item['size'], item['hash']);
+      historyItems.add(historyItem);
+    }
+    _historyService?.setTorrentHistoryList(historyItems);
+    _historyService?.notify();
   }
 
   setTorrentLabel({required String hashValue, required String label}) async {
