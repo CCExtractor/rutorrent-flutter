@@ -12,6 +12,7 @@ class SharedPreferencesService {
   String accountsData = 'data';
   SharedPreferences? _store;
 
+  // ignore: non_constant_identifier_names
   Box DB = Hive.box("DB");
 
   Future<SharedPreferences?> store() async {

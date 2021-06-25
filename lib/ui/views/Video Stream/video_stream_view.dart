@@ -109,9 +109,7 @@ class _VideoStreamViewState extends State<VideoStreamView>  with WidgetsBindingO
                             activeColor: Colors.white,
                             value: sliderValue,
                             min: 0.0,
-                            max: _videoViewController.value.duration == null
-                                ? 1.0
-                                : _videoViewController.value.duration.inSeconds
+                            max:_videoViewController.value.duration.inSeconds
                                     .toDouble(),
                             onChanged: (progress) {
                               if (this.mounted) {

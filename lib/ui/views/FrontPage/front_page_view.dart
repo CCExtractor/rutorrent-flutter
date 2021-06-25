@@ -3,7 +3,7 @@ import 'package:rutorrentflutter/ui/views/FrontPage/front_page_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 class FrontPageView extends StatelessWidget {
- int? index;
+ final int? index;
  FrontPageView({this.index});
 
  @override

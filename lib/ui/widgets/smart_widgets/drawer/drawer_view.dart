@@ -8,7 +8,7 @@ import 'package:rutorrentflutter/ui/widgets/smart_widgets/Drawer/drawer_viewmode
 import 'package:stacked/stacked.dart';
 
 class DrawerView extends StatelessWidget {
- PackageInfo? packageInfo;
+ final PackageInfo? packageInfo;
  DrawerView({this.packageInfo});
 
  @override

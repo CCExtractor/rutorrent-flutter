@@ -12,8 +12,11 @@ import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
+import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
+import 'package:rutorrentflutter/services/services_info.dart';
+import 'package:rutorrentflutter/services/state_services/history_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:xml/xml.dart';
 
@@ -26,6 +29,7 @@ class ApiService {
       locator<AuthenticationService>();
   DiskSpaceService? _diskSpaceService = locator<DiskSpaceService>();
   TorrentService? _torrentService = locator<TorrentService>();
+  HistoryService? _historyService = locator<HistoryService>();
 
   IOClient get ioClient {
     /// Url with some issue with their SSL certificates can be trusted explicitly with this
@@ -264,7 +268,7 @@ class ApiService {
 
   /// Gets History of last [lastHours] hours
   Future<List<HistoryItem>> getHistory({int? lastHours}) async {
-    log.v("Fetching history items from server");
+    log.v("Fetching history items from server for ${lastHours ?? 'infinite'} hours ago");
     String timestamp = '0';
     if (lastHours != null) {
       timestamp = ((DateTime.now().millisecondsSinceEpoch -
@@ -288,6 +292,7 @@ class ApiService {
           item['action_time'], item['size'], item['hash']);
       historyItems.add(historyItem);
     }
+    _historyService?.setTorrentHistoryList(historyItems);
     return historyItems;
   }
 
@@ -304,6 +309,56 @@ class ApiService {
           });
     } on Exception catch (e) {
       print('err: ${e.toString()}');
+    }
+  }
+
+  updateHistory() async {
+    log.v("Updating history items from server");
+    String timestamp = ((CustomizableDateTime.current.millisecondsSinceEpoch -
+                Duration(seconds: 10).inMilliseconds) ~/
+            1000)
+        .toString();
+    List<HistoryItem> historyItems = [];
+    var response = await ioClient.post(Uri.parse(historyPluginUrl),
+        headers: getAuthHeader(),
+        body: {
+          'cmd': 'get',
+          'mark': timestamp,
+        });
+
+    var items = jsonDecode(response.body)['items'];
+    for (var item in items) {
+      HistoryItem historyItem = HistoryItem(item['name'], item['action'],
+          item['action_time'], item['size'], item['hash']);
+      historyItems.add(historyItem);
+    }
+    _historyService?.setTorrentHistoryList(historyItems);
+    _historyService?.notify();
+  }
+
+  setTorrentLabel({required String hashValue, required String label}) async {
+    log.v("Setting torrent label with $label for torrent with hashValue $hashValue");
+    try {
+      await ioClient.post(Uri.parse(httpRpcPluginUrl),
+          headers: getAuthHeader(),
+          body: {
+            'mode': 'setlabel',
+            'hash': hashValue,
+            'v': label.replaceAll(" ", "%20")
+          });
+    } on Exception catch (e) {
+      print(e);
+    }
+  }
+
+  removeTorrentLabel({required String hashValue}) async {
+    log.v("Remove torrent label for torrent with hashValue $hashValue");
+    try {
+      await ioClient.post(Uri.parse(httpRpcPluginUrl),
+          headers: getAuthHeader(),
+          body: {'mode': 'setlabel', 'hash': hashValue, 'v': ''});
+    } on Exception catch (e) {
+      print(e.toString() + "error");
     }
   }
 
@@ -359,6 +414,37 @@ class ApiService {
       print(e.toString());
       return [];
     }
+  }
+
+  /// Gets list of files for a particular torrent
+  Future<List<TorrentFile>> getFiles(String hashValue) async {
+    log.v("Fetching filles for torrent with hash $hashValue");
+    List<TorrentFile> filesList = [];
+
+    var flsResponse = await ioClient.post(Uri.parse(httpRpcPluginUrl),
+        headers: getAuthHeader(), body: {'mode': 'fls', 'hash': hashValue});
+
+    var files = jsonDecode(flsResponse.body);
+    for (var file in files) {
+      TorrentFile torrentFile = TorrentFile(file[0], file[1], file[2], file[3]);
+      filesList.add(torrentFile);
+    }
+    return filesList;
+  }
+
+  /// Gets list of trackers for a particular torrent
+  Future<List<String>> getTrackers(String hashValue) async {
+    log.v("Fetching trackers for torrent with hash $hashValue");
+    List<String> trackersList = [];
+
+    var trKResponse = await ioClient.post(Uri.parse(httpRpcPluginUrl),
+        headers: getAuthHeader(), body: {'mode': 'trk', 'hash': hashValue});
+
+    var trackers = jsonDecode(trKResponse.body);
+    for (var tracker in trackers) {
+      trackersList.add(tracker[0]);
+    }
+    return trackersList;
   }
 
 

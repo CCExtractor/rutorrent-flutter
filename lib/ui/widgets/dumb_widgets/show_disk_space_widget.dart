@@ -1,12 +1,11 @@
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/models/disk_space.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 
 class ShowDiskSpace extends StatelessWidget {
-  DiskSpace? diskSpace;
+  final DiskSpace? diskSpace;
   ShowDiskSpace(this.diskSpace);
 
   @override

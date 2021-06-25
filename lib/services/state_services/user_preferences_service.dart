@@ -31,6 +31,7 @@ class UserPreferencesService {
       _downloadCompleteNotification && _allNotificationEnabled;
 
   init() {
+    // ignore: non_constant_identifier_names
     Box DB = _sharedPreferencesService!.DB; 
     showAllAccounts = DB.get("showAllAccounts") ?? false;
     int sortPreferenceIdx = DB.get("sortPreference",defaultValue: 6);

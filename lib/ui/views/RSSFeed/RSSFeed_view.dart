@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/ui/views/RSSFeed/RSSFeed_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/RSS%20Label%20Tile/rss_label_tile_view.dart';
 import 'package:stacked/stacked.dart';
@@ -14,7 +13,7 @@ class RSSFeedView extends StatelessWidget {
      builder: (context, model, child) => Scaffold(
         body: RefreshIndicator(
           color: Theme.of(context).primaryColorLight,
-          onRefresh: ()async=>{},
+          onRefresh: () async => model.notifyListeners(),
           child:
 
           model.isBusy

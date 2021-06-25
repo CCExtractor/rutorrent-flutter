@@ -5,6 +5,7 @@ import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/AppTheme/AppTheme.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
+import 'package:rutorrentflutter/services/functional_services/notification_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/bottom_sheet_setup.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -19,6 +20,8 @@ void main() async {
   //Setting custom Bottom Sheet
   setupLocator();
   setUpBottomSheetUi();
+  //Setting up Services
+  locator<NotificationService>().init();
   locator<UserPreferencesService>().init();
   runApp(MyApp());
 }
