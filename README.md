@@ -48,6 +48,10 @@ Seedboxes usually have a high speed Internet connection. This allows users to do
 
 You can learn more about seedbox [here](https://en.wikipedia.org/wiki/Seedbox).
 
+## Some Prerequisites
+
+* Flutter SDK Version (dependency compatibility) : >=2.0.4
+* Minimum deployment target in iOS : 10
 
 ## Getting Started
 
