@@ -126,7 +126,7 @@ class TorrentDetailViewModel extends BaseViewModel {
   }
 
   _setLabel(String label) async {
-    await _apiService.setTorrentLabel(hashValue: _torrent.hash!,label: label);
+    await _apiService.setTorrentLabel(hashValue: _torrent.hash!, label: label);
     _torrentService.changeLabel(label);
   }
 }

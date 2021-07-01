@@ -43,7 +43,7 @@ class URLBottomSheetViewModel extends BaseViewModel {
 
   void submit(HomeViewBottomSheetMode? mode) {
     if (mode == HomeViewBottomSheetMode.Torrent) {
-       _apiService.addTorrent(urlTextController.text);
+      _apiService.addTorrent(urlTextController.text);
     } else if (mode == HomeViewBottomSheetMode.RSS) {
       _apiService.addRSS(urlTextController.text);
     }

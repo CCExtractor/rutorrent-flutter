@@ -22,10 +22,10 @@ class DiskSpaceService {
 
     if (shouldShowNotification)
       _notificationService.dispatchLocalNotification(
-        key: NotificationService.low_disk_space_notify, 
-        customData: {
-          "title" : ServicesInfo.low_disk_space_notification_title,
-          "body" : ServicesInfo.low_disk_space_notification_body,
-        });
+          key: NotificationService.low_disk_space_notify,
+          customData: {
+            "title": ServicesInfo.low_disk_space_notification_title,
+            "body": ServicesInfo.low_disk_space_notification_body,
+          });
   }
 }

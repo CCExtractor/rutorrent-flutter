@@ -7,7 +7,6 @@ import 'package:rutorrentflutter/services/state_services/file_service.dart';
 import 'package:stacked/stacked.dart';
 
 class DownloadViewModel extends FutureViewModel {
-
   FileService _fileService = locator<FileService>();
 
   List<FileSystemEntity> filesList = [];
@@ -16,7 +15,7 @@ class DownloadViewModel extends FutureViewModel {
 
   get homeDirectory => _homeDirectory;
   get directory => _directory;
-  
+
   Future<bool> onBackPress() {
     return Future.value(true);
   }

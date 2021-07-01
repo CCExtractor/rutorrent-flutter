@@ -1,4 +1,3 @@
-
 class DiskSpace {
   /// Alert or Notification will be generated when the diskSpace is lower than [criticalPercentage]
   static int criticalPercentage = 10;

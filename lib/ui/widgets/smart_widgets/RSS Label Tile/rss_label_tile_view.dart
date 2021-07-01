@@ -11,10 +11,10 @@ class RSSLabelTileView extends StatelessWidget {
   final RSSLabel? rssLabel;
   RSSLabelTileView({this.rssLabel});
 
- @override
- Widget build(BuildContext context) {
-   return ViewModelBuilder<RSSLabelTileViewModel>.reactive(
-     builder: (context, model, child) => GestureDetector(
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<RSSLabelTileViewModel>.reactive(
+      builder: (context, model, child) => GestureDetector(
         onLongPress: () {
           model.isLongPressed = !model.isLongPressed;
         },
@@ -28,8 +28,7 @@ class RSSLabelTileView extends StatelessWidget {
                   contentPadding: EdgeInsets.fromLTRB(16, 0, 4, 0),
                   leading: FaIcon(FontAwesomeIcons.rssSquare),
                   title: Text(
-                    (rssLabel?.label ?? "") +
-                        ' (${rssLabel?.items.length})',
+                    (rssLabel?.label ?? "") + ' (${rssLabel?.items.length})',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                   trailing: IconButton(
@@ -38,7 +37,6 @@ class RSSLabelTileView extends StatelessWidget {
                       ),
                       onPressed: () async {
                         model.removeRSS(rssLabel!);
-                        
                       }),
                 )
               : ExpansionTile(
@@ -47,8 +45,7 @@ class RSSLabelTileView extends StatelessWidget {
                     color: Colors.orange[500],
                   ),
                   title: Text(
-                    (rssLabel?.label ?? "") +
-                        ' (${rssLabel?.items.length})',
+                    (rssLabel?.label ?? "") + ' (${rssLabel?.items.length})',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                   children: (rssLabel?.items ?? [])
@@ -60,7 +57,8 @@ class RSSLabelTileView extends StatelessWidget {
                                 expand: false,
                                 context: context,
                                 builder: (context) {
-                                  return RSSDetailSheetView(item, (rssLabel?.hash ?? ""));
+                                  return RSSDetailSheetView(
+                                      item, (rssLabel?.hash ?? ""));
                                 });
                           },
                           title: Text(
@@ -80,7 +78,7 @@ class RSSLabelTileView extends StatelessWidget {
                           ),
                           trailing: IconButton(
                             icon: Icon(Icons.add),
-                            onPressed: () =>model.addTorrent(item.url),
+                            onPressed: () => model.addTorrent(item.url),
                           ),
                         ),
                       )
@@ -88,7 +86,7 @@ class RSSLabelTileView extends StatelessWidget {
                 ),
         ),
       ),
-     viewModelBuilder: () => RSSLabelTileViewModel(),
-   );
- }
+      viewModelBuilder: () => RSSLabelTileViewModel(),
+    );
+  }
 }

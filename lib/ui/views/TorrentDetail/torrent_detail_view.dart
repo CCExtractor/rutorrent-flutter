@@ -10,12 +10,11 @@ class TorrentDetailView extends StatelessWidget {
   final Torrent torrent;
   TorrentDetailView({required this.torrent});
   final ScrollController _scrollController = ScrollController();
-  
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<TorrentDetailViewModel>.reactive(
-      onModelReady: (model)=>model.init(torrent,_scrollController),
+      onModelReady: (model) => model.init(torrent, _scrollController),
       builder: (context, model, child) => Scaffold(
         body: SingleChildScrollView(
           child: Container(
@@ -145,7 +144,8 @@ class TorrentDetailView extends StatelessWidget {
                                     child: IconButton(
                                         color: Colors.black,
                                         iconSize: 40,
-                                        icon: Icon(getTorrentIconData(model.torrent)),
+                                        icon: Icon(
+                                            getTorrentIconData(model.torrent)),
                                         onPressed: () =>
                                             model.toggleTorrentCurrentStatus()
                                         // ApiRequests.toggleTorrentStatus(
@@ -530,11 +530,12 @@ class TorrentDetailView extends StatelessWidget {
       viewModelBuilder: () => TorrentDetailViewModel(),
     );
   }
+
   IconData getTorrentIconData(Torrent torrent) {
     return torrent.isOpen == 0
-            ? Icons.play_arrow
-            : torrent.getState == 0
-                ? (Icons.play_arrow)
-                : Icons.pause;
+        ? Icons.play_arrow
+        : torrent.getState == 0
+            ? (Icons.play_arrow)
+            : Icons.pause;
   }
 }

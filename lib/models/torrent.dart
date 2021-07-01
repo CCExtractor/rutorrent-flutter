@@ -1,4 +1,3 @@
-
 import 'package:rutorrentflutter/models/account.dart';
 
 enum Status {
@@ -12,7 +11,7 @@ enum Status {
 class Torrent {
   Torrent(this.hash);
 
-  Account account = Account(url: "",password: "",username: "");
+  Account account = Account(url: "", password: "", username: "");
   String? hash; // hash value is a unique value for a torrent
   late String name;
   Status? status;
@@ -69,7 +68,8 @@ class Torrent {
     return eta;
   }
 
-  Torrent.fromObject({required List torrentObject, Account? account, String? hashKey}){
+  Torrent.fromObject(
+      {required List torrentObject, Account? account, String? hashKey}) {
     hash = hashKey;
     name = torrentObject[4];
     size = int.parse(torrentObject[5]);

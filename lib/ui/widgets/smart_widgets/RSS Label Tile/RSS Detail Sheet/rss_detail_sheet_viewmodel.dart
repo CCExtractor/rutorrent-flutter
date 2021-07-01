@@ -4,7 +4,6 @@ import 'package:rutorrentflutter/services/functional_services/api_service.dart';
 import 'package:stacked/stacked.dart';
 
 class RSSDetailSheetViewModel extends BaseViewModel {
-
   ApiService _apiService = locator<ApiService>();
 
   bool dataAvailable = false;
@@ -18,5 +17,4 @@ class RSSDetailSheetViewModel extends BaseViewModel {
     dataAvailable = await _apiService.getRSSDetails(rssItem, labelHash);
     setBusy(false);
   }
-
 }

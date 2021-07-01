@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeViewModel extends BaseViewModel {
-
-  AuthenticationService? _authenticationService = locator<AuthenticationService>();
+  AuthenticationService? _authenticationService =
+      locator<AuthenticationService>();
   AppStateNotifier? _appStateNotifier = locator<AppStateNotifier>();
 
   int index = 0;
@@ -18,7 +18,6 @@ class HomeViewModel extends BaseViewModel {
   Account? get account => _authenticationService!.accounts![0];
   PageController get pageController => _pageController;
 
-
   toggleTheme(bool boolVal) async {
     _appStateNotifier!.updateTheme(boolVal);
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -26,9 +25,8 @@ class HomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  updateIndex(index){
+  updateIndex(index) {
     this.index = index;
     notifyListeners();
   }
-
 }

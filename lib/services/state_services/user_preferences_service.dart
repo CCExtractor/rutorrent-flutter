@@ -13,7 +13,6 @@ Logger log = getLogger("UserPreferencesService");
 class UserPreferencesService {
   SharedPreferencesService? _sharedPreferencesService =
       locator<SharedPreferencesService>();
-  
 
   TextEditingController searchTextController = TextEditingController();
   bool showAllAccounts = false;
@@ -32,18 +31,19 @@ class UserPreferencesService {
 
   init() {
     // ignore: non_constant_identifier_names
-    Box DB = _sharedPreferencesService!.DB; 
+    Box DB = _sharedPreferencesService!.DB;
     showAllAccounts = DB.get("showAllAccounts") ?? false;
-    int sortPreferenceIdx = DB.get("sortPreference",defaultValue: 6);
+    int sortPreferenceIdx = DB.get("sortPreference", defaultValue: 6);
     TorrentService _torrentService = locator<TorrentService>();
     _torrentService.setSortPreference(Sort.values[sortPreferenceIdx]);
     _allNotificationEnabled = DB.get("allNotificationEnabled") ?? true;
     _diskSpaceNotification = DB.get("diskSpaceNotification") ?? true;
     _addTorrentNotification = DB.get("addTorrentNotification") ?? true;
-    _downloadCompleteNotification = DB.get("downloadCompleteNotification") ?? true;
+    _downloadCompleteNotification =
+        DB.get("downloadCompleteNotification") ?? true;
   }
 
-  setShowAllAccounts(bool showAccounts){
+  setShowAllAccounts(bool showAccounts) {
     showAllAccounts = showAccounts;
     log.v("ShowAllAccounts set to " + showAllAccounts.toString());
     _sharedPreferencesService!.DB.put("showAllAccounts", showAllAccounts);
@@ -51,49 +51,59 @@ class UserPreferencesService {
 
   toggleAllNotificationsEnabled() {
     _allNotificationEnabled = !allNotificationEnabled;
-    log.v("AllNotificationsEnabled set to " + _allNotificationEnabled.toString());
-    _sharedPreferencesService!.DB.put("allNotificationEnabled", _allNotificationEnabled);
+    log.v(
+        "AllNotificationsEnabled set to " + _allNotificationEnabled.toString());
+    _sharedPreferencesService!.DB
+        .put("allNotificationEnabled", _allNotificationEnabled);
   }
 
   toggleDiskSpaceNotification() {
     _diskSpaceNotification = !diskSpaceNotification;
     log.v("DiskSpaceNotification set to " + diskSpaceNotification.toString());
-    _sharedPreferencesService!.DB.put("diskSpaceNotification", _diskSpaceNotification);
+    _sharedPreferencesService!.DB
+        .put("diskSpaceNotification", _diskSpaceNotification);
   }
 
   toggleAddTorrentNotification() {
     _addTorrentNotification = !addTorrentNotification;
     log.v("AddTorrentNotification set to " + addTorrentNotification.toString());
-    _sharedPreferencesService!.DB.put("addTorrentNotification", _addTorrentNotification);
+    _sharedPreferencesService!.DB
+        .put("addTorrentNotification", _addTorrentNotification);
   }
 
   toggleDownloadCompleteNotification() {
     _downloadCompleteNotification = !downloadCompleteNotification;
-    log.v("DownloadCompleteNotification set to " + downloadCompleteNotification.toString());
-    _sharedPreferencesService!.DB.put("downloadCompleteNotification", _downloadCompleteNotification);
+    log.v("DownloadCompleteNotification set to " +
+        downloadCompleteNotification.toString());
+    _sharedPreferencesService!.DB
+        .put("downloadCompleteNotification", _downloadCompleteNotification);
   }
 
   setAllNotification(bool newVal) {
     _allNotificationEnabled = newVal;
     log.v("AllNotification set to " + newVal.toString());
-    _sharedPreferencesService!.DB.put("allNotificationEnabled", _allNotificationEnabled);
+    _sharedPreferencesService!.DB
+        .put("allNotificationEnabled", _allNotificationEnabled);
   }
 
   setDiskSpaceNotification(bool newVal) {
     log.v("DiskSpaceNotification set to " + newVal.toString());
     _diskSpaceNotification = newVal;
-    _sharedPreferencesService!.DB.put("diskSpaceNotification", _diskSpaceNotification);
+    _sharedPreferencesService!.DB
+        .put("diskSpaceNotification", _diskSpaceNotification);
   }
 
   setAddTorrentNotification(bool newVal) {
     log.v("addTorrentNotification set to " + newVal.toString());
     _addTorrentNotification = newVal;
-    _sharedPreferencesService!.DB.put("addTorrentNotification", _addTorrentNotification);
+    _sharedPreferencesService!.DB
+        .put("addTorrentNotification", _addTorrentNotification);
   }
 
   setDownloadCompleteNotification(bool newVal) {
     log.v("DownloadCompleteNotification set to " + newVal.toString());
     _downloadCompleteNotification = newVal;
-    _sharedPreferencesService!.DB.put("downloadCompleteNotification", _downloadCompleteNotification);
+    _sharedPreferencesService!.DB
+        .put("downloadCompleteNotification", _downloadCompleteNotification);
   }
 }

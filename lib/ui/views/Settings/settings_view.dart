@@ -5,12 +5,12 @@ import 'package:rutorrentflutter/ui/views/Settings/settings_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 class SettingsView extends StatelessWidget {
- const SettingsView({Key? key}) : super(key: key);
+  const SettingsView({Key? key}) : super(key: key);
 
- @override
- Widget build(BuildContext context) {
-   return ViewModelBuilder<SettingsViewModel>.reactive(
-     builder: (context, model, child) => Scaffold(
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<SettingsViewModel>.reactive(
+      builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: Text(
             'Settings',
@@ -31,7 +31,7 @@ class SettingsView extends StatelessWidget {
                         return GestureDetector(
                           onTap: () {
                             // CHANGE PASSWORD
-                            model.showPasswordChangeDialog(context,index);
+                            model.showPasswordChangeDialog(context, index);
                           },
                           child: ListTile(
                             dense: true,
@@ -41,7 +41,8 @@ class SettingsView extends StatelessWidget {
                                   ? Colors.black
                                   : Colors.white,
                             ),
-                            title: Text(Uri.parse(model.accounts[index].url).host,
+                            title: Text(
+                                Uri.parse(model.accounts[index].url).host,
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w600)),
                             subtitle: Text(
@@ -57,7 +58,7 @@ class SettingsView extends StatelessWidget {
                                 ),
                                 onPressed: () {
                                   // DELETE ACCOUNT
-                                  model.showDeleteAccountDialog(context,index);
+                                  model.showDeleteAccountDialog(context, index);
                                 }),
                           ),
                         );
@@ -70,8 +71,8 @@ class SettingsView extends StatelessWidget {
                 trailing: Checkbox(
                   activeColor: Theme.of(context).primaryColor,
                   onChanged: (val) => model.toggleAllNotificationsEnabled(),
-                    // settings.toggleAllNotificationsEnabled();
-                    // Preferences.saveSettings(settings);,
+                  // settings.toggleAllNotificationsEnabled();
+                  // Preferences.saveSettings(settings);,
                   value: model.allNotificationEnabled,
                 ),
               ),
@@ -93,12 +94,11 @@ class SettingsView extends StatelessWidget {
                 trailing: Checkbox(
                   activeColor: Theme.of(context).primaryColor,
                   value: model.diskSpaceNotification,
-                  onChanged: (val) => model.toggleDiskSpaceNotification(), 
-                    // if (settings.allNotificationEnabled) {
-                    //   settings.toggleDiskSpaceNotification();
-                    //   Preferences.saveSettings(settings);
-                    // }
-                  
+                  onChanged: (val) => model.toggleDiskSpaceNotification(),
+                  // if (settings.allNotificationEnabled) {
+                  //   settings.toggleDiskSpaceNotification();
+                  //   Preferences.saveSettings(settings);
+                  // }
                 ),
               ),
               ListTile(
@@ -120,10 +120,10 @@ class SettingsView extends StatelessWidget {
                   activeColor: Theme.of(context).primaryColor,
                   value: model.addTorrentNotification,
                   onChanged: (val) => model.toggleAddTorrentNotification(),
-                    // if (settings.allNotificationEnabled) {
-                    //   settings.toggleAddTorrentNotification();
-                    //   Preferences.saveSettings(settings);
-                    // }
+                  // if (settings.allNotificationEnabled) {
+                  //   settings.toggleAddTorrentNotification();
+                  //   Preferences.saveSettings(settings);
+                  // }
                 ),
               ),
               ListTile(
@@ -144,11 +144,12 @@ class SettingsView extends StatelessWidget {
                 trailing: Checkbox(
                   activeColor: Theme.of(context).primaryColor,
                   value: model.downloadCompleteNotification,
-                  onChanged: (val) => model.toggleDownloadCompleteNotification(),
-                    // if (settings.allNotificationEnabled) {
-                    //   settings.toggleDownloadCompleteNotification();
-                    //   Preferences.saveSettings(settings);
-                    // }
+                  onChanged: (val) =>
+                      model.toggleDownloadCompleteNotification(),
+                  // if (settings.allNotificationEnabled) {
+                  //   settings.toggleDownloadCompleteNotification();
+                  //   Preferences.saveSettings(settings);
+                  // }
                 ),
               ),
               Divider(),
@@ -173,7 +174,7 @@ class SettingsView extends StatelessWidget {
           ),
         ),
       ),
-     viewModelBuilder: () => SettingsViewModel(),
-   );
- }
+      viewModelBuilder: () => SettingsViewModel(),
+    );
+  }
 }

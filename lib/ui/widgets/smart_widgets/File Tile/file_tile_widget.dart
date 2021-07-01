@@ -5,14 +5,15 @@ import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'package:rutorrentflutter/services/state_services/file_service.dart';
+
 FileService _fileService = locator<FileService>();
 
 class FileTileWidget extends StatelessWidget {
- final TorrentFile file;
- final Torrent torrent;
- final Function syncFilesCallback;
+  final TorrentFile file;
+  final Torrent torrent;
+  final Function syncFilesCallback;
 
- FileTileWidget(this.file, this.torrent, this.syncFilesCallback);
+  FileTileWidget(this.file, this.torrent, this.syncFilesCallback);
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -38,6 +39,7 @@ class FileTileWidget extends StatelessWidget {
           : null,
     );
   }
+
   IconData getFileIcon(String filename) {
     if (_fileService.isVideo(filename)) return Icons.ondemand_video;
 

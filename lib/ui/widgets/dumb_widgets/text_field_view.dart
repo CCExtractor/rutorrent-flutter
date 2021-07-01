@@ -5,7 +5,10 @@ class TextFieldView extends StatelessWidget {
   final String heading;
   final String labelText;
   final TextEditingController textFieldController;
-  TextFieldView({required this.heading, required this.labelText, required this.textFieldController});
+  TextFieldView(
+      {required this.heading,
+      required this.labelText,
+      required this.textFieldController});
 
   @override
   Widget build(BuildContext context) {

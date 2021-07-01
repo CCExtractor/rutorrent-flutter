@@ -7,12 +7,14 @@ import 'package:rutorrentflutter/services/state_services/user_preferences_servic
 import 'package:stacked/stacked.dart';
 
 class TorrentListViewModel extends BaseViewModel {
-  UserPreferencesService? _userPreferencesService = locator<UserPreferencesService>();
+  UserPreferencesService? _userPreferencesService =
+      locator<UserPreferencesService>();
   ApiService? _apiService = locator<ApiService>();
   TorrentService? _torrentService = locator<TorrentService>();
 
   bool get showAllAccounts => _userPreferencesService!.showAllAccounts;
-  ValueNotifier<List<Torrent>> get displayTorrentList => _torrentService!.displayTorrentList;
+  ValueNotifier<List<Torrent>> get displayTorrentList =>
+      _torrentService!.displayTorrentList;
 
   getAllAccountsTorrentList() => _apiService!.getAllAccountsTorrentList();
   getTorrentList() => _apiService!.getTorrentList();

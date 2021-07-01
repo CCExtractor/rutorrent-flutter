@@ -1,8 +1,6 @@
-
 import 'dart:io';
 
-class InternetService{
-
+class InternetService {
   Future<bool?> isUserConnectedToInternet() async {
     try {
       final result = await InternetAddress.lookup('google.com');

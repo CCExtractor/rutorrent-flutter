@@ -5,8 +5,8 @@ import 'package:rutorrentflutter/services/state_services/user_preferences_servic
 import 'package:stacked/stacked.dart';
 
 class SearchBarWidgetViewModel extends BaseViewModel {
-
-  UserPreferencesService? _userPreferencesService = locator<UserPreferencesService>();
+  UserPreferencesService? _userPreferencesService =
+      locator<UserPreferencesService>();
   TorrentService _torrentService = locator<TorrentService>();
 
   bool isSearching = false;
