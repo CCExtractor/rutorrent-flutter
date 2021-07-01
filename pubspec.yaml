@@ -39,6 +39,8 @@ dependencies:
   wakelock: ^0.5.2
   xml: ^5.1.1
   awesome_notifications: ^0.0.6+9
+  chewie: ^1.2.2
+  video_player: ^2.1.6
 
 dev_dependencies:
   flutter_test:

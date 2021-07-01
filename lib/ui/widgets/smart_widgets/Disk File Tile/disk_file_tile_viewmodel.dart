@@ -12,10 +12,10 @@ import 'package:rutorrentflutter/services/functional_services/api_service.dart';
 import 'package:rutorrentflutter/services/state_services/file_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+
 final log = getLogger("DiskFileTileViewModel");
 
 class DiskFileTileViewModel extends BaseViewModel {
-
   FileService _fileService = locator<FileService>();
   ApiService _apiService = locator<ApiService>();
   NavigationService _navigationService = locator<NavigationService>();
@@ -27,11 +27,9 @@ class DiskFileTileViewModel extends BaseViewModel {
 
   get progress => _progress;
 
-  onTap(DiskFile diskFile,goBackwards,goForwards) {
+  onTap(DiskFile diskFile, goBackwards, goForwards) {
     if (diskFile.isDirectory ?? true) {
-      diskFile.name == '..'
-          ? goBackwards()
-          : goForwards(diskFile.name);
+      diskFile.name == '..' ? goBackwards() : goForwards(diskFile.name);
     } else {
       if (_fileService.isAudio(diskFile.name!) ||
           _fileService.isVideo(diskFile.name!)) {
@@ -82,7 +80,7 @@ class DiskFileTileViewModel extends BaseViewModel {
     });
   }
 
-  init(diskFileArgument,pathArgument) {
+  init(diskFileArgument, pathArgument) {
     diskFile = diskFileArgument;
     path = pathArgument;
   }
@@ -106,7 +104,9 @@ class DiskFileTileViewModel extends BaseViewModel {
 
   _streamFile() {
     String fileUrl = _getDiskFileUrl();
-    _navigationService.navigateTo(Routes.videoStreamView,arguments: VideoStreamViewArguments(mediaName: diskFile.name!, mediaUrl: fileUrl));
+    _navigationService.navigateTo(Routes.mediaStreamView,
+        arguments: MediaStreamViewArguments(
+            mediaName: diskFile.name!, mediaUrl: fileUrl, path: path));
   }
 
   clearButtonOnTap() {

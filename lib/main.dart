@@ -10,7 +10,6 @@ import 'package:rutorrentflutter/services/state_services/user_preferences_servic
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/bottom_sheet_setup.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   //Setting up Hive DB
@@ -26,7 +25,6 @@ void main() async {
   runApp(MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -34,9 +32,8 @@ class MyApp extends StatelessWidget {
       title: 'ruTorrent Mobile',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: AppStateNotifier.isDarkModeOn
-          ? ThemeMode.dark
-          : ThemeMode.light,
+      themeMode:
+          AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
       navigatorKey: StackedService.navigatorKey,
       onGenerateRoute: StackedRouter().onGenerateRoute,
     );

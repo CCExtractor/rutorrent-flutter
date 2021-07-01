@@ -6,9 +6,12 @@ Logger log = getLogger("FileService");
 
 ///[Service] for exposing file utils throughout the application as well as persisting state
 class FileService {
-
   String getFileExtension(String filename) {
-    return filename.substring(filename.lastIndexOf('.'), filename.length);
+    try {
+      return filename.substring(filename.lastIndexOf('.'), filename.length);
+    } catch (e) {
+      return "";
+    }
   }
 
   bool isImage(String filename) {
@@ -38,5 +41,4 @@ class FileService {
 
     return Icons.insert_drive_file;
   }
-
 }
