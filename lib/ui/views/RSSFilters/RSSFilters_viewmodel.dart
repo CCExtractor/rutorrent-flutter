@@ -4,7 +4,6 @@ import 'package:rutorrentflutter/services/functional_services/api_service.dart';
 import 'package:stacked/stacked.dart';
 
 class RSSFiltersViewModel extends FutureViewModel {
-
   ApiService _apiService = locator<ApiService>();
 
   List<RSSFilter> rssFilters = [];

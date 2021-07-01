@@ -11,14 +11,15 @@ import 'package:stacked/stacked.dart';
 
 final log = getLogger("TorrentListView");
 
-class TorrentListView extends StatefulWidget  {
+class TorrentListView extends StatefulWidget {
   const TorrentListView({Key? key}) : super(key: key);
 
   @override
   _TorrentListViewState createState() => _TorrentListViewState();
 }
 
-class _TorrentListViewState extends State<TorrentListView> with AutomaticKeepAliveClientMixin {
+class _TorrentListViewState extends State<TorrentListView>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -43,12 +44,10 @@ class _TorrentListViewState extends State<TorrentListView> with AutomaticKeepAli
                   return LoadingShimmer().loadingEffect(context, length: 5);
                 }
 
-                
                 // Condition for No Data
                 if (snapshot.data == null) {
                   return NoTorrentWidget();
                 }
-
 
                 // Updating torrent list
                 if (snapshot.hasData) {

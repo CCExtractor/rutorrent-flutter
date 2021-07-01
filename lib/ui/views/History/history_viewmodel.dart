@@ -7,7 +7,6 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class HistoryViewModel extends FutureViewModel {
-
   ApiService _apiService = locator<ApiService>();
   NavigationService _navigationService = locator<NavigationService>();
   HistoryService _historyService = locator<HistoryService>();
@@ -15,7 +14,8 @@ class HistoryViewModel extends FutureViewModel {
   List<HistoryItem> items = [];
   String selectedChoice = 'All';
 
-  ValueNotifier<List<HistoryItem>> get torrentHistoryDisplayList => _historyService.displayTorrentHistoryList;
+  ValueNotifier<List<HistoryItem>> get torrentHistoryDisplayList =>
+      _historyService.displayTorrentHistoryList;
 
   init() async {
     setBusy(true);
@@ -50,10 +50,8 @@ class HistoryViewModel extends FutureViewModel {
   refreshHistoryList() async {
     setBusy(true);
     selectedChoice == 'All'
-    ? loadHistoryItems()
-    : loadHistoryItems(lastHrs: int.parse(selectedChoice.split(' ')[2]));
+        ? loadHistoryItems()
+        : loadHistoryItems(lastHrs: int.parse(selectedChoice.split(' ')[2]));
     setBusy(false);
   }
-
-
 }

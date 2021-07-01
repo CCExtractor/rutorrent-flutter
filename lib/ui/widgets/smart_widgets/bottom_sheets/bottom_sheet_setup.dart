@@ -17,7 +17,6 @@ void setUpBottomSheetUi() {
         SortBottomSheetView(request: sheetRequest, completer: completer),
     BottomSheetType.confirmBottomSheet: (context, sheetRequest, completer) =>
         ConfirmBottomSheetView(request: sheetRequest, completer: completer),
-    
   };
 
   bottomSheetService.setCustomSheetBuilders(builders);
@@ -97,6 +96,7 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
     );
   }
 }
+
 class BottomSheetViewModel extends BaseViewModel {
   String errorText = "";
   bool _ischecked = false;

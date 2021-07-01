@@ -6,8 +6,7 @@ import 'package:shimmer/shimmer.dart';
 class LoadingShimmer extends StatelessWidget {
   Widget loadingEffect(BuildContext context, {int? length}) {
     return Shimmer.fromColors(
-      baseColor:
-          !AppStateNotifier.isDarkModeOn ? Colors.grey[300]! : kGreyLT,
+      baseColor: !AppStateNotifier.isDarkModeOn ? Colors.grey[300]! : kGreyLT,
       highlightColor:
           !AppStateNotifier.isDarkModeOn ? Colors.grey[100]! : kGreyDT,
       child: ListView.builder(

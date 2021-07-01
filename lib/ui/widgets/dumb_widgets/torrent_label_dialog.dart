@@ -8,14 +8,12 @@ class TorrentLabelDialog extends StatelessWidget {
   final Torrent torrent;
   final Function(String) setLabelFunc;
   final Function removeLabelFunc;
-  TorrentLabelDialog
-  ({
-      required this.formKey,
+  TorrentLabelDialog(
+      {required this.formKey,
       required this.labelController,
       required this.torrent,
       required this.setLabelFunc,
-      required this.removeLabelFunc
-  });
+      required this.removeLabelFunc});
 
   @override
   AlertDialog build(BuildContext context) {
@@ -42,17 +40,14 @@ class TorrentLabelDialog extends StatelessWidget {
         ),
       ),
       actions: [
-        _actionButton(
-            context,
-            text: "Set Label",
-            onPressed: () async {
-              if (formKey.currentState!.validate()) {
-                setLabelFunc(labelController.text);
-                Navigator.pop(context);
-                Navigator.pop(context);
-                Fluttertoast.showToast(msg: "Label set");
-              }
-            }),
+        _actionButton(context, text: "Set Label", onPressed: () async {
+          if (formKey.currentState!.validate()) {
+            setLabelFunc(labelController.text);
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Fluttertoast.showToast(msg: "Label set");
+          }
+        }),
         torrent.label!.isNotEmpty
             ? _actionButton(
                 context,
@@ -71,7 +66,8 @@ class TorrentLabelDialog extends StatelessWidget {
   }
 
   /// Action Button for set and remove label dialog
-  Widget _actionButton(BuildContext context,{required String text,required onPressed}) {
+  Widget _actionButton(BuildContext context,
+      {required String text, required onPressed}) {
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
@@ -83,10 +79,6 @@ class TorrentLabelDialog extends StatelessWidget {
         child: Text(
           text,
         ),
-        onPressed: onPressed
-        );
+        onPressed: onPressed);
   }
-
 }
-
-

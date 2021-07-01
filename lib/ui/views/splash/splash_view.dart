@@ -17,7 +17,7 @@ class SplashView extends StatelessWidget {
               child: SplashScreen.navigate(
                 height: 240,
                 name: 'assets/animation/diamond.flr',
-                next: (context)=>Container(),
+                next: (context) => Container(),
                 isLoading: true,
                 loopAnimation: 'tofro',
                 startAnimation: 'tofro',

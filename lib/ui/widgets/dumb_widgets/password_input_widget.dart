@@ -25,9 +25,8 @@ class _PasswordInputState extends State<PasswordInput> {
           obscureText: !passwordVisible,
           focusNode: widget.passwordFocus,
           controller: widget.textEditingController,
-          cursorColor: AppStateNotifier.isDarkModeOn
-              ? Colors.black
-              : Colors.white,
+          cursorColor:
+              AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white,
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
             border: InputBorder.none,

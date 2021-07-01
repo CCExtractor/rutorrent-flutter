@@ -41,8 +41,9 @@ class HistoryView extends StatelessWidget {
               onSelected: (choice) {
                 model.selectedChoice = choice;
                 choice == 'All'
-                ? model.loadHistoryItems()
-                : model.loadHistoryItems(lastHrs: int.parse(choice.split(' ')[2]));
+                    ? model.loadHistoryItems()
+                    : model.loadHistoryItems(
+                        lastHrs: int.parse(choice.split(' ')[2]));
               },
             )
           ],
@@ -55,9 +56,9 @@ class HistoryView extends StatelessWidget {
                 ? LoadingShimmer().loadingEffect(context)
                 : (model.torrentHistoryDisplayList.value.length != 0)
                     ? ValueListenableBuilder(
-                      valueListenable: model.torrentHistoryDisplayList,
-                      builder: (context, List<HistoryItem> items ,snapshot) {
-                        return ListView.builder(
+                        valueListenable: model.torrentHistoryDisplayList,
+                        builder: (context, List<HistoryItem> items, snapshot) {
+                          return ListView.builder(
                             itemCount: items.length,
                             itemBuilder: (context, index) {
                               return ListTile(
@@ -80,8 +81,8 @@ class HistoryView extends StatelessWidget {
                                         context, items[index].action),
                                   )),
                                   child: Text(
-                                      HistoryItem.historyStatus[
-                                          items[index].action]!,
+                                      HistoryItem
+                                          .historyStatus[items[index].action]!,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: getHistoryStatusColor(
@@ -93,13 +94,13 @@ class HistoryView extends StatelessWidget {
                                 subtitle: Text(
                                   '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
                                   style: TextStyle(
-                                      fontSize: 12, fontWeight: FontWeight.w600),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               );
                             },
                           );
-                      }
-                    )
+                        })
                     : Center(
                         child: SvgPicture.asset(
                           Theme.of(context).brightness == Brightness.light

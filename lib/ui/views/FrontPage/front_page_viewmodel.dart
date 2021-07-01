@@ -6,11 +6,9 @@ import 'package:rutorrentflutter/ui/views/TorrentList/Torrent_list_view.dart';
 import 'package:stacked/stacked.dart';
 
 class FrontPageViewModel extends BaseViewModel {
-
-
   PageController _pageController = PageController();
   PageController get pageController => _pageController;
-  int? homeViewPageIndex = 0 ;
+  int? homeViewPageIndex = 0;
   int currentIndex = 0;
 
   List<String> kTorrentTitle = [
@@ -47,7 +45,4 @@ class FrontPageViewModel extends BaseViewModel {
     currentIndex = i;
     notifyListeners();
   }
-
-
- 
 }

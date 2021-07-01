@@ -12,11 +12,13 @@ import 'package:rutorrentflutter/services/state_services/user_preferences_servic
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+
 final log = getLogger("TorrentTileViewModel");
-class TorrentTileViewModel extends BaseViewModel {  
-  
+
+class TorrentTileViewModel extends BaseViewModel {
   ApiService? _apiService = locator<ApiService>();
-  UserPreferencesService? _userPreferencesService = locator<UserPreferencesService>();
+  UserPreferencesService? _userPreferencesService =
+      locator<UserPreferencesService>();
   TorrentService? _torrentService = locator<TorrentService>();
   NavigationService _navigationService = locator<NavigationService>();
 
@@ -25,12 +27,12 @@ class TorrentTileViewModel extends BaseViewModel {
   get showAllAccounts => _userPreferencesService!.showAllAccounts;
   Color statusColor = kGreyDT;
 
-  init(Torrent? torrentReceived,context){
+  init(Torrent? torrentReceived, context) {
     // log.v("rebuild");
     torrent = torrentReceived;
     statusColor = getStatusColor(torrent!.status, context);
   }
-  
+
   removeTorrentWithData(String hashValue) {
     _apiService!.removeTorrentWithData(hashValue);
   }
@@ -39,16 +41,18 @@ class TorrentTileViewModel extends BaseViewModel {
     _apiService!.removeTorrent(hashValue);
   }
 
-  
-
   toggleTorrentStatus(Torrent torrent) async {
     await _apiService!.toggleTorrentStatus(torrent);
     //Refresh torrent list
     _userPreferencesService!.showAllAccounts
-    ? await _apiService!.getAllAccountsTorrentList().listen((event) { }).cancel()
-    : await _apiService!.getTorrentList().listen((event) { }).cancel();
-    await _torrentService?.updateTorrentDisplayList(searchText: _userPreferencesService?.searchTextController.text);
-  } 
+        ? await _apiService!
+            .getAllAccountsTorrentList()
+            .listen((event) {})
+            .cancel()
+        : await _apiService!.getTorrentList().listen((event) {}).cancel();
+    await _torrentService?.updateTorrentDisplayList(
+        searchText: _userPreferencesService?.searchTextController.text);
+  }
 
   getStatusColor(Status? status, BuildContext context) {
     switch (status) {
@@ -59,19 +63,16 @@ class TorrentTileViewModel extends BaseViewModel {
       case Status.stopped:
         return !AppStateNotifier.isDarkModeOn ? kGreyDT : kGreyLT;
       case Status.completed:
-        return !AppStateNotifier.isDarkModeOn
-            ? kGreenActiveLT
-            : kGreenActiveDT;
+        return !AppStateNotifier.isDarkModeOn ? kGreenActiveLT : kGreenActiveDT;
       case Status.errors:
-        return !AppStateNotifier.isDarkModeOn
-            ? kGreenActiveLT
-            : kRedErrorDT;
+        return !AppStateNotifier.isDarkModeOn ? kGreenActiveLT : kRedErrorDT;
       default:
         break;
     }
   }
 
   navigateToTorrentDetail(Torrent torrent) {
-    _navigationService.navigateTo(Routes.torrentDetailView,arguments: TorrentDetailViewArguments(torrent: torrent));
+    _navigationService.navigateTo(Routes.torrentDetailView,
+        arguments: TorrentDetailViewArguments(torrent: torrent));
   }
 }

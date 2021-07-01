@@ -9,18 +9,19 @@ import 'package:rutorrentflutter/services/functional_services/authentication_ser
 import 'package:rutorrentflutter/services/functional_services/internet_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+
 Logger log = getLogger("LoginViewModel");
 
 class LoginViewModel extends BaseViewModel {
   NavigationService? _navigationService = locator<NavigationService>();
-  AuthenticationService? _authenticationService = locator<AuthenticationService>();
+  AuthenticationService? _authenticationService =
+      locator<AuthenticationService>();
   InternetService? _internetService = locator<InternetService>();
   ApiService? _apiService = locator<ApiService>();
 
   Account? _account;
 
   login({String? url, required String username, String? password}) async {
-
     setBusy(true);
     if (username.contains(" ") || password!.contains(" ")) {
       Fluttertoast.showToast(msg: 'Invalid username or password');
@@ -31,20 +32,18 @@ class LoginViewModel extends BaseViewModel {
     }
     _navigationService?.replaceWith(Routes.splashView);
     setBusy(false);
-
   }
 
   _validateConfigurationDetails(Account? account) async {
+    final isConnected =
+        await _internetService!.isUserConnectedToInternet() ?? false;
 
-    final isConnected = await _internetService!.isUserConnectedToInternet() ?? false;
-
-    if(!isConnected){
+    if (!isConnected) {
       log.e("Network Connection Error");
       Fluttertoast.showToast(msg: "Network Connection Error");
       return;
     }
-    
+
     await _apiService!.testConnectionAndLogin(account);
-    
   }
 }

@@ -104,7 +104,8 @@ class TorrentTileView extends StatelessWidget {
                                             : kGreyDT,
                                     value: torrent.percentageDownload / 100,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                        _getStatusColor(torrent.status, context)),
+                                        _getStatusColor(
+                                            torrent.status, context)),
                                   ),
                                 ],
                               ),
@@ -123,7 +124,8 @@ class TorrentTileView extends StatelessWidget {
                       Text(
                         torrent.percentageDownload.toString() + '%',
                         style: TextStyle(
-                            color: _getStatusColor(torrent.status, context), fontWeight: FontWeight.w700),
+                            color: _getStatusColor(torrent.status, context),
+                            fontWeight: FontWeight.w700),
                       ),
                       IconButton(
                         color: _getStatusColor(torrent.status, context),
@@ -160,13 +162,9 @@ class TorrentTileView extends StatelessWidget {
       case Status.stopped:
         return !AppStateNotifier.isDarkModeOn ? kGreyDT : kGreyLT;
       case Status.completed:
-        return !AppStateNotifier.isDarkModeOn
-            ? kGreenActiveLT
-            : kGreenActiveDT;
+        return !AppStateNotifier.isDarkModeOn ? kGreenActiveLT : kGreenActiveDT;
       case Status.errors:
-        return !AppStateNotifier.isDarkModeOn
-            ? kGreenActiveLT
-            : kRedErrorDT;
+        return !AppStateNotifier.isDarkModeOn ? kGreenActiveLT : kRedErrorDT;
       default:
         break;
     }

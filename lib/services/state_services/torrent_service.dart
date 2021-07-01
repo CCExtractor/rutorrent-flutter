@@ -16,7 +16,6 @@ class TorrentService extends ChangeNotifier {
       locator<UserPreferencesService>();
   SharedPreferencesService? _sharedPreferencesService =
       locator<SharedPreferencesService>();
-  
 
   ValueNotifier<List<String>> _listOfLabels =
       new ValueNotifier(new List<String>.empty());
@@ -26,7 +25,6 @@ class TorrentService extends ChangeNotifier {
       new ValueNotifier(new List<Torrent>.empty());
   ValueNotifier<List<Torrent>> _torrentsDisplayList =
       new ValueNotifier(new List<Torrent>.empty());
-  
 
   String? _selectedLabel;
   bool _isLabelSelected = false;
@@ -42,7 +40,6 @@ class TorrentService extends ChangeNotifier {
   ValueNotifier<List<Torrent>> get activeDownloads => _activeDownloads;
   ValueNotifier<List<Torrent>> get torrentsList => _torrentsList;
   ValueNotifier<List<Torrent>> get displayTorrentList => _torrentsDisplayList;
-  
 
   setListOfLabels(List<String> labels) {
     if (_userPreferencesService!.showAllAccounts) {
@@ -68,11 +65,14 @@ class TorrentService extends ChangeNotifier {
   }
 
   setActiveDownloads(List<Torrent> list) => _activeDownloads.value = list;
-  setTorrentList(List<Torrent> list) {_torrentsList.value = list;_torrentsDisplayList.value = list;}
-  
+  setTorrentList(List<Torrent> list) {
+    _torrentsList.value = list;
+    _torrentsDisplayList.value = list;
+  }
+
   setSortPreference(Sort newPreference) {
     _sortPreference = newPreference;
-    _sharedPreferencesService!.DB.put("sortPreference",newPreference.index);
+    _sharedPreferencesService!.DB.put("sortPreference", newPreference.index);
   }
 
   updateTorrentDisplayList({String? searchText}) {
@@ -183,12 +183,15 @@ class TorrentService extends ChangeNotifier {
 
   refreshTorrentList() async {
     log.v("Torrent refresh function called");
-    ApiService? _apiService =
-      locator<ApiService>();
+    ApiService? _apiService = locator<ApiService>();
     _userPreferencesService!.showAllAccounts
-    ? await _apiService.getAllAccountsTorrentList().listen((event) { }).cancel()
-    : await _apiService.getTorrentList().listen((event) { }).cancel();
+        ? await _apiService
+            .getAllAccountsTorrentList()
+            .listen((event) {})
+            .cancel()
+        : await _apiService.getTorrentList().listen((event) {}).cancel();
     await _apiService.getHistory();
-    await updateTorrentDisplayList(searchText: _userPreferencesService?.searchTextController.text);
+    await updateTorrentDisplayList(
+        searchText: _userPreferencesService?.searchTextController.text);
   }
 }
