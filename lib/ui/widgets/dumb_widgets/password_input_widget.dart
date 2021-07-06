@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
 
 class PasswordInput extends StatefulWidget {
   final TextEditingController? textEditingController;

@@ -1,4 +1,4 @@
-import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:rutorrentflutter/ui/views/FrontPage/front_page_view.dart';
 import 'package:rutorrentflutter/ui/views/home/home_viewmodel.dart';
