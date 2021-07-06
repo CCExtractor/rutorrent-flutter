@@ -1,6 +1,6 @@
 // import 'package:rutorrentflutter/app/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
