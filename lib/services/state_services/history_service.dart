@@ -3,7 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/notification_service.dart';
 import 'package:rutorrentflutter/services/services_info.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
@@ -34,7 +34,7 @@ class HistoryService extends ChangeNotifier {
 
   refreshTorrentHistoryList({int? lastHours}) async {
     log.v("Torrent History refresh function called");
-    ApiService? _apiService = locator<ApiService>();
+    IApiService? _apiService = locator<IApiService>();
     lastHours == null
         ? await _apiService.getHistory()
         : await _apiService.getHistory(lastHours: lastHours);

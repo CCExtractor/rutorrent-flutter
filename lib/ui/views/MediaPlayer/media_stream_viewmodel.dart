@@ -2,7 +2,7 @@ import 'package:chewie/chewie.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/models/disk_file.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/state_services/file_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:video_player/video_player.dart';
@@ -14,7 +14,7 @@ class MediaStreamViewModel extends BaseViewModel {
   late String _path;
   String _subtitleUrl = "";
   List<DiskFile> _diskFiles = [];
-  ApiService _apiService = locator<ApiService>();
+  IApiService _apiService = locator<IApiService>();
   FileService _fileService = locator<FileService>();
 
   get chewieController => _chewieController;

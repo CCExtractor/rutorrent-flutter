@@ -1,12 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
@@ -16,7 +16,7 @@ import 'package:stacked_services/stacked_services.dart';
 final log = getLogger("TorrentTileViewModel");
 
 class TorrentTileViewModel extends BaseViewModel {
-  ApiService? _apiService = locator<ApiService>();
+  IApiService? _apiService = locator<IApiService>();
   UserPreferencesService? _userPreferencesService =
       locator<UserPreferencesService>();
   TorrentService? _torrentService = locator<TorrentService>();

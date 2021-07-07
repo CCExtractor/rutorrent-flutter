@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 import 'package:stacked/stacked.dart';
@@ -9,7 +9,7 @@ import 'package:stacked/stacked.dart';
 class TorrentListViewModel extends BaseViewModel {
   UserPreferencesService? _userPreferencesService =
       locator<UserPreferencesService>();
-  ApiService? _apiService = locator<ApiService>();
+  IApiService? _apiService = locator<IApiService>();
   TorrentService? _torrentService = locator<TorrentService>();
 
   bool get showAllAccounts => _userPreferencesService!.showAllAccounts;

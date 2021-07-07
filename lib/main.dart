@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/theme/AppTheme.dart';
@@ -17,7 +18,7 @@ void main() async {
   Hive.init(appDir.path);
   await Hive.openBox('DB');
   //Setting custom Bottom Sheet
-  setupLocator();
+  setupLocator(environment: Environment.prod);
   setUpBottomSheetUi();
   //Setting up Services
   locator<NotificationService>().init();
