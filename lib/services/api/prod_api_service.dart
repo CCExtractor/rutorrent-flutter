@@ -15,6 +15,7 @@ import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/services_info.dart';
 import 'package:rutorrentflutter/services/state_services/history_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
@@ -23,7 +24,7 @@ import 'package:xml/xml.dart';
 Logger log = getLogger("ApiService");
 
 ///[Service] for communicating with the [RuTorrent] APIs
-class ApiService {
+class ProdApiService implements IApiService {
   AuthenticationService? _authenticationService =
       locator<AuthenticationService>();
   DiskSpaceService? _diskSpaceService = locator<DiskSpaceService>();

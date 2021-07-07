@@ -4,7 +4,7 @@ import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 
@@ -183,7 +183,7 @@ class TorrentService extends ChangeNotifier {
 
   refreshTorrentList() async {
     log.v("Torrent refresh function called");
-    ApiService? _apiService = locator<ApiService>();
+    IApiService? _apiService = locator<IApiService>();
     _userPreferencesService!.showAllAccounts
         ? await _apiService
             .getAllAccountsTorrentList()

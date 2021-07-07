@@ -7,12 +7,12 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:flutter/material.dart';
-import 'package:rutorrentflutter/ui/views/MediaPlayer/media_stream_view.dart';
 import 'package:stacked/stacked.dart';
 
 import '../models/torrent.dart';
 import '../ui/views/DiskExplorer/disk_explorer_view.dart';
 import '../ui/views/History/history_view.dart';
+import '../ui/views/MediaPlayer/media_stream_view.dart';
 import '../ui/views/Settings/settings_view.dart';
 import '../ui/views/TorrentDetail/torrent_detail_view.dart';
 import '../ui/views/home/home_view.dart';
@@ -122,11 +122,8 @@ class MediaStreamViewArguments {
   final String mediaName;
   final String mediaUrl;
   final String path;
-  MediaStreamViewArguments({
-    required this.mediaName,
-    required this.mediaUrl,
-    required this.path,
-  });
+  MediaStreamViewArguments(
+      {required this.mediaName, required this.mediaUrl, required this.path});
 }
 
 /// TorrentDetailView arguments holder class

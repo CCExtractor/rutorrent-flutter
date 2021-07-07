@@ -1,5 +1,7 @@
+import 'package:rutorrentflutter/services/api/dev_api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/prod_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/functional_services/internet_service.dart';
@@ -36,7 +38,16 @@ import '../ui/views/splash/splash_view.dart';
   dependencies: [
     LazySingleton(classType: SharedPreferencesService),
     LazySingleton(classType: AuthenticationService),
-    LazySingleton(classType: ApiService),
+    LazySingleton(
+      classType: ProdApiService,
+      asType: IApiService,
+      environments: {Environment.prod},
+    ),
+    LazySingleton(
+      classType: DevApiService,
+      asType: IApiService,
+      environments: {Environment.dev},
+    ),
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: DiskSpaceService),
     LazySingleton(classType: NotificationService),

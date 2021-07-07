@@ -4,7 +4,7 @@ import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/models/account.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/internet_service.dart';
 import 'package:stacked/stacked.dart';
@@ -17,7 +17,7 @@ class LoginViewModel extends BaseViewModel {
   AuthenticationService? _authenticationService =
       locator<AuthenticationService>();
   InternetService? _internetService = locator<InternetService>();
-  ApiService? _apiService = locator<ApiService>();
+  IApiService? _apiService = locator<IApiService>();
 
   Account? _account;
 

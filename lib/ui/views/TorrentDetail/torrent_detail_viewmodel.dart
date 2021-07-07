@@ -7,14 +7,14 @@ import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/torrent_label_dialog.dart';
 import 'package:stacked/stacked.dart';
 
 class TorrentDetailViewModel extends BaseViewModel {
   TorrentService _torrentService = locator<TorrentService>();
-  ApiService _apiService = locator<ApiService>();
+  IApiService _apiService = locator<IApiService>();
 
   Torrent _torrent = Torrent("Dummy");
   List<TorrentFile> _files = [];

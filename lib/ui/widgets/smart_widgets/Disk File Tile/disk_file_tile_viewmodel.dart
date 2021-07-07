@@ -8,7 +8,7 @@ import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/models/disk_file.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/state_services/file_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -17,7 +17,7 @@ final log = getLogger("DiskFileTileViewModel");
 
 class DiskFileTileViewModel extends BaseViewModel {
   FileService _fileService = locator<FileService>();
-  ApiService _apiService = locator<ApiService>();
+  IApiService _apiService = locator<IApiService>();
   NavigationService _navigationService = locator<NavigationService>();
 
   late DiskFile diskFile;
