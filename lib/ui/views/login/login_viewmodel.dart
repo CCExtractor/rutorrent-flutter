@@ -21,29 +21,51 @@ class LoginViewModel extends BaseViewModel {
 
   Account? _account;
 
+  // validating url through regex
+  bool isValidUrl(String input) {
+    var urlRegex = r'(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+';
+    if (RegExp(urlRegex).hasMatch(input)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // output a invalid error message if url is invalid
+  String? urlValidator(String? input) {
+    if (!isValidUrl(input!)) {
+      return 'Please enter a valid url';
+    }
+    return null;
+  }
+
   login({String? url, required String username, String? password}) async {
     setBusy(true);
-    if (username.contains(" ") || password!.contains(" ")) {
+    if (username.contains(" ") ||
+        password!.contains(" ") ||
+        username.isEmpty ||
+        password.isEmpty) {
       Fluttertoast.showToast(msg: 'Invalid username or password');
     } else {
       _account = Account(url: url, username: username, password: password);
       _authenticationService!.tempAccount = _account;
-      await _validateConfigurationDetails(_account);
+      bool isValidConfiguration = await _validateConfigurationDetails(_account);
+      if (isValidConfiguration)
+        _navigationService?.replaceWith(Routes.splashView);
     }
-    _navigationService?.replaceWith(Routes.splashView);
     setBusy(false);
   }
 
-  _validateConfigurationDetails(Account? account) async {
+  Future<bool> _validateConfigurationDetails(Account? account) async {
     final isConnected =
         await _internetService!.isUserConnectedToInternet() ?? false;
 
     if (!isConnected) {
       log.e("Network Connection Error");
       Fluttertoast.showToast(msg: "Network Connection Error");
-      return;
+      return false;
     }
-
-    await _apiService!.testConnectionAndLogin(account);
+    bool serverResponse = await _apiService!.testConnectionAndLogin(account);
+    return serverResponse;
   }
 }

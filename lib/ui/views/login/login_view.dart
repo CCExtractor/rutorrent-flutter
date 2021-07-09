@@ -13,6 +13,7 @@ class LoginView extends StatelessWidget {
   final FocusNode usernameFocus = FocusNode();
   final FocusNode passwordFocus = FocusNode();
   final FocusNode urlFocus = FocusNode();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -61,22 +62,26 @@ class LoginView extends StatelessWidget {
                           SizedBox(
                             height: 10,
                           ),
-                          DataInput(
-                            borderColor: Colors.white,
-                            textEditingController: urlController,
-                            hintText: 'Location of ruTorrent',
-                            hintTextColor: Colors.white54,
-                            focus: urlFocus,
-                            suffixIconButton: IconButton(
-                              color: Colors.white,
-                              onPressed: () async {
-                                ClipboardData? data =
-                                    await Clipboard.getData('text/plain');
-                                if (data != null)
-                                  urlController.text = data.text.toString();
-                                if (urlFocus.hasFocus) urlFocus.unfocus();
-                              },
-                              icon: Icon(Icons.content_paste),
+                          Form(
+                            key: _formKey,
+                            child: DataInput(
+                              borderColor: Colors.white,
+                              textEditingController: urlController,
+                              hintText: 'Location of ruTorrent',
+                              hintTextColor: Colors.white54,
+                              focus: urlFocus,
+                              validator: model.urlValidator,
+                              suffixIconButton: IconButton(
+                                color: Colors.white,
+                                onPressed: () async {
+                                  ClipboardData? data =
+                                      await Clipboard.getData('text/plain');
+                                  if (data != null)
+                                    urlController.text = data.text.toString();
+                                  if (urlFocus.hasFocus) urlFocus.unfocus();
+                                },
+                                icon: Icon(Icons.content_paste),
+                              ),
                             ),
                           ),
                           Row(
@@ -151,11 +156,13 @@ class LoginView extends StatelessWidget {
                           ),
                         ),
                         onPressed: () async {
-                          await model.login(
-                            url: urlController.text.trim(),
-                            username: usernameController.text.trim(),
-                            password: passwordController.text.trim(),
-                          );
+                          if (_formKey.currentState!.validate()) {
+                            await model.login(
+                              url: urlController.text.trim(),
+                              username: usernameController.text.trim(),
+                              password: passwordController.text.trim(),
+                            );
+                          }
                         },
                       ),
                     ),
