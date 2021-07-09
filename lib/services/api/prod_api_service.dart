@@ -72,7 +72,7 @@ class ProdApiService implements IApiService {
     };
   }
 
-  testConnectionAndLogin(Account? account) async {
+  Future<bool> testConnectionAndLogin(Account? account) async {
     log.v("Testing connection with server");
     Response? response;
     var total;
@@ -84,12 +84,14 @@ class ProdApiService implements IApiService {
       Fluttertoast.showToast(msg: 'Connected');
     } catch (e) {
       Fluttertoast.showToast(msg: 'invalid');
+      return false;
     }
-    if (response != null && total != null && response.statusCode != 200) {
+    if (total != null && response.statusCode != 200) {
       Fluttertoast.showToast(msg: 'Something\'s Wrong');
-      return;
+      return false;
     }
     await _authenticationService!.saveLogin(account);
+    return true;
   }
 
   updateDiskSpace() async {
