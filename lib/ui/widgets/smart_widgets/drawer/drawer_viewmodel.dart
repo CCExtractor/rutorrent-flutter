@@ -3,6 +3,7 @@ import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/models/disk_space.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
@@ -20,6 +21,13 @@ class DrawerViewModel extends BaseViewModel {
   NavigationService _navigationService = locator<NavigationService>();
   UserPreferencesService _userPreferencesService =
       locator<UserPreferencesService>();
+  IApiService _apiService = locator<IApiService>();
+
+  void init() async {
+    setBusy(true);
+    await _apiService.updateDiskSpace();
+    setBusy(false);
+  }
 
   DiskSpace get diskSpace => _diskSpaceService!.diskSpace;
 

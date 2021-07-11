@@ -25,7 +25,7 @@ abstract class IApiService {
 
   testConnectionAndLogin(Account? account);
 
-  updateDiskSpace();
+  Future<void> updateDiskSpace();
 
   Stream<List<Torrent>> getAllAccountsTorrentList();
 
