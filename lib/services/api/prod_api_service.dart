@@ -94,7 +94,7 @@ class ProdApiService implements IApiService {
     return true;
   }
 
-  updateDiskSpace() async {
+  Future<void> updateDiskSpace() async {
     log.v("updating disk space");
     var diskSpaceResponse = await ioClient.get(Uri.parse(diskSpacePluginUrl),
         headers: getAuthHeader());
