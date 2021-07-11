@@ -16,27 +16,28 @@ class TorrentDetailViewModel extends BaseViewModel {
   TorrentService _torrentService = locator<TorrentService>();
   IApiService _apiService = locator<IApiService>();
 
-  Torrent _torrent = Torrent("Dummy");
+  late Torrent _torrent;
   List<TorrentFile> _files = [];
   List<String> _trackers = [];
   final TextEditingController labelController = TextEditingController();
-  late TextEditingController scrollController;
   final GlobalKey<FormState> formKey = GlobalKey();
+  // ignore: unused_field
+  bool _isInitialised = false;
 
-  init(torrent, _scrollController) async {
-    this.scrollController = _scrollController;
+  init(Torrent torrent) async {
     setBusy(true);
     _torrent = torrent;
     _updateTorrent();
     await _getFiles();
     await _getTrackers();
-    labelController.text = torrent.label;
+    labelController.text = torrent.label!;
+    _isInitialised = true;
     setBusy(false);
   }
 
-  get torrent => _torrent;
+  get isInitialised => _isInitialised;
 
-  get getScrollController => scrollController;
+  get torrent => _torrent;
 
   List<String> get trackers => _trackers;
 
