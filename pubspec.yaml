@@ -41,6 +41,7 @@ dependencies:
   awesome_notifications: ^0.0.6+9
   chewie: ^1.2.2
   video_player: ^2.1.6
+  webview_flutter: ^2.0.9
 
 dev_dependencies:
   flutter_test:
