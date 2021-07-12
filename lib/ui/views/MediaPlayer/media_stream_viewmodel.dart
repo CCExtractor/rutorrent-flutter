@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chewie/chewie.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/models/account.dart';
@@ -6,6 +8,7 @@ import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/state_services/file_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:video_player/video_player.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class MediaStreamViewModel extends BaseViewModel {
   late VideoPlayerController _videoPlayerController;
@@ -16,14 +19,24 @@ class MediaStreamViewModel extends BaseViewModel {
   List<DiskFile> _diskFiles = [];
   IApiService _apiService = locator<IApiService>();
   FileService _fileService = locator<FileService>();
+  bool _isAndroid = false;
 
   get chewieController => _chewieController;
 
   get videoPlayerController => _videoPlayerController;
 
+  get isAndroid => _isAndroid;
+
   void init(String mediaUrl, String path) async {
     setBusy(true);
     _mediaUrl = mediaUrl;
+    // Check if platform is Android
+    if (Platform.isAndroid) {
+      _isAndroid = true;
+      WebView.platform = SurfaceAndroidWebView();
+      setBusy(false);
+      return;
+    }
     _path = path;
     _diskFiles = await _apiService.getDiskFiles(_path);
     // below is the subtitle url of the video which can be used in future updates for adding subtitles feature
