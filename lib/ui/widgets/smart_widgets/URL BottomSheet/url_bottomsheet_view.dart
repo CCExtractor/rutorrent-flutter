@@ -48,7 +48,7 @@ class URLBottomSheetView extends StatelessWidget {
                 focus: model.urlFocus,
                 validator: model.urlValidator,
                 suffixIconButton: IconButton(
-                  color: AppStateNotifier.isDarkModeOn
+                  color: !AppStateNotifier.isDarkModeOn
                       ? Theme.of(context).primaryColor
                       : Colors.white,
                   onPressed: () async {

@@ -15,6 +15,7 @@ class MediaStreamViewModel extends BaseViewModel {
   ChewieController? _chewieController;
   late final String _mediaUrl;
   late String _path;
+  // ignore: unused_field
   String _subtitleUrl = "";
   List<DiskFile> _diskFiles = [];
   IApiService _apiService = locator<IApiService>();
