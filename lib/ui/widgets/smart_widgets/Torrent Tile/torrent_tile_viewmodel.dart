@@ -46,24 +46,7 @@ class TorrentTileViewModel extends BaseViewModel {
     await _torrentService?.updateTorrentDisplayList(
         searchText: _userPreferencesService?.searchTextController.text);
   }
-
-  // getStatusColor(Status? status, BuildContext context) {
-  //   switch (status) {
-  //     case Status.downloading:
-  //       return Theme.of(context).primaryColor;
-  //     case Status.paused:
-  //       return !AppStateNotifier.isDarkModeOn ? kGreyDT : kGreyLT;
-  //     case Status.stopped:
-  //       return !AppStateNotifier.isDarkModeOn ? kGreyDT : kGreyLT;
-  //     case Status.completed:
-  //       return !AppStateNotifier.isDarkModeOn ? kGreenActiveLT : kGreenActiveDT;
-  //     case Status.errors:
-  //       return !AppStateNotifier.isDarkModeOn ? kGreenActiveLT : kRedErrorDT;
-  //     default:
-  //       break;
-  //   }
-  // }
-
+  
   navigateToTorrentDetail(Torrent torrent) {
     _navigationService.navigateTo(Routes.torrentDetailView,
         arguments: TorrentDetailViewArguments(torrent: torrent));
