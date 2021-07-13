@@ -7,36 +7,37 @@ import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/torrent_label_dialog.dart';
 import 'package:stacked/stacked.dart';
 
 class TorrentDetailViewModel extends BaseViewModel {
   TorrentService _torrentService = locator<TorrentService>();
-  ApiService _apiService = locator<ApiService>();
+  IApiService _apiService = locator<IApiService>();
 
-  Torrent _torrent = Torrent("Dummy");
+  late Torrent _torrent;
   List<TorrentFile> _files = [];
   List<String> _trackers = [];
   final TextEditingController labelController = TextEditingController();
-  late TextEditingController scrollController;
   final GlobalKey<FormState> formKey = GlobalKey();
+  // ignore: unused_field
+  bool _isInitialised = false;
 
-  init(torrent, _scrollController) async {
-    this.scrollController = _scrollController;
+  init(Torrent torrent) async {
     setBusy(true);
     _torrent = torrent;
     _updateTorrent();
     await _getFiles();
     await _getTrackers();
-    labelController.text = torrent.label;
+    labelController.text = torrent.label!;
+    _isInitialised = true;
     setBusy(false);
   }
 
-  get torrent => _torrent;
+  get isInitialised => _isInitialised;
 
-  get getScrollController => scrollController;
+  get torrent => _torrent;
 
   List<String> get trackers => _trackers;
 
@@ -126,7 +127,7 @@ class TorrentDetailViewModel extends BaseViewModel {
   }
 
   _setLabel(String label) async {
-    await _apiService.setTorrentLabel(hashValue: _torrent.hash!,label: label);
+    await _apiService.setTorrentLabel(hashValue: _torrent.hash!, label: label);
     _torrentService.changeLabel(label);
   }
 }

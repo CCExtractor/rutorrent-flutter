@@ -1,4 +1,3 @@
-
 class RSSLabel {
   RSSLabel(this.hash, this.label);
 

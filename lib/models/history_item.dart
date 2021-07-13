@@ -22,7 +22,7 @@ class HistoryItem {
 
   HistoryItem(this.name, this.action, this.actionTime, this.size, this.hash);
 
-  HistoryItem.fromJSON(Map data){
+  HistoryItem.fromJSON(Map data) {
     this.name = data['name'];
     this.action = data['action'];
     this.actionTime = data['action_time'];

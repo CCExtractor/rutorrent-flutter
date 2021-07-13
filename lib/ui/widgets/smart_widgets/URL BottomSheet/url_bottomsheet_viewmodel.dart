@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/utils/file_picker_service.dart';
 import 'package:stacked/stacked.dart';
 
 class URLBottomSheetViewModel extends BaseViewModel {
   FilePickerService? _filePickerService = locator<FilePickerService>();
-  ApiService _apiService = locator<ApiService>();
+  IApiService _apiService = locator<IApiService>();
 
   final TextEditingController urlTextController = TextEditingController();
   final FocusNode urlFocus = FocusNode();
@@ -43,7 +43,7 @@ class URLBottomSheetViewModel extends BaseViewModel {
 
   void submit(HomeViewBottomSheetMode? mode) {
     if (mode == HomeViewBottomSheetMode.Torrent) {
-       _apiService.addTorrent(urlTextController.text);
+      _apiService.addTorrent(urlTextController.text);
     } else if (mode == HomeViewBottomSheetMode.RSS) {
       _apiService.addRSS(urlTextController.text);
     }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/password_input_widget.dart';
 
@@ -8,9 +8,7 @@ class PasswordChangeDialog extends StatefulWidget {
   final TextEditingController fieldController;
   final int? index;
   PasswordChangeDialog(
-      {required this.onTap,
-      required this.fieldController,
-      this.index});
+      {required this.onTap, required this.fieldController, this.index});
 
   @override
   _PasswordChangeDialogState createState() => _PasswordChangeDialogState();
@@ -62,8 +60,11 @@ class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
                               TextStyle(color: Theme.of(context).primaryColor),
                         ),
                         onPressed: () {
-                          setState((){isLoading = true;});
-                          widget.onTap(widget.fieldController.text,widget.index);
+                          setState(() {
+                            isLoading = true;
+                          });
+                          widget.onTap(
+                              widget.fieldController.text, widget.index);
                         },
                       ),
                     ),

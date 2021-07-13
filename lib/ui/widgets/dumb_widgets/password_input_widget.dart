@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
 
 class PasswordInput extends StatefulWidget {
   final TextEditingController? textEditingController;
@@ -25,9 +25,8 @@ class _PasswordInputState extends State<PasswordInput> {
           obscureText: !passwordVisible,
           focusNode: widget.passwordFocus,
           controller: widget.textEditingController,
-          cursorColor: AppStateNotifier.isDarkModeOn
-              ? Colors.black
-              : Colors.white,
+          cursorColor:
+              AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white,
           keyboardType: TextInputType.text,
           decoration: InputDecoration(
             border: InputBorder.none,

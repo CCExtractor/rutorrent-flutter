@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
+
 class ConfirmBottomSheetView extends StatelessWidget {
   final SheetRequest request;
   final Function(SheetResponse) completer;

@@ -1,4 +1,6 @@
 PODS:
+  - awesome_notifications (0.0.2):
+    - Flutter
   - DKImagePickerController/Core (4.3.2):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -38,11 +40,13 @@ PODS:
     - Flutter
   - flutter_vlc_player (3.0.2):
     - Flutter
-    - MobileVLCKit (~> 3.3.12)
+    - MobileVLCKit (~> 3.3.15)
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
   - MobileVLCKit (3.3.15)
+  - modal_progress_hud_nsn (0.0.1):
+    - Flutter
   - open_file (0.0.1):
     - Flutter
   - package_info (0.0.1):
@@ -56,20 +60,28 @@ PODS:
     - Flutter
   - SwiftyGif (5.3.0)
   - Toast (4.0.0)
+  - video_player (0.0.1):
+    - Flutter
   - wakelock (0.0.1):
+    - Flutter
+  - webview_flutter (0.0.1):
     - Flutter
 
 DEPENDENCIES:
+  - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_vlc_player (from `.symlinks/plugins/flutter_vlc_player/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - modal_progress_hud_nsn (from `.symlinks/plugins/modal_progress_hud_nsn/ios`)
   - open_file (from `.symlinks/plugins/open_file/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - video_player (from `.symlinks/plugins/video_player/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
+  - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
   trunk:
@@ -81,6 +93,8 @@ SPEC REPOS:
     - Toast
 
 EXTERNAL SOURCES:
+  awesome_notifications:
+    :path: ".symlinks/plugins/awesome_notifications/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
@@ -91,6 +105,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_vlc_player/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
+  modal_progress_hud_nsn:
+    :path: ".symlinks/plugins/modal_progress_hud_nsn/ios"
   open_file:
     :path: ".symlinks/plugins/open_file/ios"
   package_info:
@@ -99,18 +115,24 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
+  video_player:
+    :path: ".symlinks/plugins/video_player/ios"
   wakelock:
     :path: ".symlinks/plugins/wakelock/ios"
+  webview_flutter:
+    :path: ".symlinks/plugins/webview_flutter/ios"
 
 SPEC CHECKSUMS:
+  awesome_notifications: 74462bc8e68b11f8235d78422266886759e9da61
   DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
-  flutter_vlc_player: 64a2c27b2c99bc4fb954c5ff9d1cc278c87702ee
+  flutter_vlc_player: bb2059d1a5833e695ec30a25864336baf065fd9f
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   MobileVLCKit: 9a04c9fa19e35c376ddf59425dd82e397d5899ad
+  modal_progress_hud_nsn: f6fb744cd060653d66ed8f325360ef3650eb2fde
   open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
@@ -118,8 +140,10 @@ SPEC CHECKSUMS:
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   SwiftyGif: e466e86c660d343357ab944a819a101c4127cb40
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
+  webview_flutter: 3603125dfd3bcbc9d8d418c3f80aeecf331c068b
 
-PODFILE CHECKSUM: a75497545d4391e2d394c3668e20cfb1c2bbd4aa
+PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.1

@@ -1,15 +1,16 @@
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/models/disk_file.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:stacked/stacked.dart';
+
 final log = getLogger("DiskExplorerViewModel");
 
 class DiskExplorerViewModel extends FutureViewModel {
-
-  ApiService _apiService = locator<ApiService>();
-  AuthenticationService _authenticationService = locator<AuthenticationService>();
+  IApiService _apiService = locator<IApiService>();
+  AuthenticationService _authenticationService =
+      locator<AuthenticationService>();
 
   String path = "/";
   bool isFeatureAvailable = false;
@@ -49,8 +50,9 @@ class DiskExplorerViewModel extends FutureViewModel {
 
   init() async {
     setBusy(true);
-    isFeatureAvailable = _authenticationService.accounts?[0]?.isSeedboxAccount ?? false;
-    await _getDiskFiles(); 
+    isFeatureAvailable =
+        _authenticationService.accounts?[0]?.isSeedboxAccount ?? false;
+    await _getDiskFiles();
     setBusy(false);
   }
 

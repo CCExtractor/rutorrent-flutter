@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LoadingShimmer extends StatelessWidget {
   Widget loadingEffect(BuildContext context, {int? length}) {
     return Shimmer.fromColors(
-      baseColor:
-          !AppStateNotifier.isDarkModeOn ? Colors.grey[300]! : kGreyLT,
+      baseColor: !AppStateNotifier.isDarkModeOn ? Colors.grey[300]! : kGreyLT,
       highlightColor:
           !AppStateNotifier.isDarkModeOn ? Colors.grey[100]! : kGreyDT,
       child: ListView.builder(

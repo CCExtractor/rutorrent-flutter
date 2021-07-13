@@ -1,4 +1,4 @@
-import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:rutorrentflutter/ui/views/FrontPage/front_page_view.dart';
 import 'package:rutorrentflutter/ui/views/home/home_viewmodel.dart';
@@ -15,16 +15,15 @@ class HomeView extends StatefulWidget {
   _HomeViewState createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> 
-    with AutomaticKeepAliveClientMixin  {
-      
+class _HomeViewState extends State<HomeView>
+    with AutomaticKeepAliveClientMixin {
   @override
   // ignore: must_call_super
   Widget build(BuildContext context) {
     return ViewModelBuilder<HomeViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: HomeViewAppBar(model.account!,model),
+        appBar: HomeViewAppBar(model.account!, model),
         drawer: DrawerView(),
         body: PageView(
           physics: NeverScrollableScrollPhysics(),
@@ -33,13 +32,12 @@ class _HomeViewState extends State<HomeView>
             model.updateIndex(index);
           },
           children: <Widget>[
-            FrontPageView(index:0),
-            FrontPageView(index:1),
+            FrontPageView(index: 0),
+            FrontPageView(index: 1),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor:
-              AppStateNotifier.isDarkModeOn ? kGreyDT : null,
+          backgroundColor: AppStateNotifier.isDarkModeOn ? kGreyDT : null,
           selectedItemColor: Theme.of(context).primaryColor,
           currentIndex: model.index,
           selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),

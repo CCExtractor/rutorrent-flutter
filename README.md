@@ -7,7 +7,7 @@
 # ruTorrent Mobile [Stacked Architecture](https://pub.dev/packages/stacked) Migration
 
 ## Completion
-<img src="https://progress-bar.dev/50" alt="drawing" width="200"/>
+<img src="https://progress-bar.dev/80" alt="drawing" width="200"/>
 
 ## **A ruTorrent-based client built with Flutter**
 
@@ -48,6 +48,10 @@ Seedboxes usually have a high speed Internet connection. This allows users to do
 
 You can learn more about seedbox [here](https://en.wikipedia.org/wiki/Seedbox).
 
+## Some Prerequisites
+
+* Flutter SDK Version (dependency compatibility) : >=2.0.4
+* Minimum deployment target in iOS : 10
 
 ## Getting Started
 

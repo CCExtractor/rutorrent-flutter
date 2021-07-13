@@ -1,21 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/state_services/history_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class HistoryViewModel extends FutureViewModel {
-
-  ApiService _apiService = locator<ApiService>();
+  IApiService _apiService = locator<IApiService>();
   NavigationService _navigationService = locator<NavigationService>();
   HistoryService _historyService = locator<HistoryService>();
 
   List<HistoryItem> items = [];
   String selectedChoice = 'All';
 
-  ValueNotifier<List<HistoryItem>> get torrentHistoryDisplayList => _historyService.displayTorrentHistoryList;
+  ValueNotifier<List<HistoryItem>> get torrentHistoryDisplayList =>
+      _historyService.displayTorrentHistoryList;
 
   init() async {
     setBusy(true);
@@ -50,10 +50,8 @@ class HistoryViewModel extends FutureViewModel {
   refreshHistoryList() async {
     setBusy(true);
     selectedChoice == 'All'
-    ? loadHistoryItems()
-    : loadHistoryItems(lastHrs: int.parse(selectedChoice.split(' ')[2]));
+        ? loadHistoryItems()
+        : loadHistoryItems(lastHrs: int.parse(selectedChoice.split(' ')[2]));
     setBusy(false);
   }
-
-
 }

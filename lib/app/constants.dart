@@ -3,7 +3,6 @@ library app_constants;
 
 import 'package:rutorrentflutter/enums/enums.dart';
 
-
 ///Notification Channel Names and Descriptions
 ///
 ///[Key] : Enum index of corresponding notification channel ID
@@ -27,12 +26,12 @@ Map<int, List<String>> notificationInfo = {
 };
 
 Map<Sort, String> sortMap = {
-    Sort.name_ascending: 'Name - A to Z',
-    Sort.name_descending: 'Name - Z to A',
-    Sort.dateAdded: 'Date Added',
-    Sort.ratio: 'Ratio',
-    Sort.size_ascending: 'Size - Small to Large',
-    Sort.size_descending: 'Size - Large to Small',
+  Sort.name_ascending: 'Name - A to Z',
+  Sort.name_descending: 'Name - Z to A',
+  Sort.dateAdded: 'Date Added',
+  Sort.ratio: 'Ratio',
+  Sort.size_ascending: 'Size - Small to Large',
+  Sort.size_descending: 'Size - Large to Small',
 };
 
 /// APP RELEASE INFO

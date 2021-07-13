@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/Search%20Bar/search_bar_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/sort_bottom_sheet/sort_bottom_sheet_view.dart';
@@ -8,12 +8,12 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class SearchBarWidget extends StatelessWidget {
- const SearchBarWidget({Key? key}) : super(key: key);
+  const SearchBarWidget({Key? key}) : super(key: key);
 
- @override
- Widget build(BuildContext context) {
-   return ViewModelBuilder<SearchBarWidgetViewModel>.reactive(
-     builder: (context, model, child) => Padding(
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<SearchBarWidgetViewModel>.reactive(
+      builder: (context, model, child) => Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: <Widget>[
@@ -42,8 +42,9 @@ class SearchBarWidget extends StatelessWidget {
                           model.setSearchingState(true);
                         },
                         controller: model.searchTextController,
-                        cursorColor:
-                            !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white,
+                        cursorColor: !AppStateNotifier.isDarkModeOn
+                            ? Colors.black
+                            : Colors.white,
                         keyboardType: TextInputType.text,
                         decoration: InputDecoration(
                             isDense: true,
@@ -80,7 +81,10 @@ class SearchBarWidget extends StatelessWidget {
                     context: context,
                     isScrollControlled: true,
                     builder: (context) {
-                      return SortBottomSheetView(completer: (s)=>{},request: SheetRequest(),);
+                      return SortBottomSheetView(
+                        completer: (s) => {},
+                        request: SheetRequest(),
+                      );
                     });
               },
               child: Container(
@@ -94,7 +98,7 @@ class SearchBarWidget extends StatelessWidget {
           ],
         ),
       ),
-     viewModelBuilder: () => SearchBarWidgetViewModel(),
-   );
- }
+      viewModelBuilder: () => SearchBarWidgetViewModel(),
+    );
+  }
 }

@@ -1,4 +1,3 @@
 import 'package:stacked/stacked.dart';
 
-class FileTileViewModel extends BaseViewModel {
-}
+class FileTileViewModel extends BaseViewModel {}

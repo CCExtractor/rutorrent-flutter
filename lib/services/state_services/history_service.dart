@@ -3,7 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
-import 'package:rutorrentflutter/services/functional_services/api_service.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/notification_service.dart';
 import 'package:rutorrentflutter/services/services_info.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
@@ -11,11 +11,10 @@ import 'package:rutorrentflutter/services/state_services/user_preferences_servic
 Logger log = getLogger("HistoryService");
 
 ///Class to handle [Torrent History] State accross the application
-class HistoryService extends ChangeNotifier{
-
-  UserPreferencesService _userPreferencesService = locator<UserPreferencesService>();
+class HistoryService extends ChangeNotifier {
+  UserPreferencesService _userPreferencesService =
+      locator<UserPreferencesService>();
   NotificationService _notificationService = locator<NotificationService>();
-
 
   ValueNotifier<List<HistoryItem>> _torrentsHistoryList =
       new ValueNotifier(new List<HistoryItem>.empty());
@@ -35,10 +34,10 @@ class HistoryService extends ChangeNotifier{
 
   refreshTorrentHistoryList({int? lastHours}) async {
     log.v("Torrent History refresh function called");
-    ApiService? _apiService = locator<ApiService>();
-    lastHours==null 
-    ? await _apiService.getHistory() 
-    : await _apiService.getHistory(lastHours: lastHours);
+    IApiService? _apiService = locator<IApiService>();
+    lastHours == null
+        ? await _apiService.getHistory()
+        : await _apiService.getHistory(lastHours: lastHours);
   }
 
   updateTorrentHistoryDisplayList() {
@@ -62,15 +61,12 @@ class HistoryService extends ChangeNotifier{
           if (happenedNow(item)) {
             // Generate Notification
             if (_userPreferencesService.addTorrentNotification) {
-
               _notificationService.dispatchLocalNotification(
-                key: NotificationService.new_torrent_added_notify, 
-                customData: {
-                  'title' : ServicesInfo.new_torrent_added_notification_title,
-                  'body' : ServicesInfo.new_torrent_added_notification_body,
-                }
-              );
-
+                  key: NotificationService.new_torrent_added_notify,
+                  customData: {
+                    'title': ServicesInfo.new_torrent_added_notification_title,
+                    'body': ServicesInfo.new_torrent_added_notification_body,
+                  });
             }
           }
           break;
@@ -79,15 +75,12 @@ class HistoryService extends ChangeNotifier{
           if (happenedNow(item)) {
             // Generate Notification
             if (_userPreferencesService.downloadCompleteNotification) {
-              
               _notificationService.dispatchLocalNotification(
-                key: NotificationService.download_completed_notify, 
-                customData: {
-                  'title' : ServicesInfo.download_completed_notification_title,
-                  'body' : ServicesInfo.download_completed_notification_body,
-                }
-              );
-
+                  key: NotificationService.download_completed_notify,
+                  customData: {
+                    'title': ServicesInfo.download_completed_notification_title,
+                    'body': ServicesInfo.download_completed_notification_body,
+                  });
             }
           }
           break;
@@ -100,6 +93,4 @@ class HistoryService extends ChangeNotifier{
       }
     }
   }
-
-
 }

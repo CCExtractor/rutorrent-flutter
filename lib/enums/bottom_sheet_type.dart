@@ -1,4 +1,4 @@
-enum BottomSheetType{
+enum BottomSheetType {
   floating,
   sortBottomSheet,
   confirmBottomSheet,

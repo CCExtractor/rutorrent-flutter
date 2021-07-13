@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rutorrentflutter/AppTheme/AppStateNotifier.dart';
-import 'package:rutorrentflutter/AppTheme/AppTheme.dart';
+import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/AppTheme.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/services/functional_services/notification_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/bottom_sheet_setup.dart';
 import 'package:stacked_services/stacked_services.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,14 +18,13 @@ void main() async {
   Hive.init(appDir.path);
   await Hive.openBox('DB');
   //Setting custom Bottom Sheet
-  setupLocator();
+  setupLocator(environment: Environment.prod);
   setUpBottomSheetUi();
   //Setting up Services
   locator<NotificationService>().init();
   locator<UserPreferencesService>().init();
   runApp(MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   @override
@@ -34,9 +33,8 @@ class MyApp extends StatelessWidget {
       title: 'ruTorrent Mobile',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: AppStateNotifier.isDarkModeOn
-          ? ThemeMode.dark
-          : ThemeMode.light,
+      themeMode:
+          AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
       navigatorKey: StackedService.navigatorKey,
       onGenerateRoute: StackedRouter().onGenerateRoute,
     );

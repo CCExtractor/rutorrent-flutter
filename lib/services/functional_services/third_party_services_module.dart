@@ -2,13 +2,13 @@ import 'package:injectable/injectable.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 @module
-abstract class ThirdPartyServicesModule{
+abstract class ThirdPartyServicesModule {
   @lazySingleton
-  NavigationService get navigationService;   
+  NavigationService get navigationService;
   @lazySingleton
-  DialogService get dialogService;   
+  DialogService get dialogService;
   @lazySingleton
-  SnackbarService get snackbarService;   
+  SnackbarService get snackbarService;
   @lazySingleton
-  BottomSheetService get bottomSheetService;   
+  BottomSheetService get bottomSheetService;
 }
