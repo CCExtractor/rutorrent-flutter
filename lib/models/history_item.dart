@@ -14,11 +14,18 @@ class HistoryItem {
     3: FontAwesomeIcons.download,
   };
 
-  String name;
-  int action;
-  int actionTime;
-  int size;
-  String hash;
+  late String name;
+  late int action;
+  late int actionTime;
+  int? size;
+  late String hash;
 
   HistoryItem(this.name, this.action, this.actionTime, this.size, this.hash);
+
+  HistoryItem.fromJSON(Map data) {
+    this.name = data['name'];
+    this.action = data['action'];
+    this.actionTime = data['action_time'];
+    this.hash = data['hash'];
+  }
 }

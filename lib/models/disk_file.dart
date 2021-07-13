@@ -1,4 +1,4 @@
 class DiskFile {
-  String name;
-  bool isDirectory;
+  String? name;
+  bool? isDirectory;
 }

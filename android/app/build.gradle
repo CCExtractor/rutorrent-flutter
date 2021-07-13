@@ -34,10 +34,11 @@ android {
     defaultConfig {
 
         applicationId "org.ccextractor.rutorrentflutter"
-        minSdkVersion 17
+        minSdkVersion 19
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {

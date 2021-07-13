@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:rutorrentflutter/screens/loading_screen.dart';
-import 'api/api_conf.dart';
-import 'models/general_features.dart';
-import 'models/mode.dart';
-import 'models/settings.dart';
-import 'utilities/themes.dart';
+import 'package:hive/hive.dart';
+import 'package:injectable/injectable.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/AppTheme.dart';
+import 'package:rutorrentflutter/app/app.locator.dart';
+import 'package:rutorrentflutter/app/app.router.dart';
+import 'package:rutorrentflutter/services/functional_services/notification_service.dart';
+import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/bottom_sheet_setup.dart';
+import 'package:stacked_services/stacked_services.dart';
 
-void main() {
-  runApp(
-    MultiProvider(
-      providers: [
-        /// Providing at the top of the widget tree to grant access to the whole app
-        Provider<Api>(create: (context) => Api()),
-        ChangeNotifierProvider<Mode>(create: (context) => Mode()),
-        ChangeNotifierProvider<Settings>(create: (context) => Settings()),
-        ChangeNotifierProvider<GeneralFeatures>(
-          create: (context) => GeneralFeatures(),
-        ),
-      ],
-      child: MyApp(),
-    ),
-  );
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //Setting up Hive DB
+  final appDir = await getApplicationDocumentsDirectory();
+  Hive.init(appDir.path);
+  await Hive.openBox('DB');
+  //Setting custom Bottom Sheet
+  setupLocator(environment: Environment.prod);
+  setUpBottomSheetUi();
+  //Setting up Services
+  locator<NotificationService>().init();
+  locator<UserPreferencesService>().init();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -29,12 +31,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ruTorrent Mobile',
-      theme: Themes.lightTheme(context),
-      darkTheme: Themes.darkTheme(context),
-      themeMode: Provider.of<Mode>(context).isLightMode
-          ? ThemeMode.light
-          : ThemeMode.dark,
-      home: LoadingScreen(),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode:
+          AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
+      navigatorKey: StackedService.navigatorKey,
+      onGenerateRoute: StackedRouter().onGenerateRoute,
     );
   }
 }

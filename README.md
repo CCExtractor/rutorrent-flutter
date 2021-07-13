@@ -4,15 +4,17 @@
 
 
 
-# ruTorrent Mobile
+# ruTorrent Mobile [Stacked Architecture](https://pub.dev/packages/stacked) Migration
 
-<img src="https://raw.githubusercontent.com/harchani-ritik/rutorrent-flutter/master/gsoc_2020.png" alt="GSOC 2020" height=30px>
+## Completion
+<img src="https://progress-bar.dev/80" alt="drawing" width="200"/>
 
-**A ruTorrent-based client build in Flutter**
+## **A ruTorrent-based client built with Flutter**
 
 The project is a flutter application for ruTorrent web interface. The app communicates with ruTorrent's backend via REST APIs to display the information about the torrents and the functionality to control its basic features. It also supports some plugin functionalities as provided in the ruTorrent web.
 
 Additionally, you can also stream torrents from your server (or seedbox) and download them locally to your mobile device (a save offline feature), which makes torrenting a seamless experience for ruTorrent users.
+
 
 ## ruTorrent and rtorrent
 
@@ -46,6 +48,10 @@ Seedboxes usually have a high speed Internet connection. This allows users to do
 
 You can learn more about seedbox [here](https://en.wikipedia.org/wiki/Seedbox).
 
+## Some Prerequisites
+
+* Flutter SDK Version (dependency compatibility) : >=2.0.4
+* Minimum deployment target in iOS : 10
 
 ## Getting Started
 

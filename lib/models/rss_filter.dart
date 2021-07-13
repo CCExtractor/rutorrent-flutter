@@ -8,4 +8,15 @@ class RSSFilter {
   String label;
   String exclude;
   String dir;
+
+  Map<String, dynamic> toJson() {
+    return {
+      "name": this.name,
+      "enabled": this.enabled,
+      "pattern": this.pattern,
+      "label": this.label,
+      "exclude": this.exclude,
+      "dir": this.dir,
+    };
+  }
 }
