@@ -20,6 +20,8 @@ class HistoryViewModel extends FutureViewModel {
   init() async {
     setBusy(true);
     _apiService.updateHistory();
+    await Future.delayed(Duration(seconds: 1));
+    await _historyService.refreshTorrentHistoryList();
     setBusy(false);
   }
 

@@ -27,7 +27,7 @@ class SplashViewModel extends FutureViewModel {
       _navigationService?.replaceWith(Routes.homeView);
     } else {
       log.v("User not logged in");
-      _navigationService?.replaceWith(Routes.loginView);
+      _navigationService?.clearStackAndShow(Routes.loginView);
     }
   }
 
