@@ -9,6 +9,7 @@ import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/services/functional_services/notification_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/bottom_sheet_setup.dart';
+import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 void main() async {
@@ -27,9 +28,11 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+
+ @override
+ Widget build(BuildContext context) {
+   return ViewModelBuilder<AppStateNotifier>.reactive(
+     builder: (context, model, child) => MaterialApp(
       title: 'ruTorrent Mobile',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
@@ -37,6 +40,8 @@ class MyApp extends StatelessWidget {
           AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
       navigatorKey: StackedService.navigatorKey,
       onGenerateRoute: StackedRouter().onGenerateRoute,
-    );
-  }
+    ),
+     viewModelBuilder: () => locator<AppStateNotifier>(),
+   );
+ }
 }

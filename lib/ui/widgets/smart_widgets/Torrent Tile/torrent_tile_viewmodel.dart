@@ -1,15 +1,11 @@
-import 'dart:ui';
 
-import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
-import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
-import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -25,12 +21,9 @@ class TorrentTileViewModel extends BaseViewModel {
   Torrent? torrent = Torrent("dummy");
 
   get showAllAccounts => _userPreferencesService!.showAllAccounts;
-  Color statusColor = kGreyDT;
 
   init(Torrent? torrentReceived, context) {
-    // log.v("rebuild");
     torrent = torrentReceived;
-    statusColor = getStatusColor(torrent!.status, context);
   }
 
   removeTorrentWithData(String hashValue) {
@@ -54,22 +47,22 @@ class TorrentTileViewModel extends BaseViewModel {
         searchText: _userPreferencesService?.searchTextController.text);
   }
 
-  getStatusColor(Status? status, BuildContext context) {
-    switch (status) {
-      case Status.downloading:
-        return Theme.of(context).primaryColor;
-      case Status.paused:
-        return !AppStateNotifier.isDarkModeOn ? kGreyDT : kGreyLT;
-      case Status.stopped:
-        return !AppStateNotifier.isDarkModeOn ? kGreyDT : kGreyLT;
-      case Status.completed:
-        return !AppStateNotifier.isDarkModeOn ? kGreenActiveLT : kGreenActiveDT;
-      case Status.errors:
-        return !AppStateNotifier.isDarkModeOn ? kGreenActiveLT : kRedErrorDT;
-      default:
-        break;
-    }
-  }
+  // getStatusColor(Status? status, BuildContext context) {
+  //   switch (status) {
+  //     case Status.downloading:
+  //       return Theme.of(context).primaryColor;
+  //     case Status.paused:
+  //       return !AppStateNotifier.isDarkModeOn ? kGreyDT : kGreyLT;
+  //     case Status.stopped:
+  //       return !AppStateNotifier.isDarkModeOn ? kGreyDT : kGreyLT;
+  //     case Status.completed:
+  //       return !AppStateNotifier.isDarkModeOn ? kGreenActiveLT : kGreenActiveDT;
+  //     case Status.errors:
+  //       return !AppStateNotifier.isDarkModeOn ? kGreenActiveLT : kRedErrorDT;
+  //     default:
+  //       break;
+  //   }
+  // }
 
   navigateToTorrentDetail(Torrent torrent) {
     _navigationService.navigateTo(Routes.torrentDetailView,
