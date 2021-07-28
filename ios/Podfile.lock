@@ -38,13 +38,9 @@ PODS:
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
-  - flutter_vlc_player (3.0.2):
-    - Flutter
-    - MobileVLCKit (~> 3.3.15)
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
-  - MobileVLCKit (3.3.15)
   - modal_progress_hud_nsn (0.0.1):
     - Flutter
   - open_file (0.0.1):
@@ -72,7 +68,6 @@ DEPENDENCIES:
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
-  - flutter_vlc_player (from `.symlinks/plugins/flutter_vlc_player/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - modal_progress_hud_nsn (from `.symlinks/plugins/modal_progress_hud_nsn/ios`)
   - open_file (from `.symlinks/plugins/open_file/ios`)
@@ -87,7 +82,6 @@ SPEC REPOS:
   trunk:
     - DKImagePickerController
     - DKPhotoGallery
-    - MobileVLCKit
     - SDWebImage
     - SwiftyGif
     - Toast
@@ -101,8 +95,6 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
-  flutter_vlc_player:
-    :path: ".symlinks/plugins/flutter_vlc_player/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   modal_progress_hud_nsn:
@@ -129,9 +121,7 @@ SPEC CHECKSUMS:
   file_picker: 3e6c3790de664ccf9b882732d9db5eaf6b8d4eb1
   Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
-  flutter_vlc_player: bb2059d1a5833e695ec30a25864336baf065fd9f
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
-  MobileVLCKit: 9a04c9fa19e35c376ddf59425dd82e397d5899ad
   modal_progress_hud_nsn: f6fb744cd060653d66ed8f325360ef3650eb2fde
   open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62

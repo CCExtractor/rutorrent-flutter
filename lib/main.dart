@@ -28,20 +28,19 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-
- @override
- Widget build(BuildContext context) {
-   return ViewModelBuilder<AppStateNotifier>.reactive(
-     builder: (context, model, child) => MaterialApp(
-      title: 'ruTorrent Mobile',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode:
-          AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-      navigatorKey: StackedService.navigatorKey,
-      onGenerateRoute: StackedRouter().onGenerateRoute,
-    ),
-     viewModelBuilder: () => locator<AppStateNotifier>(),
-   );
- }
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<AppStateNotifier>.reactive(
+      builder: (context, model, child) => MaterialApp(
+        title: 'ruTorrent Mobile',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode:
+            AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
+        navigatorKey: StackedService.navigatorKey,
+        onGenerateRoute: StackedRouter().onGenerateRoute,
+      ),
+      viewModelBuilder: () => locator<AppStateNotifier>(),
+    );
+  }
 }

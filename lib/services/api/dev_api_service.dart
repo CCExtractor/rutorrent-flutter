@@ -3,7 +3,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
@@ -18,6 +17,10 @@ import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
+import 'package:rutorrentflutter/services/mock_data/accounts.dart';
+import 'package:rutorrentflutter/services/mock_data/disk_space.dart';
+import 'package:rutorrentflutter/services/mock_data/history.dart';
+import 'package:rutorrentflutter/services/mock_data/torrents.dart';
 import 'package:rutorrentflutter/services/services_info.dart';
 import 'package:rutorrentflutter/services/state_services/history_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
@@ -74,190 +77,127 @@ class DevApiService implements IApiService {
     };
   }
 
-  testConnectionAndLogin(Account? account) async {
-    log.v("Testing connection with server");
-    Response? response;
-    var total;
-    try {
-      response = await ioClient.get(Uri.parse(diskSpacePluginUrl),
-          headers: getAuthHeader());
-      log.i("Test Connection Response : " + response.body);
-      total = jsonDecode(response.body)['total'];
-      Fluttertoast.showToast(msg: 'Connected');
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'invalid');
+  Future<bool> testConnectionAndLogin(Account? account) async {
+    log.v("Testing connection with mock server");
+    for (int i = 0; i < devAccounts.length; i++) {
+      if (devAccounts[i].url == account!.url &&
+          devAccounts[i].username == account.username &&
+          devAccounts[i].password == account.password) {
+        Fluttertoast.showToast(msg: 'Connected');
+        await _authenticationService!.saveLogin(account);
+        return true;
+      }
     }
-    if (response != null && total != null && response.statusCode != 200) {
-      Fluttertoast.showToast(msg: 'Something\'s Wrong');
-      return;
-    }
-    await _authenticationService!.saveLogin(account);
+    Fluttertoast.showToast(msg: 'invalid');
+    return false;
   }
 
-  updateDiskSpace() async {
+  Future<void> updateDiskSpace() async {
     log.v("updating disk space");
-    var diskSpaceResponse = await ioClient.get(Uri.parse(diskSpacePluginUrl),
-        headers: getAuthHeader());
-    var diskSpace = jsonDecode(diskSpaceResponse.body);
-    _diskSpaceService!.updateDiskSpace(diskSpace['total'], diskSpace['free']);
+    var diskSpace = devDiskSpace;
+    _diskSpaceService!.updateDiskSpace(diskSpace.total, diskSpace.free);
   }
 
   /// Gets list of torrents for all saved accounts [Apis]
   Stream<List<Torrent>> getAllAccountsTorrentList() async* {
     log.v("Fetching torrent lists from all accounts");
     List<Account?>? accounts = _authenticationService!.accounts;
-    // while (true) {
-    List<Torrent> allTorrentList = [];
-    try {
-      for (Account? account in accounts!) {
-        try {
-          var response = await ioClient.post(Uri.parse(httpRpcPluginUrl),
-              headers: getAuthHeader(),
-              body: {
-                'mode': 'list',
-              });
-          allTorrentList.addAll(_parseTorrentData(response.body, account)!);
-        } catch (e) {
-          print(e);
+    while (true) {
+      List<Torrent> allTorrentList = [];
+      try {
+        for (Account? account in accounts!) {
+          try {
+            var response = devTorrents;
+            allTorrentList.addAll(_parseTorrentData(response, account)!);
+          } catch (e) {
+            print(e);
+          }
         }
+      } catch (e) {
+        print('Account Changes');
       }
-    } catch (e) {
-      print('Account Changes');
+      yield allTorrentList;
+      await Future.delayed(Duration(seconds: 1), () {});
     }
-    yield allTorrentList;
-    await Future.delayed(Duration(seconds: 1), () {});
-    // }
   }
 
   /// Gets list of torrents for a particular account
   Stream<List<Torrent?>?> getTorrentList() async* {
-    log.v("Fetching torrent lists from all accounts");
-    // while (true) {
-    try {
-      var response = await ioClient
-          .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
-        'mode': 'list',
-      });
-
-      yield _parseTorrentData(response.body, account)!;
-    } catch (e) {
-      print('Exception caught in getTorrentList Api Request ' + e.toString());
-      /*returning null since the stream has to be active all the times to return something
+    log.v("Fetching torrent lists from one account");
+    while (true) {
+      try {
+        var response = devTorrents;
+        yield _parseTorrentData(response, account)!;
+      } catch (e) {
+        print('Exception caught in getTorrentList Api Request ' + e.toString());
+        /*returning null since the stream has to be active all the times to return something
           this usually occurs when there is no torrent task available or when the connect
           to rTorrent is not established
         */
-      yield null;
+        yield null;
+      }
+      // Producing artificial delay of one second
+      await Future.delayed(Duration(seconds: 1), () {});
     }
-    // Producing artificial delay of one second
-    await Future.delayed(Duration(seconds: 1), () {});
-    // }
   }
 
   startTorrent(String? hashValue) async {
     log.v("Starting Torrent");
-    await ioClient
-        .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
-      'mode': 'start',
-      'hash': hashValue,
-    });
+    devTorrents[hashValue]![0] = "1";
+    devTorrents[hashValue]![3] = "1";
   }
 
   pauseTorrent(String? hashValue) async {
     log.v("Pausing Torrent");
-    await ioClient
-        .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
-      'mode': 'pause',
-      'hash': hashValue,
-    });
+    devTorrents[hashValue]![3] = "0";
   }
 
   stopTorrent(String hashValue) async {
     log.v("Stop Torrent");
-    await ioClient
-        .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
-      'mode': 'stop',
-      'hash': hashValue,
-    });
+    devTorrents[hashValue]![0] = "0";
   }
 
   removeTorrent(String hashValue) async {
     log.v("Remove Torrent");
-    var response = await ioClient
-        .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
-      'mode': 'remove',
-      'hash': hashValue,
-    });
-
-    if (response.statusCode == 200)
-      Fluttertoast.showToast(msg: 'Removed Torrent Successfully');
+    if (devTorrents.containsKey(hashValue)) {
+      devTorrents.remove(hashValue);
+    }
+    Fluttertoast.showToast(msg: 'Removed Torrent Successfully');
   }
 
   removeTorrentWithData(String hashValue) async {
     log.v("removing torrent");
-    var client = ioClient;
-    var request = Request(
-      'POST',
-      Uri.parse(httpRpcPluginUrl),
-    );
-    request.headers.addAll(getAuthHeader());
-    var xml =
-        "<?xml version=\"1.0\" encoding=\"UTF-8\"?><methodCall><methodName>system.multicall</methodName><params><param><value><array><data><value><struct><member><name>methodName</name><value><string>d.custom5.set</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value><value><string>1</string></value></data></array></value></member></struct></value><value><struct><member><name>methodName</name><value><string>d.delete_tied</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value></data></array></value></member></struct></value><value><struct><member><name>methodName</name><value><string>d.erase</string></value></member><member><name>params</name><value><array><data><value><string>${hashValue.toString()}</string></value></data></array></value></member></struct></value></data></array></value></param></params></methodCall>";
-    request.body = xml;
-    var streamedResponse = await client.send(request);
-
-    if (streamedResponse.statusCode == 200)
-      Fluttertoast.showToast(
-          msg: 'Removed Torrent and Deleted Data Successfully');
-
-    var responseBody =
-        await streamedResponse.stream.transform(utf8.decoder).join();
-    print(responseBody);
-    client.close();
+    if (devTorrents.containsKey(hashValue)) {
+      devTorrents.remove(hashValue);
+    }
+    Fluttertoast.showToast(msg: 'Removed Torrent Successfully');
   }
 
   addTorrent(String url) async {
     Fluttertoast.showToast(msg: 'Adding torrent');
-    await ioClient
-        .post(Uri.parse(addTorrentPluginUrl), headers: getAuthHeader(), body: {
-      'url': url,
-    });
+    // todo
   }
 
   addTorrentFile(String torrentPath) async {
     Fluttertoast.showToast(msg: 'Adding torrent');
-    var request = MultipartRequest('POST', Uri.parse(addTorrentPluginUrl));
-    // request.fields['label'] = "hell";
-
-    request.files
-        .add(await MultipartFile.fromPath('torrent_file', torrentPath));
-    try {
-      var response = await request.send();
-
-      print(response.headers);
-    } catch (e) {
-      print(e.toString());
-    }
+    // todo
   }
 
   toggleTorrentStatus(Torrent torrent) async {
     log.v("Toggling torrent status");
-    const Map<Status, String> statusMap = {
-      Status.downloading: 'start',
-      Status.paused: 'pause',
-      Status.stopped: 'stop',
-    };
-
     Status toggleStatus = torrent.isOpen == 0
         ? Status.downloading
         : torrent.getState == 0
             ? (Status.downloading)
             : Status.paused;
-
-    await ioClient
-        .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
-      'mode': statusMap[toggleStatus],
-      'hash': torrent.hash,
-    });
+    if (toggleStatus == Status.downloading) {
+      devTorrents[torrent.hash]![0] = "1";
+      devTorrents[torrent.hash]![3] = "1";
+    } else if (toggleStatus == Status.paused) {
+      devTorrents[torrent.hash]![3] = "0";
+    } else {
+      devTorrents[torrent.hash]![0] = "0";
+    }
   }
 
   /// Gets History of last [lastHours] hours
@@ -271,19 +211,19 @@ class DevApiService implements IApiService {
               1000)
           .toString();
     }
-
-    var response = await ioClient
-        .post(Uri.parse(historyPluginUrl), headers: getAuthHeader(), body: {
-      'cmd': 'get',
-      'mark': timestamp,
-    });
-
-    var items = jsonDecode(response.body)['items'];
+    // todo: implement search history with given timestamp
+    var response = devHistory;
+    var items = response['items'];
 
     List<HistoryItem> historyItems = [];
-    for (var item in items) {
-      HistoryItem historyItem = HistoryItem(item['name'], item['action'],
-          item['action_time'], item['size'], item['hash']);
+    for (var item in items!) {
+      HistoryItem historyItem = HistoryItem(
+        item['name'].toString(),
+        int.parse(item['action'].toString()),
+        int.parse(item['action_time'].toString()),
+        int.parse(item['size'].toString()),
+        item['hash'].toString(),
+      );
       historyItems.add(historyItem);
     }
     _historyService?.setTorrentHistoryList(historyItems);
@@ -293,16 +233,7 @@ class DevApiService implements IApiService {
   removeHistoryItem(String hashValue) async {
     log.v("Removing history item from server");
     Fluttertoast.showToast(msg: 'Removing Torrent from History');
-    try {
-      await ioClient
-          .post(Uri.parse(historyPluginUrl), headers: getAuthHeader(), body: {
-        'cmd': 'delete',
-        'mode': 'hstdelete',
-        'hash': hashValue,
-      });
-    } on Exception catch (e) {
-      print('err: ${e.toString()}');
-    }
+    devHistory["items"]!.removeWhere((element) => element["hash"] == hashValue);
   }
 
   updateHistory() async {
@@ -311,17 +242,19 @@ class DevApiService implements IApiService {
                 Duration(seconds: 10).inMilliseconds) ~/
             1000)
         .toString();
-    List<HistoryItem> historyItems = [];
-    var response = await ioClient
-        .post(Uri.parse(historyPluginUrl), headers: getAuthHeader(), body: {
-      'cmd': 'get',
-      'mark': timestamp,
-    });
+    // todo: implement search history with given timestamp
+    var response = devHistory;
+    var items = response['items'];
 
-    var items = jsonDecode(response.body)['items'];
-    for (var item in items) {
-      HistoryItem historyItem = HistoryItem(item['name'], item['action'],
-          item['action_time'], item['size'], item['hash']);
+    List<HistoryItem> historyItems = [];
+    for (var item in items!) {
+      HistoryItem historyItem = HistoryItem(
+        item['name'].toString(),
+        int.parse(item['action'].toString()),
+        int.parse(item['action_time'].toString()),
+        int.parse(item['size'].toString()),
+        item['hash'].toString(),
+      );
       historyItems.add(historyItem);
     }
     _historyService?.setTorrentHistoryList(historyItems);
@@ -331,91 +264,34 @@ class DevApiService implements IApiService {
   setTorrentLabel({required String hashValue, required String label}) async {
     log.v(
         "Setting torrent label with $label for torrent with hashValue $hashValue");
-    try {
-      await ioClient.post(Uri.parse(httpRpcPluginUrl),
-          headers: getAuthHeader(),
-          body: {
-            'mode': 'setlabel',
-            'hash': hashValue,
-            'v': label.replaceAll(" ", "%20")
-          });
-    } on Exception catch (e) {
-      print(e);
-    }
+    devTorrents[hashValue]![14] = label;
   }
 
   removeTorrentLabel({required String hashValue}) async {
     log.v("Remove torrent label for torrent with hashValue $hashValue");
-    try {
-      await ioClient.post(Uri.parse(httpRpcPluginUrl),
-          headers: getAuthHeader(),
-          body: {'mode': 'setlabel', 'hash': hashValue, 'v': ''});
-    } on Exception catch (e) {
-      print(e.toString() + "error");
-    }
+    devTorrents[hashValue]![14] = "";
   }
 
   Future<bool> changePassword(int index, String newPassword) async {
     log.v("Changing password");
     Account account = accounts[index];
-    var response;
-    int total = -100;
-    try {
-      response = await ioClient.get(Uri.parse(diskSpacePluginUrl), headers: {
-        'authorization': 'Basic ' +
-            base64Encode(utf8.encode('${account.username}:$newPassword')),
-      });
-      total = jsonDecode(response.body)['total'];
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Invalid Password');
-    }
-
-    if (response != null && total > -100 && response.statusCode == 200) {
-      return true;
-    }
-
-    return false;
+    devPasswordChange(account.username, newPassword);
+    return true;
   }
 
   /// Gets Disk Files
   Future<List<DiskFile>> getDiskFiles(String path) async {
     log.v("Fetching Disk Files");
-    try {
-      var response = await ioClient
-          .post(Uri.parse(explorerPluginUrl), headers: getAuthHeader(), body: {
-        'cmd': 'get',
-        'src': path,
-      });
-
-      var files = jsonDecode(response.body)['files'];
-
-      List<DiskFile> diskFiles = [];
-
-      for (var file in files) {
-        DiskFile diskFile = DiskFile();
-
-        diskFile.isDirectory = file['is_dir'];
-        diskFile.name = file['data']['name'];
-        diskFiles.add(diskFile);
-      }
-
-      return diskFiles;
-    } on Exception catch (e) {
-      print(e.toString());
-      return [];
-    }
+    return [];
   }
 
   /// Gets list of files for a particular torrent
   Future<List<TorrentFile>> getFiles(String hashValue) async {
-    log.v("Fetching filles for torrent with hash $hashValue");
+    log.v("Fetching files for torrent with hash $hashValue");
     List<TorrentFile> filesList = [];
 
-    var flsResponse = await ioClient.post(Uri.parse(httpRpcPluginUrl),
-        headers: getAuthHeader(), body: {'mode': 'fls', 'hash': hashValue});
-
-    var files = jsonDecode(flsResponse.body);
-    for (var file in files) {
+    var files = devTorrentsData[hashValue];
+    for (var file in files!) {
       TorrentFile torrentFile = TorrentFile(file[0], file[1], file[2], file[3]);
       filesList.add(torrentFile);
     }
@@ -427,11 +303,8 @@ class DevApiService implements IApiService {
     log.v("Fetching trackers for torrent with hash $hashValue");
     List<String> trackersList = [];
 
-    var trKResponse = await ioClient.post(Uri.parse(httpRpcPluginUrl),
-        headers: getAuthHeader(), body: {'mode': 'trk', 'hash': hashValue});
-
-    var trackers = jsonDecode(trKResponse.body);
-    for (var tracker in trackers) {
+    var trackers = devTorrentsTracker[hashValue];
+    for (var tracker in trackers!) {
       trackersList.add(tracker[0]);
     }
     return trackersList;
@@ -537,20 +410,17 @@ class DevApiService implements IApiService {
     return rssFilters;
   }
 
-  List<Torrent>? _parseTorrentData(String responseBody, Account? currAccount) {
+  List<Torrent>? _parseTorrentData(dynamic torrentsPath, Account? currAccount) {
     log.v("List of Torrents being parsed");
     // takes response and parse and return the torrents data
     List<Torrent> torrentsList = [];
     // A list of active torrents is required for changing the connection state from waiting to active
     List<Torrent> activeTorrents = [];
     List<String> labels = [];
-    var torrentsPath = jsonDecode(responseBody)['t'];
-
     if (torrentsPath.length == 0) {
       log.i("No torrent to parse");
       return [];
     }
-
     for (var hashKey in torrentsPath.keys) {
       var torrentObject = torrentsPath[hashKey];
       Torrent torrent = Torrent.fromObject(
