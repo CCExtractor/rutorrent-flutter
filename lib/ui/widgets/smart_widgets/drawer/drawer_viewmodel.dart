@@ -1,4 +1,7 @@
+import 'package:logger/logger.dart';
+import 'package:package_info/package_info.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
+import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/account.dart';
@@ -12,6 +15,7 @@ import 'package:rutorrentflutter/ui/widgets/dumb_widgets/filter_tile_list_widget
 import 'package:stacked/stacked.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
+Logger log = getLogger("DrawerViewModel");
 
 class DrawerViewModel extends BaseViewModel {
   DiskSpaceService? _diskSpaceService = locator<DiskSpaceService>();
@@ -23,9 +27,15 @@ class DrawerViewModel extends BaseViewModel {
       locator<UserPreferencesService>();
   IApiService _apiService = locator<IApiService>();
 
+  PackageInfo packageinfo = new PackageInfo(
+      packageName: '', appName: '', buildNumber: '', version: '');
+
+  get packageInfo => packageinfo;
+
   void init() async {
     setBusy(true);
     await _apiService.updateDiskSpace();
+    packageinfo = await PackageInfo.fromPlatform();
     setBusy(false);
   }
 

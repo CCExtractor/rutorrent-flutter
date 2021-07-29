@@ -31,7 +31,7 @@ class DrawerView extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    'Application version: ${packageInfo?.version ?? ""}',
+                    'Application version: ${model.packageInfo?.version ?? ""}',
                     style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
                   ),
                 ],

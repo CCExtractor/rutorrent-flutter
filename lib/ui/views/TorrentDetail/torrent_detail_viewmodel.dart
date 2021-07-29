@@ -11,9 +11,11 @@ import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/torrent_label_dialog.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class TorrentDetailViewModel extends BaseViewModel {
   TorrentService _torrentService = locator<TorrentService>();
+  NavigationService _navigationService = locator<NavigationService>();
   IApiService _apiService = locator<IApiService>();
 
   late Torrent _torrent;
@@ -61,11 +63,19 @@ class TorrentDetailViewModel extends BaseViewModel {
   }
 
   void removeTorrentWithData() async {
-    await _apiService.removeTorrentWithData(_torrent.hash ?? "");
+    setBusy(true);
+    _navigationService.popRepeated(1);
+    await _torrentService.removeTorrentWithData(_torrent.hash ?? "");
+    _navigationService.popRepeated(1);
+    setBusy(false);
   }
 
   void removeTorrent() async {
-    await _apiService.removeTorrent(_torrent.hash ?? "");
+    setBusy(true);
+    _navigationService.popRepeated(1);
+    await _torrentService.removeTorrent(_torrent.hash ?? "");
+    _navigationService.popRepeated(1);
+    setBusy(false);
   }
 
   toggleTorrentCurrentStatus() async {

@@ -16,7 +16,7 @@ class TorrentDetailView extends StatelessWidget {
     return ViewModelBuilder<TorrentDetailViewModel>.reactive(
       onModelReady: (model) => model.init(torrent),
       builder: (context, model, child) => Scaffold(
-        body: !model.isInitialised
+        body: !model.isInitialised || model.isBusy
             ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -121,8 +121,8 @@ class TorrentDetailView extends StatelessWidget {
                                               onPressed: () {
                                                 showDialog(
                                                     context: context,
-                                                    builder: (context) =>
-                                                        CustomDialog(
+                                                    builder: (context) => 
+                                                    CustomDialog(
                                                           title:
                                                               'Remove Torrent',
                                                           optionRightText:
@@ -133,22 +133,11 @@ class TorrentDetailView extends StatelessWidget {
                                                               () {
                                                             model
                                                                 .removeTorrentWithData();
-                                                            // ApiRequests
-                                                            //     .removeTorrentWithData(
-                                                            //         model.torrent.api,
-                                                            //         model.torrent.hash);
-                                                            // Navigator.pop(context);
-                                                            // Navigator.pop(context);
                                                           },
                                                           optionLeftOnPressed:
                                                               () {
                                                             model
                                                                 .removeTorrent();
-                                                            // ApiRequests.removeTorrent(
-                                                            //     model.torrent.api,
-                                                            //     model.torrent.hash);
-                                                            // Navigator.pop(context);
-                                                            // Navigator.pop(context);
                                                           },
                                                         ));
                                               }),
@@ -167,11 +156,6 @@ class TorrentDetailView extends StatelessWidget {
                                                   model.torrent)),
                                               onPressed: () => model
                                                   .toggleTorrentCurrentStatus()
-                                              // ApiRequests.toggleTorrentStatus(
-                                              //     model.torrent.api,
-                                              //     model.torrent.hash,
-                                              //     model.torrent.isOpen,
-                                              //     model.torrent.getState),
                                               ),
                                         ),
                                         SizedBox(

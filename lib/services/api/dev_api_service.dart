@@ -1,5 +1,3 @@
-// [WIP] This is the Development API service class, yet to be implemented
-// Please DO NOT USE THIS SERVICE UNTIL THIS WARNING IS REMOVED
 import 'dart:convert';
 import 'dart:io';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,6 +18,7 @@ import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/mock_data/accounts.dart';
 import 'package:rutorrentflutter/services/mock_data/disk_space.dart';
 import 'package:rutorrentflutter/services/mock_data/history.dart';
+import 'package:rutorrentflutter/services/mock_data/rss.dart';
 import 'package:rutorrentflutter/services/mock_data/torrents.dart';
 import 'package:rutorrentflutter/services/services_info.dart';
 import 'package:rutorrentflutter/services/state_services/history_service.dart';
@@ -56,17 +55,12 @@ class DevApiService implements IApiService {
   get url => account!.url;
 
   /// Plugin urls
-  get httpRpcPluginUrl => url + '/plugins/httprpc/action.php';
-
-  get addTorrentPluginUrl => url + '/php/addtorrent.php';
-
-  get diskSpacePluginUrl => url + '/plugins/diskspace/action.php';
-
-  get rssPluginUrl => url + '/plugins/rss/action.php';
-
-  get historyPluginUrl => url + '/plugins/history/action.php';
-
-  get explorerPluginUrl => url + '/plugins/explorer/action.php';
+  get httpRpcPluginUrl => '';
+  get addTorrentPluginUrl => '';
+  get diskSpacePluginUrl => '';
+  get rssPluginUrl => '';
+  get historyPluginUrl => '';
+  get explorerPluginUrl => '';
 
   /// Authentication header
   Map<String, String> getAuthHeader() {
@@ -104,19 +98,12 @@ class DevApiService implements IApiService {
     List<Account?>? accounts = _authenticationService!.accounts;
     while (true) {
       List<Torrent> allTorrentList = [];
-      try {
-        for (Account? account in accounts!) {
-          try {
-            var response = devTorrents;
-            allTorrentList.addAll(_parseTorrentData(response, account)!);
-          } catch (e) {
-            print(e);
-          }
-        }
-      } catch (e) {
-        print('Account Changes');
+      for (Account? account in accounts!) {
+        var response = devTorrents;
+        allTorrentList.addAll(_parseTorrentData(response, account)!);
       }
       yield allTorrentList;
+      // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
     }
   }
@@ -125,17 +112,8 @@ class DevApiService implements IApiService {
   Stream<List<Torrent?>?> getTorrentList() async* {
     log.v("Fetching torrent lists from one account");
     while (true) {
-      try {
-        var response = devTorrents;
-        yield _parseTorrentData(response, account)!;
-      } catch (e) {
-        print('Exception caught in getTorrentList Api Request ' + e.toString());
-        /*returning null since the stream has to be active all the times to return something
-          this usually occurs when there is no torrent task available or when the connect
-          to rTorrent is not established
-        */
-        yield null;
-      }
+      var response = devTorrents;
+      yield _parseTorrentData(response, account)!;
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
     }
@@ -204,6 +182,7 @@ class DevApiService implements IApiService {
   Future<List<HistoryItem>> getHistory({int? lastHours}) async {
     log.v(
         "Fetching history items from server for ${lastHours ?? 'infinite'} hours ago");
+    // ignore: unused_local_variable
     String timestamp = '0';
     if (lastHours != null) {
       timestamp = ((DateTime.now().millisecondsSinceEpoch -
@@ -238,6 +217,7 @@ class DevApiService implements IApiService {
 
   updateHistory() async {
     log.v("Updating history items from server");
+    // ignore: unused_local_variable
     String timestamp = ((CustomizableDateTime.current.millisecondsSinceEpoch -
                 Duration(seconds: 10).inMilliseconds) ~/
             1000)
@@ -316,11 +296,8 @@ class DevApiService implements IApiService {
   Future<List<RSSLabel>> loadRSS() async {
     log.v("Loading RSS");
     List<RSSLabel> rssLabels = [];
-    var rssResponse =
-        await ioClient.post(Uri.parse(rssPluginUrl), headers: getAuthHeader());
-
-    var feeds = jsonDecode(rssResponse.body)['list'];
-    for (var label in feeds) {
+    var feeds = devRSS['list'];
+    for (var label in feeds!) {
       RSSLabel rssLabel = RSSLabel(label['hash'], label['label']);
       for (var item in label['items']) {
         RSSItem rssItem = RSSItem(item['title'], item['time'], item['href']);
@@ -334,22 +311,15 @@ class DevApiService implements IApiService {
   /// Removes RSS Feed
   removeRSS(String hashValue) async {
     log.v("Removing RSS");
-    await ioClient
-        .post(Uri.parse(rssPluginUrl), headers: getAuthHeader(), body: {
-      'mode': 'remove',
-      'rss': hashValue,
-    });
+    Fluttertoast.showToast(msg: 'Removing RSS');
+    devRSS['list']!.removeWhere((rss) => rss["hash"] == hashValue);
   }
 
   /// Adds new RSS Feed
   addRSS(String rssUrl) async {
     log.v("Adding RSS");
     Fluttertoast.showToast(msg: 'Adding RSS');
-    await ioClient
-        .post(Uri.parse(rssPluginUrl), headers: getAuthHeader(), body: {
-      'mode': 'add',
-      'url': rssUrl,
-    });
+    // todo
   }
 
   /// Gets details of available torrent in RSS Feed
@@ -357,14 +327,12 @@ class DevApiService implements IApiService {
     log.v("Fetching RSS Details");
     bool dataAvailable = true;
     try {
-      var response = await ioClient
-          .post(Uri.parse(rssPluginUrl), headers: getAuthHeader(), body: {
-        'mode': 'getdesc',
-        'href': rssItem.url,
-        'rss': labelHash,
-      });
-      var xmlResponse = XmlDocument.parse(response.body);
-
+      Map<String, dynamic> rss =
+          devRSSItems.firstWhere((rss) => rss['hash'] == labelHash);
+      var rssItems = [];
+      rssItems.addAll(rss['items']);
+      var item = rssItems.firstWhere((item) => item['href'] == rssItem.url);
+      var xmlResponse = XmlDocument.parse(item['xml']);
       var data =
           xmlResponse.lastChild?.text; // extracting value stored in data tag
       var list = data?.split('<br />');
@@ -390,20 +358,15 @@ class DevApiService implements IApiService {
   Future<List<RSSFilter>> getRSSFilters() async {
     log.v("Fetching RSS Filters");
     List<RSSFilter> rssFilters = [];
-    var response = await ioClient
-        .post(Uri.parse(rssPluginUrl), headers: getAuthHeader(), body: {
-      'mode': 'getfilters',
-    });
-
-    var filters = jsonDecode(response.body);
+    var filters = devRSSFilters;
     for (var filter in filters) {
       RSSFilter rssFilter = RSSFilter(
-        filter['name'],
-        filter['enabled'],
-        filter['pattern'],
-        filter['label'],
-        filter['exclude'],
-        filter['dir'],
+        filter['name'].toString(),
+        int.parse(filter['enabled'].toString()),
+        filter['pattern'].toString(),
+        filter['label'].toString(),
+        filter['exclude'].toString(),
+        filter['dir'].toString(),
       );
       rssFilters.add(rssFilter);
     }

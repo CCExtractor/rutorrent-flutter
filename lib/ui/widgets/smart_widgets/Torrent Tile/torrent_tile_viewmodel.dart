@@ -27,11 +27,11 @@ class TorrentTileViewModel extends BaseViewModel {
   }
 
   removeTorrentWithData(String hashValue) {
-    _apiService!.removeTorrentWithData(hashValue);
+    _torrentService!.removeTorrentWithData(hashValue);
   }
 
   removeTorrent(String hashValue) {
-    _apiService!.removeTorrent(hashValue);
+    _torrentService!.removeTorrent(hashValue);
   }
 
   toggleTorrentStatus(Torrent torrent) async {

@@ -21,7 +21,6 @@ class LabelTile extends StatelessWidget {
         ),
         title: Text(label),
         onTap: () {
-          print("ontapp label");
           model.changeLabel(label);
           Navigator.pop(context);
         },

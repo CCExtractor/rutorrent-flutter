@@ -566,12 +566,11 @@ class ProdApiService implements IApiService {
       if (!labels.contains(torrent.label) && torrent.label != "") {
         labels.add(torrent.label!);
       }
-      // log.e(torrent.account);
       torrentsList.add(torrent);
     }
     _torrentService!.setActiveDownloads(activeTorrents);
-    _torrentService!.setListOfLabels(labels);
     _torrentService!.setTorrentList(torrentsList);
+    _torrentService!.setListOfLabels(labels);
     return torrentsList;
   }
 }
