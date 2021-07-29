@@ -18,8 +18,9 @@ void main() async {
   final appDir = await getApplicationDocumentsDirectory();
   Hive.init(appDir.path);
   await Hive.openBox('DB');
-  //Setting custom Bottom Sheet
+  //To work in development environment, simply change the environment to Environment.dev below
   setupLocator(environment: Environment.prod);
+  //Setting custom Bottom Sheet
   setUpBottomSheetUi();
   //Setting up Services
   locator<NotificationService>().init();
