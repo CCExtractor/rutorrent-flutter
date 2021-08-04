@@ -1,9 +1,9 @@
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
-import 'package:rutorrentflutter/ui/views/TorrentDetail/torrent_detail_viewmodel.dart';
+import 'package:rutorrentflutter/ui/views/torrent_detail/torrent_detail_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/cutom_dialog_widget.dart';
-import 'package:rutorrentflutter/ui/widgets/smart_widgets/File%20Tile/file_tile_widget.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/file_tile/file_tile_widget.dart';
 import 'package:stacked/stacked.dart';
 
 class TorrentDetailView extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
-import 'package:rutorrentflutter/ui/widgets/smart_widgets/URL%20BottomSheet/url_bottomsheet_view.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/URL_bottom_sheet/url_bottomsheet_view.dart';
 
 class HomeViewFloatingActionButton extends StatelessWidget {
   final int index;

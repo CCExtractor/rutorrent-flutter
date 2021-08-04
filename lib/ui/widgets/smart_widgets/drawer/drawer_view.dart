@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/app/constants.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/label_tile_widget.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/show_disk_space_widget.dart';

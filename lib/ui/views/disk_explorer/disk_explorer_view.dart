@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
-import 'package:rutorrentflutter/ui/views/DiskExplorer/disk_explorer_viewmodel.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
+import 'package:rutorrentflutter/ui/views/disk_explorer/disk_explorer_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/loading_shimmer.dart';
-import 'package:rutorrentflutter/ui/widgets/smart_widgets/Disk%20File%20Tile/disk_file_tile_view.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/disk_file_tile/disk_file_tile_view.dart';
 import 'package:stacked/stacked.dart';
 
 class DiskExplorerView extends StatelessWidget {
