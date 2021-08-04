@@ -1,6 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:rutorrentflutter/ui/views/MediaPlayer/media_stream_viewmodel.dart';
+import 'package:rutorrentflutter/ui/views/media_player/media_stream_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

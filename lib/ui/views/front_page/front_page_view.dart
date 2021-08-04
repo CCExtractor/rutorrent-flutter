@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rutorrentflutter/ui/views/FrontPage/front_page_viewmodel.dart';
+import 'package:rutorrentflutter/ui/views/front_page/front_page_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 class FrontPageView extends StatelessWidget {

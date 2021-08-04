@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:rutorrentflutter/ui/views/RSSFilters/RSSFilters_viewmodel.dart';
+import 'package:rutorrentflutter/ui/views/rss_filters/rss_filters_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/loading_shimmer.dart';
 import 'package:stacked/stacked.dart';
 

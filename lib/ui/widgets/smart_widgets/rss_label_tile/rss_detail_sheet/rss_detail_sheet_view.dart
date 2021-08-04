@@ -1,8 +1,8 @@
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/loading_shimmer.dart';
-import 'package:rutorrentflutter/ui/widgets/smart_widgets/RSS%20Label%20Tile/RSS%20Detail%20Sheet/rss_detail_sheet_viewmodel.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/rss_label_tile/rss_detail_sheet/rss_detail_sheet_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

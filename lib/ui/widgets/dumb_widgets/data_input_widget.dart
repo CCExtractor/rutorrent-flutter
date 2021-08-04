@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 
 class DataInput extends StatelessWidget {
   final String? hintText;

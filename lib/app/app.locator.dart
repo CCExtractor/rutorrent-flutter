@@ -22,7 +22,7 @@ import '../services/state_services/file_service.dart';
 import '../services/state_services/history_service.dart';
 import '../services/state_services/torrent_service.dart';
 import '../services/state_services/user_preferences_service.dart';
-import '../theme/AppStateNotifier.dart';
+import '../theme/app_state_notifier.dart';
 import '../utils/file_picker_service.dart';
 
 final locator = StackedLocator.instance;

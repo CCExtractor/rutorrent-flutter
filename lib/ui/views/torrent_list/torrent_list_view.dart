@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
-import 'package:rutorrentflutter/ui/views/TorrentList/Torrent_list_viewmodel.dart';
+import 'package:rutorrentflutter/ui/views/torrent_list/torrent_list_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/loading_shimmer.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/no_torrent_widget.dart';
-import 'package:rutorrentflutter/ui/widgets/smart_widgets/Search%20Bar/search_bar_view.dart';
-import 'package:rutorrentflutter/ui/widgets/smart_widgets/Torrent%20Tile/torrent_tile_view.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/search_bar/search_bar_view.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/torrent_tile/torrent_tile_view.dart';
 import 'package:stacked/stacked.dart';
 
 final log = getLogger("TorrentListView");

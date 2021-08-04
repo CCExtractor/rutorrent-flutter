@@ -1,6 +1,6 @@
-import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
-import 'package:rutorrentflutter/ui/views/FrontPage/front_page_view.dart';
+import 'package:rutorrentflutter/ui/views/front_page/front_page_view.dart';
 import 'package:rutorrentflutter/ui/views/home/home_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/floating_action_button_widget.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/frontpageview_appbar_widget.dart';
