@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/data_input_widget.dart';
-import 'package:rutorrentflutter/ui/widgets/smart_widgets/URL%20BottomSheet/url_bottomsheet_viewmodel.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/URL_bottom_sheet/url_bottomsheet_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 class URLBottomSheetView extends StatelessWidget {

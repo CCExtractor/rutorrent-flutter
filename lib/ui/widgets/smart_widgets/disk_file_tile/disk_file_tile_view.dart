@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/models/disk_file.dart';
-import 'package:rutorrentflutter/ui/widgets/smart_widgets/Disk%20File%20Tile/disk_file_tile_viewmodel.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/disk_file_tile/disk_file_tile_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 class DiskFileTileView extends StatelessWidget {

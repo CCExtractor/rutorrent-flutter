@@ -10,11 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import '../models/torrent.dart';
-import '../ui/views/DiskExplorer/disk_explorer_view.dart';
+import '../ui/views/disk_explorer/disk_explorer_view.dart';
 import '../ui/views/History/history_view.dart';
-import '../ui/views/MediaPlayer/media_stream_view.dart';
+import '../ui/views/media_player/media_stream_view.dart';
 import '../ui/views/Settings/settings_view.dart';
-import '../ui/views/TorrentDetail/torrent_detail_view.dart';
+import '../ui/views/torrent_detail/torrent_detail_view.dart';
 import '../ui/views/home/home_view.dart';
 import '../ui/views/login/login_view.dart';
 import '../ui/views/splash/splash_view.dart';
