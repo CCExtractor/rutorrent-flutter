@@ -28,7 +28,7 @@ class SharedPreferencesService {
     prefs?.setString(accountsData, data);
   }
 
-  Future<List<Account?>> fetchSavedLogin() async {
+  Future<List<Account>> fetchSavedLogin() async {
     final prefs = await store();
     if (prefs?.containsKey(accountsData) ?? false)
       return _decodeAccounts(prefs?.getString(accountsData));
@@ -47,9 +47,9 @@ class SharedPreferencesService {
             .toList(),
       );
 
-  List<Account?> _decodeAccounts(String? data) {
+  List<Account> _decodeAccounts(String? data) {
     return (json.decode(data!) as List<dynamic>)
-        .map<Account?>((item) => Account.fromJson(item))
+        .map<Account>((item) => Account.fromJson(item))
         .toList();
   }
 }

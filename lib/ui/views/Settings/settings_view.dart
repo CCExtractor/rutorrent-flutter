@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/models/account.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/views/Settings/settings_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
@@ -20,50 +21,66 @@ class SettingsView extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              ExpansionTile(
-                title: Text('Manage Accounts',
-                    style: TextStyle(fontWeight: FontWeight.w600)),
-                children: <Widget>[
-                  ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: model.accounts.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            // CHANGE PASSWORD
-                            model.showPasswordChangeDialog(context, index);
-                          },
-                          child: ListTile(
-                            dense: true,
-                            leading: Icon(
-                              Icons.supervisor_account,
-                              color: !AppStateNotifier.isDarkModeOn
-                                  ? Colors.black
-                                  : Colors.white,
-                            ),
-                            title: Text(
-                                Uri.parse(model.accounts[index].url).host,
-                                style: TextStyle(
-                                    fontSize: 14, fontWeight: FontWeight.w600)),
-                            subtitle: Text(
-                              'Change Password',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600, fontSize: 12),
-                            ),
-                            trailing: IconButton(
-                                icon: Icon(
-                                  Icons.delete_forever,
-                                  color: Theme.of(context).primaryColor,
-                                  size: 28,
+              ValueListenableBuilder(
+                valueListenable: model.accounts,
+                builder: (context, List<Account> accounts, snapshot) {
+                  return ExpansionTile(
+                    title: Text('Manage Accounts',
+                        style: TextStyle(fontWeight: FontWeight.w600)),
+                    children: <Widget>[
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: accounts.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                // CHANGE PASSWORD
+                                model.showPasswordChangeDialog(context, index);
+                              },
+                              child: ListTile(
+                                dense: true,
+                                leading: Icon(
+                                  Icons.supervisor_account,
+                                  color: !AppStateNotifier.isDarkModeOn
+                                      ? Colors.black
+                                      : Colors.white,
                                 ),
-                                onPressed: () {
-                                  // DELETE ACCOUNT
-                                  model.showDeleteAccountDialog(context, index);
-                                }),
-                          ),
-                        );
-                      })
-                ],
+                                title: Text(
+                                    Uri.parse(accounts[index].url ?? "").host,
+                                    style: TextStyle(
+                                        fontSize: 14, fontWeight: FontWeight.w600)),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      accounts[index].username ?? "",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600, fontSize: 12),
+                                    ),
+                                    SizedBox(height: 3,),
+                                    Text(
+                                      'Change Password',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600, fontSize: 12),
+                                    ),
+                                  ],
+                                ),
+                                trailing: IconButton(
+                                    icon: Icon(
+                                      Icons.delete_forever,
+                                      color: Theme.of(context).primaryColor,
+                                      size: 28,
+                                    ),
+                                    onPressed: () {
+                                      // DELETE ACCOUNT
+                                      model.showDeleteAccountDialog(context, index);
+                                    }),
+                              ),
+                            );
+                          })
+                    ],
+                  );
+                }
               ),
               ListTile(
                 title: Text('Notifications',

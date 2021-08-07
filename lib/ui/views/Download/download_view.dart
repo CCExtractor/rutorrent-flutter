@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:rutorrentflutter/ui/views/Download/download_viewmodel.dart';
+import 'package:rutorrentflutter/ui/views/download/download_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 class DownloadView extends StatelessWidget {

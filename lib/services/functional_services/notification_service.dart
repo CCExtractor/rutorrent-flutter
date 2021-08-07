@@ -79,22 +79,23 @@ class NotificationService {
   /// for the notification title and body.
   ///
   /// **Example Call** :
+  ///```dart
+  ///  notificationMap = {
   ///
-  /// `notificationMap = {`
+  ///  "title":"This is my title notification",
   ///
-  /// `"title":"This is my title notification",`
+  ///  "body" : "This is the body of the notification"
   ///
-  /// `"body" : "This is the body of the notification`"
+  ///  }
   ///
-  /// `}`
+  /// dispatchLocalNotification( 
   ///
-  ///`dispatchLocalNotification( `
+  ///    key : _notificationService.< Notification_Channel_Name >, 
   ///
-  ///`    key : _notificationService.< Notification_Channel_Name >, `
+  ///    customData : notificationsMap
   ///
-  ///`    customData : notificationsMap`
-  ///
-  ///`)`
+  ///  )
+  ///```
   dispatchLocalNotification(
       {required String key, required Map customData}) async {
     // If two notifications happen to have same IDs

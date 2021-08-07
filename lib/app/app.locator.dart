@@ -22,7 +22,7 @@ import '../services/state_services/file_service.dart';
 import '../services/state_services/history_service.dart';
 import '../services/state_services/torrent_service.dart';
 import '../services/state_services/user_preferences_service.dart';
-import '../theme/AppStateNotifier.dart';
+import '../theme/app_state_notifier.dart';
 import '../utils/file_picker_service.dart';
 
 final locator = StackedLocator.instance;
@@ -44,7 +44,6 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => NotificationService());
   locator.registerLazySingleton(() => UserPreferencesService());
   locator.registerLazySingleton(() => InternetService());
-  locator.registerLazySingleton(() => TorrentService());
   locator.registerLazySingleton(() => HistoryService());
   locator.registerLazySingleton(() => AppStateNotifier());
   locator.registerLazySingleton(() => FileService());
@@ -52,4 +51,5 @@ void setupLocator({String? environment, EnvironmentFilter? environmentFilter}) {
   locator.registerLazySingleton(() => SnackbarService());
   locator.registerLazySingleton(() => BottomSheetService());
   locator.registerLazySingleton(() => FilePickerService());
+  locator.registerLazySingleton(() => TorrentService());
 }

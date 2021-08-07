@@ -2,10 +2,10 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
-import 'package:rutorrentflutter/ui/views/History/history_viewmodel.dart';
+import 'package:rutorrentflutter/ui/views/history/history_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/loading_shimmer.dart';
 import 'package:stacked/stacked.dart';
 

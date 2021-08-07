@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/ui/views/Download/download_view.dart';
-import 'package:rutorrentflutter/ui/views/RSSFeed/RSSFeed_view.dart';
-import 'package:rutorrentflutter/ui/views/RSSFilters/RSSFilters_view.dart';
-import 'package:rutorrentflutter/ui/views/TorrentList/Torrent_list_view.dart';
+import 'package:rutorrentflutter/ui/views/rss_feed/rss_feed_view.dart';
+import 'package:rutorrentflutter/ui/views/rss_filters/rss_filters_view.dart';
+import 'package:rutorrentflutter/ui/views/torrent_list/torrent_list_view.dart';
 import 'package:stacked/stacked.dart';
 
 class FrontPageViewModel extends BaseViewModel {
