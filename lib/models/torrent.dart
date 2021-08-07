@@ -1,7 +1,4 @@
-import 'package:logger/logger.dart';
-import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/models/account.dart';
-Logger log = getLogger("Torrent");
 enum Status {
   downloading,
   paused,

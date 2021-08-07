@@ -37,14 +37,7 @@ class TorrentTileViewModel extends BaseViewModel {
   toggleTorrentStatus(Torrent torrent) async {
     await _apiService!.toggleTorrentStatus(torrent);
     //Refresh torrent list
-    _userPreferencesService!.showAllAccounts
-        ? await _apiService!
-            .getAllAccountsTorrentList()
-            .listen((event) {})
-            .cancel()
-        : await _apiService!.getTorrentList().listen((event) {}).cancel();
-    await _torrentService?.updateTorrentDisplayList(
-        searchText: _userPreferencesService?.searchTextController.text);
+    await _torrentService?.refreshTorrentList();
   }
   
   navigateToTorrentDetail(Torrent torrent) {

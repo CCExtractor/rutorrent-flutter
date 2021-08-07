@@ -42,9 +42,9 @@ class ProdApiService implements IApiService {
     return _ioClient;
   }
 
-  Account? get account => _authenticationService!.accounts!.isEmpty
+  Account? get account => _authenticationService!.accounts.value.isEmpty
       ? _authenticationService!.tempAccount
-      : _authenticationService!.accounts![0];
+      : _authenticationService!.accounts.value[0];
 
   get accounts => _authenticationService?.accounts;
 
@@ -105,11 +105,11 @@ class ProdApiService implements IApiService {
   /// Gets list of torrents for all saved accounts [Apis]
   Stream<List<Torrent>> getAllAccountsTorrentList() async* {
     log.v("Fetching torrent lists from all accounts");
-    List<Account?>? accounts = _authenticationService!.accounts;
+    List<Account?>? accounts = _authenticationService!.accounts.value;
     // while (true) {
     List<Torrent> allTorrentList = [];
     try {
-      for (Account? account in accounts!) {
+      for (Account? account in accounts) {
         try {
           var response = await ioClient.post(Uri.parse(httpRpcPluginUrl),
               headers: getAuthHeader(),
@@ -240,7 +240,6 @@ class ProdApiService implements IApiService {
   }
 
   toggleTorrentStatus(Torrent torrent) async {
-    log.v("Toggling torrent status");
     const Map<Status, String> statusMap = {
       Status.downloading: 'start',
       Status.paused: 'pause',
@@ -258,6 +257,7 @@ class ProdApiService implements IApiService {
       'mode': statusMap[toggleStatus],
       'hash': torrent.hash,
     });
+    log.v("Toggling torrent status to " + statusMap[toggleStatus].toString());
   }
 
   /// Gets History of last [lastHours] hours

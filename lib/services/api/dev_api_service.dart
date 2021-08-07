@@ -46,9 +46,9 @@ class DevApiService implements IApiService {
     return _ioClient;
   }
 
-  Account? get account => _authenticationService!.accounts!.isEmpty
+  Account? get account => _authenticationService!.accounts.value.isEmpty
       ? _authenticationService!.tempAccount
-      : _authenticationService!.accounts![0];
+      : _authenticationService!.accounts.value[0];
 
   get accounts => _authenticationService?.accounts;
 
@@ -95,28 +95,28 @@ class DevApiService implements IApiService {
   /// Gets list of torrents for all saved accounts [Apis]
   Stream<List<Torrent>> getAllAccountsTorrentList() async* {
     log.v("Fetching torrent lists from all accounts");
-    List<Account?>? accounts = _authenticationService!.accounts;
-    while (true) {
+    List<Account?>? accounts = _authenticationService!.accounts.value;
+    // while (true) {
       List<Torrent> allTorrentList = [];
-      for (Account? account in accounts!) {
+      for (Account? account in accounts) {
         var response = devTorrents;
         allTorrentList.addAll(_parseTorrentData(response, account)!);
       }
       yield allTorrentList;
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
-    }
+    // }
   }
 
   /// Gets list of torrents for a particular account
   Stream<List<Torrent?>?> getTorrentList() async* {
     log.v("Fetching torrent lists from one account");
-    while (true) {
+    // while (true) {
       var response = devTorrents;
       yield _parseTorrentData(response, account)!;
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
-    }
+    // }
   }
 
   startTorrent(String? hashValue) async {
@@ -254,7 +254,7 @@ class DevApiService implements IApiService {
 
   Future<bool> changePassword(int index, String newPassword) async {
     log.v("Changing password");
-    Account account = accounts[index];
+    Account account = accounts.value[index];
     devPasswordChange(account.username, newPassword);
     return true;
   }

@@ -121,8 +121,8 @@ class TorrentDetailView extends StatelessWidget {
                                               onPressed: () {
                                                 showDialog(
                                                     context: context,
-                                                    builder: (context) => 
-                                                    CustomDialog(
+                                                    builder: (context) =>
+                                                        CustomDialog(
                                                           title:
                                                               'Remove Torrent',
                                                           optionRightText:
@@ -152,11 +152,13 @@ class TorrentDetailView extends StatelessWidget {
                                           child: IconButton(
                                               color: Colors.black,
                                               iconSize: 40,
-                                              icon: Icon(getTorrentIconData(
-                                                  model.torrent)),
+                                              icon: Icon(model.torrent.isOpen == 0
+                                                  ? Icons.play_arrow
+                                                  : model.torrent.getState == 0
+                                                      ? (Icons.play_arrow)
+                                                      : Icons.pause),
                                               onPressed: () => model
-                                                  .toggleTorrentCurrentStatus()
-                                              ),
+                                                  .toggleTorrentCurrentStatus()),
                                         ),
                                         SizedBox(
                                           width: 35,
@@ -554,11 +556,7 @@ class TorrentDetailView extends StatelessWidget {
     );
   }
 
-  IconData getTorrentIconData(Torrent torrent) {
-    return torrent.isOpen == 0
-        ? Icons.play_arrow
-        : torrent.getState == 0
-            ? (Icons.play_arrow)
-            : Icons.pause;
-  }
+  // IconData getTorrentIconData(Torrent torrent) {
+  //   return
+  // }
 }

@@ -80,10 +80,16 @@ class TorrentDetailViewModel extends BaseViewModel {
 
   toggleTorrentCurrentStatus() async {
     await _apiService.toggleTorrentStatus(torrent);
+    await _torrentService.refreshTorrentList();
+    _torrent = _torrentService.torrentsList.value.firstWhere((tor) => tor.hash==_torrent.hash);
+    notifyListeners();
   }
 
   stopTorrent() async {
     await _apiService.stopTorrent(_torrent.hash ?? "");
+    await _torrentService.refreshTorrentList();
+    _torrent = _torrentService.torrentsList.value.firstWhere((tor) => tor.hash==_torrent.hash);
+    notifyListeners();
   }
 
   _updateTorrent() {

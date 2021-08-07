@@ -11,6 +11,7 @@ import 'package:rutorrentflutter/services/functional_services/authentication_ser
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
+import 'package:rutorrentflutter/ui/widgets/dumb_widgets/add_another_account_widget.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/filter_tile_list_widgets.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class DrawerViewModel extends BaseViewModel {
 
   DiskSpace get diskSpace => _diskSpaceService!.diskSpace;
 
-  List<Account?> get accounts => (_authenticationService.accounts)!;
+  ValueNotifier<List<Account>> get getAccountValueListenable => _authenticationService.accounts;
 
   List<Widget> filterTileList(model) {
     return _getFilterTileList(model);
@@ -55,24 +56,30 @@ class DrawerViewModel extends BaseViewModel {
 
   bool get isLabelSelected => _torrentService?.isLabelSelected;
 
+  bool get shouldShowAllAccounts => _userPreferencesService.showAllAccounts;
+
   changeLabel(String label) {
     _torrentService?.changeLabel(label);
   }
 
   getAccountsList(context) {
-    Account? currAccount = _authenticationService.accounts?[0];
-    List<Account?> torrentAccounts = accounts;
+    Account currAccount = _authenticationService.accounts.value[0];
+    List<Account> torrentAccounts = getAccountValueListenable.value;
 
     //Add all Accounts
     List<Widget> accountsList = torrentAccounts
         .map((e) => Container(
-              color: _authenticationService.matchAccount(e!, currAccount!)
+              color: _authenticationService.matchAccount(e, currAccount) || shouldShowAllAccounts 
                   ? Theme.of(context).disabledColor
                   : null,
               child: ListTile(
                 dense: true,
                 title: Text(
                   (e.url)!,
+                  style: TextStyle(fontSize: 12),
+                ),
+                subtitle: Text(
+                  (e.username)!,
                   style: TextStyle(fontSize: 12),
                 ),
                 onTap: () => _changeAccount(e, currAccount),
@@ -83,8 +90,10 @@ class DrawerViewModel extends BaseViewModel {
     // Add All Accounts mode option
     accountsList.insert(
         0,
-        _showAllAccountsWidget(
-            _setAllAccounts, _userPreferencesService.showAllAccounts, context));
+        _showAllAccountsWidget(context));
+
+    // Add the "Add Account Option"
+    accountsList.add(AddAnotherAccountWidget(onTap: _addAccount));
 
     return accountsList;
   }
@@ -93,23 +102,20 @@ class DrawerViewModel extends BaseViewModel {
     _torrentService?.changeFilter(filter);
   }
 
-  _changeAccount(Account toBeChangedAccount, Account currAccount) {
+  _changeAccount(Account toBeChangedAccount, Account currAccount) async {
     if (!_authenticationService.matchAccount(toBeChangedAccount, currAccount)) {
-      //Remove account from the list first
-      accounts.removeAt(accounts.indexOf(toBeChangedAccount));
-      //Add the account back at the first position
-      accounts.insert(0, toBeChangedAccount);
-      _authenticationService.saveLogin(toBeChangedAccount);
-      _torrentService?.refreshTorrentList();
+      log.i("Account being changed to username : ${toBeChangedAccount.username}");
+      await _authenticationService.saveLogin(toBeChangedAccount);
+      await _torrentService?.refreshTorrentList();
       _navigationService.navigateTo(Routes.splashView);
+      notifyListeners();
     } else {
       _navigationService.popRepeated(1);
       _userPreferencesService.setShowAllAccounts(false);
     }
   }
 
-  _showAllAccountsWidget(
-      Function onTap, bool showAllAccounts, BuildContext context) {
+  _showAllAccountsWidget(BuildContext context) {
     return Container(
       child: ListTile(
         dense: true,
@@ -118,12 +124,12 @@ class DrawerViewModel extends BaseViewModel {
           width: 12,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: showAllAccounts
+            color: shouldShowAllAccounts
                 ? Theme.of(context).accentColor
                 : Theme.of(context).disabledColor,
           ),
         ),
-        onTap: () => onTap(),
+        onTap: () =>  _setAllAccounts(),
         title: Text(
           'All Accounts',
           style: TextStyle(fontSize: 12),
@@ -133,8 +139,9 @@ class DrawerViewModel extends BaseViewModel {
   }
 
   _setAllAccounts() {
-    _userPreferencesService.setShowAllAccounts(true);
+    _userPreferencesService.toggleShowAllAccounts();
     _torrentService?.refreshTorrentList();
+    notifyListeners();
   }
 
   List<Widget> _getFilterTileList(model) {
@@ -164,5 +171,9 @@ class DrawerViewModel extends BaseViewModel {
   navigateToSettingsScreen() {
     _navigationService.popRepeated(1);
     _navigationService.navigateTo(Routes.settingsView);
+  }
+
+  _addAccount() {
+    _navigationService.navigateTo(Routes.loginView);
   }
 }
