@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
+import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class ConfirmBottomSheetView extends StatelessWidget {
@@ -13,34 +15,35 @@ class ConfirmBottomSheetView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(25),
-      padding: EdgeInsets.all(25),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 24,
+        vertical: 24,
       ),
+      color: AppStateNotifier.isDarkModeOn ? kGreyDT : Colors.white,
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             request.title!,
             style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[900],
+              fontSize: 18,
             ),
           ),
           SizedBox(height: 10),
           Text(
             request.description!,
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(
+              color: Colors.grey,
+            ),
           ),
+          SizedBox(height: 20),
           Row(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               MaterialButton(
-                onPressed: () => completer(SheetResponse(confirmed: true)),
+                onPressed: () => completer(SheetResponse(confirmed: false)),
                 child: Text(
                   request.secondaryButtonTitle!,
                   style: TextStyle(color: Theme.of(context).primaryColor),

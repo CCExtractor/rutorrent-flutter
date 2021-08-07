@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/enums/bottom_sheet_type.dart';
+import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
@@ -22,7 +23,7 @@ class SettingsViewModel extends BaseViewModel {
 
   TextEditingController passwordFieldController = TextEditingController();
 
-  get accounts => _authenticationService.accounts;
+  ValueNotifier<List<Account>> get accounts => _authenticationService.accounts;
 
   get allNotificationEnabled => _userPreferencesService.allNotificationEnabled;
 
@@ -46,17 +47,16 @@ class SettingsViewModel extends BaseViewModel {
     showDialog(
         context: context,
         builder: (context) => DeleteAccountDialog(
-              length: _authenticationService.accounts?.length,
+              length: _authenticationService.accounts.value.length,
               leftFunc: () => _navigationService.popRepeated(1),
               rightFunc: deleteAccount,
               index: index,
             ));
   }
 
-  changePassword(int index) async {
+  changePassword(String password, int index) async {
     setBusy(true);
-    await _authenticationService.changePassword(
-        index, passwordFieldController.text);
+    await _authenticationService.changePassword(index, password);
     _navigationService.popRepeated(1);
     _navigationService.navigateTo(Routes.splashView);
     setBusy(false);
@@ -69,15 +69,15 @@ class SettingsViewModel extends BaseViewModel {
   }
 
   logoutAllAccounts() async {
-    SheetResponse? sheetReponse = await _bottomSheetService.showCustomSheet(
+    SheetResponse? sheetResponse = await _bottomSheetService.showCustomSheet(
       variant: BottomSheetType.confirmBottomSheet,
       title: "Are you sure you want to logout from all saved accounts?",
       description: "This will log you out from all accounts",
       mainButtonTitle: "Yes",
       secondaryButtonTitle: "No",
     );
-    _navigationService.popRepeated(1);
-    if (sheetReponse?.confirmed ?? false) {
+    if (sheetResponse?.confirmed ?? false) {
+      _navigationService.popRepeated(1);
       _authenticationService.logoutAllAccounts();
       await _sharedPreferencesService.clearLogin();
       _navigationService.navigateTo(Routes.splashView);

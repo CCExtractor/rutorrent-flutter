@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rutorrentflutter/theme/AppStateNotifier.dart';
-import 'package:rutorrentflutter/theme/AppTheme.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
+import 'package:rutorrentflutter/theme/app_theme.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/services/functional_services/notification_service.dart';
@@ -18,8 +18,9 @@ void main() async {
   final appDir = await getApplicationDocumentsDirectory();
   Hive.init(appDir.path);
   await Hive.openBox('DB');
-  //Setting custom Bottom Sheet
+  //To work in development environment, simply change the environment to Environment.dev below
   setupLocator(environment: Environment.prod);
+  //Setting custom Bottom Sheet
   setUpBottomSheetUi();
   //Setting up Services
   locator<NotificationService>().init();
@@ -28,20 +29,19 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-
- @override
- Widget build(BuildContext context) {
-   return ViewModelBuilder<AppStateNotifier>.reactive(
-     builder: (context, model, child) => MaterialApp(
-      title: 'ruTorrent Mobile',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode:
-          AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
-      navigatorKey: StackedService.navigatorKey,
-      onGenerateRoute: StackedRouter().onGenerateRoute,
-    ),
-     viewModelBuilder: () => locator<AppStateNotifier>(),
-   );
- }
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<AppStateNotifier>.reactive(
+      builder: (context, model, child) => MaterialApp(
+        title: 'ruTorrent Mobile',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode:
+            AppStateNotifier.isDarkModeOn ? ThemeMode.dark : ThemeMode.light,
+        navigatorKey: StackedService.navigatorKey,
+        onGenerateRoute: StackedRouter().onGenerateRoute,
+      ),
+      viewModelBuilder: () => locator<AppStateNotifier>(),
+    );
+  }
 }
