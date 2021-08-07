@@ -23,7 +23,7 @@ class SettingsViewModel extends BaseViewModel {
 
   TextEditingController passwordFieldController = TextEditingController();
 
-  ValueNotifier<List<Account>> get  accounts => _authenticationService.accounts;
+  ValueNotifier<List<Account>> get accounts => _authenticationService.accounts;
 
   get allNotificationEnabled => _userPreferencesService.allNotificationEnabled;
 
@@ -56,8 +56,7 @@ class SettingsViewModel extends BaseViewModel {
 
   changePassword(String password, int index) async {
     setBusy(true);
-    await _authenticationService.changePassword(
-        index, password);
+    await _authenticationService.changePassword(index, password);
     _navigationService.popRepeated(1);
     _navigationService.navigateTo(Routes.splashView);
     setBusy(false);
