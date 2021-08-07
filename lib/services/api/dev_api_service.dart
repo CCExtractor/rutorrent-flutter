@@ -96,7 +96,7 @@ class DevApiService implements IApiService {
   Stream<List<Torrent>> getAllAccountsTorrentList() async* {
     log.v("Fetching torrent lists from all accounts");
     List<Account?>? accounts = _authenticationService!.accounts.value;
-    // while (true) {
+    while (true) {
       List<Torrent> allTorrentList = [];
       for (Account? account in accounts) {
         var response = devTorrents;
@@ -105,18 +105,18 @@ class DevApiService implements IApiService {
       yield allTorrentList;
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
-    // }
+    }
   }
 
   /// Gets list of torrents for a particular account
   Stream<List<Torrent?>?> getTorrentList() async* {
     log.v("Fetching torrent lists from one account");
-    // while (true) {
+    while (true) {
       var response = devTorrents;
       yield _parseTorrentData(response, account)!;
       // Producing artificial delay of one second
       await Future.delayed(Duration(seconds: 1), () {});
-    // }
+    }
   }
 
   startTorrent(String? hashValue) async {
