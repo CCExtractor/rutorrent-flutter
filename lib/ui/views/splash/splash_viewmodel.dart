@@ -18,11 +18,11 @@ class SplashViewModel extends FutureViewModel {
       locator<AuthenticationService>();
 
   handleStartUpLogic() async {
-    _authenticationService!.accounts =
+    _authenticationService!.accounts.value =
         await _sharedPreferencesService!.fetchSavedLogin();
-    List<Account?>? accounts = _authenticationService!.accounts;
+    List<Account> accounts = _authenticationService?.accounts.value ?? [];
 
-    if (accounts?.isNotEmpty ?? false) {
+    if (accounts.isNotEmpty) {
       log.v("User is logged in");
       _navigationService?.replaceWith(Routes.homeView);
     } else {

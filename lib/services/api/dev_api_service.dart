@@ -46,9 +46,9 @@ class DevApiService implements IApiService {
     return _ioClient;
   }
 
-  Account? get account => _authenticationService!.accounts!.isEmpty
+  Account? get account => _authenticationService!.accounts.value.isEmpty
       ? _authenticationService!.tempAccount
-      : _authenticationService!.accounts![0];
+      : _authenticationService!.accounts.value[0];
 
   get accounts => _authenticationService?.accounts;
 
@@ -95,10 +95,10 @@ class DevApiService implements IApiService {
   /// Gets list of torrents for all saved accounts [Apis]
   Stream<List<Torrent>> getAllAccountsTorrentList() async* {
     log.v("Fetching torrent lists from all accounts");
-    List<Account?>? accounts = _authenticationService!.accounts;
+    List<Account?>? accounts = _authenticationService!.accounts.value;
     while (true) {
       List<Torrent> allTorrentList = [];
-      for (Account? account in accounts!) {
+      for (Account? account in accounts) {
         var response = devTorrents;
         allTorrentList.addAll(_parseTorrentData(response, account)!);
       }
@@ -182,6 +182,7 @@ class DevApiService implements IApiService {
   Future<List<HistoryItem>> getHistory({int? lastHours}) async {
     log.v(
         "Fetching history items from server for ${lastHours ?? 'infinite'} hours ago");
+    // ignore: unused_local_variable
     String timestamp = '0';
     if (lastHours != null) {
       timestamp = ((DateTime.now().millisecondsSinceEpoch -
@@ -216,6 +217,7 @@ class DevApiService implements IApiService {
 
   updateHistory() async {
     log.v("Updating history items from server");
+    // ignore: unused_local_variable
     String timestamp = ((CustomizableDateTime.current.millisecondsSinceEpoch -
                 Duration(seconds: 10).inMilliseconds) ~/
             1000)
@@ -252,7 +254,7 @@ class DevApiService implements IApiService {
 
   Future<bool> changePassword(int index, String newPassword) async {
     log.v("Changing password");
-    Account account = accounts[index];
+    Account account = accounts.value[index];
     devPasswordChange(account.username, newPassword);
     return true;
   }

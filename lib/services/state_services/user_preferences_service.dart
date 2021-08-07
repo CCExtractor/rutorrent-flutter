@@ -49,6 +49,12 @@ class UserPreferencesService {
     _sharedPreferencesService!.DB.put("showAllAccounts", showAllAccounts);
   }
 
+  toggleShowAllAccounts() {
+    showAllAccounts = !showAllAccounts;
+    log.v("ShowAllAccounts set to " + showAllAccounts.toString());
+    _sharedPreferencesService!.DB.put("showAllAccounts", showAllAccounts);
+  }
+
   toggleAllNotificationsEnabled() {
     _allNotificationEnabled = !allNotificationEnabled;
     log.v(

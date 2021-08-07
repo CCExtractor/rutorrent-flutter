@@ -40,7 +40,7 @@ class ConfirmBottomSheetView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               MaterialButton(
-                onPressed: () => completer(SheetResponse(confirmed: true)),
+                onPressed: () => completer(SheetResponse(confirmed: false)),
                 child: Text(
                   request.secondaryButtonTitle!,
                   style: TextStyle(color: Theme.of(context).primaryColor),

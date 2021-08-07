@@ -27,24 +27,17 @@ class TorrentTileViewModel extends BaseViewModel {
   }
 
   removeTorrentWithData(String hashValue) {
-    _apiService!.removeTorrentWithData(hashValue);
+    _torrentService!.removeTorrentWithData(hashValue);
   }
 
   removeTorrent(String hashValue) {
-    _apiService!.removeTorrent(hashValue);
+    _torrentService!.removeTorrent(hashValue);
   }
 
   toggleTorrentStatus(Torrent torrent) async {
     await _apiService!.toggleTorrentStatus(torrent);
     //Refresh torrent list
-    _userPreferencesService!.showAllAccounts
-        ? await _apiService!
-            .getAllAccountsTorrentList()
-            .listen((event) {})
-            .cancel()
-        : await _apiService!.getTorrentList().listen((event) {}).cancel();
-    await _torrentService?.updateTorrentDisplayList(
-        searchText: _userPreferencesService?.searchTextController.text);
+    await _torrentService?.refreshTorrentList();
   }
   
   navigateToTorrentDetail(Torrent torrent) {

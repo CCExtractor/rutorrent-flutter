@@ -53,7 +53,6 @@ import '../ui/views/splash/splash_view.dart';
     LazySingleton(classType: NotificationService),
     LazySingleton(classType: UserPreferencesService),
     LazySingleton(classType: InternetService),
-    LazySingleton(classType: TorrentService),
     LazySingleton(classType: HistoryService),
     LazySingleton(classType: AppStateNotifier),
     LazySingleton(classType: FileService),
@@ -61,6 +60,7 @@ import '../ui/views/splash/splash_view.dart';
     LazySingleton(classType: SnackbarService),
     LazySingleton(classType: BottomSheetService),
     LazySingleton(classType: FilePickerService),
+    LazySingleton(classType: TorrentService),
   ],
   logger: StackedLogger(),
 )

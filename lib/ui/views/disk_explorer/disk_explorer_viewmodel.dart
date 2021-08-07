@@ -51,7 +51,7 @@ class DiskExplorerViewModel extends FutureViewModel {
   init() async {
     setBusy(true);
     isFeatureAvailable =
-        _authenticationService.accounts?[0]?.isSeedboxAccount ?? false;
+        _authenticationService.accounts.value[0].isSeedboxAccount ?? false;
     await _getDiskFiles();
     setBusy(false);
   }
