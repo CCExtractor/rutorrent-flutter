@@ -43,7 +43,6 @@ List filterTileIcons = [
   Icons.error,
 ];
 
-
 // List<FilterTile> filterTileList = [
 //     FilterTile(
 //       icon: Icons.filter_tilt_shift,

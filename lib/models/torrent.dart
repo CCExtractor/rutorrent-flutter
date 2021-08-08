@@ -1,4 +1,5 @@
 import 'package:rutorrentflutter/models/account.dart';
+
 enum Status {
   downloading,
   paused,

@@ -12,13 +12,14 @@ import 'package:stacked_services/stacked_services.dart';
 Logger log = getLogger("AuthenticationService");
 
 ///[Service] used for all functionalities related to authentication and its state
-class AuthenticationService extends ChangeNotifier{
+class AuthenticationService extends ChangeNotifier {
   SharedPreferencesService? _sharedPreferencesService =
       locator<SharedPreferencesService>();
   NavigationService _navigationService = locator<NavigationService>();
 
   ///List of user accounts
-  ValueNotifier<List<Account>> _accounts = new ValueNotifier(new List<Account>.empty());
+  ValueNotifier<List<Account>> _accounts =
+      new ValueNotifier(new List<Account>.empty());
 
   ///Temp account used to verify login credentials
   Account? _tempAccount;
@@ -43,8 +44,7 @@ class AuthenticationService extends ChangeNotifier{
   Future<List<Account?>> saveLogin(Account? account) async {
     log.i("User being saved");
     if (account == null) return [];
-    List<Account> accounts =
-        await _sharedPreferencesService!.fetchSavedLogin();
+    List<Account> accounts = await _sharedPreferencesService!.fetchSavedLogin();
     bool alreadyLoggedIn = false;
 
     for (int index = 0; index < accounts.length; index++) {

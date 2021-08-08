@@ -1,4 +1,3 @@
-
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
@@ -39,7 +38,7 @@ class TorrentTileViewModel extends BaseViewModel {
     //Refresh torrent list
     await _torrentService?.refreshTorrentList();
   }
-  
+
   navigateToTorrentDetail(Torrent torrent) {
     _navigationService.navigateTo(Routes.torrentDetailView,
         arguments: TorrentDetailViewArguments(torrent: torrent));

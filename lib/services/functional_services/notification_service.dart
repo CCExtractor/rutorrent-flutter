@@ -88,9 +88,9 @@ class NotificationService {
   ///
   ///  }
   ///
-  /// dispatchLocalNotification( 
+  /// dispatchLocalNotification(
   ///
-  ///    key : _notificationService.< Notification_Channel_Name >, 
+  ///    key : _notificationService.< Notification_Channel_Name >,
   ///
   ///    customData : notificationsMap
   ///
