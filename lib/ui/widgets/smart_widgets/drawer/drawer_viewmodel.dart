@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
@@ -13,7 +14,6 @@ import 'package:rutorrentflutter/services/state_services/user_preferences_servic
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/add_another_account_widget.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/filter_tile_list_widgets.dart';
 import 'package:stacked/stacked.dart';
-import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 Logger log = getLogger("DrawerViewModel");

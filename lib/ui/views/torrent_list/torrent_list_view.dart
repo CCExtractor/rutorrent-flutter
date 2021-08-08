@@ -27,7 +27,9 @@ class _TorrentListViewState extends State<TorrentListView>
     return ViewModelBuilder<TorrentListViewModel>.reactive(
       builder: (context, model, child) => Column(
         children: <Widget>[
-          SearchBarWidget(screen: Screens.TorrentListViewScreen,),
+          SearchBarWidget(
+            screen: Screens.TorrentListViewScreen,
+          ),
           Expanded(
             child: StreamBuilder(
               stream: model.showAllAccounts

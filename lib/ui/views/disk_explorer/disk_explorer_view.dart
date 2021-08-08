@@ -32,7 +32,9 @@ class DiskExplorerView extends StatelessWidget {
               ? Container(
                   child: Column(
                     children: <Widget>[
-                      SearchBarWidget(screen: Screens.DiskExplorerViewScreen,),
+                      SearchBarWidget(
+                        screen: Screens.DiskExplorerViewScreen,
+                      ),
                       ListTile(
                         title: Text(
                           'Files (${model.diskFiles.value.length})',
@@ -41,24 +43,26 @@ class DiskExplorerView extends StatelessWidget {
                       ),
                       model.isBusy
                           ? Expanded(
-                              child: Center(child: LoadingShimmer().loadingEffect(context)))
+                              child: Center(
+                                  child:
+                                      LoadingShimmer().loadingEffect(context)))
                           : (model.diskFiles.value.length != 0)
                               ? Expanded(
                                   child: ValueListenableBuilder(
-                                    valueListenable: model.diskFiles,
-                                    builder: (context, List<DiskFile> diskFiles, snapshot) {
-                                      return ListView.builder(
-                                        itemCount: diskFiles.length,
-                                        itemBuilder: (context, index) {
-                                          return DiskFileTileView(
-                                              diskFiles[index],
-                                              model.path,
-                                              model.goBackwards,
-                                              model.goForwards);
-                                        },
-                                      );
-                                    }
-                                  ),
+                                      valueListenable: model.diskFiles,
+                                      builder: (context,
+                                          List<DiskFile> diskFiles, snapshot) {
+                                        return ListView.builder(
+                                          itemCount: diskFiles.length,
+                                          itemBuilder: (context, index) {
+                                            return DiskFileTileView(
+                                                diskFiles[index],
+                                                model.path,
+                                                model.goBackwards,
+                                                model.goForwards);
+                                          },
+                                        );
+                                      }),
                                 )
                               : Expanded(
                                   child: Center(

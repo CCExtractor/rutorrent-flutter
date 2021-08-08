@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:rutorrentflutter/ui/views/front_page/front_page_view.dart';
@@ -6,7 +7,6 @@ import 'package:rutorrentflutter/ui/widgets/dumb_widgets/floating_action_button_
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/frontpageview_appbar_widget.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/drawer/drawer_view.dart';
 import 'package:stacked/stacked.dart';
-import 'package:flutter/material.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);

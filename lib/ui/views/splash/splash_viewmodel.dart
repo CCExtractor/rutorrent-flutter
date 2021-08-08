@@ -1,7 +1,7 @@
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
-import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
+import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
@@ -18,8 +18,7 @@ class SplashViewModel extends FutureViewModel {
   NavigationService? _navigationService = locator<NavigationService>();
   AuthenticationService? _authenticationService =
       locator<AuthenticationService>();
-  PackageInfoService? _packageInfoService =
-      locator<PackageInfoService>();
+  PackageInfoService? _packageInfoService = locator<PackageInfoService>();
   UserPreferencesService? _userPreferencesService =
       locator<UserPreferencesService>();
 
@@ -28,8 +27,9 @@ class SplashViewModel extends FutureViewModel {
         await _sharedPreferencesService!.fetchSavedLogin();
     List<Account> accounts = _authenticationService?.accounts.value ?? [];
 
-    //Get and Save PackageInfo 
-    _userPreferencesService!.setPackageInfo(await _packageInfoService!.getPackageInfo());
+    //Get and Save PackageInfo
+    _userPreferencesService!
+        .setPackageInfo(await _packageInfoService!.getPackageInfo());
 
     if (accounts.isNotEmpty) {
       log.v("User is logged in");

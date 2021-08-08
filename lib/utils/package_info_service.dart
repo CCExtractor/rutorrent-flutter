@@ -5,5 +5,5 @@ class PackageInfoService {
   Future<PackageInfo> getPackageInfo() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     return packageInfo;
-  } 
+  }
 }

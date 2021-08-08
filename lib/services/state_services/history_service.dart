@@ -17,7 +17,8 @@ class HistoryService extends ChangeNotifier {
   UserPreferencesService _userPreferencesService =
       locator<UserPreferencesService>();
   NotificationService _notificationService = locator<NotificationService>();
-  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
+  SharedPreferencesService _sharedPreferencesService =
+      locator<SharedPreferencesService>();
 
   ValueNotifier<List<HistoryItem>> _torrentsHistoryList =
       new ValueNotifier(new List<HistoryItem>.empty());
@@ -145,6 +146,7 @@ class HistoryService extends ChangeNotifier {
 
   void setSortPreference(Sort newPreference) {
     _sortPreference = newPreference;
-    _sharedPreferencesService.DB.put("sortPreferenceHistory", newPreference.index);
+    _sharedPreferencesService.DB
+        .put("sortPreferenceHistory", newPreference.index);
   }
 }

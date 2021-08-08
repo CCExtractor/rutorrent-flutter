@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
-import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:rutorrentflutter/ui/views/history/history_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/loading_shimmer.dart';
@@ -58,13 +58,15 @@ class HistoryView extends StatelessWidget {
               physics: ScrollPhysics(),
               child: Column(
                 children: [
-                  SearchBarWidget(screen: Screens.TorrentHistoryViewScreen,),
-                    ListTile(
-                      title: Text(
-                        'Files (${model.torrentHistoryDisplayList.value.length})',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
+                  SearchBarWidget(
+                    screen: Screens.TorrentHistoryViewScreen,
+                  ),
+                  ListTile(
+                    title: Text(
+                      'Files (${model.torrentHistoryDisplayList.value.length})',
+                      style: TextStyle(fontWeight: FontWeight.w600),
                     ),
+                  ),
                   model.isBusy
                       ? LoadingShimmer().loadingEffect(context)
                       : (model.torrentHistoryDisplayList.value.length != 0)
