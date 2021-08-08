@@ -43,18 +43,17 @@ class DrawerView extends StatelessWidget {
                   children: <Widget>[
                     ShowDiskSpace(model.diskSpace),
                     ValueListenableBuilder(
-                      valueListenable: model.getAccountValueListenable,
-                      builder: (context, accounts, snapshot) {
-                        return ExpansionTile(
-                          leading: Icon(Icons.supervisor_account,
-                              color: !AppStateNotifier.isDarkModeOn
-                                  ? Colors.black
-                                  : Colors.white),
-                          title: Text('Accounts'),
-                          children: model.getAccountsList(context),
-                        );
-                      }
-                    ),
+                        valueListenable: model.getAccountValueListenable,
+                        builder: (context, accounts, snapshot) {
+                          return ExpansionTile(
+                            leading: Icon(Icons.supervisor_account,
+                                color: !AppStateNotifier.isDarkModeOn
+                                    ? Colors.black
+                                    : Colors.white),
+                            title: Text('Accounts'),
+                            children: model.getAccountsList(context),
+                          );
+                        }),
                     ExpansionTile(
                       initiallyExpanded: true,
                       leading: Icon(Icons.sort,

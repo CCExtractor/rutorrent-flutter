@@ -110,25 +110,25 @@ class ProdApiService implements IApiService {
     log.v("Fetching torrent lists from all accounts\n [Will be run every other second]");
     List<Account?>? accounts = _authenticationService!.accounts.value;
     while (true) {
-    List<Torrent> allTorrentList = [];
-    try {
-      for (Account? account in accounts) {
-        try {
-          var response = await ioClient.post(Uri.parse(httpRpcPluginUrl),
-              headers: getAuthHeader(),
-              body: {
-                'mode': 'list',
-              });
-          allTorrentList.addAll(_parseTorrentData(response.body, account)!);
-        } catch (e) {
-          print(e);
+      List<Torrent> allTorrentList = [];
+      try {
+        for (Account? account in accounts) {
+          try {
+            var response = await ioClient.post(Uri.parse(httpRpcPluginUrl),
+                headers: getAuthHeader(),
+                body: {
+                  'mode': 'list',
+                });
+            allTorrentList.addAll(_parseTorrentData(response.body, account)!);
+          } catch (e) {
+            print(e);
+          }
         }
+      } catch (e) {
+        print('Account Changes');
       }
-    } catch (e) {
-      print('Account Changes');
-    }
-    yield allTorrentList;
-    await Future.delayed(Duration(seconds: 1), () {});
+      yield allTorrentList;
+      await Future.delayed(Duration(seconds: 1), () {});
     }
   }
 
@@ -136,23 +136,23 @@ class ProdApiService implements IApiService {
   Stream<List<Torrent?>?> getTorrentList() async* {
     log.v("Fetching torrent lists from all accounts\n [Will be run every other second]");
     while (true) {
-    try {
-      var response = await ioClient
-          .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
-        'mode': 'list',
-      });
+      try {
+        var response = await ioClient
+            .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
+          'mode': 'list',
+        });
 
-      yield _parseTorrentData(response.body, account)!;
-    } catch (e) {
-      print('Exception caught in getTorrentList Api Request ' + e.toString());
-      /*returning null since the stream has to be active all the times to return something
+        yield _parseTorrentData(response.body, account)!;
+      } catch (e) {
+        print('Exception caught in getTorrentList Api Request ' + e.toString());
+        /*returning null since the stream has to be active all the times to return something
           this usually occurs when there is no torrent task available or when the connect
           to rTorrent is not established
         */
-      yield null;
-    }
-    // Producing artificial delay of one second
-    await Future.delayed(Duration(seconds: 1), () {});
+        yield null;
+      }
+      // Producing artificial delay of one second
+      await Future.delayed(Duration(seconds: 1), () {});
     }
   }
 
