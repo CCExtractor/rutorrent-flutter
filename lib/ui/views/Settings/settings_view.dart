@@ -23,66 +23,73 @@ class SettingsView extends StatelessWidget {
           child: Column(
             children: <Widget>[
               ValueListenableBuilder(
-                valueListenable: model.accounts,
-                builder: (context, List<Account> accounts, snapshot) {
-                  return ExpansionTile(
-                    title: Text('Manage Accounts',
-                        style: TextStyle(fontWeight: FontWeight.w600)),
-                    children: <Widget>[
-                      ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: accounts.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                // CHANGE PASSWORD
-                                model.showPasswordChangeDialog(context, index);
-                              },
-                              child: ListTile(
-                                dense: true,
-                                leading: Icon(
-                                  Icons.supervisor_account,
-                                  color: !AppStateNotifier.isDarkModeOn
-                                      ? Colors.black
-                                      : Colors.white,
-                                ),
-                                title: Text(
-                                    Uri.parse(accounts[index].url ?? "").host,
-                                    style: TextStyle(
-                                        fontSize: 14, fontWeight: FontWeight.w600)),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      accounts[index].username ?? "",
+                  valueListenable: model.accounts,
+                  builder: (context, List<Account> accounts, snapshot) {
+                    return ExpansionTile(
+                      title: Text('Manage Accounts',
+                          style: TextStyle(fontWeight: FontWeight.w600)),
+                      children: <Widget>[
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: accounts.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  // CHANGE PASSWORD
+                                  model.showPasswordChangeDialog(
+                                      context, index);
+                                },
+                                child: ListTile(
+                                  dense: true,
+                                  leading: Icon(
+                                    Icons.supervisor_account,
+                                    color: !AppStateNotifier.isDarkModeOn
+                                        ? Colors.black
+                                        : Colors.white,
+                                  ),
+                                  title: Text(
+                                      Uri.parse(accounts[index].url ?? "").host,
                                       style: TextStyle(
-                                          fontWeight: FontWeight.w600, fontSize: 12),
-                                    ),
-                                    SizedBox(height: 3,),
-                                    Text(
-                                      'Change Password',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600, fontSize: 12),
-                                    ),
-                                  ],
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600)),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        accounts[index].username ?? "",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 12),
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ),
+                                      Text(
+                                        'Change Password',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: IconButton(
+                                      icon: Icon(
+                                        Icons.delete_forever,
+                                        color: Theme.of(context).primaryColor,
+                                        size: 28,
+                                      ),
+                                      onPressed: () {
+                                        // DELETE ACCOUNT
+                                        model.showDeleteAccountDialog(
+                                            context, index);
+                                      }),
                                 ),
-                                trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.delete_forever,
-                                      color: Theme.of(context).primaryColor,
-                                      size: 28,
-                                    ),
-                                    onPressed: () {
-                                      // DELETE ACCOUNT
-                                      model.showDeleteAccountDialog(context, index);
-                                    }),
-                              ),
-                            );
-                          })
-                    ],
-                  );
-                }
-              ),
+                              );
+                            })
+                      ],
+                    );
+                  }),
               ListTile(
                 title: Text('Notifications',
                     style: TextStyle(fontWeight: FontWeight.w600)),

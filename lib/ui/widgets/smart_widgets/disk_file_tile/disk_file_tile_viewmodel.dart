@@ -6,12 +6,15 @@ import 'package:path_provider/path_provider.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
+import 'package:rutorrentflutter/enums/bottom_sheet_type.dart';
+import 'package:rutorrentflutter/enums/player_source.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/models/disk_file.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/state_services/file_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final log = getLogger("DiskFileTileViewModel");
 
@@ -19,6 +22,7 @@ class DiskFileTileViewModel extends BaseViewModel {
   FileService _fileService = locator<FileService>();
   IApiService _apiService = locator<IApiService>();
   NavigationService _navigationService = locator<NavigationService>();
+  BottomSheetService _bottomSheetService = locator<BottomSheetService>();
 
   late DiskFile diskFile;
   late String path;
@@ -33,10 +37,9 @@ class DiskFileTileViewModel extends BaseViewModel {
     } else {
       if (_fileService.isAudio(diskFile.name!) ||
           _fileService.isVideo(diskFile.name!)) {
-        Fluttertoast.showToast(msg: 'Streaming File');
         _streamFile();
       } else {
-        Fluttertoast.showToast(msg: 'Not a streamable file');
+        Fluttertoast.showToast(msg: 'Not a Streamable File');
       }
     }
   }
@@ -102,11 +105,38 @@ class DiskFileTileViewModel extends BaseViewModel {
     return fileUrl;
   }
 
-  _streamFile() {
+  _streamFile() async {
     String fileUrl = _getDiskFileUrl();
-    _navigationService.navigateTo(Routes.mediaStreamView,
-        arguments: MediaStreamViewArguments(
-            mediaName: diskFile.name!, mediaUrl: fileUrl, path: path));
+    SheetResponse? sheetResponse = await _bottomSheetService.showCustomSheet(
+      variant: BottomSheetType.optionBottomSheet,
+    );
+    if (sheetResponse?.confirmed ?? false) {
+      Fluttertoast.showToast(msg: 'Streaming File');
+      switch (sheetResponse!.responseData) {
+        case PlayerSource.In_App_Player:
+          {
+            _navigationService.navigateTo(Routes.mediaStreamView,
+                arguments: MediaStreamViewArguments(
+                    mediaName: diskFile.name!, mediaUrl: fileUrl, path: path));
+            break;
+          }
+        case PlayerSource.Web_Browser:
+          {
+            if (await canLaunch(fileUrl)) {
+              await launch(
+                fileUrl,
+                enableJavaScript: true,
+                forceSafariVC: true,
+                forceWebView: false,
+              );
+            } else {
+              Fluttertoast.showToast(msg: "Unable to Stream File");
+              throw 'Could not launch $fileUrl';
+            }
+            break;
+          }
+      }
+    }
   }
 
   clearButtonOnTap() {

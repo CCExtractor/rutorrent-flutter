@@ -26,8 +26,7 @@ Logger log = getLogger("ApiService");
 
 ///[Service] for communicating with the [RuTorrent] APIs
 class ProdApiService implements IApiService {
-  AuthenticationService? _authenticationService =
-      locator<AuthenticationService>();
+  AuthenticationService? _authenticationService = locator<AuthenticationService>();
   DiskSpaceService? _diskSpaceService = locator<DiskSpaceService>();
   TorrentService? _torrentService = locator<TorrentService>();
   HistoryService? _historyService = locator<HistoryService>();
@@ -107,52 +106,52 @@ class ProdApiService implements IApiService {
 
   /// Gets list of torrents for all saved accounts [Apis]
   Stream<List<Torrent>> getAllAccountsTorrentList() async* {
-    log.v("Fetching torrent lists from all accounts\n [Will be run every other second]");
+    log.v("Fetching torrent lists from all accounts");
     List<Account?>? accounts = _authenticationService!.accounts.value;
     while (true) {
-    List<Torrent> allTorrentList = [];
-    try {
-      for (Account? account in accounts) {
-        try {
-          var response = await ioClient.post(Uri.parse(httpRpcPluginUrl),
-              headers: getAuthHeader(),
-              body: {
-                'mode': 'list',
-              });
-          allTorrentList.addAll(_parseTorrentData(response.body, account)!);
-        } catch (e) {
-          print(e);
+      List<Torrent> allTorrentList = [];
+      try {
+        for (Account? account in accounts) {
+          try {
+            var response = await ioClient.post(Uri.parse(httpRpcPluginUrl),
+                headers: getAuthHeader(),
+                body: {
+                  'mode': 'list',
+                });
+            allTorrentList.addAll(_parseTorrentData(response.body, account)!);
+          } catch (e) {
+            print(e);
+          }
         }
+      } catch (e) {
+        print('Account Changes');
       }
-    } catch (e) {
-      print('Account Changes');
-    }
-    yield allTorrentList;
-    await Future.delayed(Duration(seconds: 1), () {});
+      yield allTorrentList;
+      await Future.delayed(Duration(seconds: 1), () {});
     }
   }
 
   /// Gets list of torrents for a particular account
   Stream<List<Torrent?>?> getTorrentList() async* {
-    log.v("Fetching torrent lists from all accounts\n [Will be run every other second]");
+    log.v("Fetching torrent lists from all accounts");
     while (true) {
-    try {
-      var response = await ioClient
-          .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
-        'mode': 'list',
-      });
+      try {
+        var response = await ioClient
+            .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
+          'mode': 'list',
+        });
 
-      yield _parseTorrentData(response.body, account)!;
-    } catch (e) {
-      print('Exception caught in getTorrentList Api Request ' + e.toString());
-      /*returning null since the stream has to be active all the times to return something
+        yield _parseTorrentData(response.body, account)!;
+      } catch (e) {
+        print('Exception caught in getTorrentList Api Request ' + e.toString());
+        /*returning null since the stream has to be active all the times to return something
           this usually occurs when there is no torrent task available or when the connect
           to rTorrent is not established
         */
-      yield null;
-    }
-    // Producing artificial delay of one second
-    await Future.delayed(Duration(seconds: 1), () {});
+        yield null;
+      }
+      // Producing artificial delay of one second
+      await Future.delayed(Duration(seconds: 1), () {});
     }
   }
 

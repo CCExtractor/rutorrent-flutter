@@ -152,7 +152,8 @@ class TorrentDetailView extends StatelessWidget {
                                           child: IconButton(
                                               color: Colors.black,
                                               iconSize: 40,
-                                              icon: Icon(model.torrent.isOpen == 0
+                                              icon: Icon(model.torrent.isOpen ==
+                                                      0
                                                   ? Icons.play_arrow
                                                   : model.torrent.getState == 0
                                                       ? (Icons.play_arrow)
