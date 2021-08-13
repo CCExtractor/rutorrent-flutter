@@ -2,9 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
+import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/notification_service.dart';
+import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
 import 'package:rutorrentflutter/services/services_info.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 
@@ -15,6 +17,7 @@ class HistoryService extends ChangeNotifier {
   UserPreferencesService _userPreferencesService =
       locator<UserPreferencesService>();
   NotificationService _notificationService = locator<NotificationService>();
+  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
 
   ValueNotifier<List<HistoryItem>> _torrentsHistoryList =
       new ValueNotifier(new List<HistoryItem>.empty());
@@ -25,6 +28,10 @@ class HistoryService extends ChangeNotifier {
       _torrentsHistoryList;
   ValueNotifier<List<HistoryItem>> get displayTorrentHistoryList =>
       _torrentsHistoryDisplayList;
+
+  Sort _sortPreference = Sort.none;
+
+  get sortPreference => _sortPreference;
 
   setTorrentHistoryList(List<HistoryItem> list) {
     _torrentsHistoryList.value = list;
@@ -40,9 +47,51 @@ class HistoryService extends ChangeNotifier {
         : await _apiService.getHistory(lastHours: lastHours);
   }
 
-  updateTorrentHistoryDisplayList() {
-    _torrentsHistoryList.notifyListeners();
+  updateTorrentHistoryDisplayList({String? searchText}) {
+    log.v("History Items being updated");
+    List<HistoryItem> displayList = _torrentsHistoryList.value;
+    //Sorting: sorting data on basis of sortPreference
+    displayList = _sortList(displayList, sortPreference)!;
+
+    if (searchText != null) {
+      //Searching : showing list on basis of searched text
+      displayList = displayList
+          .where((element) =>
+              element.name.toLowerCase().contains(searchText.toLowerCase()))
+          .toList();
+    }
+    _torrentsHistoryDisplayList.value = displayList;
     _torrentsHistoryDisplayList.notifyListeners();
+  }
+
+  List<HistoryItem>? _sortList(List<HistoryItem>? torrentsList, Sort? sort) {
+    switch (sort) {
+      case Sort.name_ascending:
+        torrentsList!.sort((a, b) => a.name.compareTo(b.name));
+        return torrentsList;
+
+      case Sort.name_descending:
+        torrentsList!.sort((a, b) => a.name.compareTo(b.name));
+        return torrentsList.reversed.toList();
+
+      case Sort.dateAdded:
+        torrentsList!.sort((a, b) => a.actionTime.compareTo(b.actionTime));
+        return torrentsList;
+
+      case Sort.size_ascending:
+        torrentsList!.sort((a, b) => a.size!.compareTo(b.size!));
+        return torrentsList;
+
+      case Sort.size_descending:
+        torrentsList!.sort((a, b) => a.size!.compareTo(b.size!));
+        return torrentsList.reversed.toList();
+
+      case Sort.none:
+        return _torrentsHistoryList.value;
+
+      default:
+        return torrentsList;
+    }
   }
 
   notify() {
@@ -92,5 +141,10 @@ class HistoryService extends ChangeNotifier {
           break;
       }
     }
+  }
+
+  void setSortPreference(Sort newPreference) {
+    _sortPreference = newPreference;
+    _sharedPreferencesService.DB.put("sortPreferenceHistory", newPreference.index);
   }
 }

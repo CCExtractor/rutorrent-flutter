@@ -86,7 +86,7 @@ class TorrentService extends ChangeNotifier {
     _sharedPreferencesService!.DB.put("sortPreference", newPreference.index);
   }
 
-  /// Updates display list of [Torrent]s
+  /// Updates display list of [Torrent]s Display List
   updateTorrentDisplayList({String? searchText}) {
     List<Torrent> displayList = torrentsList.value;
     //Sorting: sorting data on basis of sortPreference

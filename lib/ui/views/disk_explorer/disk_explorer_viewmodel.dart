@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/models/disk_file.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
+import 'package:rutorrentflutter/services/state_services/disk_file_service.dart';
 import 'package:stacked/stacked.dart';
 
 final log = getLogger("DiskExplorerViewModel");
@@ -11,12 +13,13 @@ class DiskExplorerViewModel extends FutureViewModel {
   IApiService _apiService = locator<IApiService>();
   AuthenticationService _authenticationService =
       locator<AuthenticationService>();
+  DiskFileService _diskFileService = locator<DiskFileService>();
 
   String path = "/";
   bool isFeatureAvailable = false;
-  List<DiskFile> _diskFiles = [];
 
-  get diskFiles => _diskFiles;
+  ValueNotifier<List<DiskFile>> get diskFiles =>
+      _diskFileService.diskFileDisplayList;
 
   Future<bool> onBackPress() async {
     log.v("Path is now : " + path);
@@ -44,7 +47,7 @@ class DiskExplorerViewModel extends FutureViewModel {
 
   _getDiskFiles() async {
     setBusy(true);
-    _diskFiles = await _apiService.getDiskFiles(path);
+    await _apiService.getDiskFiles(path);
     setBusy(false);
   }
 

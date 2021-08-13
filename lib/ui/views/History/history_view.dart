@@ -2,11 +2,13 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:rutorrentflutter/ui/views/history/history_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/loading_shimmer.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/search_bar/search_bar_view.dart';
 import 'package:stacked/stacked.dart';
 
 class HistoryView extends StatelessWidget {
@@ -50,66 +52,85 @@ class HistoryView extends StatelessWidget {
         ),
         body: RefreshIndicator(
           onRefresh: () async => model.refreshHistoryList(),
-          child: Padding(
+          child: Container(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            child: model.isBusy
-                ? LoadingShimmer().loadingEffect(context)
-                : (model.torrentHistoryDisplayList.value.length != 0)
-                    ? ValueListenableBuilder(
-                        valueListenable: model.torrentHistoryDisplayList,
-                        builder: (context, List<HistoryItem> items, snapshot) {
-                          return ListView.builder(
-                            itemCount: items.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                onLongPress: () {
-                                  _showRemoveDialog(
-                                      items[index].hash, model, context);
-                                },
-                                title: SizedBox(
-                                    width: 40,
-                                    child: Text(items[index].name,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600))),
-                                trailing: Container(
-                                  padding: const EdgeInsets.all(4),
-                                  width: 70,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                    color: getHistoryStatusColor(
-                                        context, items[index].action),
-                                  )),
-                                  child: Text(
-                                      HistoryItem
-                                          .historyStatus[items[index].action]!,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: getHistoryStatusColor(
-                                            context, items[index].action),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                      )),
-                                ),
-                                subtitle: Text(
-                                  '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              );
-                            },
-                          );
-                        })
-                    : Center(
-                        child: SvgPicture.asset(
-                          Theme.of(context).brightness == Brightness.light
-                              ? 'assets/logo/empty.svg'
-                              : 'assets/logo/empty_dark.svg',
-                          width: 120,
-                          height: 120,
-                        ),
+            child: SingleChildScrollView(
+              physics: ScrollPhysics(),
+              child: Column(
+                children: [
+                  SearchBarWidget(screen: Screens.TorrentHistoryViewScreen,),
+                    ListTile(
+                      title: Text(
+                        'Files (${model.torrentHistoryDisplayList.value.length})',
+                        style: TextStyle(fontWeight: FontWeight.w600),
                       ),
+                    ),
+                  model.isBusy
+                      ? LoadingShimmer().loadingEffect(context)
+                      : (model.torrentHistoryDisplayList.value.length != 0)
+                          ? ValueListenableBuilder(
+                              valueListenable: model.torrentHistoryDisplayList,
+                              builder:
+                                  (context, List<HistoryItem> items, snapshot) {
+                                return ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  shrinkWrap: true,
+                                  itemCount: items.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      onLongPress: () {
+                                        _showRemoveDialog(
+                                            items[index].hash, model, context);
+                                      },
+                                      title: SizedBox(
+                                          width: 40,
+                                          child: Text(items[index].name,
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight:
+                                                      FontWeight.w600))),
+                                      trailing: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        width: 70,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                          color: getHistoryStatusColor(
+                                              context, items[index].action),
+                                        )),
+                                        child: Text(
+                                            HistoryItem.historyStatus[
+                                                items[index].action]!,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: getHistoryStatusColor(
+                                                  context, items[index].action),
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                            )),
+                                      ),
+                                      subtitle: Text(
+                                        '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    );
+                                  },
+                                );
+                              })
+                          : Center(
+                              child: SvgPicture.asset(
+                                Theme.of(context).brightness == Brightness.light
+                                    ? 'assets/logo/empty.svg'
+                                    : 'assets/logo/empty_dark.svg',
+                                width: 120,
+                                height: 120,
+                              ),
+                            ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

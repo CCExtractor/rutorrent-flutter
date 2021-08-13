@@ -17,6 +17,7 @@ import 'package:rutorrentflutter/services/functional_services/authentication_ser
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/services_info.dart';
+import 'package:rutorrentflutter/services/state_services/disk_file_service.dart';
 import 'package:rutorrentflutter/services/state_services/history_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:xml/xml.dart';
@@ -30,6 +31,7 @@ class ProdApiService implements IApiService {
   DiskSpaceService? _diskSpaceService = locator<DiskSpaceService>();
   TorrentService? _torrentService = locator<TorrentService>();
   HistoryService? _historyService = locator<HistoryService>();
+  DiskFileService _diskFileService = locator<DiskFileService>();
 
   IOClient get ioClient {
     /// Url with some issue with their SSL certificates can be trusted explicitly with this
@@ -81,15 +83,16 @@ class ProdApiService implements IApiService {
           headers: getAuthHeader());
       log.i("Test Connection Response : " + response.body);
       total = jsonDecode(response.body)['total'];
-      Fluttertoast.showToast(msg: 'Connected');
     } catch (e) {
-      Fluttertoast.showToast(msg: 'invalid');
+      Fluttertoast.showToast(msg: 'Username or Password incorrect');
       return false;
     }
     if (total != null && response.statusCode != 200) {
       Fluttertoast.showToast(msg: 'Something\'s Wrong');
       return false;
     }
+    
+    Fluttertoast.showToast(msg: 'Connected');
     await _authenticationService!.saveLogin(account);
     return true;
   }
@@ -104,7 +107,7 @@ class ProdApiService implements IApiService {
 
   /// Gets list of torrents for all saved accounts [Apis]
   Stream<List<Torrent>> getAllAccountsTorrentList() async* {
-    log.v("Fetching torrent lists from all accounts");
+    log.v("Fetching torrent lists from all accounts\n [Will be run every other second]");
     List<Account?>? accounts = _authenticationService!.accounts.value;
     while (true) {
     List<Torrent> allTorrentList = [];
@@ -131,7 +134,7 @@ class ProdApiService implements IApiService {
 
   /// Gets list of torrents for a particular account
   Stream<List<Torrent?>?> getTorrentList() async* {
-    log.v("Fetching torrent lists from all accounts");
+    log.v("Fetching torrent lists from all accounts\n [Will be run every other second]");
     while (true) {
     try {
       var response = await ioClient
@@ -399,6 +402,7 @@ class ProdApiService implements IApiService {
         diskFiles.add(diskFile);
       }
 
+      _diskFileService.setDiskFileList(diskFiles);
       return diskFiles;
     } on Exception catch (e) {
       print(e.toString());
@@ -538,7 +542,7 @@ class ProdApiService implements IApiService {
   }
 
   List<Torrent>? _parseTorrentData(String responseBody, Account? currAccount) {
-    log.v("List of Torrents being parsed");
+    // log.v("List of Torrents being parsed");
     // takes response and parse and return the torrents data
     List<Torrent> torrentsList = [];
     // A list of active torrents is required for changing the connection state from waiting to active

@@ -24,7 +24,7 @@ void main() async {
   setUpBottomSheetUi();
   //Setting up Services
   locator<NotificationService>().init();
-  locator<UserPreferencesService>().init();
+  await locator<UserPreferencesService>().init();
   runApp(MyApp());
 }
 

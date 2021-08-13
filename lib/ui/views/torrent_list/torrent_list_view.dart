@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
+import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/ui/views/torrent_list/torrent_list_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/loading_shimmer.dart';
@@ -26,7 +27,7 @@ class _TorrentListViewState extends State<TorrentListView>
     return ViewModelBuilder<TorrentListViewModel>.reactive(
       builder: (context, model, child) => Column(
         children: <Widget>[
-          SearchBarWidget(),
+          SearchBarWidget(screen: Screens.TorrentListViewScreen,),
           Expanded(
             child: StreamBuilder(
               stream: model.showAllAccounts

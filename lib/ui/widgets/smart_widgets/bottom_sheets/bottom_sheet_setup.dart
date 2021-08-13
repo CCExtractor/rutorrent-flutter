@@ -1,5 +1,6 @@
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/bottom_sheet_type.dart';
+import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/text_field_view.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/confirm_bottom_sheet/confirm_bottom_sheet_view.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/sort_bottom_sheet/sort_bottom_sheet_view.dart';
@@ -14,7 +15,7 @@ void setUpBottomSheetUi() {
     BottomSheetType.floating: (context, sheetRequest, completer) =>
         _FloatingBoxBottomSheet(request: sheetRequest, completer: completer),
     BottomSheetType.sortBottomSheet: (context, sheetRequest, completer) =>
-        SortBottomSheetView(request: sheetRequest, completer: completer),
+        SortBottomSheetView(request: sheetRequest, completer: completer,screen: Screens.TorrentListViewScreen,),
     BottomSheetType.confirmBottomSheet: (context, sheetRequest, completer) =>
         ConfirmBottomSheetView(request: sheetRequest, completer: completer),
   };
