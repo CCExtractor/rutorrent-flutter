@@ -407,4 +407,29 @@ class DevApiService implements IApiService {
     _torrentService!.setTorrentList(torrentsList);
     return torrentsList;
   }
+
+  @override
+  Future<List<DiskFile>> getAllAccountsDiskFiles(String path) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<HistoryItem>> getAllAccountsHistory({int? lastHours}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<RSSFilter>> getAllAccountsRSSFilters() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<RSSLabel>> loadAllAccountsRSS() {
+    throw UnimplementedError();
+  }
+
+  @override
+  updateAllAccountsHistory() {
+    throw UnimplementedError();
+  }
 }

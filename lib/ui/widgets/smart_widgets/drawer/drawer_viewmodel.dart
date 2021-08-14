@@ -1,5 +1,4 @@
 import 'package:logger/logger.dart';
-import 'package:package_info/package_info.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
@@ -28,15 +27,11 @@ class DrawerViewModel extends BaseViewModel {
       locator<UserPreferencesService>();
   IApiService _apiService = locator<IApiService>();
 
-  PackageInfo packageinfo = new PackageInfo(
-      packageName: '', appName: '', buildNumber: '', version: '');
-
-  get packageInfo => packageinfo;
+  get packageInfo => _userPreferencesService.packageInfo;
 
   void init() async {
     setBusy(true);
     await _apiService.updateDiskSpace();
-    packageinfo = await PackageInfo.fromPlatform();
     setBusy(false);
   }
 

@@ -11,12 +11,16 @@ class ServicesInfo {
   static const low_disk_space_notification_title = "Low Disk Space ⚠️ !";
   static const low_disk_space_notification_body =
       "Your account has low disk space";
+  static DateTime testDate = DateTime(0,0,0,0,0,0,0);
 }
 
 extension CustomizableDateTime on DateTime {
   static DateTime? _customTime;
   static DateTime get current {
-    return _customTime ?? DateTime.now();
+    return
+    _customTime?.isAtSameMomentAs(ServicesInfo.testDate) ?? false
+    ? ServicesInfo.testDate
+    : DateTime.now();
   }
 
   static set customTime(DateTime customTime) {
