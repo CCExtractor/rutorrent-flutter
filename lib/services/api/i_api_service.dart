@@ -79,6 +79,9 @@ abstract class IApiService {
 
   /// Gets list of saved RSS Feeds
   Future<List<RSSLabel>> loadRSS();
+  
+  /// Gets list of saved RSS Feeds
+  Future<List<RSSLabel>> loadAllAccountsRSS();
 
   /// Gets list of saved RSS Feeds
   Future<List<RSSLabel>> loadAllAccountsRSS();
@@ -94,6 +97,9 @@ abstract class IApiService {
 
   /// Gets details of RSS Filters
   Future<List<RSSFilter>> getRSSFilters();
+  
+  /// Gets details of RSS Filters for All Accounts
+  Future<List<RSSFilter>> getAllAccountsRSSFilters();
 
   /// Gets details of RSS Filters for All Accounts
   Future<List<RSSFilter>> getAllAccountsRSSFilters();

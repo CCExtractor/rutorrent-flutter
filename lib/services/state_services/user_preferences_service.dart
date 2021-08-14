@@ -63,8 +63,6 @@ class UserPreferencesService {
     _addTorrentNotification = DB.get("addTorrentNotification") ?? true;
     _downloadCompleteNotification =
         DB.get("downloadCompleteNotification") ?? true;
-    //todo remove
-    print(_isDarkModeOn);
     _appStateNotifier.updateTheme(_isDarkModeOn);
   }
 

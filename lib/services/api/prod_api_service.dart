@@ -115,7 +115,8 @@ class ProdApiService implements IApiService {
 
   /// Gets list of torrents for all saved accounts [Apis]
   Stream<List<Torrent>> getAllAccountsTorrentList() async* {
-    log.v("Fetching torrent lists from all accounts\n [Will be run every other second]");
+    log.v(
+        "Fetching torrent lists from all accounts\n [Will be run every other second]");
     List<Account?>? accounts = _authenticationService!.accounts.value;
     while (true) {
       List<Torrent> allTorrentList = [];
@@ -142,7 +143,8 @@ class ProdApiService implements IApiService {
 
   /// Gets list of torrents for a particular account
   Stream<List<Torrent?>?> getTorrentList() async* {
-    log.v("Fetching torrent lists from all accounts\n [Will be run every other second]");
+    log.v(
+        "Fetching torrent lists from all accounts\n [Will be run every other second]");
     while (true) {
       try {
         var response = await ioClient
