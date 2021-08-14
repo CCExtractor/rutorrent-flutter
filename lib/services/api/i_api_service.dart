@@ -49,9 +49,13 @@ abstract class IApiService {
 
   Future<List<HistoryItem>> getHistory({int? lastHours});
 
+  Future<List<HistoryItem>> getAllAccountsHistory({int? lastHours});
+
   removeHistoryItem(String hashValue);
 
   updateHistory();
+
+  updateAllAccountsHistory();
 
   setTorrentLabel({required String hashValue, required String label});
 
@@ -59,8 +63,11 @@ abstract class IApiService {
 
   Future<bool> changePassword(int index, String newPassword);
 
-  /// Gets Disk Files
+  /// Fetches Disk Files
   Future<List<DiskFile>> getDiskFiles(String path);
+
+  /// Fetches Disk Files for All Accounts
+  Future<List<DiskFile>> getAllAccountsDiskFiles(String path);
 
   /// Gets list of files for a particular torrent
   Future<List<TorrentFile>> getFiles(String hashValue);
@@ -72,6 +79,9 @@ abstract class IApiService {
 
   /// Gets list of saved RSS Feeds
   Future<List<RSSLabel>> loadRSS();
+  
+  /// Gets list of saved RSS Feeds
+  Future<List<RSSLabel>> loadAllAccountsRSS();
 
   /// Removes RSS Feed
   removeRSS(String hashValue);
@@ -84,6 +94,9 @@ abstract class IApiService {
 
   /// Gets details of RSS Filters
   Future<List<RSSFilter>> getRSSFilters();
+  
+  /// Gets details of RSS Filters for All Accounts
+  Future<List<RSSFilter>> getAllAccountsRSSFilters();
 
   // ignore: unused_element
   List<Torrent>? _parseTorrentData(String responseBody, Account? currAccount);

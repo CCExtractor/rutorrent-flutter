@@ -13,18 +13,22 @@ class FilterTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isSelected = (model.selectedFilter == filter && !model.isLabelSelected); 
     return Container(
-      color: (model.selectedFilter == filter && !model.isLabelSelected)
-          ? Theme.of(context).disabledColor
+      color: isSelected
+          ? Theme.of(context).accentColor
           : null,
       child: ListTile(
         dense: true,
         leading: Icon(
           icon,
-          color: !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white,
+          color: isSelected ? Colors.white : !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white,
         ),
         title: Text(
-            filter.toString().substring(filter.toString().indexOf('.') + 1)),
+            filter.toString().substring(filter.toString().indexOf('.') + 1),
+            style: TextStyle(color: isSelected ? Colors.white : !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white),
+            ),
+            
         onTap: () {
           model.changeFilter(filter);
           Navigator.pop(context);

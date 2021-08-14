@@ -63,6 +63,7 @@ class DrawerView extends StatelessWidget {
                               : Colors.white),
                       title: Text(
                         'Filters',
+                        style: TextStyle(color: Theme.of(context).accentColor),
                       ),
                       children: model.filterTileList(model),
                     ),
@@ -74,6 +75,7 @@ class DrawerView extends StatelessWidget {
                               : Colors.white),
                       title: Text(
                         'Labels',
+                        style: TextStyle(color: Theme.of(context).accentColor),
                       ),
                       children: ((model.listOfLabels.value as List<String>)
                           .map((e) => LabelTile(
