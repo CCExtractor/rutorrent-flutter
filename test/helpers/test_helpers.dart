@@ -1,5 +1,3 @@
-import 'package:http/http.dart';
-import 'package:http/io_client.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/services/api/prod_api_service.dart';

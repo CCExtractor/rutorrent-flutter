@@ -48,16 +48,21 @@ import 'package:shared_preferences/shared_preferences.dart' as _i26;
 // ignore_for_file: prefer_const_constructors
 // ignore_for_file: unnecessary_parenthesis
 
+// ignore: camel_case_types
 class _FakeIOClient_0 extends _i1.Fake implements _i2.IOClient {}
 
+// ignore: camel_case_types
 class _FakeValueNotifier_1<T> extends _i1.Fake implements _i3.ValueNotifier<T> {
 }
 
+// ignore: camel_case_types
 class _FakeDiskSpace_2 extends _i1.Fake implements _i4.DiskSpace {}
 
+// ignore: camel_case_types
 class _FakeTextEditingController_3 extends _i1.Fake
     implements _i5.TextEditingController {}
 
+// ignore: camel_case_types
 class _FakeBox_4<E> extends _i1.Fake implements _i6.Box<E> {}
 
 /// A class which mocks [ProdApiService].
@@ -499,11 +504,13 @@ class MockSharedPreferencesService extends _i1.Mock
       super.noSuchMethod(Invocation.setter(#accountsData, _accountsData),
           returnValueForMissingStub: null);
   @override
+  // ignore: non_constant_identifier_names
   _i6.Box<dynamic> get DB => (super.noSuchMethod(Invocation.getter(#DB),
       returnValue: _FakeBox_4<dynamic>()) as _i6.Box<dynamic>);
   @override
-  set DB(_i6.Box<dynamic>? _DB) =>
-      super.noSuchMethod(Invocation.setter(#DB, _DB),
+  // ignore: non_constant_identifier_names
+  set DB(_i6.Box<dynamic>? DB) =>
+      super.noSuchMethod(Invocation.setter(#DB, DB),
           returnValueForMissingStub: null);
   @override
   _i9.Future<_i26.SharedPreferences?> store() =>

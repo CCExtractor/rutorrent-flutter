@@ -1,5 +1,4 @@
 import 'package:logger/logger.dart';
-import 'package:package_info/package_info.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/app/app.router.dart';

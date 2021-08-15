@@ -410,31 +410,26 @@ class DevApiService implements IApiService {
 
   @override
   Future<List<DiskFile>> getAllAccountsDiskFiles(String path) {
-    // TODO: implement getAllAccountsDiskFiles
     throw UnimplementedError();
   }
 
   @override
   Future<List<HistoryItem>> getAllAccountsHistory({int? lastHours}) {
-    // TODO: implement getAllAccountsHistory
     throw UnimplementedError();
   }
 
   @override
   Future<List<RSSFilter>> getAllAccountsRSSFilters() {
-    // TODO: implement getAllAccountsRSSFilters
     throw UnimplementedError();
   }
 
   @override
   Future<List<RSSLabel>> loadAllAccountsRSS() {
-    // TODO: implement loadAllAccountsRSS
     throw UnimplementedError();
   }
 
   @override
   updateAllAccountsHistory() {
-    // TODO: implement updateAllAccountsHistory
     throw UnimplementedError();
   }
 }
