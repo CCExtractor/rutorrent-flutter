@@ -43,7 +43,7 @@ class LoginViewModel extends BaseViewModel {
     setBusy(true);
     if (username.trim().isEmpty) {
       Fluttertoast.showToast(msg: 'Username cannot be empty!');
-    } else if(password!.trim().isEmpty){
+    } else if (password!.trim().isEmpty) {
       Fluttertoast.showToast(msg: 'Password cannot be empty!');
     } else {
       _account = Account(url: url, username: username, password: password);

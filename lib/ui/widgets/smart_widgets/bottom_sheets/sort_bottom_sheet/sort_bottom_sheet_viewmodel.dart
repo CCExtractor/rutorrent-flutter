@@ -16,12 +16,12 @@ class SortBottomSheetViewModel extends BaseViewModel {
 
   late Screens screen;
 
-  init(Screens screen){
+  init(Screens screen) {
     this.screen = screen;
   }
 
   Sort get sortPreference {
-    switch(screen){
+    switch (screen) {
       case Screens.TorrentListViewScreen:
         return _torrentService.sortPreference;
       case Screens.DiskExplorerViewScreen:
@@ -33,7 +33,7 @@ class SortBottomSheetViewModel extends BaseViewModel {
 
   setSortPreference(Function func, Sort newPreference) {
     log.e(newPreference);
-    switch(screen){
+    switch (screen) {
       case Screens.TorrentListViewScreen:
         _torrentService.setSortPreference(newPreference);
         _torrentService.updateTorrentDisplayList();
@@ -51,7 +51,7 @@ class SortBottomSheetViewModel extends BaseViewModel {
   }
 
   Map<Sort, String> getSortMap() {
-    switch(screen){
+    switch (screen) {
       case Screens.TorrentListViewScreen:
         return sortMapTorrentList;
       case Screens.DiskExplorerViewScreen:

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
@@ -13,8 +14,8 @@ import 'package:rutorrentflutter/services/state_services/user_preferences_servic
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/add_another_account_widget.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/filter_tile_list_widgets.dart';
 import 'package:stacked/stacked.dart';
-import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
+
 Logger log = getLogger("DrawerViewModel");
 
 class DrawerViewModel extends BaseViewModel {
@@ -37,7 +38,8 @@ class DrawerViewModel extends BaseViewModel {
 
   DiskSpace get diskSpace => _diskSpaceService!.diskSpace;
 
-  ValueNotifier<List<Account>> get getAccountValueListenable => _authenticationService.accounts;
+  ValueNotifier<List<Account>> get getAccountValueListenable =>
+      _authenticationService.accounts;
 
   List<Widget> filterTileList(model) {
     return _getFilterTileList(model);
@@ -64,7 +66,8 @@ class DrawerViewModel extends BaseViewModel {
     //Add all Accounts
     List<Widget> accountsList = torrentAccounts
         .map((e) => Container(
-              color: _authenticationService.matchAccount(e, currAccount) || shouldShowAllAccounts 
+              color: _authenticationService.matchAccount(e, currAccount) ||
+                      shouldShowAllAccounts
                   ? Theme.of(context).disabledColor
                   : null,
               child: ListTile(
@@ -83,9 +86,7 @@ class DrawerViewModel extends BaseViewModel {
         .toList();
 
     // Add All Accounts mode option
-    accountsList.insert(
-        0,
-        _showAllAccountsWidget(context));
+    accountsList.insert(0, _showAllAccountsWidget(context));
 
     // Add the "Add Account Option"
     accountsList.add(AddAnotherAccountWidget(onTap: _addAccount));
@@ -99,7 +100,8 @@ class DrawerViewModel extends BaseViewModel {
 
   _changeAccount(Account toBeChangedAccount, Account currAccount) async {
     if (!_authenticationService.matchAccount(toBeChangedAccount, currAccount)) {
-      log.i("Account being changed to username : ${toBeChangedAccount.username}");
+      log.i(
+          "Account being changed to username : ${toBeChangedAccount.username}");
       await _authenticationService.saveLogin(toBeChangedAccount);
       await _torrentService?.refreshTorrentList();
       _navigationService.navigateTo(Routes.splashView);
@@ -124,7 +126,7 @@ class DrawerViewModel extends BaseViewModel {
                 : Theme.of(context).disabledColor,
           ),
         ),
-        onTap: () =>  _setAllAccounts(),
+        onTap: () => _setAllAccounts(),
         title: Text(
           'All Accounts',
           style: TextStyle(fontSize: 12),

@@ -509,9 +509,8 @@ class MockSharedPreferencesService extends _i1.Mock
       returnValue: _FakeBox_4<dynamic>()) as _i6.Box<dynamic>);
   @override
   // ignore: non_constant_identifier_names
-  set DB(_i6.Box<dynamic>? DB) =>
-      super.noSuchMethod(Invocation.setter(#DB, DB),
-          returnValueForMissingStub: null);
+  set DB(_i6.Box<dynamic>? DB) => super.noSuchMethod(Invocation.setter(#DB, DB),
+      returnValueForMissingStub: null);
   @override
   _i9.Future<_i26.SharedPreferences?> store() =>
       (super.noSuchMethod(Invocation.method(#store, []),

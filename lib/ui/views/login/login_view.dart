@@ -32,7 +32,9 @@ class LoginView extends StatelessWidget {
             passwordFocus.unfocus();
           },
           child: Scaffold(
-            backgroundColor: AppStateNotifier.isDarkModeOn ? Theme.of(context).primaryColor : Colors.white,
+            backgroundColor: AppStateNotifier.isDarkModeOn
+                ? Theme.of(context).primaryColor
+                : Colors.white,
             appBar: AppBar(
               elevation: 0,
               backgroundColor: AppStateNotifier.isDarkModeOn
@@ -154,21 +156,18 @@ class LoginView extends StatelessWidget {
                                 side: BorderSide(
                                     color: Theme.of(context).primaryColor),
                               ),
-                              primary:
-                              !AppStateNotifier.isDarkModeOn
-                  ? Colors.white
-                  : Colors.black 
-                              ),
+                              primary: !AppStateNotifier.isDarkModeOn
+                                  ? Colors.white
+                                  : Colors.black),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 28, vertical: 16),
                             child: Text(
                               'Let\'s get started',
                               style: TextStyle(
-                                  color:
-                                  !AppStateNotifier.isDarkModeOn
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.white,
+                                  color: !AppStateNotifier.isDarkModeOn
+                                      ? Theme.of(context).primaryColor
+                                      : Colors.white,
                                   fontSize: 18),
                             ),
                           ),

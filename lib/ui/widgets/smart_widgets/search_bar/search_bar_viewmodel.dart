@@ -27,7 +27,7 @@ class SearchBarWidgetViewModel extends BaseViewModel {
   }
 
   onTyping(String searchKey) {
-    switch(screen){
+    switch (screen) {
       case Screens.TorrentListViewScreen:
         _torrentService.updateTorrentDisplayList(searchText: searchKey);
         break;
@@ -47,7 +47,7 @@ class SearchBarWidgetViewModel extends BaseViewModel {
   }
 
   String getHintText() {
-    switch(screen){
+    switch (screen) {
       case Screens.TorrentListViewScreen:
         return 'Search torrent by name';
       case Screens.DiskExplorerViewScreen:

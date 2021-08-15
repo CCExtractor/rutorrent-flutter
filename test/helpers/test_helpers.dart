@@ -1,7 +1,7 @@
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/services/api/prod_api_service.dart';
-import 'package:mockito/annotations.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/functional_services/notification_service.dart';
@@ -31,7 +31,7 @@ ProdApiService getAndRegisterProdApiServiceMock() {
   final service = ProdApiService();
   when(service.historyPluginUrl)
       .thenAnswer((realInvocation) => TestData.historyPluginUrl);
-  
+
   locator.registerSingleton<ProdApiService>(service);
   return service;
 }
@@ -48,8 +48,7 @@ AuthenticationService getAndRegisterAuthenticationService() {
   print("getAndRegisterAuthenticationService");
   _removeRegistrationIfExists<AuthenticationService>();
   final service = MockAuthenticationService();
-  when(service.accounts)
-      .thenAnswer((realInvocation) => TestData.accounts);
+  when(service.accounts).thenAnswer((realInvocation) => TestData.accounts);
   locator.registerSingleton<AuthenticationService>(service);
   return service;
 }
@@ -77,26 +76,29 @@ DiskFileService getAndRegisterDiskFileService() {
   locator.registerSingleton<DiskFileService>(service);
   return service;
 }
+
 UserPreferencesService getAndRegisterUserPreferencesService() {
   print("getAndRegisterUserPreferencesService");
- _removeRegistrationIfExists<UserPreferencesService>();
- final service = MockUserPreferencesService();
- locator.registerSingleton<UserPreferencesService>(service);
- return service;
+  _removeRegistrationIfExists<UserPreferencesService>();
+  final service = MockUserPreferencesService();
+  locator.registerSingleton<UserPreferencesService>(service);
+  return service;
 }
+
 SharedPreferencesService getAndRegisterSharedPreferencesService() {
   print("getAndRegisterSharedPreferencesService");
- _removeRegistrationIfExists<SharedPreferencesService>();
- final service = MockSharedPreferencesService();
- locator.registerSingleton<SharedPreferencesService>(service);
- return service;
+  _removeRegistrationIfExists<SharedPreferencesService>();
+  final service = MockSharedPreferencesService();
+  locator.registerSingleton<SharedPreferencesService>(service);
+  return service;
 }
+
 NotificationService getAndRegisterNotificationService() {
   print("getAndRegisterNotificationService");
- _removeRegistrationIfExists<NotificationService>();
- final service = MockNotificationService();
- locator.registerSingleton<NotificationService>(service);
- return service;
+  _removeRegistrationIfExists<NotificationService>();
+  final service = MockNotificationService();
+  locator.registerSingleton<NotificationService>(service);
+  return service;
 }
 
 void registerServices() {

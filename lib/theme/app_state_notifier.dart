@@ -5,10 +5,11 @@ import 'package:stacked/stacked.dart';
 
 @lazySingleton
 class AppStateNotifier extends BaseViewModel {
-  UserPreferencesService _userPreferencesService = locator<UserPreferencesService>();
+  UserPreferencesService _userPreferencesService =
+      locator<UserPreferencesService>();
 
   static bool isDarkModeOn = locator<UserPreferencesService>().isDarkModeOn;
-  
+
   void updateTheme(bool isdarkmodeon) {
     isDarkModeOn = isdarkmodeon;
     _userPreferencesService.setDarkMode(isdarkmodeon);

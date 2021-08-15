@@ -5,15 +5,15 @@ import 'package:rutorrentflutter/models/disk_file.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
 
 ///Service to handle state of [DiskFile] objects in the application
-class DiskFileService extends ChangeNotifier{
-
-  SharedPreferencesService _sharedPreferencesService = locator<SharedPreferencesService>();
+class DiskFileService extends ChangeNotifier {
+  SharedPreferencesService _sharedPreferencesService =
+      locator<SharedPreferencesService>();
 
   ValueNotifier<List<DiskFile>> _diskFileList =
       new ValueNotifier(new List<DiskFile>.empty());
   ValueNotifier<List<DiskFile>> _diskFileDisplayList =
       new ValueNotifier(new List<DiskFile>.empty());
-      
+
   Sort _sortPreference = Sort.none;
 
   get sortPreference => _sortPreference;
@@ -28,7 +28,8 @@ class DiskFileService extends ChangeNotifier{
 
   setSortPreference(Sort newPreference) {
     _sortPreference = newPreference;
-    _sharedPreferencesService.DB.put("sortPreference_diskFiles", newPreference.index);
+    _sharedPreferencesService.DB
+        .put("sortPreference_diskFiles", newPreference.index);
   }
 
   /// Updates display list of [Torrent]s
@@ -70,5 +71,4 @@ class DiskFileService extends ChangeNotifier{
         return diskFileList;
     }
   }
-
 }

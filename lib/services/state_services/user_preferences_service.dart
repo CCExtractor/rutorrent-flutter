@@ -38,7 +38,6 @@ class UserPreferencesService {
   get packageInfo => _packageInfo;
 
   init() {
-
     //Fetch all User Preferences from local storage
     //And restore state
 
@@ -52,8 +51,10 @@ class UserPreferencesService {
     showAllAccounts = DB.get("showAllAccounts") ?? false;
     _isDarkModeOn = DB.get("isDarkModeOn") ?? false;
     int sortPreferenceIdx = DB.get("sortPreference", defaultValue: 6);
-    int sortPreferenceIdxDiskFile = DB.get("sortPreference_diskFiles", defaultValue: 6);
-    int sortPreferenceIdxHistory = DB.get("sortPreferenceHistory", defaultValue: 6);
+    int sortPreferenceIdxDiskFile =
+        DB.get("sortPreference_diskFiles", defaultValue: 6);
+    int sortPreferenceIdxHistory =
+        DB.get("sortPreferenceHistory", defaultValue: 6);
     _torrentService.setSortPreference(Sort.values[sortPreferenceIdx]);
     _diskFileService.setSortPreference(Sort.values[sortPreferenceIdxDiskFile]);
     _historyService.setSortPreference(Sort.values[sortPreferenceIdxHistory]);
@@ -62,7 +63,7 @@ class UserPreferencesService {
     _addTorrentNotification = DB.get("addTorrentNotification") ?? true;
     _downloadCompleteNotification =
         DB.get("downloadCompleteNotification") ?? true;
-        //todo remove
+    //todo remove
     print(_isDarkModeOn);
     _appStateNotifier.updateTheme(_isDarkModeOn);
   }
@@ -140,10 +141,9 @@ class UserPreferencesService {
   setDarkMode(bool newVal) {
     log.v("DarkMode set to " + newVal.toString());
     _isDarkModeOn = newVal;
-    _sharedPreferencesService!.DB
-        .put("isDarkModeOn", _isDarkModeOn);
+    _sharedPreferencesService!.DB.put("isDarkModeOn", _isDarkModeOn);
   }
-  
+
   setPackageInfo(PackageInfo newVal) {
     //Application Version will not be saved to local storage
     //Since we want it to be fetched everytime user opens application

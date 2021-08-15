@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
@@ -13,9 +14,9 @@ import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
-import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/services_info.dart';
 import 'package:rutorrentflutter/services/state_services/disk_file_service.dart';
 import 'package:rutorrentflutter/services/state_services/history_service.dart';
@@ -26,7 +27,8 @@ Logger log = getLogger("ApiService");
 
 ///[Service] for communicating with the [RuTorrent] APIs
 class ProdApiService implements IApiService {
-  AuthenticationService? _authenticationService = locator<AuthenticationService>();
+  AuthenticationService? _authenticationService =
+      locator<AuthenticationService>();
   DiskSpaceService? _diskSpaceService = locator<DiskSpaceService>();
   TorrentService? _torrentService = locator<TorrentService>();
   HistoryService? _historyService = locator<HistoryService>();
@@ -66,19 +68,17 @@ class ProdApiService implements IApiService {
 
   /// Authentication header
   Map<String, String> getAuthHeader({Account? currentAccount}) {
-    return
-    currentAccount == null 
-    ?{
-      'authorization': 'Basic ' +
-          base64Encode(
-              utf8.encode('${account!.username}:${account!.password}')),
-    }
-    :{
-      'authorization': 'Basic ' +
-          base64Encode(
-              utf8.encode('${currentAccount.username}:${currentAccount.password}')),
-    }
-    ;
+    return currentAccount == null
+        ? {
+            'authorization': 'Basic ' +
+                base64Encode(
+                    utf8.encode('${account!.username}:${account!.password}')),
+          }
+        : {
+            'authorization': 'Basic ' +
+                base64Encode(utf8.encode(
+                    '${currentAccount.username}:${currentAccount.password}')),
+          };
   }
 
   Future<bool> testConnectionAndLogin(Account? account) async {
@@ -99,7 +99,7 @@ class ProdApiService implements IApiService {
       Fluttertoast.showToast(msg: 'Something\'s Wrong');
       return false;
     }
-    
+
     Fluttertoast.showToast(msg: 'Connected');
     await _authenticationService!.saveLogin(account);
     return true;
@@ -313,11 +313,12 @@ class ProdApiService implements IApiService {
           .toString();
     }
     for (Account? account in accounts) {
-      var response = await ioClient
-          .post(Uri.parse(historyPluginUrl), headers: getAuthHeader(currentAccount: account), body: {
-        'cmd': 'get',
-        'mark': timestamp,
-      });
+      var response = await ioClient.post(Uri.parse(historyPluginUrl),
+          headers: getAuthHeader(currentAccount: account),
+          body: {
+            'cmd': 'get',
+            'mark': timestamp,
+          });
 
       var items = jsonDecode(response.body)['items'];
 
@@ -376,12 +377,13 @@ class ProdApiService implements IApiService {
                 Duration(seconds: 10).inMilliseconds) ~/
             1000)
         .toString();
-    for(Account? account in accounts){
-      var response = await ioClient
-          .post(Uri.parse(historyPluginUrl), headers: getAuthHeader(currentAccount: account), body: {
-        'cmd': 'get',
-        'mark': timestamp,
-      });
+    for (Account? account in accounts) {
+      var response = await ioClient.post(Uri.parse(historyPluginUrl),
+          headers: getAuthHeader(currentAccount: account),
+          body: {
+            'cmd': 'get',
+            'mark': timestamp,
+          });
 
       var items = jsonDecode(response.body)['items'];
       for (var item in items) {
@@ -477,13 +479,14 @@ class ProdApiService implements IApiService {
   Future<List<DiskFile>> getAllAccountsDiskFiles(String path) async {
     log.v("Fetching Disk Files");
     List<DiskFile> diskFiles = [];
-    for(Account? account in accounts){
+    for (Account? account in accounts) {
       try {
-        var response = await ioClient
-            .post(Uri.parse(explorerPluginUrl), headers: getAuthHeader(currentAccount: account), body: {
-          'cmd': 'get',
-          'src': path,
-        });
+        var response = await ioClient.post(Uri.parse(explorerPluginUrl),
+            headers: getAuthHeader(currentAccount: account),
+            body: {
+              'cmd': 'get',
+              'src': path,
+            });
 
         var files = jsonDecode(response.body)['files'];
 
@@ -497,7 +500,6 @@ class ProdApiService implements IApiService {
 
         _diskFileService.setDiskFileList(diskFiles);
         return diskFiles;
-
       } on Exception catch (e) {
         print(e.toString());
         return [];
@@ -505,7 +507,7 @@ class ProdApiService implements IApiService {
     }
     return [];
   }
-  
+
   /// Gets list of files for a particular torrent
   Future<List<TorrentFile>> getFiles(String hashValue) async {
     log.v("Fetching filles for torrent with hash $hashValue");
@@ -562,9 +564,9 @@ class ProdApiService implements IApiService {
   Future<List<RSSLabel>> loadAllAccountsRSS() async {
     log.v("Loading RSS");
     List<RSSLabel> rssLabels = [];
-    for(Account? account in accounts){
-      var rssResponse =
-          await ioClient.post(Uri.parse(rssPluginUrl), headers: getAuthHeader(currentAccount: account));
+    for (Account? account in accounts) {
+      var rssResponse = await ioClient.post(Uri.parse(rssPluginUrl),
+          headers: getAuthHeader(currentAccount: account));
 
       var feeds = jsonDecode(rssResponse.body)['list'];
       for (var label in feeds) {
@@ -663,11 +665,12 @@ class ProdApiService implements IApiService {
     log.v("Fetching RSS Filters");
     List<RSSFilter> rssFilters = [];
 
-    for(Account? account in accounts){
-      var response = await ioClient
-          .post(Uri.parse(rssPluginUrl), headers: getAuthHeader(currentAccount: account), body: {
-        'mode': 'getfilters',
-      });
+    for (Account? account in accounts) {
+      var response = await ioClient.post(Uri.parse(rssPluginUrl),
+          headers: getAuthHeader(currentAccount: account),
+          body: {
+            'mode': 'getfilters',
+          });
 
       var filters = jsonDecode(response.body);
       for (var filter in filters) {

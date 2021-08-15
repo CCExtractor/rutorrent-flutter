@@ -6,7 +6,6 @@ import 'package:rutorrentflutter/ui/views/Settings/settings_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 class SettingsView extends StatelessWidget {
-  
   const SettingsView({Key? key}) : super(key: key);
 
   @override

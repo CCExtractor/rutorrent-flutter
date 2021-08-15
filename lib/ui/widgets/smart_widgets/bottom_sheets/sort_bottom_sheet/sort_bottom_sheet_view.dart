@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/sort_bottom_sheet/sort_bottom_sheet_viewmodel.dart';
 import 'package:stacked/stacked.dart';
@@ -10,12 +10,13 @@ class SortBottomSheetView extends StatelessWidget {
   final SheetRequest request;
   final Function(SheetResponse) completer;
   final Screens screen;
-  SortBottomSheetView({required this.request, required this.completer, required this.screen});
+  SortBottomSheetView(
+      {required this.request, required this.completer, required this.screen});
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SortBottomSheetViewModel>.reactive(
-      onModelReady: (model)=>model.init(screen),
+      onModelReady: (model) => model.init(screen),
       builder: (context, model, child) => Padding(
         padding: const EdgeInsets.only(
           left: 16.0,
@@ -63,34 +64,34 @@ class SortBottomSheetView extends StatelessWidget {
                 itemCount: Sort.values.length - 1,
                 itemBuilder: (context, index) {
                   Map<Sort, String> sortMap = model.getSortMap();
-                  return
-                  sortMap[Sort.values[index]] == null
-                  ? Container()
-                  : GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () {
-                      model.setSortPreference(completer, Sort.values[index]);
-                      Navigator.of(context).pop();
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          sortMap[Sort.values[index]]!,
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                        Radio(
-                          groupValue: model.sortPreference,
-                          value: Sort.values[index],
-                          onChanged: (selected) {
+                  return sortMap[Sort.values[index]] == null
+                      ? Container()
+                      : GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
                             model.setSortPreference(
                                 completer, Sort.values[index]);
                             Navigator.of(context).pop();
                           },
-                        ),
-                      ],
-                    ),
-                  );
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                sortMap[Sort.values[index]]!,
+                                style: TextStyle(fontWeight: FontWeight.w600),
+                              ),
+                              Radio(
+                                groupValue: model.sortPreference,
+                                value: Sort.values[index],
+                                onChanged: (selected) {
+                                  model.setSortPreference(
+                                      completer, Sort.values[index]);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          ),
+                        );
                 },
               ),
             )
