@@ -31,7 +31,6 @@ ProdApiService getAndRegisterProdApiServiceMock() {
   final service = ProdApiService();
   when(service.historyPluginUrl)
       .thenAnswer((realInvocation) => TestData.historyPluginUrl);
-
   locator.registerSingleton<ProdApiService>(service);
   return service;
 }
