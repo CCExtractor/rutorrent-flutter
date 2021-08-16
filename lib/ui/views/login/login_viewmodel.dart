@@ -41,25 +41,25 @@ class LoginViewModel extends BaseViewModel {
 
   login({String? url, required String? username, String? password}) async {
     setBusy(true);
-    
+
     if (username!.isEmpty) {
       Fluttertoast.showToast(msg: 'Username cannot be empty!');
       setBusy(false);
       return;
-    } 
-    
-    if(password!.isEmpty) {
+    }
+
+    if (password!.isEmpty) {
       Fluttertoast.showToast(msg: 'Password cannot be empty!');
       setBusy(false);
       return;
-    } 
+    }
 
     _account = Account(url: url, username: username, password: password);
     _authenticationService!.tempAccount = _account;
     bool isValidConfiguration = await _validateConfigurationDetails(_account);
     if (isValidConfiguration)
-    _navigationService?.replaceWith(Routes.splashView);
-    
+      _navigationService?.replaceWith(Routes.splashView);
+
     setBusy(false);
   }
 
