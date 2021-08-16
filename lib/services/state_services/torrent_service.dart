@@ -26,7 +26,7 @@ class TorrentService extends ChangeNotifier {
   ValueNotifier<List<Torrent>> _torrentsDisplayList =
       new ValueNotifier(new List<Torrent>.empty());
 
-  String? _selectedLabel;
+  String? _selectedLabel = "";
   bool _isLabelSelected = false;
   Filter _selectedFilter = Filter.All;
   Sort _sortPreference = Sort.none;
@@ -52,10 +52,21 @@ class TorrentService extends ChangeNotifier {
   }
 
   changeLabel(String label) {
-    _selectedFilter = Filter.All;
-    _isLabelSelected = true;
-    _selectedLabel = label;
-    _listOfLabels.notifyListeners();
+    // If already selected label tapped
+    // Disable all label selection
+    if (_selectedLabel == label) {
+      _selectedLabel = "";
+      _isLabelSelected = false;
+      updateTorrentDisplayList();
+      _selectedFilter = Filter.All;
+      _listOfLabels.notifyListeners();
+    } else {
+      _selectedFilter = Filter.All;
+      _isLabelSelected = true;
+      _selectedLabel = label;
+      _listOfLabels.notifyListeners();
+      updateTorrentDisplayList();
+    }
   }
 
   changeFilter(Filter filter) {
@@ -75,6 +86,7 @@ class TorrentService extends ChangeNotifier {
     _sharedPreferencesService!.DB.put("sortPreference", newPreference.index);
   }
 
+  /// Updates display list of [Torrent]s Display List
   updateTorrentDisplayList({String? searchText}) {
     List<Torrent> displayList = torrentsList.value;
     //Sorting: sorting data on basis of sortPreference
@@ -181,6 +193,7 @@ class TorrentService extends ChangeNotifier {
     return torrentsList.where((torrent) => torrent.label == label).toList();
   }
 
+  /// Reloads list of [Torrent]s from seedbox
   refreshTorrentList() async {
     log.v("Torrent refresh function called");
     IApiService? _apiService = locator<IApiService>();
@@ -193,5 +206,19 @@ class TorrentService extends ChangeNotifier {
     await _apiService.getHistory();
     await updateTorrentDisplayList(
         searchText: _userPreferencesService?.searchTextController.text);
+  }
+
+  ///Removes [Torrent] and updates torrents list
+  removeTorrent(String hashValue) async {
+    IApiService? _apiService = locator<IApiService>();
+    await _apiService.removeTorrent(hashValue);
+    await refreshTorrentList();
+  }
+
+  ///Removes [Torrent] *with Data* and updates torrents list
+  removeTorrentWithData(String hashValue) async {
+    IApiService? _apiService = locator<IApiService>();
+    await _apiService.removeTorrentWithData(hashValue);
+    await refreshTorrentList();
   }
 }

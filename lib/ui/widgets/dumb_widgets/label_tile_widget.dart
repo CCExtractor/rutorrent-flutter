@@ -9,19 +9,29 @@ class LabelTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isSelected = model.selectedLabel == label && model.isLabelSelected;
     return Container(
-      color: (model.selectedLabel == label && model.isLabelSelected)
-          ? Theme.of(context).disabledColor
-          : null,
+      color: isSelected ? Theme.of(context).accentColor : null,
       child: ListTile(
         dense: true,
         leading: Icon(
           Icons.label_important_outline,
-          color: !AppStateNotifier.isDarkModeOn ? Colors.black : Colors.white,
+          color: isSelected
+              ? Colors.white
+              : !AppStateNotifier.isDarkModeOn
+                  ? Colors.black
+                  : Colors.white,
         ),
-        title: Text(label),
+        title: Text(
+          label,
+          style: TextStyle(
+              color: isSelected
+                  ? Colors.white
+                  : !AppStateNotifier.isDarkModeOn
+                      ? Colors.black
+                      : Colors.white),
+        ),
         onTap: () {
-          print("ontapp label");
           model.changeLabel(label);
           Navigator.pop(context);
         },

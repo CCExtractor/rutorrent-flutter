@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
-import 'package:rutorrentflutter/ui/widgets/smart_widgets/search_bar/search_bar_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/sort_bottom_sheet/sort_bottom_sheet_view.dart';
+import 'package:rutorrentflutter/ui/widgets/smart_widgets/search_bar/search_bar_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class SearchBarWidget extends StatelessWidget {
-  const SearchBarWidget({Key? key}) : super(key: key);
+  final Screens screen;
+  const SearchBarWidget({Key? key, required this.screen}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SearchBarWidgetViewModel>.reactive(
+      onModelReady: (model) => model.init(screen),
       builder: (context, model, child) => Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -51,7 +54,7 @@ class SearchBarWidget extends StatelessWidget {
                             border: InputBorder.none,
                             contentPadding:
                                 EdgeInsets.symmetric(horizontal: 16),
-                            hintText: 'Search torrent by name'),
+                            hintText: model.getHintText()),
                         onChanged: (value) => model.onTyping(value),
                       ),
                     ),
@@ -82,6 +85,7 @@ class SearchBarWidget extends StatelessWidget {
                     isScrollControlled: true,
                     builder: (context) {
                       return SortBottomSheetView(
+                        screen: screen,
                         completer: (s) => {},
                         request: SheetRequest(),
                       );

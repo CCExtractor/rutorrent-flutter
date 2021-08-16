@@ -1,9 +1,9 @@
 // import 'package:rutorrentflutter/app/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 
@@ -15,7 +15,7 @@ class HomeViewModel extends BaseViewModel {
   int index = 0;
   PageController _pageController = PageController();
 
-  Account? get account => _authenticationService!.accounts![0];
+  Account? get account => _authenticationService!.accounts.value[0];
   PageController get pageController => _pageController;
 
   toggleTheme(bool boolVal) async {

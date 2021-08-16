@@ -1,35 +1,40 @@
+import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
+import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 Logger log = getLogger("AuthenticationService");
 
 ///[Service] used for all functionalities related to authentication and its state
-class AuthenticationService {
+class AuthenticationService extends ChangeNotifier {
   SharedPreferencesService? _sharedPreferencesService =
       locator<SharedPreferencesService>();
+  NavigationService _navigationService = locator<NavigationService>();
 
   ///List of user accounts
-  List<Account?>? _accounts;
+  ValueNotifier<List<Account>> _accounts =
+      new ValueNotifier(new List<Account>.empty());
 
   ///Temp account used to verify login credentials
   Account? _tempAccount;
 
   //Getters
-  List<Account?>? get accounts => _accounts;
+  ValueNotifier<List<Account>> get accounts => _accounts;
   Account? get tempAccount => _tempAccount;
 
   //Setters
   set accounts(accounts) => _accounts = accounts;
   set tempAccount(account) => _tempAccount = account;
 
-  Future<List<Account?>?> getAccount() async {
-    if (_accounts == null) {
-      _accounts = await _sharedPreferencesService!.fetchSavedLogin();
+  Future<ValueNotifier<List<Account>>> getAccount() async {
+    if (_accounts.value.isEmpty) {
+      _accounts.value = await _sharedPreferencesService!.fetchSavedLogin();
       return _accounts;
     } else {
       return _accounts;
@@ -37,14 +42,14 @@ class AuthenticationService {
   }
 
   Future<List<Account?>> saveLogin(Account? account) async {
+    log.i("User being saved");
     if (account == null) return [];
-    List<Account?> accounts =
-        await _sharedPreferencesService!.fetchSavedLogin();
+    List<Account> accounts = await _sharedPreferencesService!.fetchSavedLogin();
     bool alreadyLoggedIn = false;
 
     for (int index = 0; index < accounts.length; index++) {
-      if (matchAccount(accounts[index]!, account)) {
-        Fluttertoast.showToast(msg: 'Account already saved');
+      if (matchAccount(accounts[index], account)) {
+        log.i("User already exists");
         alreadyLoggedIn = true;
 
         // Swap to put active one on first position which will be active by default
@@ -56,9 +61,10 @@ class AuthenticationService {
 
     if (!alreadyLoggedIn) {
       accounts.insert(0, account);
-      _sharedPreferencesService!.saveLogin(accounts);
     }
-
+    _accounts.value = accounts;
+    _sharedPreferencesService!.saveLogin(accounts);
+    _accounts.notifyListeners();
     return accounts;
   }
 
@@ -73,8 +79,8 @@ class AuthenticationService {
 
   Future<bool> changePassword(int index, String password) async {
     IApiService _apiService = locator<IApiService>();
-
-    if (password == accounts?[index]?.password) {
+    log.e("Password being changed");
+    if (password == accounts.value[index].password) {
       Fluttertoast.showToast(
           msg: 'New password cannot be same as old password');
       return false;
@@ -87,25 +93,36 @@ class AuthenticationService {
       return false;
     }
 
-    accounts?[index]?.setPassword(password);
-    saveLogin(accounts?[index]);
+    accounts.value[index].setPassword(password);
+    _sharedPreferencesService?.saveLogin(accounts.value);
+    saveLogin(accounts.value[index]);
     Fluttertoast.showToast(msg: 'Password Changed Successfully');
 
     return true;
   }
 
   void deleteAccount(int index) {
-    if (accounts?.length == 1) {
+    if (accounts.value.length == 1) {
       logoutAllAccounts();
     } else {
       removeAccount(index);
     }
   }
 
-  void logoutAllAccounts() async {}
+  void logoutAllAccounts() async {
+    log.e("Logging out of all accounts");
+    _accounts.value = [];
+    _accounts.notifyListeners();
+    await _sharedPreferencesService?.saveLogin(_accounts.value);
+    _navigationService.navigateTo(Routes.splashView);
+  }
 
-  void removeAccount(int index) {
-    _accounts?.removeAt(index);
-    saveLogin(_accounts?[0]);
+  void removeAccount(int index) async {
+    log.e("Account being removed");
+    _accounts.value.removeAt(index);
+    await _sharedPreferencesService?.saveLogin(_accounts.value);
+    saveLogin(_accounts.value[0]);
+    _accounts.notifyListeners();
+    _navigationService.navigateTo(Routes.splashView);
   }
 }

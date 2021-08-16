@@ -27,3 +27,9 @@ enum HomeViewBottomSheetMode {
   Torrent,
   RSS,
 }
+
+enum Screens {
+  TorrentListViewScreen,
+  DiskExplorerViewScreen,
+  TorrentHistoryViewScreen,
+}

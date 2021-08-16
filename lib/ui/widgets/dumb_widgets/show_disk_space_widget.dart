@@ -1,7 +1,7 @@
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
-import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/models/disk_space.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 
 class ShowDiskSpace extends StatelessWidget {

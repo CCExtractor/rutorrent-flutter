@@ -1,9 +1,8 @@
-
-import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/app/app.logger.dart';
 import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 import 'package:stacked/stacked.dart';
@@ -27,26 +26,19 @@ class TorrentTileViewModel extends BaseViewModel {
   }
 
   removeTorrentWithData(String hashValue) {
-    _apiService!.removeTorrentWithData(hashValue);
+    _torrentService!.removeTorrentWithData(hashValue);
   }
 
   removeTorrent(String hashValue) {
-    _apiService!.removeTorrent(hashValue);
+    _torrentService!.removeTorrent(hashValue);
   }
 
   toggleTorrentStatus(Torrent torrent) async {
     await _apiService!.toggleTorrentStatus(torrent);
     //Refresh torrent list
-    _userPreferencesService!.showAllAccounts
-        ? await _apiService!
-            .getAllAccountsTorrentList()
-            .listen((event) {})
-            .cancel()
-        : await _apiService!.getTorrentList().listen((event) {}).cancel();
-    await _torrentService?.updateTorrentDisplayList(
-        searchText: _userPreferencesService?.searchTextController.text);
+    await _torrentService?.refreshTorrentList();
   }
-  
+
   navigateToTorrentDetail(Torrent torrent) {
     _navigationService.navigateTo(Routes.torrentDetailView,
         arguments: TorrentDetailViewArguments(torrent: torrent));
