@@ -53,75 +53,80 @@ class HistoryView extends StatelessWidget {
         body: RefreshIndicator(
           onRefresh: () async => model.refreshHistoryList(),
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: SingleChildScrollView(
-              physics: ScrollPhysics(),
-              child: Column(
-                children: [
-                  SearchBarWidget(
-                    screen: Screens.TorrentHistoryViewScreen,
+            // padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Column(
+              children: [
+                SearchBarWidget(
+                  screen: Screens.TorrentHistoryViewScreen,
+                ),
+                ListTile(
+                  title: Text(
+                    'Files (${model.torrentHistoryDisplayList.value.length})',
+                    style: TextStyle(fontWeight: FontWeight.w600),
                   ),
-                  ListTile(
-                    title: Text(
-                      'Files (${model.torrentHistoryDisplayList.value.length})',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  model.isBusy
-                      ? LoadingShimmer().loadingEffect(context)
-                      : (model.torrentHistoryDisplayList.value.length != 0)
-                          ? ValueListenableBuilder(
-                              valueListenable: model.torrentHistoryDisplayList,
-                              builder:
-                                  (context, List<HistoryItem> items, snapshot) {
-                                return ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemCount: items.length,
-                                  itemBuilder: (context, index) {
-                                    return ListTile(
-                                      onLongPress: () {
-                                        _showRemoveDialog(
-                                            items[index].hash, model, context);
-                                      },
-                                      title: SizedBox(
-                                          width: 40,
-                                          child: Text(items[index].name,
+                ),
+                model.isBusy
+                    ? Expanded(
+                        child: Center(
+                            child: LoadingShimmer().loadingEffect(context)))
+                    : (model.torrentHistoryDisplayList.value.length != 0)
+                        ? Expanded(
+                            child: ValueListenableBuilder(
+                                valueListenable:
+                                    model.torrentHistoryDisplayList,
+                                builder: (context, List<HistoryItem> items,
+                                    snapshot) {
+                                  return ListView.builder(
+                                    // physics: NeverScrollableScrollPhysics(),
+                                    // scrollDirection: Axis.vertical,
+                                    // shrinkWrap: true,
+                                    itemCount: items.length,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        onLongPress: () {
+                                          _showRemoveDialog(items[index].hash,
+                                              model, context);
+                                        },
+                                        title: SizedBox(
+                                            width: 40,
+                                            child: Text(items[index].name,
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight:
+                                                        FontWeight.w600))),
+                                        trailing: Container(
+                                          padding: const EdgeInsets.all(4),
+                                          width: 70,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                            color: getHistoryStatusColor(
+                                                context, items[index].action),
+                                          )),
+                                          child: Text(
+                                              HistoryItem.historyStatus[
+                                                  items[index].action]!,
+                                              textAlign: TextAlign.center,
                                               style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight:
-                                                      FontWeight.w600))),
-                                      trailing: Container(
-                                        padding: const EdgeInsets.all(4),
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                          color: getHistoryStatusColor(
-                                              context, items[index].action),
-                                        )),
-                                        child: Text(
-                                            HistoryItem.historyStatus[
-                                                items[index].action]!,
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: getHistoryStatusColor(
-                                                  context, items[index].action),
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w600,
-                                            )),
-                                      ),
-                                      subtitle: Text(
-                                        '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                    );
-                                  },
-                                );
-                              })
-                          : Center(
+                                                color: getHistoryStatusColor(
+                                                    context,
+                                                    items[index].action),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              )),
+                                        ),
+                                        subtitle: Text(
+                                          '${DateFormat('HH:mm dd MMM yy').format(DateTime.fromMillisecondsSinceEpoch(items[index].actionTime * 1000))} | ${filesize(items[index].size)}',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }),
+                          )
+                        : Expanded(
+                            child: Center(
                               child: SvgPicture.asset(
                                 Theme.of(context).brightness == Brightness.light
                                     ? 'assets/logo/empty.svg'
@@ -130,8 +135,8 @@ class HistoryView extends StatelessWidget {
                                 height: 120,
                               ),
                             ),
-                ],
-              ),
+                          ),
+              ],
             ),
           ),
         ),

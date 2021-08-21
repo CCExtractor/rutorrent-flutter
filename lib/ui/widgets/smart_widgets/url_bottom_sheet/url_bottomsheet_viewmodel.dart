@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
+import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/utils/file_picker_service.dart';
 import 'package:stacked/stacked.dart';
 
 class URLBottomSheetViewModel extends BaseViewModel {
   FilePickerService? _filePickerService = locator<FilePickerService>();
+  TorrentService _torrentService = locator<TorrentService>();
   IApiService _apiService = locator<IApiService>();
 
   final TextEditingController urlTextController = TextEditingController();
@@ -33,12 +35,13 @@ class URLBottomSheetViewModel extends BaseViewModel {
   }
 
   void pickTorrentFile() async {
-    String? torrentPath =
-        await (_filePickerService!.selectFile() as Future<String?>);
+    String? torrentPath = await _filePickerService!.selectFile();
 
     if (torrentPath != null) {
-      _apiService.addTorrentFile(torrentPath);
+      await _apiService.addTorrentFile(torrentPath);
     }
+    await Future.delayed(Duration(seconds: 2));
+    await _torrentService.refreshTorrentList();
   }
 
   void submit(HomeViewBottomSheetMode? mode) {

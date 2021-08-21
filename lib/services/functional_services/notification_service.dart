@@ -17,7 +17,7 @@ class NotificationService {
   init() async {
     await AwesomeNotifications().initialize(
         // set the icon to null if you want to use the default app icon
-        'resource://drawable/ic_launcher',
+        'resource://drawable/logo',
         [
           NotificationChannel(
               enableVibration: true,
@@ -98,6 +98,7 @@ class NotificationService {
   ///```
   dispatchLocalNotification(
       {required String key, required Map customData}) async {
+    log.v("New Notification Dispatching");
     // If two notifications happen to have same IDs
     // One will be replaced by the other, so to avoid
     // this scenario we generate a Random ID for any notification

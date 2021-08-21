@@ -228,6 +228,7 @@ class ProdApiService implements IApiService {
   }
 
   addTorrent(String url) async {
+    log.v("Adding torrent");
     Fluttertoast.showToast(msg: 'Adding torrent');
     await ioClient
         .post(Uri.parse(addTorrentPluginUrl), headers: getAuthHeader(), body: {
@@ -236,16 +237,16 @@ class ProdApiService implements IApiService {
   }
 
   addTorrentFile(String torrentPath) async {
+    log.v("Adding torrent");
     Fluttertoast.showToast(msg: 'Adding torrent');
     var request = MultipartRequest('POST', Uri.parse(addTorrentPluginUrl));
+    request.headers.addAll(getAuthHeader());
     // request.fields['label'] = "hell";
 
     request.files
         .add(await MultipartFile.fromPath('torrent_file', torrentPath));
     try {
-      var response = await request.send();
-
-      print(response.headers);
+      await request.send();
     } catch (e) {
       print(e.toString());
     }

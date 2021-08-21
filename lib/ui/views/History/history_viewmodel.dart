@@ -22,6 +22,7 @@ class HistoryViewModel extends FutureViewModel {
     _apiService.updateHistory();
     await Future.delayed(Duration(seconds: 1));
     await _historyService.refreshTorrentHistoryList();
+    _historyService.notify();
     setBusy(false);
   }
 
@@ -54,6 +55,7 @@ class HistoryViewModel extends FutureViewModel {
     selectedChoice == 'All'
         ? loadHistoryItems()
         : loadHistoryItems(lastHrs: int.parse(selectedChoice.split(' ')[2]));
+    _historyService.notify();
     setBusy(false);
   }
 }

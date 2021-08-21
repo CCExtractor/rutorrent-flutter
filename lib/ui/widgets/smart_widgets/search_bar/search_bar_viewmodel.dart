@@ -29,13 +29,13 @@ class SearchBarWidgetViewModel extends BaseViewModel {
   onTyping(String searchKey) {
     switch (screen) {
       case Screens.TorrentListViewScreen:
-        _torrentService.updateTorrentDisplayList(searchText: searchKey);
+        _torrentService.updateTorrentDisplayList();
         break;
       case Screens.DiskExplorerViewScreen:
-        _diskFileService.updateDiskFileDisplayList(searchText: searchKey);
+        _diskFileService.updateDiskFileDisplayList();
         break;
       case Screens.TorrentHistoryViewScreen:
-        _historyService.updateTorrentHistoryDisplayList(searchText: searchKey);
+        _historyService.updateTorrentHistoryDisplayList();
         break;
       default:
         break;

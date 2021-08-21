@@ -96,9 +96,10 @@ class HistoryService extends ChangeNotifier {
   }
 
   notify() {
+    log.v("Checking for new torrents to send notification");
     bool happenedNow(HistoryItem item) {
-      if (DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime == 1)
-        return true;
+      if ((DateTime.now().millisecondsSinceEpoch ~/ 1000 - item.actionTime) <
+          1000) return true;
       return false;
     }
 
@@ -138,6 +139,7 @@ class HistoryService extends ChangeNotifier {
         case 3: // Torrent Deleted
           if (happenedNow(item)) {
             // Do Something
+            log.v("Torrent Deleted");
           }
           break;
       }
