@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
@@ -13,10 +14,11 @@ import 'package:rutorrentflutter/models/rss.dart';
 import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
+import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
-import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/services_info.dart';
+import 'package:rutorrentflutter/services/state_services/disk_file_service.dart';
 import 'package:rutorrentflutter/services/state_services/history_service.dart';
 import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:xml/xml.dart';
@@ -30,6 +32,7 @@ class ProdApiService implements IApiService {
   DiskSpaceService? _diskSpaceService = locator<DiskSpaceService>();
   TorrentService? _torrentService = locator<TorrentService>();
   HistoryService? _historyService = locator<HistoryService>();
+  DiskFileService _diskFileService = locator<DiskFileService>();
 
   IOClient get ioClient {
     /// Url with some issue with their SSL certificates can be trusted explicitly with this
@@ -64,16 +67,23 @@ class ProdApiService implements IApiService {
   get explorerPluginUrl => url + '/plugins/explorer/action.php';
 
   /// Authentication header
-  Map<String, String> getAuthHeader() {
-    return {
-      'authorization': 'Basic ' +
-          base64Encode(
-              utf8.encode('${account!.username}:${account!.password}')),
-    };
+  Map<String, String> getAuthHeader({Account? currentAccount}) {
+    return currentAccount == null
+        ? {
+            'authorization': 'Basic ' +
+                base64Encode(
+                    utf8.encode('${account!.username}:${account!.password}')),
+          }
+        : {
+            'authorization': 'Basic ' +
+                base64Encode(utf8.encode(
+                    '${currentAccount.username}:${currentAccount.password}')),
+          };
   }
 
   Future<bool> testConnectionAndLogin(Account? account) async {
     log.v("Testing connection with server");
+    log.e(getAuthHeader());
     Response? response;
     var total;
     try {
@@ -81,15 +91,16 @@ class ProdApiService implements IApiService {
           headers: getAuthHeader());
       log.i("Test Connection Response : " + response.body);
       total = jsonDecode(response.body)['total'];
-      Fluttertoast.showToast(msg: 'Connected');
     } catch (e) {
-      Fluttertoast.showToast(msg: 'invalid');
+      Fluttertoast.showToast(msg: 'Username or Password Incorrect');
       return false;
     }
     if (total != null && response.statusCode != 200) {
       Fluttertoast.showToast(msg: 'Something\'s Wrong');
       return false;
     }
+
+    Fluttertoast.showToast(msg: 'Connected');
     await _authenticationService!.saveLogin(account);
     return true;
   }
@@ -104,7 +115,8 @@ class ProdApiService implements IApiService {
 
   /// Gets list of torrents for all saved accounts [Apis]
   Stream<List<Torrent>> getAllAccountsTorrentList() async* {
-    log.v("Fetching torrent lists from all accounts");
+    log.v(
+        "Fetching torrent lists from all accounts\n [Will be run every other second]");
     List<Account?>? accounts = _authenticationService!.accounts.value;
     while (true) {
       List<Torrent> allTorrentList = [];
@@ -131,14 +143,14 @@ class ProdApiService implements IApiService {
 
   /// Gets list of torrents for a particular account
   Stream<List<Torrent?>?> getTorrentList() async* {
-    log.v("Fetching torrent lists from all accounts");
+    log.v(
+        "Fetching torrent lists from all accounts\n [Will be run every other second]");
     while (true) {
       try {
         var response = await ioClient
             .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
           'mode': 'list',
         });
-
         yield _parseTorrentData(response.body, account)!;
       } catch (e) {
         print('Exception caught in getTorrentList Api Request ' + e.toString());
@@ -216,6 +228,7 @@ class ProdApiService implements IApiService {
   }
 
   addTorrent(String url) async {
+    log.v("Adding torrent");
     Fluttertoast.showToast(msg: 'Adding torrent');
     await ioClient
         .post(Uri.parse(addTorrentPluginUrl), headers: getAuthHeader(), body: {
@@ -224,16 +237,16 @@ class ProdApiService implements IApiService {
   }
 
   addTorrentFile(String torrentPath) async {
+    log.v("Adding torrent");
     Fluttertoast.showToast(msg: 'Adding torrent');
     var request = MultipartRequest('POST', Uri.parse(addTorrentPluginUrl));
+    request.headers.addAll(getAuthHeader());
     // request.fields['label'] = "hell";
 
     request.files
         .add(await MultipartFile.fromPath('torrent_file', torrentPath));
     try {
-      var response = await request.send();
-
-      print(response.headers);
+      await request.send();
     } catch (e) {
       print(e.toString());
     }
@@ -290,6 +303,38 @@ class ProdApiService implements IApiService {
     return historyItems;
   }
 
+  /// Gets History for all accounts of last [lastHours] hours
+  Future<List<HistoryItem>> getAllAccountsHistory({int? lastHours}) async {
+    log.v(
+        "Fetching history items from server for ${lastHours ?? 'infinite'} hours ago");
+    List<HistoryItem> historyItems = [];
+    String timestamp = '0';
+    if (lastHours != null) {
+      timestamp = ((DateTime.now().millisecondsSinceEpoch -
+                  Duration(hours: lastHours).inMilliseconds) ~/
+              1000)
+          .toString();
+    }
+    for (Account? account in accounts) {
+      var response = await ioClient.post(Uri.parse(historyPluginUrl),
+          headers: getAuthHeader(currentAccount: account),
+          body: {
+            'cmd': 'get',
+            'mark': timestamp,
+          });
+
+      var items = jsonDecode(response.body)['items'];
+
+      for (var item in items) {
+        HistoryItem historyItem = HistoryItem(item['name'], item['action'],
+            item['action_time'], item['size'], item['hash']);
+        historyItems.add(historyItem);
+      }
+    }
+    _historyService?.setTorrentHistoryList(historyItems);
+    return historyItems;
+  }
+
   removeHistoryItem(String hashValue) async {
     log.v("Removing history item from server");
     Fluttertoast.showToast(msg: 'Removing Torrent from History');
@@ -323,6 +368,32 @@ class ProdApiService implements IApiService {
       HistoryItem historyItem = HistoryItem(item['name'], item['action'],
           item['action_time'], item['size'], item['hash']);
       historyItems.add(historyItem);
+    }
+    _historyService?.setTorrentHistoryList(historyItems);
+    _historyService?.notify();
+  }
+
+  updateAllAccountsHistory() async {
+    log.v("Updating history items from server");
+    List<HistoryItem> historyItems = [];
+    String timestamp = ((CustomizableDateTime.current.millisecondsSinceEpoch -
+                Duration(seconds: 10).inMilliseconds) ~/
+            1000)
+        .toString();
+    for (Account? account in accounts) {
+      var response = await ioClient.post(Uri.parse(historyPluginUrl),
+          headers: getAuthHeader(currentAccount: account),
+          body: {
+            'cmd': 'get',
+            'mark': timestamp,
+          });
+
+      var items = jsonDecode(response.body)['items'];
+      for (var item in items) {
+        HistoryItem historyItem = HistoryItem(item['name'], item['action'],
+            item['action_time'], item['size'], item['hash']);
+        historyItems.add(historyItem);
+      }
     }
     _historyService?.setTorrentHistoryList(historyItems);
     _historyService?.notify();
@@ -399,11 +470,45 @@ class ProdApiService implements IApiService {
         diskFiles.add(diskFile);
       }
 
+      _diskFileService.setDiskFileList(diskFiles);
       return diskFiles;
     } on Exception catch (e) {
       print(e.toString());
       return [];
     }
+  }
+
+  /// Gets Disk Files
+  Future<List<DiskFile>> getAllAccountsDiskFiles(String path) async {
+    log.v("Fetching Disk Files");
+    List<DiskFile> diskFiles = [];
+    for (Account? account in accounts) {
+      try {
+        var response = await ioClient.post(Uri.parse(explorerPluginUrl),
+            headers: getAuthHeader(currentAccount: account),
+            body: {
+              'cmd': 'get',
+              'src': path,
+            });
+
+        var files = jsonDecode(response.body)['files'];
+
+        for (var file in files) {
+          DiskFile diskFile = DiskFile();
+
+          diskFile.isDirectory = file['is_dir'];
+          diskFile.name = file['data']['name'];
+          diskFiles.add(diskFile);
+        }
+
+        _diskFileService.setDiskFileList(diskFiles);
+        return diskFiles;
+      } on Exception catch (e) {
+        print(e.toString());
+        return [];
+      }
+    }
+    return [];
   }
 
   /// Gets list of files for a particular torrent
@@ -454,6 +559,27 @@ class ProdApiService implements IApiService {
         rssLabel.items.add(rssItem);
       }
       rssLabels.add(rssLabel);
+    }
+    return rssLabels;
+  }
+
+  /// Gets list of saved RSS Feeds
+  Future<List<RSSLabel>> loadAllAccountsRSS() async {
+    log.v("Loading RSS");
+    List<RSSLabel> rssLabels = [];
+    for (Account? account in accounts) {
+      var rssResponse = await ioClient.post(Uri.parse(rssPluginUrl),
+          headers: getAuthHeader(currentAccount: account));
+
+      var feeds = jsonDecode(rssResponse.body)['list'];
+      for (var label in feeds) {
+        RSSLabel rssLabel = RSSLabel(label['hash'], label['label']);
+        for (var item in label['items']) {
+          RSSItem rssItem = RSSItem(item['title'], item['time'], item['href']);
+          rssLabel.items.add(rssItem);
+        }
+        rssLabels.add(rssLabel);
+      }
     }
     return rssLabels;
   }
@@ -537,8 +663,36 @@ class ProdApiService implements IApiService {
     return rssFilters;
   }
 
+  /// Gets details of RSS Filters
+  Future<List<RSSFilter>> getAllAccountsRSSFilters() async {
+    log.v("Fetching RSS Filters");
+    List<RSSFilter> rssFilters = [];
+
+    for (Account? account in accounts) {
+      var response = await ioClient.post(Uri.parse(rssPluginUrl),
+          headers: getAuthHeader(currentAccount: account),
+          body: {
+            'mode': 'getfilters',
+          });
+
+      var filters = jsonDecode(response.body);
+      for (var filter in filters) {
+        RSSFilter rssFilter = RSSFilter(
+          filter['name'],
+          filter['enabled'],
+          filter['pattern'],
+          filter['label'],
+          filter['exclude'],
+          filter['dir'],
+        );
+        rssFilters.add(rssFilter);
+      }
+    }
+    return rssFilters;
+  }
+
   List<Torrent>? _parseTorrentData(String responseBody, Account? currAccount) {
-    log.v("List of Torrents being parsed");
+    // log.v("List of Torrents being parsed");
     // takes response and parse and return the torrents data
     List<Torrent> torrentsList = [];
     // A list of active torrents is required for changing the connection state from waiting to active

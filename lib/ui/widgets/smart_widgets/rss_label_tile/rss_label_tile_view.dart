@@ -40,6 +40,7 @@ class RSSLabelTileView extends StatelessWidget {
                       }),
                 )
               : ExpansionTile(
+                  textColor: Theme.of(context).accentColor,
                   leading: FaIcon(
                     FontAwesomeIcons.rssSquare,
                     color: Colors.orange[500],

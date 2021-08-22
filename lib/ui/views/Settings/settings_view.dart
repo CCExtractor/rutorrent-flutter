@@ -25,6 +25,7 @@ class SettingsView extends StatelessWidget {
                   valueListenable: model.accounts,
                   builder: (context, List<Account> accounts, snapshot) {
                     return ExpansionTile(
+                      textColor: Theme.of(context).accentColor,
                       title: Text('Manage Accounts',
                           style: TextStyle(fontWeight: FontWeight.w600)),
                       children: <Widget>[

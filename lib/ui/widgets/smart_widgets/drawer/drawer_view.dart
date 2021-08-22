@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
-import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/app/constants.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/label_tile_widget.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/show_disk_space_widget.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/Drawer/drawer_viewmodel.dart';
@@ -62,6 +62,7 @@ class DrawerView extends StatelessWidget {
                               : Colors.white),
                       title: Text(
                         'Filters',
+                        style: TextStyle(color: Theme.of(context).accentColor),
                       ),
                       children: model.filterTileList(model),
                     ),
@@ -73,6 +74,7 @@ class DrawerView extends StatelessWidget {
                               : Colors.white),
                       title: Text(
                         'Labels',
+                        style: TextStyle(color: Theme.of(context).accentColor),
                       ),
                       children: ((model.listOfLabels.value as List<String>)
                           .map((e) => LabelTile(

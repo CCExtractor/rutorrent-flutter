@@ -48,6 +48,7 @@ dev_dependencies:
     sdk: flutter
   stacked_generator: ^0.4.6
   build_runner: ^2.0.3
+  mockito:
 
 flutter:
   uses-material-design: true

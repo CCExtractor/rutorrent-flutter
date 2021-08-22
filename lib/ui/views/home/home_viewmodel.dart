@@ -1,9 +1,9 @@
 // import 'package:rutorrentflutter/app/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
+import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
 
