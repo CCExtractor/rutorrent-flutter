@@ -3,25 +3,36 @@ import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/password_input_widget.dart';
 
-class PasswordChangeDialog extends StatefulWidget {
+class PasswordChangeBottomSheet extends StatefulWidget {
   final Function onTap;
   final TextEditingController fieldController;
   final int? index;
-  PasswordChangeDialog(
+  PasswordChangeBottomSheet(
       {required this.onTap, required this.fieldController, this.index});
 
   @override
-  _PasswordChangeDialogState createState() => _PasswordChangeDialogState();
+  _PasswordChangeBottomSheetState createState() =>
+      _PasswordChangeBottomSheetState();
 }
 
-class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
+class _PasswordChangeBottomSheetState extends State<PasswordChangeBottomSheet> {
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-        return Column(
+    // removing dialog widget
+    return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+      return Container(
+        // padding added
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          top: 8.0,
+          right: 8.0,
+          left: 8.0,
+        ),
+        child: Column(
+          // minimizing to size
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Align(
               alignment: Alignment.centerLeft,
@@ -31,7 +42,12 @@ class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.only(
+                bottom: 8.0,
+                top: 8.0,
+                right: 8.0,
+                left: 8.0,
+              ),
               child: PasswordInput(
                 textEditingController: widget.fieldController,
                 autoFocus: true,
@@ -70,8 +86,8 @@ class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
                     ),
             )
           ],
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }

@@ -7,7 +7,7 @@ import 'package:rutorrentflutter/services/functional_services/authentication_ser
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/delete_account_widget.dart';
-import 'package:rutorrentflutter/ui/widgets/dumb_widgets/password_change_dialog_widget.dart';
+import 'package:rutorrentflutter/ui/widgets/dumb_widgets/password_change_bottom_sheet.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -34,13 +34,16 @@ class SettingsViewModel extends BaseViewModel {
   get downloadCompleteNotification =>
       _userPreferencesService.downloadCompleteNotification;
 
-  showPasswordChangeDialog(context, index) {
-    showDialog(
+  showPasswordChangeBottomSheet(context, index) {
+    showModalBottomSheet(
         context: context,
-        builder: (context) => PasswordChangeDialog(
-            onTap: changePassword,
-            fieldController: passwordFieldController,
-            index: index));
+        isScrollControlled: true,
+        builder: (BuildContext context) {
+          return PasswordChangeBottomSheet(
+              onTap: changePassword,
+              fieldController: passwordFieldController,
+              index: index);
+        });
   }
 
   showDeleteAccountDialog(context, int index) {

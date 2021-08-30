@@ -36,7 +36,7 @@ class SettingsView extends StatelessWidget {
                               return GestureDetector(
                                 onTap: () {
                                   // CHANGE PASSWORD
-                                  model.showPasswordChangeDialog(
+                                  model.showPasswordChangeBottomSheet(
                                       context, index);
                                 },
                                 child: ListTile(
