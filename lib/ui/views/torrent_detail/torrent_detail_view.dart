@@ -217,6 +217,7 @@ class TorrentDetailView extends StatelessWidget {
                             ],
                           )),
                       ExpansionTile(
+                        textColor: Theme.of(context).accentColor,
                         initiallyExpanded: model.torrent != null &&
                             model.torrent.status == Status.downloading,
                         title: Text(
@@ -508,6 +509,7 @@ class TorrentDetailView extends StatelessWidget {
                         ],
                       ),
                       ExpansionTile(
+                        textColor: Theme.of(context).accentColor,
                         title: Text('Files',
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w600)),
@@ -524,6 +526,7 @@ class TorrentDetailView extends StatelessWidget {
                         ],
                       ),
                       ExpansionTile(
+                        textColor: Theme.of(context).accentColor,
                         title: Text(
                           'Trackers',
                           style: TextStyle(
