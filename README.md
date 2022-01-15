@@ -1,7 +1,5 @@
 <p align="center">
-  
 <img src="https://raw.githubusercontent.com/harchani-ritik/rutorrent-flutter/master/assets/logo/light_mode_white_background.png" alt="ruTorrent Mobile" height=400px>
-  
 </p>
 
 # ruTorrent Mobile [Stacked Architecture](https://pub.dev/packages/stacked) Migration
