@@ -1,4 +1,8 @@
-<img src="https://raw.githubusercontent.com/harchani-ritik/rutorrent-flutter/master/assets/logo/light_mode_white_background.png" alt="ruTorrent Mobile" height=200px>
+<p align="center">
+  
+<img src="https://raw.githubusercontent.com/harchani-ritik/rutorrent-flutter/master/assets/logo/light_mode_white_background.png" alt="ruTorrent Mobile" height=400px>
+  
+</p>
 
 # ruTorrent Mobile [Stacked Architecture](https://pub.dev/packages/stacked) Migration
 
@@ -8,9 +12,9 @@
 
 ## **A ruTorrent-based client built with Flutter**
 
-The project is a flutter application for ruTorrent web interface. The app communicates with ruTorrent's backend via REST APIs to display the information about the torrents and the functionality to control its basic features. It also supports some plugin functionalities as provided in the ruTorrent web.
+The project is a flutter application for the ruTorrent web interface. The app communicates with ruTorrent's backend via REST APIs to display the information about the torrents and the functionality to control its basic features. It also supports some plugin functionalities as provided in the ruTorrent web.
 
-Additionally, you can also stream torrents from your server (or seedbox) and download them locally to your mobile device (a save offline feature), which makes torrenting a seamless experience for ruTorrent users.
+Additionally, you can also stream torrents from your server (or seedbox) and download them locally to your mobile device (a save offline feature), making torrenting a seamless experience for ruTorrent users.
 
 ## ruTorrent and rtorrent
 
@@ -20,9 +24,9 @@ Additionally, you can also stream torrents from your server (or seedbox) and dow
 
 In short:
 
-rtorrent ⇒ The BitTorrent client, a console-based tool that also has an API to interact with it.
+rtorrent ⇒ The BitTorrent client is a console-based tool with an API to interact with it.
 
-ruTorrent ⇒ A web interface for rtorrent that uses that API. It also does other things, for example, it can download torrents from an RSS feed. You configure RSS feeds in rutorrent's web interface, but there's also a backend service (written in PHP) that is part of rutorrent to do the actual download.
+ruTorrent ⇒ A web interface for rtorrent that uses that API. It also does other things; for example, it can download torrents from an RSS feed. You configure RSS feeds in rutorrent's web interface, but there's also a backend service (written in PHP) that is part of rutorrent to do the actual download.
 
 Thus, our Flutter application talks with ruTorrent's backend service to provide a native interface.
 
@@ -30,17 +34,17 @@ Thus, our Flutter application talks with ruTorrent's backend service to provide 
 
 ## Usage
 
-In order to use this flutter application you should have ruTorrent configured on your system, after which you can connect your mobile on the same network as your system and use the app by entering the configuration (IP address).
+In order to use this flutter application, you should have ruTorrent configured on your system, after which you can connect your mobile to the same network as your system and use the app by entering the configuration (IP address).
 
 If you find any difficulty to run ruTorrent and rtorrent on your system, you can use this [docker image](https://hub.docker.com/r/crazymax/rtorrent-rutorrent).
 
-Though the primary usage of this application is to control ruTorrent hosted on your seedbox account.
+Though, the primary usage of this application is to control ruTorrent hosted on your seedbox account.
 
 ## Seedbox
 
-A seedbox is a dedicated BitTorrent server. Oftentimes they are rented out by companies called seedbox providers.
+A seedbox is a dedicated BitTorrent server. Often they are rented out by companies called seedbox providers.
 
-Seedboxes usually have a high speed Internet connection. This allows users to download torrents quickly and seed the torrents for a long time.
+Seedboxes usually have a high-speed Internet connection. This allows users to download torrents quickly and seed the torrents for a long time.
 
 You can learn more about seedbox [here](https://en.wikipedia.org/wiki/Seedbox).
 
@@ -84,7 +88,7 @@ flutter run
 ## Contributing
 
 Contribution to the project can be made if you have some improvements for the project or if you find some bugs.
-You can contribute to the project by reporting issues, forking it, modifying the code and making a pull request to the repository.
+You can contribute to the project by forking it, reporting issues, modifying the code, and making a pull request to the repository.
 
 Please make sure you specify the commit type when opening pull requests:
 
