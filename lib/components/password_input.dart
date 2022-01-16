@@ -42,7 +42,7 @@ class _PasswordInputState extends State<PasswordInput> {
             suffixIcon: IconButton(
               color: Colors.grey,
               icon: Icon(
-                passwordVisible ? Icons.visibility : Icons.visibility_off,
+                passwordVisible ? Icons.visibility_off : Icons.visibility,
                 color: Colors.grey,
               ),
               onPressed: () {
