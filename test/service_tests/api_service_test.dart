@@ -1,12 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import '../helpers/test_helpers.dart';
-
 void main() {
   group('ApiServiceTests -', () {
     group('StartUp -', () {
-      setUp(() => registerServices());
-      tearDown(() => unregisterServices());
+      // setUp(() => registerServices());
+      // tearDown(() => unregisterServices());
     });
 
     group('Update History -', () {

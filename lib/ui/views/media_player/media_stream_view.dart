@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/ui/views/media_player/media_stream_viewmodel.dart';

@@ -9,9 +9,10 @@ class AppTheme {
           fontFamily: 'SFUIDisplay',
         ),
     primaryColor: kBluePrimaryLT,
-    accentColor: kIndigoSecondaryLT,
     disabledColor: kGreyLT,
     toggleableActiveColor: kIndigoSecondaryLT,
+    colorScheme:
+        ColorScheme.fromSwatch().copyWith(secondary: kIndigoSecondaryLT),
   );
 
   static final ThemeData darkTheme = ThemeData.dark().copyWith(
@@ -21,8 +22,8 @@ class AppTheme {
           fontFamily: 'SFUIDisplay',
         ),
     primaryColor: kPrimaryDT,
-    accentColor: kSecondaryDT,
     disabledColor: kGreyDT,
     toggleableActiveColor: kSecondaryDT,
+    colorScheme: ColorScheme.fromSwatch().copyWith(secondary: kSecondaryDT),
   );
 }

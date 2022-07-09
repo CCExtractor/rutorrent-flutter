@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/enums/player_source.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';

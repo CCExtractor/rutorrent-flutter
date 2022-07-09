@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
@@ -122,7 +124,7 @@ class DrawerViewModel extends BaseViewModel {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: shouldShowAllAccounts
-                ? Theme.of(context).accentColor
+                ? Theme.of(context).colorScheme.secondary
                 : Theme.of(context).disabledColor,
           ),
         ),

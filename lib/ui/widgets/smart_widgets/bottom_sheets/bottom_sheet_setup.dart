@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/bottom_sheet_type.dart';
@@ -83,7 +85,6 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  // ignore: deprecated_member_use
                   FlatButton(
                     onPressed: () =>
                         model.response(completer, textFieldController1.text),

@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:rutorrentflutter/app/constants.dart';
@@ -62,7 +64,8 @@ class DrawerView extends StatelessWidget {
                               : Colors.white),
                       title: Text(
                         'Filters',
-                        style: TextStyle(color: Theme.of(context).accentColor),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary),
                       ),
                       children: model.filterTileList(model),
                     ),
@@ -74,7 +77,8 @@ class DrawerView extends StatelessWidget {
                               : Colors.white),
                       title: Text(
                         'Labels',
-                        style: TextStyle(color: Theme.of(context).accentColor),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary),
                       ),
                       children: ((model.listOfLabels.value as List<String>)
                           .map((e) => LabelTile(

@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 // import 'package:rutorrentflutter/app/locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';

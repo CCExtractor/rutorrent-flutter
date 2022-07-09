@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe, deprecated_member_use
+
 import 'dart:io';
 
 import 'package:dio/dio.dart';
