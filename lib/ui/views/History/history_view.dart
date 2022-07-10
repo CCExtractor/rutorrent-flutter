@@ -2,8 +2,6 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-// ignore_for_file: import_of_legacy_library_into_null_safe
-
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
