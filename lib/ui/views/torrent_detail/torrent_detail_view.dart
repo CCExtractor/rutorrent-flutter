@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
@@ -217,7 +219,7 @@ class TorrentDetailView extends StatelessWidget {
                             ],
                           )),
                       ExpansionTile(
-                        textColor: Theme.of(context).accentColor,
+                        textColor: Theme.of(context).colorScheme.secondary,
                         initiallyExpanded: model.torrent != null &&
                             model.torrent.status == Status.downloading,
                         title: Text(
@@ -509,7 +511,7 @@ class TorrentDetailView extends StatelessWidget {
                         ],
                       ),
                       ExpansionTile(
-                        textColor: Theme.of(context).accentColor,
+                        textColor: Theme.of(context).colorScheme.secondary,
                         title: Text('Files',
                             style: TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w600)),
@@ -526,7 +528,7 @@ class TorrentDetailView extends StatelessWidget {
                         ],
                       ),
                       ExpansionTile(
-                        textColor: Theme.of(context).accentColor,
+                        textColor: Theme.of(context).colorScheme.secondary,
                         title: Text(
                           'Trackers',
                           style: TextStyle(

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/bottom_sheet_type.dart';
@@ -74,8 +76,8 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   MaterialButton(
-                    onPressed: () => completer(
-                        SheetResponse(confirmed: false, responseData: null)),
+                    onPressed: () =>
+                        completer(SheetResponse(confirmed: false, data: null)),
                     child: Text(
                       request.secondaryButtonTitle!,
                       style: TextStyle(
@@ -83,7 +85,6 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  // ignore: deprecated_member_use
                   FlatButton(
                     onPressed: () =>
                         model.response(completer, textFieldController1.text),

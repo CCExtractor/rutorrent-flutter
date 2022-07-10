@@ -16,7 +16,7 @@ jobs:
           java-version: "12.x"
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: "2.2.2"
+          flutter-version: "3.0.4"
       - run: flutter pub get
       - run: flutter test
       - run: flutter analyze

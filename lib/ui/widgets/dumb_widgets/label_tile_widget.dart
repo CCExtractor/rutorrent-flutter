@@ -11,7 +11,7 @@ class LabelTile extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isSelected = model.selectedLabel == label && model.isLabelSelected;
     return Container(
-      color: isSelected ? Theme.of(context).accentColor : null,
+      color: isSelected ? Theme.of(context).colorScheme.secondary : null,
       child: ListTile(
         dense: true,
         leading: Icon(

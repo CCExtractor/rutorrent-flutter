@@ -1,7 +1,8 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
@@ -47,7 +48,9 @@ class TorrentDetailViewModel extends BaseViewModel {
 
   get syncFiles => _syncFiles;
 
-  IconData? getTorrentIconData(torrent) {}
+  IconData? getTorrentIconData(torrent) {
+    return null;
+  }
 
   showLabelDialog(BuildContext context) {
     showDialog(

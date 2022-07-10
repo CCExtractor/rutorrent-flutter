@@ -1,4 +1,5 @@
-import 'package:rutorrentflutter/services/api/dev_api_service.dart';
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/api/prod_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
@@ -43,13 +44,13 @@ import '../ui/views/splash/splash_view.dart';
     LazySingleton(
       classType: ProdApiService,
       asType: IApiService,
-      environments: {Environment.prod},
+      // environments: {Environment.prod},
     ),
-    LazySingleton(
-      classType: DevApiService,
-      asType: IApiService,
-      environments: {Environment.dev},
-    ),
+    // LazySingleton(
+    //   classType: DevApiService,
+    //   asType: IApiService,
+    //   environments: {Environment.dev},
+    // ),
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: DiskSpaceService),
     LazySingleton(classType: NotificationService),
@@ -66,6 +67,5 @@ import '../ui/views/splash/splash_view.dart';
     LazySingleton(classType: PackageInfoService),
     LazySingleton(classType: DiskFileService),
   ],
-  logger: StackedLogger(),
 )
 class AppSetup {}

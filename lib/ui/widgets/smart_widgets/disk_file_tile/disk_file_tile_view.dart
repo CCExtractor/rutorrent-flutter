@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/models/disk_file.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/disk_file_tile/disk_file_tile_viewmodel.dart';
@@ -32,7 +34,7 @@ class DiskFileTileView extends StatelessWidget {
               ? LinearProgressIndicator(
                   value: model.progress / 100,
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).accentColor,
+                    Theme.of(context).colorScheme.secondary,
                   ),
                   backgroundColor: Theme.of(context).disabledColor)
               : Container(),

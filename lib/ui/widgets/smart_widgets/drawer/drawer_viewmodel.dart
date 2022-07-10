@@ -122,7 +122,7 @@ class DrawerViewModel extends BaseViewModel {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: shouldShowAllAccounts
-                ? Theme.of(context).accentColor
+                ? Theme.of(context).colorScheme.secondary
                 : Theme.of(context).disabledColor,
           ),
         ),

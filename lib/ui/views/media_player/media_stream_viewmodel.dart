@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'dart:io';
 
 import 'package:chewie/chewie.dart';

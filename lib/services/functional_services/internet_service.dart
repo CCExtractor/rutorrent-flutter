@@ -10,5 +10,6 @@ class InternetService {
     } on SocketException catch (_) {
       return false;
     }
+    return null;
   }
 }
