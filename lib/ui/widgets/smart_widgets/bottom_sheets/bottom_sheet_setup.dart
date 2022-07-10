@@ -1,4 +1,4 @@
-// ignore_for_file: import_of_legacy_library_into_null_safe, deprecated_member_use
+// ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
@@ -76,8 +76,8 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   MaterialButton(
-                    onPressed: () => completer(
-                        SheetResponse(confirmed: false, responseData: null)),
+                    onPressed: () =>
+                        completer(SheetResponse(confirmed: false, data: null)),
                     child: Text(
                       request.secondaryButtonTitle!,
                       style: TextStyle(
