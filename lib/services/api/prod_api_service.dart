@@ -68,7 +68,8 @@ class ProdApiService implements IApiService {
 
   /// Authentication header
   Map<String, String> getAuthHeader({Account? currentAccount}) {
-    return currentAccount == null
+    Map<String,String> requestHeader = {};
+    requestHeader = currentAccount == null
         ? {
             'authorization': 'Basic ' +
                 base64Encode(
@@ -79,6 +80,9 @@ class ProdApiService implements IApiService {
                 base64Encode(utf8.encode(
                     '${currentAccount.username}:${currentAccount.password}')),
           };
+
+    requestHeader.addAll({"origin":url});
+    return requestHeader;
   }
 
   Future<bool> testConnectionAndLogin(Account? account) async {
@@ -147,10 +151,11 @@ class ProdApiService implements IApiService {
         "Fetching torrent lists from all accounts\n [Will be run every other second]");
     while (true) {
       try {
+        var requestBody = {'mode': 'list'};
+        Map<String,String> requestHeaders = getAuthHeader();
+        requestHeaders.addAll({"origin":url});
         var response = await ioClient
-            .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
-          'mode': 'list',
-        });
+            .post(Uri.parse(httpRpcPluginUrl), headers: requestHeaders, body: requestBody);
         yield _parseTorrentData(response.body, account)!;
       } catch (e) {
         print('Exception caught in getTorrentList Api Request ' + e.toString());
