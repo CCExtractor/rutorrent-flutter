@@ -30,7 +30,12 @@ Thus, our Flutter application talks with ruTorrent's backend service to provide 
 
 ![Diagram](./assets/docs/ruTorrent%20Flutter%20Application%20Diagram.png)
 
-## Screenshots
+## App Preview
+
+<details>
+<summary>📷 <b>Screenshots</b> </summary>
+<br/>
+
 
 Login Screen            |  All Torrents Screen       | Downloaded Torrents Screen      |  Drawer Screen
 :-------------------------:|:-------------------------:|:-------------------------:|:-------------------------:
@@ -43,6 +48,8 @@ Rss-Feed Screen         |  RSS-filters Screen        |   Settings Screen        
 Disk Explorer Screen (seedbox)         | History Screen       |   
 :-------------------------:|:---------------------:|
 ![Disk_Explore_screen](https://user-images.githubusercontent.com/47276307/113501965-bb721f80-9546-11eb-84d9-ea450462296e.jpeg)|![History_screen](https://user-images.githubusercontent.com/47276307/113501977-c927a500-9546-11eb-9bae-f13fb384828a.jpeg)|
+</details>
+
 
 ## Usage
 
