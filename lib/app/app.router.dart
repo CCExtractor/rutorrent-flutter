@@ -4,13 +4,15 @@
 // StackedRouterGenerator
 // **************************************************************************
 
-// ignore_for_file: public_member_api_docs, import_of_legacy_library_into_null_safe
+// ignore_for_file: public_member_api_docs, unused_import, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import '../models/torrent.dart';
 import '../ui/views/History/history_view.dart';
+import '../ui/views/IRSSI/IRSSI_view.dart';
 import '../ui/views/Settings/settings_view.dart';
 import '../ui/views/disk_explorer/disk_explorer_view.dart';
 import '../ui/views/home/home_view.dart';
@@ -28,6 +30,7 @@ class Routes {
   static const String diskExplorerView = '/disk-explorer-view';
   static const String mediaStreamView = '/media-stream-view';
   static const String torrentDetailView = '/torrent-detail-view';
+  static const String iRSSIView = '/i-rs-si-view';
   static const all = <String>{
     splashView,
     loginView,
@@ -37,6 +40,7 @@ class Routes {
     diskExplorerView,
     mediaStreamView,
     torrentDetailView,
+    iRSSIView,
   };
 }
 
@@ -52,6 +56,7 @@ class StackedRouter extends RouterBase {
     RouteDef(Routes.diskExplorerView, page: DiskExplorerView),
     RouteDef(Routes.mediaStreamView, page: MediaStreamView),
     RouteDef(Routes.torrentDetailView, page: TorrentDetailView),
+    RouteDef(Routes.iRSSIView, page: IRSSIView),
   ];
   @override
   Map<Type, StackedRouteFactory> get pagesMap => _pagesMap;
@@ -110,6 +115,12 @@ class StackedRouter extends RouterBase {
         settings: data,
       );
     },
+    IRSSIView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => IRSSIView(),
+        settings: data,
+      );
+    },
   };
 }
 
@@ -130,4 +141,161 @@ class MediaStreamViewArguments {
 class TorrentDetailViewArguments {
   final Torrent torrent;
   TorrentDetailViewArguments({required this.torrent});
+}
+
+/// ************************************************************************
+/// Extension for strongly typed navigation
+/// *************************************************************************
+
+extension NavigatorStateExtension on NavigationService {
+  Future<dynamic> navigateToSplashView({
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.splashView,
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToLoginView({
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.loginView,
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToHomeView({
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.homeView,
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToHistoryView({
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.historyView,
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToSettingsView({
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.settingsView,
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToDiskExplorerView({
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.diskExplorerView,
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToMediaStreamView({
+    required String mediaName,
+    required String mediaUrl,
+    required String path,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.mediaStreamView,
+      arguments: MediaStreamViewArguments(
+          mediaName: mediaName, mediaUrl: mediaUrl, path: path),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToTorrentDetailView({
+    required Torrent torrent,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.torrentDetailView,
+      arguments: TorrentDetailViewArguments(torrent: torrent),
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
+
+  Future<dynamic> navigateToIRSSIView({
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo(
+      Routes.iRSSIView,
+      id: routerId,
+      preventDuplicates: preventDuplicates,
+      parameters: parameters,
+      transition: transition,
+    );
+  }
 }

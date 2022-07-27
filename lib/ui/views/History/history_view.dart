@@ -19,6 +19,7 @@ class HistoryView extends StatelessWidget {
     return ViewModelBuilder<HistoryViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             'History',
             style: TextStyle(fontWeight: FontWeight.w400),

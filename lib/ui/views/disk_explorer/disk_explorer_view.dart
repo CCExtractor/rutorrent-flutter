@@ -21,6 +21,7 @@ class DiskExplorerView extends StatelessWidget {
         onWillPop: model.onBackPress,
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () => Navigator.of(context).pop(),

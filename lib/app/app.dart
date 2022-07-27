@@ -1,5 +1,7 @@
 // ignore_for_file: import_of_legacy_library_into_null_safe
 
+import 'package:rutorrentflutter/services/api/dev_api_service.dart';
+import 'package:rutorrentflutter/services/api/http_client_service.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/api/prod_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
@@ -14,6 +16,7 @@ import 'package:rutorrentflutter/services/state_services/torrent_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/views/History/history_view.dart';
+import 'package:rutorrentflutter/ui/views/IRSSI/IRSSI_view.dart';
 import 'package:rutorrentflutter/ui/views/Settings/settings_view.dart';
 import 'package:rutorrentflutter/ui/views/disk_explorer/disk_explorer_view.dart';
 import 'package:rutorrentflutter/ui/views/media_player/media_stream_view.dart';
@@ -28,6 +31,7 @@ import '../ui/views/login/login_view.dart';
 import '../ui/views/splash/splash_view.dart';
 
 @StackedApp(
+  logger: StackedLogger(),
   routes: [
     MaterialRoute(page: SplashView, initial: true),
     MaterialRoute(page: LoginView),
@@ -37,6 +41,7 @@ import '../ui/views/splash/splash_view.dart';
     MaterialRoute(page: DiskExplorerView),
     MaterialRoute(page: MediaStreamView),
     MaterialRoute(page: TorrentDetailView),
+    MaterialRoute(page: IRSSIView),
   ],
   dependencies: [
     LazySingleton(classType: SharedPreferencesService),
@@ -44,13 +49,14 @@ import '../ui/views/splash/splash_view.dart';
     LazySingleton(
       classType: ProdApiService,
       asType: IApiService,
-      // environments: {Environment.prod},
+      environments: {Environment.prod},
     ),
-    // LazySingleton(
-    //   classType: DevApiService,
-    //   asType: IApiService,
-    //   environments: {Environment.dev},
-    // ),
+    LazySingleton(
+      classType: DevApiService,
+      asType: IApiService,
+      environments: {Environment.dev},
+    ),
+    LazySingleton(classType: HttpIOClient),
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: DiskSpaceService),
     LazySingleton(classType: NotificationService),

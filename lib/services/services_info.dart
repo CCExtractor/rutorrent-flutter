@@ -17,7 +17,7 @@ class ServicesInfo {
 extension CustomizableDateTime on DateTime {
   static DateTime? _customTime;
   static DateTime get current {
-    return _customTime?.isAtSameMomentAs(ServicesInfo.testDate) ?? false
+    return (_customTime?.isAtSameMomentAs(ServicesInfo.testDate) ?? false)
         ? ServicesInfo.testDate
         : DateTime.now();
   }

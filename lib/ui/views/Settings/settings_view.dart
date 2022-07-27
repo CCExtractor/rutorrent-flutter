@@ -15,6 +15,7 @@ class SettingsView extends StatelessWidget {
     return ViewModelBuilder<SettingsViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text(
             'Settings',
             style: TextStyle(fontWeight: FontWeight.w400),
