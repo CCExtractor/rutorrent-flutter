@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +42,7 @@ class RSSLabelTileView extends StatelessWidget {
                       }),
                 )
               : ExpansionTile(
+                  textColor: Theme.of(context).colorScheme.secondary,
                   leading: FaIcon(
                     FontAwesomeIcons.rssSquare,
                     color: Colors.orange[500],

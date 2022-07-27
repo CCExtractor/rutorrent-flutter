@@ -6,6 +6,7 @@ import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/shared_preferences_service.dart';
+import 'package:rutorrentflutter/services/state_services/history_service.dart';
 import 'package:rutorrentflutter/services/state_services/user_preferences_service.dart';
 
 Logger log = getLogger("TorrentService");
@@ -16,6 +17,7 @@ class TorrentService extends ChangeNotifier {
       locator<UserPreferencesService>();
   SharedPreferencesService? _sharedPreferencesService =
       locator<SharedPreferencesService>();
+  HistoryService _historyService = locator<HistoryService>();
 
   ValueNotifier<List<String>> _listOfLabels =
       new ValueNotifier(new List<String>.empty());
@@ -78,7 +80,7 @@ class TorrentService extends ChangeNotifier {
   setActiveDownloads(List<Torrent> list) => _activeDownloads.value = list;
   setTorrentList(List<Torrent> list) {
     _torrentsList.value = list;
-    _torrentsDisplayList.value = list;
+    updateTorrentDisplayList();
   }
 
   setSortPreference(Sort newPreference) {
@@ -100,11 +102,12 @@ class TorrentService extends ChangeNotifier {
       displayList = _filterListUsingLabel(displayList, selectedLabel);
     }
 
-    if (searchText != null) {
+    String? searchText = _userPreferencesService?.searchTextController.text;
+    if (searchText != null || (searchText?.isNotEmpty ?? false)) {
       //Searching : showing list on basis of searched text
       displayList = displayList
           .where((element) =>
-              element.name.toLowerCase().contains(searchText.toLowerCase()))
+              element.name.toLowerCase().contains(searchText!.toLowerCase()))
           .toList();
     }
     _torrentsDisplayList.value = displayList;
@@ -204,8 +207,8 @@ class TorrentService extends ChangeNotifier {
             .cancel()
         : await _apiService.getTorrentList().listen((event) {}).cancel();
     await _apiService.getHistory();
-    await updateTorrentDisplayList(
-        searchText: _userPreferencesService?.searchTextController.text);
+    await updateTorrentDisplayList();
+    _historyService.notify();
   }
 
   ///Removes [Torrent] and updates torrents list

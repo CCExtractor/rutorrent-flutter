@@ -25,14 +25,14 @@ class CustomDialog extends StatelessWidget {
         TextButton(
           child: Text(
             optionLeftText!,
-            style: TextStyle(color: Theme.of(context).accentColor),
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
           ),
           onPressed: optionLeftOnPressed as void Function()?,
         ),
         TextButton(
           child: Text(
             optionRightText!,
-            style: TextStyle(color: Theme.of(context).accentColor),
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
           ),
           onPressed: optionRightOnPressed as void Function()?,
         ),

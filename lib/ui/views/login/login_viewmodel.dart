@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
@@ -39,7 +41,7 @@ class LoginViewModel extends BaseViewModel {
     return null;
   }
 
-  login({String? url, required String username, String? password}) async {
+  login({String? url, required String? username, String? password}) async {
     setBusy(true);
     if (username.trim().isEmpty) {
       Fluttertoast.showToast(msg: 'Username cannot be empty!');
@@ -52,6 +54,19 @@ class LoginViewModel extends BaseViewModel {
       if (isValidConfiguration)
         _navigationService?.replaceWith(Routes.splashView);
     }
+
+    if (password!.isEmpty) {
+      Fluttertoast.showToast(msg: 'Password cannot be empty!');
+      setBusy(false);
+      return;
+    }
+
+    _account = Account(url: url, username: username, password: password);
+    _authenticationService!.tempAccount = _account;
+    bool isValidConfiguration = await _validateConfigurationDetails(_account);
+    if (isValidConfiguration)
+      _navigationService?.replaceWith(Routes.splashView);
+
     setBusy(false);
   }
 

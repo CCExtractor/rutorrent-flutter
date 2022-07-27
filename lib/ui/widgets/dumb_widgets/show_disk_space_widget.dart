@@ -42,7 +42,7 @@ class ShowDiskSpace extends StatelessWidget {
                   ? AppStateNotifier.isDarkModeOn
                       ? kRedErrorLT
                       : kRedErrorDT
-                  : Theme.of(context).accentColor),
+                  : Theme.of(context).colorScheme.secondary),
             ),
           )
         ],

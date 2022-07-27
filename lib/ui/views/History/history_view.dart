@@ -2,6 +2,8 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
@@ -143,7 +145,7 @@ class HistoryView extends StatelessWidget {
   Color getHistoryStatusColor(BuildContext context, int action) {
     switch (action) {
       case 1: // Added
-        return Theme.of(context).accentColor;
+        return Theme.of(context).colorScheme.secondary;
       case 2: // Finished
         return !AppStateNotifier.isDarkModeOn ? kGreenActiveLT : kGreenActiveDT;
       case 3: // Deleted
@@ -165,14 +167,16 @@ class HistoryView extends StatelessWidget {
                 TextButton(
                   child: Text(
                     'Yes!',
-                    style: TextStyle(color: Theme.of(context).accentColor),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary),
                   ),
                   onPressed: () => model.removeHistoryItem(hashValue),
                 ),
                 TextButton(
                   child: Text(
                     'Cancel',
-                    style: TextStyle(color: Theme.of(context).accentColor),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.secondary),
                   ),
                   onPressed: () => Navigator.pop(context),
                 ),

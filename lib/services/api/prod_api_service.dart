@@ -92,7 +92,7 @@ class ProdApiService implements IApiService {
       log.i("Test Connection Response : " + response.body);
       total = jsonDecode(response.body)['total'];
     } catch (e) {
-      Fluttertoast.showToast(msg: 'Username or Password incorrect');
+      Fluttertoast.showToast(msg: 'Username or Password Incorrect');
       return false;
     }
     if (total != null && response.statusCode != 200) {
@@ -115,7 +115,8 @@ class ProdApiService implements IApiService {
 
   /// Gets list of torrents for all saved accounts [Apis]
   Stream<List<Torrent>> getAllAccountsTorrentList() async* {
-    log.v("Fetching torrent lists from all accounts");
+    log.v(
+        "Fetching torrent lists from all accounts\n [Will be run every other second]");
     List<Account?>? accounts = _authenticationService!.accounts.value;
     while (true) {
       List<Torrent> allTorrentList = [];
@@ -142,7 +143,8 @@ class ProdApiService implements IApiService {
 
   /// Gets list of torrents for a particular account
   Stream<List<Torrent?>?> getTorrentList() async* {
-    log.v("Fetching torrent lists from an account");
+    log.v(
+        "Fetching torrent lists from all accounts\n [Will be run every other second]");
     while (true) {
       try {
         var response = await ioClient
@@ -226,6 +228,7 @@ class ProdApiService implements IApiService {
   }
 
   addTorrent(String url) async {
+    log.v("Adding torrent");
     Fluttertoast.showToast(msg: 'Adding torrent');
     await ioClient
         .post(Uri.parse(addTorrentPluginUrl), headers: getAuthHeader(), body: {
@@ -234,16 +237,16 @@ class ProdApiService implements IApiService {
   }
 
   addTorrentFile(String torrentPath) async {
+    log.v("Adding torrent");
     Fluttertoast.showToast(msg: 'Adding torrent');
     var request = MultipartRequest('POST', Uri.parse(addTorrentPluginUrl));
+    request.headers.addAll(getAuthHeader());
     // request.fields['label'] = "hell";
 
     request.files
         .add(await MultipartFile.fromPath('torrent_file', torrentPath));
     try {
-      var response = await request.send();
-
-      print(response.headers);
+      await request.send();
     } catch (e) {
       print(e.toString());
     }

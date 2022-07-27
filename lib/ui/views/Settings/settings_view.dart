@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rutorrentflutter/models/account.dart';
@@ -25,6 +27,7 @@ class SettingsView extends StatelessWidget {
                   valueListenable: model.accounts,
                   builder: (context, List<Account> accounts, snapshot) {
                     return ExpansionTile(
+                      textColor: Theme.of(context).colorScheme.secondary,
                       title: Text('Manage Accounts',
                           style: TextStyle(fontWeight: FontWeight.w600)),
                       children: <Widget>[
