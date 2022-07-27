@@ -486,26 +486,26 @@ packages:
     source: hosted
     version: "0.1.4"
   meta:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.6.0"
   mime:
     dependency: transitive
     description:
       name: mime
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.2"
   mockito:
     dependency: "direct dev"
     description:
       name: mockito
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.14"
+    version: "5.2.0"
   modal_bottom_sheet:
     dependency: "direct main"
     description:

@@ -50,9 +50,18 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  stacked_generator: ^0.4.6
-  build_runner: ^2.0.3
-  mockito:
+  build_runner: ^2.0.1
+  stacked_generator: ^0.7.13
+  flutter_launcher_icons: ^0.9.0
+  mockito: ^5.0.0
+
+dependency_overrides:
+  meta: 1.6.0
+
+flutter_icons:
+  image_path: "assets/logo/light_mode_icon.png"
+  android: true
+  ios: true
 
 flutter:
   uses-material-design: true
