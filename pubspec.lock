@@ -481,13 +481,6 @@ packages:
   material_color_utilities:
     dependency: transitive
     description:
-      name: material_color_utilities
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
-  meta:
-    dependency: "direct overridden"
-    description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
