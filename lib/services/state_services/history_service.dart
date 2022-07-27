@@ -33,6 +33,7 @@ class HistoryService extends ChangeNotifier {
   Sort _sortPreference = Sort.none;
 
   get sortPreference => _sortPreference;
+  get historyList => _torrentsHistoryList.value;
 
   setTorrentHistoryList(List<HistoryItem> list) {
     _torrentsHistoryList.value = list;

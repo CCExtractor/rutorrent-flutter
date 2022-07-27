@@ -170,6 +170,11 @@ class DrawerViewModel extends BaseViewModel {
     _navigationService.navigateTo(Routes.settingsView);
   }
 
+  navigateToIRSSIScreen() {
+    _navigationService.popRepeated(1);
+    _navigationService.navigateTo(Routes.iRSSIView);
+  }
+
   _addAccount() {
     _navigationService.navigateTo(Routes.loginView);
   }

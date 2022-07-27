@@ -6,8 +6,10 @@ import 'package:rutorrentflutter/ui/views/home/home_viewmodel.dart';
 
 @override
 // ignore: non_constant_identifier_names
-AppBar HomeViewAppBar(Account account, HomeViewModel model) {
+AppBar HomeViewAppBar(
+    Account account, HomeViewModel model, BuildContext context) {
   return AppBar(
+    backgroundColor: Theme.of(context).primaryColor,
     title: Text(
       'Hey, ${account.username}',
       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),

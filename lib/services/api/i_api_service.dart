@@ -25,6 +25,8 @@ abstract class IApiService {
 
   testConnectionAndLogin(Account? account);
 
+  irssiLoad(String function);
+
   Future<void> updateDiskSpace();
 
   Stream<List<Torrent>> getAllAccountsTorrentList();

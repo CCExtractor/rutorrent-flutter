@@ -23,7 +23,7 @@ class _HomeViewState extends State<HomeView>
     return ViewModelBuilder<HomeViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: HomeViewAppBar(model.account!, model),
+        appBar: HomeViewAppBar(model.account!, model, context),
         drawer: DrawerView(),
         body: PageView(
           physics: NeverScrollableScrollPhysics(),

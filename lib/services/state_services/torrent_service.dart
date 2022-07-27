@@ -89,7 +89,7 @@ class TorrentService extends ChangeNotifier {
   }
 
   /// Updates display list of [Torrent]s Display List
-  updateTorrentDisplayList() {
+  updateTorrentDisplayList({String? searchText}) {
     List<Torrent> displayList = torrentsList.value;
     //Sorting: sorting data on basis of sortPreference
     displayList = _sortList(displayList, sortPreference)!;

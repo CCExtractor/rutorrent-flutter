@@ -57,7 +57,7 @@ class DrawerView extends StatelessWidget {
                           );
                         }),
                     ExpansionTile(
-                      initiallyExpanded: true,
+                      initiallyExpanded: false,
                       leading: Icon(Icons.sort,
                           color: !AppStateNotifier.isDarkModeOn
                               ? Colors.black
@@ -70,7 +70,7 @@ class DrawerView extends StatelessWidget {
                       children: model.filterTileList(model),
                     ),
                     ExpansionTile(
-                      initiallyExpanded: true,
+                      initiallyExpanded: false,
                       leading: Icon(Icons.sort,
                           color: !AppStateNotifier.isDarkModeOn
                               ? Colors.black
@@ -86,6 +86,14 @@ class DrawerView extends StatelessWidget {
                                 model: model,
                               ))
                           .toList()),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.rss_feed,
+                          color: !AppStateNotifier.isDarkModeOn
+                              ? Colors.black
+                              : Colors.white),
+                      onTap: () => model.navigateToIRSSIScreen(),
+                      title: Text('IRSSI'),
                     ),
                     ListTile(
                       leading: Icon(Icons.history,
