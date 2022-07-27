@@ -1,12 +1,14 @@
+
 <img src="https://raw.githubusercontent.com/harchani-ritik/rutorrent-flutter/master/assets/logo/light_mode_white_background.png" alt="ruTorrent Mobile" height=200px>
 
-# ruTorrent Mobile [Stacked Architecture](https://pub.dev/packages/stacked) Migration
 
-## Completion
 
-<img src="https://progress-bar.dev/80" alt="drawing" width="200"/>
 
-## **A ruTorrent-based client built with Flutter**
+# ruTorrent Mobile
+
+<img src="https://raw.githubusercontent.com/harchani-ritik/rutorrent-flutter/master/gsoc_2020.png" alt="GSOC 2020" height=30px>
+
+**A ruTorrent-based client build in Flutter**
 
 The project is a flutter application for ruTorrent web interface. The app communicates with ruTorrent's backend via REST APIs to display the information about the torrents and the functionality to control its basic features. It also supports some plugin functionalities as provided in the ruTorrent web.
 
@@ -18,7 +20,7 @@ Additionally, you can also stream torrents from your server (or seedbox) and dow
 
 [ruTorrent](https://github.com/Novik/ruTorrent) is the most popular web interface for [rtorrent](https://github.com/rakshasa/rtorrent), which is possibly the most used BitTorrent client in Linux. It is mostly a web application, but it has its own backend that connects to rtorrent.
 
-In short:
+In short: 
 
 rtorrent ⇒ The BitTorrent client, a console-based tool that also has an API to interact with it.
 
@@ -44,10 +46,6 @@ Seedboxes usually have a high speed Internet connection. This allows users to do
 
 You can learn more about seedbox [here](https://en.wikipedia.org/wiki/Seedbox).
 
-## Some Prerequisites
-
-- Flutter SDK Version (dependency compatibility) : >=2.0.4
-- Minimum deployment target in iOS : 10
 
 ## Getting Started
 
@@ -70,10 +68,9 @@ flutter doctor
 ```
 
 4. For IOS
-
-- Uncomment `platform :ios, '9.0'` from ios/Podfile
-- Cd into the new ios directory`cd ios`
-- From the ios directory `pod install --verbose`
+- Uncomment ```platform :ios, '9.0'``` from ios/Podfile
+- Cd into the new ios directory```cd ios```
+- From the ios directory ```pod install --verbose```
 
 5. Run the app:
 
@@ -103,10 +100,9 @@ refactor: Regular code refactoring and maintenance
 ```
 
 ## Community
-
 You may join the gsoc-rutorrent channel of CCExtractor community through slack and propose improvements to the project.
 
-- CCExtractor Development on [Slack](https://ccextractor.org/public:general:support?)
+* CCExtractor Development on [Slack](https://ccextractor.org/public:general:support?)
 
 ## License
 
