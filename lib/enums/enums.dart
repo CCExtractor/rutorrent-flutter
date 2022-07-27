@@ -33,3 +33,14 @@ enum Screens {
   DiskExplorerViewScreen,
   TorrentHistoryViewScreen,
 }
+
+enum IrssiButtons {
+  update,
+  whatsnew,
+  clear,
+  backup,
+  restore,
+  reloadtrackers,
+  version,
+  none,
+}

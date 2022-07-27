@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
@@ -15,6 +13,7 @@ import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
+import 'package:rutorrentflutter/services/api/http_client_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/services_info.dart';
@@ -33,17 +32,9 @@ class ProdApiService implements IApiService {
   TorrentService? _torrentService = locator<TorrentService>();
   HistoryService? _historyService = locator<HistoryService>();
   DiskFileService _diskFileService = locator<DiskFileService>();
+  HttpIOClient _ioClient = locator<HttpIOClient>();
 
-  IOClient get ioClient {
-    /// Url with some issue with their SSL certificates can be trusted explicitly with this
-    bool trustSelfSigned = true;
-    HttpClient httpClient = HttpClient()
-      ..badCertificateCallback =
-          ((X509Certificate cert, String host, int port) => trustSelfSigned);
-
-    IOClient _ioClient = new IOClient(httpClient);
-    return _ioClient;
-  }
+  IOClient get ioClient => _ioClient.getIOClient();
 
   Account? get account => _authenticationService!.accounts.value.isEmpty
       ? _authenticationService!.tempAccount
@@ -66,9 +57,13 @@ class ProdApiService implements IApiService {
 
   get explorerPluginUrl => url + '/plugins/explorer/action.php';
 
+  get autodlIRSSIPluginUrl =>
+      url + '/plugins/autodl-irssi/command.php?type=autodl&arg1=';
+
   /// Authentication header
   Map<String, String> getAuthHeader({Account? currentAccount}) {
-    return currentAccount == null
+    Map<String, String> requestHeader = {};
+    requestHeader = currentAccount == null
         ? {
             'authorization': 'Basic ' +
                 base64Encode(
@@ -79,6 +74,9 @@ class ProdApiService implements IApiService {
                 base64Encode(utf8.encode(
                     '${currentAccount.username}:${currentAccount.password}')),
           };
+
+    requestHeader.addAll({"origin": url});
+    return requestHeader;
   }
 
   Future<bool> testConnectionAndLogin(Account? account) async {
@@ -103,6 +101,14 @@ class ProdApiService implements IApiService {
     Fluttertoast.showToast(msg: 'Connected');
     await _authenticationService!.saveLogin(account);
     return true;
+  }
+
+  irssiLoad(String function) async {
+    log.v("Loading IRSSI Notifications");
+    String endpoint = autodlIRSSIPluginUrl + function;
+    var response =
+        await ioClient.get(Uri.parse(endpoint), headers: getAuthHeader());
+    log.i("Status Code: " + response.statusCode.toString());
   }
 
   Future<void> updateDiskSpace() async {
@@ -147,10 +153,10 @@ class ProdApiService implements IApiService {
         "Fetching torrent lists from all accounts\n [Will be run every other second]");
     while (true) {
       try {
-        var response = await ioClient
-            .post(Uri.parse(httpRpcPluginUrl), headers: getAuthHeader(), body: {
-          'mode': 'list',
-        });
+        var requestBody = {'mode': 'list'};
+        Map<String, String> requestHeaders = getAuthHeader();
+        var response = await ioClient.post(Uri.parse(httpRpcPluginUrl),
+            headers: requestHeaders, body: requestBody);
         yield _parseTorrentData(response.body, account)!;
       } catch (e) {
         print('Exception caught in getTorrentList Api Request ' + e.toString());
@@ -221,9 +227,7 @@ class ProdApiService implements IApiService {
       Fluttertoast.showToast(
           msg: 'Removed Torrent and Deleted Data Successfully');
 
-    var responseBody =
-        await streamedResponse.stream.transform(utf8.decoder).join();
-    print(responseBody);
+    await streamedResponse.stream.transform(utf8.decoder).join();
     client.close();
   }
 
@@ -356,6 +360,7 @@ class ProdApiService implements IApiService {
                 Duration(seconds: 10).inMilliseconds) ~/
             1000)
         .toString();
+
     List<HistoryItem> historyItems = [];
     var response = await ioClient
         .post(Uri.parse(historyPluginUrl), headers: getAuthHeader(), body: {

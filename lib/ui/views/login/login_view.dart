@@ -39,9 +39,7 @@ class LoginView extends StatelessWidget {
                 : Colors.white,
             appBar: AppBar(
               elevation: 0,
-              backgroundColor: AppStateNotifier.isDarkModeOn
-                  ? Colors.black
-                  : Theme.of(context).primaryColor,
+              backgroundColor: Theme.of(context).primaryColor,
             ),
             body: SingleChildScrollView(
               child: Container(

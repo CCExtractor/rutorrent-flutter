@@ -1,5 +1,3 @@
-// ignore_for_file: import_of_legacy_library_into_null_safe
-
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
@@ -25,7 +23,7 @@ class _HomeViewState extends State<HomeView>
     return ViewModelBuilder<HomeViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: HomeViewAppBar(model.account!, model),
+        appBar: HomeViewAppBar(model.account!, model, context),
         drawer: DrawerView(),
         body: PageView(
           physics: NeverScrollableScrollPhysics(),

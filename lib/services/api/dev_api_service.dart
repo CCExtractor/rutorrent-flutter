@@ -433,4 +433,7 @@ class DevApiService implements IApiService {
   updateAllAccountsHistory() {
     throw UnimplementedError();
   }
+
+  @override
+  irssiLoad(String function) {}
 }

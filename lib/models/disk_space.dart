@@ -3,7 +3,7 @@ class DiskSpace {
   static int criticalPercentage = 10;
 
   // Initialised with random val to prevent Null Exception
-  int? total = 1;
+  int? total = -1;
   int? free = 0;
 
   /// [alertUser] ensures user is notified only once and also alert can be switched off from the Settings

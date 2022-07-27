@@ -74,8 +74,8 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   MaterialButton(
-                    onPressed: () => completer(
-                        SheetResponse(confirmed: false, responseData: null)),
+                    onPressed: () =>
+                        completer(SheetResponse(confirmed: false, data: null)),
                     child: Text(
                       request.secondaryButtonTitle!,
                       style: TextStyle(

@@ -4,6 +4,8 @@
 // StackedLoggerGenerator
 // **************************************************************************
 
+// ignore_for_file: avoid_print
+
 /// Maybe this should be generated for the user as well?
 ///
 /// import 'package:customer_app/services/stackdriver/stackdriver_service.dart';
@@ -59,18 +61,49 @@ class SimpleLogPrinter extends LogPrinter {
 
   String? _getMethodName() {
     try {
-      var currentStack = StackTrace.current;
-      var formattedStacktrace = _formatStackTrace(currentStack, 3);
+      final currentStack = StackTrace.current;
+      final formattedStacktrace = _formatStackTrace(currentStack, 3);
+      if (kIsWeb) {
+        final classNameParts = _splitClassNameWords(className);
+        return _findMostMatchedTrace(formattedStacktrace!, classNameParts)
+            .split(' ')
+            .last;
+      } else {
+        final realFirstLine = formattedStacktrace
+            ?.firstWhere((line) => line.contains(className), orElse: () => "");
 
-      var realFirstLine =
-          formattedStacktrace?.firstWhere((line) => line.contains(className));
-
-      var methodName = realFirstLine?.replaceAll('$className.', '');
-      return methodName;
+        final methodName = realFirstLine?.replaceAll('$className.', '');
+        return methodName;
+      }
     } catch (e) {
       // There's no deliberate function call from our code so we return null;
       return null;
     }
+  }
+
+  List<String> _splitClassNameWords(String className) {
+    return className
+        .split(RegExp(r"(?=[A-Z])"))
+        .map((e) => e.toLowerCase())
+        .toList();
+  }
+
+  /// When the faulty word exists in the begging this method will not be very usefull
+  String _findMostMatchedTrace(
+      List<String> stackTraces, List<String> keyWords) {
+    String match = stackTraces.firstWhere(
+        (trace) => _doesTraceContainsAllKeywords(trace, keyWords),
+        orElse: () => '');
+    if (match.isEmpty) {
+      match = _findMostMatchedTrace(
+          stackTraces, keyWords.sublist(0, keyWords.length - 1));
+    }
+    return match;
+  }
+
+  bool _doesTraceContainsAllKeywords(String stackTrace, List<String> keywords) {
+    final formattedKeywordsAsRegex = RegExp("${keywords.join('.*')}");
+    return stackTrace.contains(formattedKeywordsAsRegex);
   }
 }
 
@@ -120,13 +153,6 @@ class MultipleLoggerOutput extends LogOutput {
   }
 }
 
-class LogAllTheTimeFilter extends LogFilter {
-  @override
-  bool shouldLog(LogEvent event) {
-    return true;
-  }
-}
-
 Logger getLogger(
   String className, {
   bool printCallingFunctionName = true,
@@ -135,7 +161,6 @@ Logger getLogger(
   String? showOnlyClass,
 }) {
   return Logger(
-    filter: LogAllTheTimeFilter(),
     printer: SimpleLogPrinter(
       className,
       printCallingFunctionName: printCallingFunctionName,
@@ -144,7 +169,7 @@ Logger getLogger(
       exludeLogsFromClasses: exludeLogsFromClasses,
     ),
     output: MultipleLoggerOutput([
-      ConsoleOutput(),
+      if (!kReleaseMode) ConsoleOutput(),
     ]),
   );
 }
