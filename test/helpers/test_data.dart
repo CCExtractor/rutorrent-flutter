@@ -26,7 +26,7 @@ class TestData {
   ];
 
   static Torrent get torrent => Torrent("dddd");
-  static RSSFilter get rssFilter => RSSFilter("",0,"","","","");
+  static RSSFilter get rssFilter => RSSFilter("", 0, "", "", "", "");
 
   static const httpRpcPluginUrl = url + '/plugins/httprpc/action.php';
 

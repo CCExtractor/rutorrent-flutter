@@ -2,7 +2,7 @@ name: rutorrentflutter
 description: A rutorrent-based client in flutter
 
 publish_to: "none"
-version: 1.0.0-alpha+4
+version: 1.0.0-alpha+6
 
 environment:
   sdk: ">=2.12.0-0 <3.0.0"
@@ -45,6 +45,9 @@ dependencies:
   webview_flutter_plus: ^0.3.0+2
   percent_indicator: ^4.2.2
   logger:
+  firebase_core: ^1.21.1
+  firebase_analytics: ^9.3.3
+  firebase_crashlytics: ^2.8.9
   # webviewx: ^0.2.1
 
 dev_dependencies:

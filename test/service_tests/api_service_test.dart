@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rutorrentflutter/models/disk_file.dart';
 import 'package:rutorrentflutter/models/rss.dart';
-import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'package:rutorrentflutter/models/torrent_file.dart';
 import 'package:rutorrentflutter/services/api/prod_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
@@ -57,30 +56,32 @@ void main() {
       });
 
       group('Update Disk Space -', () {
-        test('When update diskspace call made, should populate diskspace object', () async {
-          DiskSpaceService _diskSpaceService = getAndRegisterDiskSpaceService(mock: false);
+        test(
+            'When update diskspace call made, should populate diskspace object',
+            () async {
+          DiskSpaceService _diskSpaceService =
+              getAndRegisterDiskSpaceService(mock: false);
           ProdApiService api = ProdApiService();
-    
+
           //Mock Api Call
           await api.updateDiskSpace();
 
           expect(_diskSpaceService.diskSpace, isNotNull);
 
-          bool isTotalUpdated = _diskSpaceService.diskSpace.total!=-1; 
-          expect(isTotalUpdated,true);
-          
+          bool isTotalUpdated = _diskSpaceService.diskSpace.total != -1;
+          expect(isTotalUpdated, true);
         });
       });
       group('Get All Accounts Torrent List -', () {
-        test('When update all accounts torrent list call made, should populate torrent list', () async {
-          TorrentService _torrentService = getAndRegisterTorrentService(mock: false);
+        test(
+            'When update all accounts torrent list call made, should populate torrent list',
+            () async {
+          TorrentService _torrentService =
+              getAndRegisterTorrentService(mock: false);
           ProdApiService api = ProdApiService();
-    
+
           //Mock Api Call
-          await api
-            .getAllAccountsTorrentList()
-            .listen((event) {})
-            .cancel();
+          await api.getAllAccountsTorrentList().listen((event) {}).cancel();
 
           expect(_torrentService.torrentsList.value, isNotEmpty);
           expect(_torrentService.torrentsList.value[0].runtimeType,
@@ -88,13 +89,14 @@ void main() {
         });
       });
       group('Get Disk Files -', () {
-        test('When get disk files call made, should populate disk file list', () async {
-          DiskFileService _diskFileService = getAndRegisterDiskFileService(mock: false);
+        test('When get disk files call made, should populate disk file list',
+            () async {
+          DiskFileService _diskFileService =
+              getAndRegisterDiskFileService(mock: false);
           ProdApiService api = ProdApiService();
-    
+
           //Mock Api Call
-          await api
-            .getDiskFiles("/");
+          await api.getDiskFiles("/");
 
           expect(_diskFileService.diskFileList.value, isNotEmpty);
           expect(_diskFileService.diskFileList.value[0].runtimeType,
@@ -102,55 +104,52 @@ void main() {
         });
       });
       group('Get Files -', () {
-        test('When files from Torrent call made, should return torrent file list', () async {
+        test(
+            'When files from Torrent call made, should return torrent file list',
+            () async {
           ProdApiService api = ProdApiService();
-    
+
           //Mock Api Call
-          var response = await api
-            .getFiles(TestData.hash);
+          var response = await api.getFiles(TestData.hash);
 
           expect(response, isNotEmpty);
-          expect(response.runtimeType,
-              [TorrentFile("","","","")].runtimeType);
+          expect(
+              response.runtimeType, [TorrentFile("", "", "", "")].runtimeType);
         });
       });
       group('Get Trackers -', () {
-        test('When getTrackers call made, should return trackers list', () async {
+        test('When getTrackers call made, should return trackers list',
+            () async {
           ProdApiService api = ProdApiService();
-    
+
           //Mock Api Call
-          var response = await api
-            .getTrackers(TestData.hash);
+          var response = await api.getTrackers(TestData.hash);
 
           expect(response, isNotEmpty);
-          expect(response.runtimeType,
-              [""].runtimeType);
+          expect(response.runtimeType, [""].runtimeType);
         });
       });
       group('Load RSS -', () {
         test('When loadRSS call made, should return RSS Label list', () async {
           ProdApiService api = ProdApiService();
-    
+
           //Mock Api Call
-          var response = await api
-            .loadRSS();
+          var response = await api.loadRSS();
 
           expect(response, isNotEmpty);
-          expect(response.runtimeType,
-              [RSSLabel(TestData.hash, "")].runtimeType);
+          expect(
+              response.runtimeType, [RSSLabel(TestData.hash, "")].runtimeType);
         });
       });
       group('Get RSS Filters -', () {
         test('When loadRSS call made, should return RSS Label list', () async {
           ProdApiService api = ProdApiService();
-    
+
           //Mock Api Call
-          var response = await api
-            .getRSSFilters();
+          var response = await api.getRSSFilters();
 
           expect(response, isNotEmpty);
-          expect(response.runtimeType,
-              [TestData.rssFilter].runtimeType);
+          expect(response.runtimeType, [TestData.rssFilter].runtimeType);
         });
       });
     });
