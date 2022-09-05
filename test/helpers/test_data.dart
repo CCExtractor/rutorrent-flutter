@@ -2,12 +2,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
+import 'package:rutorrentflutter/models/rss_filter.dart';
 import 'package:rutorrentflutter/models/torrent.dart';
 import 'package:rutorrentflutter/services/services_info.dart';
 
 /// This class contains the test data used in tests to remove non-deterministic behaviour
 class TestData {
   static const url = "http://localhost:8080";
+  static const String hash = "EB25F7EC8FDE4DA888C197DB0975FFF549C9D7FB";
 
   static ValueNotifier<List<Account>> accounts = ValueNotifier([
     Account(username: "test", password: "test", url: "http://localhost:8080")
@@ -24,6 +26,7 @@ class TestData {
   ];
 
   static Torrent get torrent => Torrent("dddd");
+  static RSSFilter get rssFilter => RSSFilter("", 0, "", "", "", "");
 
   static const httpRpcPluginUrl = url + '/plugins/httprpc/action.php';
 

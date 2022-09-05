@@ -9,6 +9,7 @@
 .buildlog/
 .history
 .svn/
+*.env
 
 # IntelliJ related
 *.iml
@@ -42,3 +43,9 @@ app.*.map.json
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+# Firebase
+android/app/google-services.json
+ios/firebase_app_id_file.json
+ios/Runner/GoogleService-Info.plist
+
