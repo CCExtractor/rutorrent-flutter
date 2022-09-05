@@ -48,6 +48,7 @@ dependencies:
   firebase_core: ^1.21.1
   firebase_analytics: ^9.3.3
   firebase_crashlytics: ^2.8.9
+  flutter_dotenv: ^5.0.2
   # webviewx: ^0.2.1
 
 dev_dependencies:
@@ -69,6 +70,7 @@ flutter:
   assets:
     - assets/logo/
     - assets/animation/
+    - .env
 
   fonts:
     - family: SFUIDisplay

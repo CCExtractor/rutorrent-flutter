@@ -9,6 +9,7 @@
 .buildlog/
 .history
 .svn/
+*.env
 
 # IntelliJ related
 *.iml
@@ -44,7 +45,6 @@ app.*.map.json
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 # Firebase
-lib/firebase_options.dart
 android/app/google-services.json
 ios/firebase_app_id_file.json
 ios/Runner/GoogleService-Info.plist
