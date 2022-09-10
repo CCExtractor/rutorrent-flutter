@@ -2,7 +2,7 @@ name: rutorrentflutter
 description: A rutorrent-based client in flutter
 
 publish_to: "none"
-version: 1.0.0-alpha+6
+version: 0.9.1-beta+60
 
 environment:
   sdk: ">=2.12.0-0 <3.0.0"
@@ -70,7 +70,8 @@ flutter:
   assets:
     - assets/logo/
     - assets/animation/
-    - .env
+    # uncomment the below line when building a release for Playstore (app bundle or apk)
+    # - .env
 
   fonts:
     - family: SFUIDisplay
