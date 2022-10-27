@@ -29,17 +29,17 @@ void main() async {
     Hive.init(appDir.path);
     await Hive.openBox('DB');
     //To work in development environment, simply change the environment to Environment.dev below
-    setupLocator(environment: Environment.prod);
+    await setupLocator(environment: Environment.dev);
     //Setting custom Bottom Sheet
     setUpBottomSheetUi();
     //Setting up Services
-    locator<NotificationService>().init();
+    await locator<NotificationService>().init();
     await locator<UserPreferencesService>().init();
     //Setting up Firebase
-    await dotenv.load(fileName: ".env");
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    // await dotenv.load(fileName: ".env");
+    // await Firebase.initializeApp(
+    //   options: DefaultFirebaseOptions.currentPlatform,
+    // );
 
     // Make sure to comment out this line in development to see Errors
     // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;

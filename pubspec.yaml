@@ -70,6 +70,7 @@ flutter:
   assets:
     - assets/logo/
     - assets/animation/
+    - assets/icons/
     # uncomment the below line when building a release for Playstore (app bundle or apk)
     # - .env
 

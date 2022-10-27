@@ -44,3 +44,16 @@ enum IrssiButtons {
   version,
   none,
 }
+
+/// Default Labels for Torrents
+enum DefaultLabelsEnum {
+  videos,
+  games,
+  music,
+  software,
+  movies,
+  documents,
+  pictures,
+  movies3d,
+  nolabel
+}

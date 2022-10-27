@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/models/history_item.dart';
+import 'package:rutorrentflutter/models/mode.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
 import 'package:rutorrentflutter/ui/views/history/history_viewmodel.dart';
@@ -124,7 +125,7 @@ class HistoryView extends StatelessWidget {
                               })
                           : Center(
                               child: SvgPicture.asset(
-                                Theme.of(context).brightness == Brightness.light
+                                Mode.isDarkMode
                                     ? 'assets/logo/empty.svg'
                                     : 'assets/logo/empty_dark.svg',
                                 width: 120,

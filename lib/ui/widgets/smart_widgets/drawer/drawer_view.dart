@@ -11,7 +11,7 @@ import 'package:stacked/stacked.dart';
 
 class DrawerView extends StatelessWidget {
   final PackageInfo? packageInfo;
-  DrawerView({this.packageInfo});
+  const DrawerView({this.packageInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +28,10 @@ class DrawerView extends StatelessWidget {
                 children: <Widget>[
                   Image(
                     image: !AppStateNotifier.isDarkModeOn
-                        ? AssetImage('assets/logo/light_mode.png')
-                        : AssetImage('assets/logo/dark_mode.png'),
+                        ? AssetImage(
+                            '${DefaultPaths.defaultLogos}light_mode.png')
+                        : AssetImage(
+                            '${DefaultPaths.defaultLogos}dark_mode.png'),
                   ),
                   SizedBox(height: 20),
                   Text(
