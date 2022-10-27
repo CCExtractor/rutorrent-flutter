@@ -37,6 +37,7 @@ class TorrentService extends ChangeNotifier {
   get selectedLabel => _selectedLabel;
   get selectedFilter => _selectedFilter;
   get sortPreference => _sortPreference;
+  Map<Filter, int> get torrentCount => _countTorrents();
 
   ValueNotifier<List<String?>> get listOfLabels => _listOfLabels;
   ValueNotifier<List<Torrent>> get activeDownloads => _activeDownloads;
@@ -91,6 +92,7 @@ class TorrentService extends ChangeNotifier {
   /// Updates display list of [Torrent]s Display List
   updateTorrentDisplayList({String? searchText}) {
     List<Torrent> displayList = torrentsList.value;
+
     //Sorting: sorting data on basis of sortPreference
     displayList = _sortList(displayList, sortPreference)!;
 
@@ -114,6 +116,37 @@ class TorrentService extends ChangeNotifier {
     // ignore: invalid_use_of_visible_for_testing_member
     // ignore: invalid_use_of_protected_member
     _torrentsDisplayList.notifyListeners();
+  }
+
+  Map<Filter, int> _countTorrents() {
+    return {
+      Filter.All: torrentsList.value.length,
+      Filter.Downloading: torrentsList.value
+          .where((torrent) =>
+              torrent.status == Status.downloading ||
+              (torrent.status == Status.paused &&
+                  torrent.status != Status.completed))
+          .toList()
+          .length,
+      Filter.Completed: torrentsList.value
+          .where((torrent) => torrent.status == Status.completed)
+          .toList()
+          .length,
+      Filter.Active: torrentsList.value
+          .where((torrent) => torrent.ulSpeed! > 0 || torrent.dlSpeed! > 0)
+          .toList()
+          .length,
+      Filter.Inactive: torrentsList.value
+          .where((torrent) => torrent.ulSpeed == 0 && torrent.dlSpeed == 0)
+          .toList()
+          .length,
+      Filter.Error: torrentsList.value
+          .where((torrent) =>
+              torrent.msg!.length > 0 &&
+              torrent.msg != 'Tracker: [Tried all trackers.]')
+          .toList()
+          .length,
+    };
   }
 
   List<Torrent>? _sortList(List<Torrent>? torrentsList, Sort? sort) {
