@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
-import 'package:rutorrentflutter/ui/views/torrent_list/torrent_list_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/Drawer/drawer_viewmodel.dart';
 
 class FilterTile extends StatelessWidget {

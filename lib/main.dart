@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,8 +14,6 @@ import 'package:rutorrentflutter/services/state_services/user_preferences_servic
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/theme/app_theme.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/bottom_sheet_setup.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -36,6 +33,7 @@ void main() async {
     await locator<NotificationService>().init();
     await locator<UserPreferencesService>().init();
     //Setting up Firebase
+    //Comment this when you want to enter development mode
     // await dotenv.load(fileName: ".env");
     // await Firebase.initializeApp(
     //   options: DefaultFirebaseOptions.currentPlatform,
