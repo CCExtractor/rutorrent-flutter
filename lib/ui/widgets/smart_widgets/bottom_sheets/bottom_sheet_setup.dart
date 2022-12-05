@@ -85,7 +85,7 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  FlatButton(
+                  TextButton(
                     onPressed: () =>
                         model.response(completer, textFieldController1.text),
                     child: Text(
@@ -93,7 +93,9 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
-                    color: Theme.of(context).primaryColor,
+                    style: TextButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                    )
                   )
                 ],
               )
