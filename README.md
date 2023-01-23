@@ -91,12 +91,18 @@ cd rutorrent-flutter
 flutter doctor
 ```
 
-4. For IOS
+4. Get the dependencies:
+
+```bash
+flutter pub get
+```
+
+5. For IOS
 - Uncomment ```platform :ios, '9.0'``` from ios/Podfile
 - Cd into the new ios directory```cd ios```
 - From the ios directory ```pod install --verbose```
 
-5. Run the app:
+6. Run the app:
 
 ```bash
 flutter run
