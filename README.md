@@ -14,9 +14,6 @@ The project is a flutter application for ruTorrent web interface. The app commun
 
 Additionally, you can also stream torrents from your server (or seedbox) and download them locally to your mobile device (a save offline feature), which makes torrenting a seamless experience for ruTorrent users.
 
-## Download App
-<a href="https://play.google.com/store/apps/details?id=org.ccextractor.rutorrentflutter"><img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" width="200"></img></a>
-
 ## ruTorrent and rtorrent
 
 <img src="https://raw.githubusercontent.com/CCExtractor/rutorrent-flutter/master/rutorrent.jpeg" alt="ruTorrent Web" height=100px>

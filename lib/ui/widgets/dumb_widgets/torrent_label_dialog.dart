@@ -74,7 +74,7 @@ class TorrentLabelDialog extends StatelessWidget {
             borderRadius: BorderRadius.circular(5.0),
             side: BorderSide(color: Theme.of(context).primaryColor),
           ),
-          backgroundColor: Theme.of(context).primaryColor,
+          primary: Theme.of(context).primaryColor,
         ),
         child: Text(
           text,

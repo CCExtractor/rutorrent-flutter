@@ -46,7 +46,7 @@ class _PasswordChangeDialogState extends State<PasswordChangeDialog> {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: !AppStateNotifier.isDarkModeOn
+                          primary: !AppStateNotifier.isDarkModeOn
                               ? Colors.white
                               : kGreyDT,
                           shape: RoundedRectangleBorder(
