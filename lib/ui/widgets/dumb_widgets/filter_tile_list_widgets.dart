@@ -8,8 +8,13 @@ class FilterTile extends StatelessWidget {
   final DrawerViewModel model;
   final Filter filter;
   final IconData icon;
+  final int count;
 
-  FilterTile({required this.model, required this.filter, required this.icon});
+  FilterTile(
+      {required this.model,
+      required this.filter,
+      required this.icon,
+      required this.count});
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +31,16 @@ class FilterTile extends StatelessWidget {
               : !AppStateNotifier.isDarkModeOn
                   ? Colors.black
                   : Colors.white,
+        ),
+        trailing: Text(
+          '( $count )',
+          style: TextStyle(
+            color: isSelected
+                ? Colors.white
+                : !AppStateNotifier.isDarkModeOn
+                    ? Colors.black
+                    : Colors.white,
+          ),
         ),
         title: Text(
           filter.toString().substring(filter.toString().indexOf('.') + 1),

@@ -25,6 +25,18 @@ Map<Sort, String> sortMapHistoryList = {
   Sort.size_descending: 'Size - Large to Small',
 };
 
+/// Default Asset Paths for the project
+class DefaultPaths {
+  /// Default Labels icons path
+  static const String defaultLabelIcons = 'assets/icons/';
+
+  /// Default Logos path
+  static const String defaultLogos = 'assets/logo/';
+
+  /// Default Animations path
+  static const String defaultAnimations = 'assets/animations/';
+}
+
 /// APP RELEASE INFO
 const String BUILD_NUMBER = '2';
 const String RELEASE_DATE = '28.02.20';

@@ -142,17 +142,22 @@ class DrawerViewModel extends BaseViewModel {
   }
 
   List<Widget> _getFilterTileList(model) {
+    Map<Filter, int> map = _torrentService!.torrentCount;
     // ignore: unnecessary_cast
     return filterTileIcons
         .asMap()
         .map((index, icon) =>
-            MapEntry(index, _getFilterTile(index, icon, model)))
+            MapEntry(index, _getFilterTile(index, icon, model, map)))
         .values
         .toList() as List<Widget>;
   }
 
-  FilterTile _getFilterTile(int index, icon, model) {
-    return FilterTile(model: model, filter: Filter.values[index], icon: icon);
+  FilterTile _getFilterTile(int index, icon, model, map) {
+    return FilterTile(
+        model: model,
+        filter: Filter.values[index],
+        icon: icon,
+        count: map[Filter.values[index]]);
   }
 
   navigateToHistoryScreen() {
