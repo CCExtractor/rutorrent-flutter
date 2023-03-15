@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
+import 'package:stacked_services/stacked_services.dart';
+
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/shared/shared_styles.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 class ConfirmBottomSheetView extends StatelessWidget {
   final SheetRequest request;
@@ -50,13 +52,16 @@ class ConfirmBottomSheetView extends StatelessWidget {
                 ),
               ),
               // ignore: deprecated_member_use
-              FlatButton(
+              TextButton(
                 onPressed: () => completer(SheetResponse(confirmed: true)),
                 child: Text(
                   request.mainButtonTitle!,
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Theme.of(context).primaryColor,
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Theme.of(context).primaryColor),
+                ),
               )
             ],
           )

@@ -1,12 +1,12 @@
-// ignore_for_file: import_of_legacy_library_into_null_safe
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:stacked/stacked.dart';
+
 import 'package:rutorrentflutter/enums/enums.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/data_input_widget.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/URL_bottom_sheet/url_bottomsheet_viewmodel.dart';
-import 'package:stacked/stacked.dart';
 
 class URLBottomSheetView extends StatelessWidget {
   final HomeViewBottomSheetMode? mode;
@@ -73,8 +73,8 @@ class URLBottomSheetView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5.0),
                     side: BorderSide(color: Theme.of(context).primaryColor),
                   ),
-                  side: BorderSide(color: Theme.of(context).primaryColor),
-                  primary: Theme.of(context).primaryColor),
+                  backgroundColor: Theme.of(context).primaryColor,
+                  side: BorderSide(color: Theme.of(context).primaryColor)),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
@@ -106,8 +106,9 @@ class URLBottomSheetView extends StatelessWidget {
                           side:
                               BorderSide(color: Theme.of(context).primaryColor),
                         ),
-                        side: BorderSide(color: Theme.of(context).primaryColor),
-                        primary: Theme.of(context).primaryColor),
+                        backgroundColor: Theme.of(context).primaryColor,
+                        side:
+                            BorderSide(color: Theme.of(context).primaryColor)),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 28, vertical: 16),
