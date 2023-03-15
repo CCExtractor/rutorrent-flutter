@@ -17,7 +17,7 @@ class DocumentTypeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var subtitle1 = Theme.of(context).textTheme.subtitle1?.copyWith(
+    var subtitle1 = Theme.of(context).textTheme.titleMedium?.copyWith(
           fontSize: 16,
           color: (isSelected) ? Colors.white : Colors.black,
         );

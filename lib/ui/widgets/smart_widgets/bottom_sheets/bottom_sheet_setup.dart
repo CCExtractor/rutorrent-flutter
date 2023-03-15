@@ -1,6 +1,9 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
+
+import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
+
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/bottom_sheet_type.dart';
 import 'package:rutorrentflutter/enums/enums.dart';
@@ -8,8 +11,6 @@ import 'package:rutorrentflutter/ui/widgets/dumb_widgets/text_field_view.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/confirm_bottom_sheet/confirm_bottom_sheet_view.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/option_bottom_sheet/option_bottom_sheet_view.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/bottom_sheets/sort_bottom_sheet/sort_bottom_sheet_view.dart';
-import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 void setUpBottomSheetUi() {
   final bottomSheetService = locator<BottomSheetService>();
@@ -85,7 +86,7 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  FlatButton(
+                  TextButton(
                     onPressed: () =>
                         model.response(completer, textFieldController1.text),
                     child: Text(
@@ -93,7 +94,10 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
-                    color: Theme.of(context).primaryColor,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).primaryColor),
+                    ),
                   )
                 ],
               )
