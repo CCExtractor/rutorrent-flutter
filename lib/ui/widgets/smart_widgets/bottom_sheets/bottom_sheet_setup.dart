@@ -85,7 +85,7 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  FlatButton(
+                  ElevatedButton(
                     onPressed: () =>
                         model.response(completer, textFieldController1.text),
                     child: Text(
