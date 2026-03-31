@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/widgets/smart_widgets/Drawer/drawer_viewmodel.dart';
+import 'package:rutorrentflutter/utils/label_icon_mapper.dart';
 
 class LabelTile extends StatelessWidget {
   final DrawerViewModel model;
@@ -15,7 +16,7 @@ class LabelTile extends StatelessWidget {
       child: ListTile(
         dense: true,
         leading: Icon(
-          Icons.label_important_outline,
+          getLabelIcon(label),
           color: isSelected
               ? Colors.white
               : !AppStateNotifier.isDarkModeOn
