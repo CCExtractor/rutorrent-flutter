@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:rutorrentflutter/services/functional_services/discovery_service.dart';
 import 'package:rutorrentflutter/theme/app_state_notifier.dart';
 import 'package:rutorrentflutter/ui/views/login/login_viewmodel.dart';
 import 'package:rutorrentflutter/ui/widgets/dumb_widgets/data_input_widget.dart';
@@ -17,6 +18,139 @@ class LoginView extends StatelessWidget {
   final FocusNode passwordFocus = FocusNode();
   final FocusNode urlFocus = FocusNode();
   final _formKey = GlobalKey<FormState>();
+
+  void _showDiscoveryDialog(
+      BuildContext context, LoginViewModel model) async {
+    // Show dialog immediately with loading state
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (bottomSheetContext) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              padding: EdgeInsets.all(16),
+              constraints: BoxConstraints(minHeight: 200),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Discover Servers',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.refresh),
+                        onPressed: () {
+                          setModalState(() {});
+                          model.discoverServers().then((_) {
+                            setModalState(() {});
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Searching for ruTorrent servers on your local network...',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  ValueListenableBuilder<bool>(
+                    valueListenable: model.isDiscovering,
+                    builder: (context, isDiscovering, _) {
+                      if (isDiscovering) {
+                        return Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(24),
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+                      return ValueListenableBuilder<List<DiscoveredServer>>(
+                        valueListenable: model.discoveredServers,
+                        builder: (context, servers, _) {
+                          if (servers.isEmpty) {
+                            return Padding(
+                              padding: EdgeInsets.all(24),
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    Icon(
+                                      Icons.search_off,
+                                      size: 48,
+                                      color: Colors.grey,
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      'No servers found',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      'Make sure your server is configured\nwith Avahi/mDNS discovery.',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemCount: servers.length,
+                            itemBuilder: (context, index) {
+                              final server = servers[index];
+                              return ListTile(
+                                leading: Icon(
+                                  Icons.dns_outlined,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                                title: Text(
+                                  server.name ?? server.host,
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                subtitle: Text(server.url),
+                                trailing: Icon(Icons.arrow_forward_ios,
+                                    size: 16),
+                                onTap: () {
+                                  urlController.text = server.url;
+                                  Navigator.pop(bottomSheetContext);
+                                },
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+
+    // Start discovery after showing the dialog
+    model.discoverServers();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +251,35 @@ class LoginView extends StatelessWidget {
                                   ),
                                 ),
                               ],
-                            )
+                            ),
+                            SizedBox(height: 8),
+                            // Discover Servers button
+                            TextButton.icon(
+                              onPressed: () =>
+                                  _showDiscoveryDialog(context, model),
+                              icon: Icon(
+                                Icons.wifi_find,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              label: Text(
+                                'Discover Servers on Network',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
+                                side: BorderSide(
+                                    color: Colors.white54, width: 1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),

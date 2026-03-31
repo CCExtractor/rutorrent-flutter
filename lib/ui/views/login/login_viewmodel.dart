@@ -1,5 +1,6 @@
 // ignore_for_file: import_of_legacy_library_into_null_safe
 
+import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
@@ -8,6 +9,7 @@ import 'package:rutorrentflutter/app/app.router.dart';
 import 'package:rutorrentflutter/models/account.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
+import 'package:rutorrentflutter/services/functional_services/discovery_service.dart';
 import 'package:rutorrentflutter/services/functional_services/internet_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -20,8 +22,14 @@ class LoginViewModel extends BaseViewModel {
       locator<AuthenticationService>();
   InternetService? _internetService = locator<InternetService>();
   IApiService? _apiService = locator<IApiService>();
+  DiscoveryService _discoveryService = locator<DiscoveryService>();
 
   Account? _account;
+
+  /// Reactive state for discovered servers
+  ValueNotifier<List<DiscoveredServer>> get discoveredServers =>
+      _discoveryService.discoveredServers;
+  ValueNotifier<bool> get isDiscovering => _discoveryService.isDiscovering;
 
   // validating url through regex
   bool isValidUrl(String input) {
@@ -39,6 +47,19 @@ class LoginViewModel extends BaseViewModel {
       return 'Please enter a valid url';
     }
     return null;
+  }
+
+  /// Starts mDNS discovery for ruTorrent servers on the local network.
+  Future<List<DiscoveredServer>> discoverServers() async {
+    log.i('Starting server discovery...');
+    final servers = await _discoveryService.discover();
+    if (servers.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'No servers found. Make sure your server advertises via mDNS.',
+      );
+    }
+    notifyListeners();
+    return servers;
   }
 
   login({String? url, required String? username, String? password}) async {
