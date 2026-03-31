@@ -47,6 +47,11 @@ class DrawerViewModel extends BaseViewModel {
 
   get listOfLabels => _torrentService?.listOfLabels;
 
+  /// Returns the count of torrents matching a given [Filter]
+  int getFilterCount(Filter filter) {
+    return _torrentService?.getFilterCount(filter) ?? 0;
+  }
+
   Filter get selectedFilter => _torrentService?.selectedFilter;
 
   String get selectedLabel => _torrentService?.selectedLabel;

@@ -15,6 +15,7 @@ class FilterTile extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isSelected =
         (model.selectedFilter == filter && !model.isLabelSelected);
+    int count = model.getFilterCount(filter);
     return Container(
       color: isSelected ? Theme.of(context).colorScheme.secondary : null,
       child: ListTile(
@@ -35,6 +36,25 @@ class FilterTile extends StatelessWidget {
                   : !AppStateNotifier.isDarkModeOn
                       ? Colors.black
                       : Colors.white),
+        ),
+        trailing: Container(
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? Colors.white.withOpacity(0.3)
+                : Theme.of(context).colorScheme.secondary.withOpacity(0.15),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            '$count',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: isSelected
+                  ? Colors.white
+                  : Theme.of(context).colorScheme.secondary,
+            ),
+          ),
         ),
         onTap: () {
           model.changeFilter(filter);

@@ -196,6 +196,12 @@ class TorrentService extends ChangeNotifier {
     return torrentsList.where((torrent) => torrent.label == label).toList();
   }
 
+  /// Returns the count of torrents matching a given [Filter]
+  int getFilterCount(Filter filter) {
+    List<Torrent>? filtered = _filterList(torrentsList.value, filter);
+    return filtered?.length ?? 0;
+  }
+
   /// Reloads list of [Torrent]s from seedbox
   refreshTorrentList() async {
     log.v("Torrent refresh function called");
