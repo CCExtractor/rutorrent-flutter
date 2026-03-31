@@ -5,6 +5,7 @@ import 'package:rutorrentflutter/services/api/http_client_service.dart';
 import 'package:rutorrentflutter/services/api/i_api_service.dart';
 import 'package:rutorrentflutter/services/api/prod_api_service.dart';
 import 'package:rutorrentflutter/services/functional_services/authentication_service.dart';
+import 'package:rutorrentflutter/services/functional_services/discovery_service.dart';
 import 'package:rutorrentflutter/services/functional_services/disk_space_service.dart';
 import 'package:rutorrentflutter/services/functional_services/internet_service.dart';
 import 'package:rutorrentflutter/services/functional_services/notification_service.dart';
@@ -71,6 +72,7 @@ import '../ui/views/splash/splash_view.dart';
     LazySingleton(classType: FilePickerService),
     LazySingleton(classType: TorrentService),
     LazySingleton(classType: PackageInfoService),
+    LazySingleton(classType: DiscoveryService),
     LazySingleton(classType: DiskFileService),
   ],
 )

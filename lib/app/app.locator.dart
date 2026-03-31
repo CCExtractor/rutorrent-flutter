@@ -14,6 +14,7 @@ import '../services/api/http_client_service.dart';
 import '../services/api/i_api_service.dart';
 import '../services/api/prod_api_service.dart';
 import '../services/functional_services/authentication_service.dart';
+import '../services/functional_services/discovery_service.dart';
 import '../services/functional_services/disk_space_service.dart';
 import '../services/functional_services/internet_service.dart';
 import '../services/functional_services/notification_service.dart';
@@ -57,5 +58,6 @@ Future<void> setupLocator(
   locator.registerLazySingleton(() => FilePickerService());
   locator.registerLazySingleton(() => TorrentService());
   locator.registerLazySingleton(() => PackageInfoService());
+  locator.registerLazySingleton(() => DiscoveryService());
   locator.registerLazySingleton(() => DiskFileService());
 }
