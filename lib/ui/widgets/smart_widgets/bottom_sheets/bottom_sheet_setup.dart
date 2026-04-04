@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:rutorrentflutter/app/app.locator.dart';
 import 'package:rutorrentflutter/enums/bottom_sheet_type.dart';
@@ -85,15 +83,17 @@ class _FloatingBoxBottomSheet extends StatelessWidget {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  FlatButton(
+                  TextButton(
                     onPressed: () =>
                         model.response(completer, textFieldController1.text),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
                     child: Text(
                       request.mainButtonTitle!,
                       style: TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
-                    color: Theme.of(context).primaryColor,
                   )
                 ],
               )
@@ -124,7 +124,7 @@ class BottomSheetViewModel extends BaseViewModel {
       errorText = "Maximum limit of 250 characters exceeded";
     } else {
       func(
-        SheetResponse(confirmed: true, responseData: responseText),
+        SheetResponse(confirmed: true, data: responseText),
       );
     }
   }

@@ -17,7 +17,7 @@ class DocumentTypeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var subtitle1 = Theme.of(context).textTheme.subtitle1?.copyWith(
+    var subtitle1 = Theme.of(context).textTheme.titleMedium?.copyWith(
           fontSize: 16,
           color: (isSelected) ? Colors.white : Colors.black,
         );
@@ -31,7 +31,7 @@ class DocumentTypeCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           color: isSelected
               ? Theme.of(context).primaryColor
-              : Theme.of(context).colorScheme.background,
+              : Theme.of(context).colorScheme.surface,
         ),
         width: App(context).appWidth(0.4),
         child: Row(

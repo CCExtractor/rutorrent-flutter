@@ -17,7 +17,7 @@ Logger log = getLogger("IRSSIView");
 class IRSSIView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var subtitle1 = Theme.of(context).textTheme.subtitle1?.copyWith(
+    var subtitle1 = Theme.of(context).textTheme.titleMedium?.copyWith(
           fontSize: 15,
           color: (AppStateNotifier.isDarkModeOn) ? Colors.white : Colors.black,
         );
@@ -190,18 +190,18 @@ class IRSSIView extends StatelessWidget {
                                                       ElevatedButton.styleFrom(
                                                     textStyle: Theme.of(context)
                                                         .textTheme
-                                                        .button
+                                                        .labelLarge
                                                         ?.copyWith(
                                                             color:
                                                                 Colors.white),
-                                                    primary: model
+                                                    backgroundColor: model
                                                                 .irssiButton ==
                                                             IrssiButtons.none
                                                         ? Colors.grey
                                                         : Theme.of(context)
                                                             .primaryColor,
                                                     padding: const EdgeInsets
-                                                            .symmetric(
+                                                        .symmetric(
                                                         horizontal: 20.0,
                                                         vertical: 5),
                                                     shape:
@@ -218,7 +218,7 @@ class IRSSIView extends StatelessWidget {
                                                         : "Refresh",
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .button
+                                                        .labelLarge
                                                         ?.copyWith(
                                                             color:
                                                                 Colors.white),
@@ -254,7 +254,7 @@ class IRSSIView extends StatelessWidget {
                                                       index];
                                               var subtitle1 = Theme.of(context)
                                                   .textTheme
-                                                  .subtitle1
+                                                  .titleMedium
                                                   ?.copyWith(
                                                     fontSize: 15,
                                                     color: (AppStateNotifier

@@ -60,41 +60,44 @@ class SortBottomSheetView extends StatelessWidget {
             Divider(
               thickness: 2,
             ),
-            Container(
-              height: 300,
-              child: ListView.builder(
-                itemCount: Sort.values.length - 1,
-                itemBuilder: (context, index) {
-                  Map<Sort, String> sortMap = model.getSortMap();
-                  return sortMap[Sort.values[index]] == null
-                      ? Container()
-                      : GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                            model.setSortPreference(
-                                completer, Sort.values[index]);
-                            Navigator.of(context).pop();
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                sortMap[Sort.values[index]]!,
-                                style: TextStyle(fontWeight: FontWeight.w600),
-                              ),
-                              Radio(
-                                groupValue: model.sortPreference,
-                                value: Sort.values[index],
-                                onChanged: (selected) {
-                                  model.setSortPreference(
-                                      completer, Sort.values[index]);
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                },
+            RadioGroup<Sort>(
+              groupValue: model.sortPreference,
+              onChanged: (Sort? selected) {
+                if (selected != null) {
+                  model.setSortPreference(completer, selected);
+                  Navigator.of(context).pop();
+                }
+              },
+              child: Container(
+                height: 300,
+                child: ListView.builder(
+                  itemCount: Sort.values.length - 1,
+                  itemBuilder: (context, index) {
+                    Map<Sort, String> sortMap = model.getSortMap();
+                    return sortMap[Sort.values[index]] == null
+                        ? Container()
+                        : GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              model.setSortPreference(
+                                  completer, Sort.values[index]);
+                              Navigator.of(context).pop();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  sortMap[Sort.values[index]]!,
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                                Radio<Sort>(
+                                  value: Sort.values[index],
+                                ),
+                              ],
+                            ),
+                          );
+                  },
+                ),
               ),
             )
           ],

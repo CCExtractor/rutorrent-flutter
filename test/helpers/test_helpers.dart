@@ -22,17 +22,17 @@ import 'test_helpers.mocks.dart';
 Logger log = getLogger("test_helpers.dart");
 
 @GenerateMocks([], customMocks: [
-  MockSpec<HistoryService>(returnNullOnMissingStub: true),
-  MockSpec<AuthenticationService>(returnNullOnMissingStub: true),
-  MockSpec<DiskSpaceService>(returnNullOnMissingStub: true),
-  MockSpec<TorrentService>(returnNullOnMissingStub: true),
-  MockSpec<DiskFileService>(returnNullOnMissingStub: true),
-  MockSpec<UserPreferencesService>(returnNullOnMissingStub: true),
-  MockSpec<SharedPreferencesService>(returnNullOnMissingStub: true),
-  MockSpec<NotificationService>(returnNullOnMissingStub: true),
-  MockSpec<IOClient>(returnNullOnMissingStub: true),
-  MockSpec<HttpIOClient>(returnNullOnMissingStub: true),
-  MockSpec<ProdApiService>(returnNullOnMissingStub: true),
+  MockSpec<HistoryService>(),
+  MockSpec<AuthenticationService>(),
+  MockSpec<DiskSpaceService>(),
+  MockSpec<TorrentService>(),
+  MockSpec<DiskFileService>(),
+  MockSpec<UserPreferencesService>(),
+  MockSpec<SharedPreferencesService>(),
+  MockSpec<NotificationService>(),
+  MockSpec<IOClient>(),
+  MockSpec<HttpIOClient>(),
+  MockSpec<ProdApiService>(),
 ])
 ProdApiService getAndRegisterProdApiServiceMock({mock = true}) {
   log.v("getAndRegisterProdApiServiceMock");

@@ -74,7 +74,7 @@ class URLBottomSheetView extends StatelessWidget {
                     side: BorderSide(color: Theme.of(context).primaryColor),
                   ),
                   side: BorderSide(color: Theme.of(context).primaryColor),
-                  primary: Theme.of(context).primaryColor),
+                  backgroundColor: Theme.of(context).primaryColor),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
@@ -107,7 +107,7 @@ class URLBottomSheetView extends StatelessWidget {
                               BorderSide(color: Theme.of(context).primaryColor),
                         ),
                         side: BorderSide(color: Theme.of(context).primaryColor),
-                        primary: Theme.of(context).primaryColor),
+                        backgroundColor: Theme.of(context).primaryColor),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 28, vertical: 16),

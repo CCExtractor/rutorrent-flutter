@@ -49,14 +49,15 @@ class ConfirmBottomSheetView extends StatelessWidget {
                   style: TextStyle(color: Theme.of(context).primaryColor),
                 ),
               ),
-              // ignore: deprecated_member_use
-              FlatButton(
+              TextButton(
                 onPressed: () => completer(SheetResponse(confirmed: true)),
+                style: TextButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                ),
                 child: Text(
                   request.mainButtonTitle!,
                   style: TextStyle(color: Colors.white),
                 ),
-                color: Theme.of(context).primaryColor,
               )
             ],
           )
