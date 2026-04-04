@@ -12,13 +12,18 @@ class SortBottomSheetView extends StatelessWidget {
   final SheetRequest request;
   final Function(SheetResponse) completer;
   final Screens screen;
-  SortBottomSheetView(
-      {required this.request, required this.completer, required this.screen});
+
+  SortBottomSheetView({
+    required this.request,
+    required this.completer,
+    required this.screen,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SortBottomSheetViewModel>.reactive(
       onModelReady: (model) => model.init(screen),
+      viewModelBuilder: () => SortBottomSheetViewModel(),
       builder: (context, model, child) => Padding(
         padding: const EdgeInsets.only(
           left: 16.0,
@@ -33,14 +38,13 @@ class SortBottomSheetView extends StatelessWidget {
               children: [
                 Text(
                   'SORT BY',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
+                  style: TextStyle(fontSize: 18),
                 ),
                 Spacer(),
                 TextButton(
                   style: ButtonStyle(
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                   onPressed: () {
                     model.setSortPreference(completer, Sort.values.last);
                     Navigator.of(context).pop();
@@ -57,53 +61,53 @@ class SortBottomSheetView extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(
-              thickness: 2,
-            ),
+            Divider(thickness: 2),
             RadioGroup<Sort>(
               groupValue: model.sortPreference,
-              onChanged: (Sort? selected) {
-                if (selected != null) {
-                  model.setSortPreference(completer, selected);
-                  Navigator.of(context).pop();
-                }
+              onChanged: (selected) {
+                if (selected == null) return;
+                model.setSortPreference(completer, selected);
+                Navigator.of(context).pop();
               },
-              child: Container(
+              child: SizedBox(
                 height: 300,
                 child: ListView.builder(
                   itemCount: Sort.values.length - 1,
                   itemBuilder: (context, index) {
-                    Map<Sort, String> sortMap = model.getSortMap();
-                    return sortMap[Sort.values[index]] == null
-                        ? Container()
-                        : GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              model.setSortPreference(
-                                  completer, Sort.values[index]);
-                              Navigator.of(context).pop();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  sortMap[Sort.values[index]]!,
-                                  style: TextStyle(fontWeight: FontWeight.w600),
-                                ),
-                                Radio<Sort>(
-                                  value: Sort.values[index],
-                                ),
-                              ],
+                    final sortMap = model.getSortMap();
+                    final sortValue = Sort.values[index];
+                    final label = sortMap[sortValue];
+
+                    if (label == null) return SizedBox.shrink();
+
+                    return InkWell(
+                      onTap: () {
+                        model.setSortPreference(completer, sortValue);
+                        Navigator.of(context).pop();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12.0),
+                            child: Text(
+                              label,
+                              style: TextStyle(fontWeight: FontWeight.w600),
                             ),
-                          );
+                          ),
+                          Radio<Sort>(
+                            value: sortValue,
+                          ),
+                        ],
+                      ),
+                    );
                   },
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
-      viewModelBuilder: () => SortBottomSheetViewModel(),
     );
   }
 }

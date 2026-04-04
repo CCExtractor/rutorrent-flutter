@@ -56,8 +56,8 @@ import 'package:shared_preferences/shared_preferences.dart' as _i24;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
-class _FakeValueNotifier_0<T> extends _i1.Fake implements _i2.ValueNotifier<T> {
-}
+class _FakeValueNotifier_0<T> extends _i1.Fake
+    implements _i2.ValueNotifier<T> {}
 
 class _FakeDiskSpace_1 extends _i1.Fake implements _i3.DiskSpace {}
 
