@@ -17,8 +17,13 @@ class DiskExplorerView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<DiskExplorerViewModel>.reactive(
-      builder: (context, model, child) => WillPopScope(
-        onWillPop: model.onBackPress,
+      builder: (context, model, child) => PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (bool didPop, dynamic result) async {
+          if (didPop) return;
+          final shouldPop = await model.onBackPress();
+          if (shouldPop && context.mounted) Navigator.of(context).pop();
+        },
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Theme.of(context).primaryColor,

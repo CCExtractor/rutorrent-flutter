@@ -156,7 +156,7 @@ class LoginView extends StatelessWidget {
                                 side: BorderSide(
                                     color: Theme.of(context).primaryColor),
                               ),
-                              primary: !AppStateNotifier.isDarkModeOn
+                              backgroundColor: !AppStateNotifier.isDarkModeOn
                                   ? Colors.white
                                   : Colors.black),
                           child: Padding(

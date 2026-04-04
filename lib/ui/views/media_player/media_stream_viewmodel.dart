@@ -83,7 +83,8 @@ class MediaStreamViewModel extends BaseViewModel {
   }
 
   Future<void> initializePlayer() async {
-    _videoPlayerController = VideoPlayerController.network(_mediaUrl);
+    _videoPlayerController =
+        VideoPlayerController.networkUrl(Uri.parse(_mediaUrl));
     await Future.wait([
       _videoPlayerController.initialize(),
     ]);

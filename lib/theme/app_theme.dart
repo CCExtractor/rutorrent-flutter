@@ -10,7 +10,6 @@ class AppTheme {
         ),
     primaryColor: kBluePrimaryLT,
     disabledColor: kGreyLT,
-    toggleableActiveColor: kIndigoSecondaryLT,
     colorScheme:
         ColorScheme.fromSwatch().copyWith(secondary: kIndigoSecondaryLT),
   );
@@ -23,7 +22,6 @@ class AppTheme {
         ),
     primaryColor: kPrimaryDT,
     disabledColor: kGreyDT,
-    toggleableActiveColor: kSecondaryDT,
     colorScheme: ColorScheme.fromSwatch().copyWith(secondary: kSecondaryDT),
   );
 }
